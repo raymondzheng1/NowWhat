@@ -19,15 +19,20 @@ export const IP_RATE_LIMIT = { max: 30, windowSeconds: 60 * 60 } as const;
  * small model for structural envelope repair (harness §11).
  */
 export const MODELS = {
-  primary: "claude-sonnet-4-6",
+  // The grounded-answer model. Overridable via env so the primary model can be tuned
+  // (e.g. Sonnet vs Opus vs Haiku) without a code change — handy while A/B testing the
+  // LLM answers against the keyless wizard.
+  primary: process.env.ANTHROPIC_MODEL?.trim() || "claude-sonnet-4-6",
+  // Small model for structural envelope repair only (never substance, harness §11).
   small: "claude-haiku-4-5-20251001",
-} as const;
+};
 
 /** Per-1M-token prices (USD) used by the cost meter. Update on model change. */
 export const MODEL_PRICES_USD_PER_MTOK: Record<
   string,
   { input: number; output: number }
 > = {
+  "claude-opus-4-8": { input: 15, output: 75 },
   "claude-sonnet-4-6": { input: 3, output: 15 },
   "claude-haiku-4-5-20251001": { input: 1, output: 5 },
 };

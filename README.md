@@ -28,6 +28,25 @@ npm run verify        # the single quality gate — must be green before push
 Local dev needs **no keys**: the cost guard uses an in-memory KV fallback and the model
 calls degrade gracefully to "not covered → get help" without an `ANTHROPIC_API_KEY`.
 
+## Enabling the model (`/ask` and `/decode` only)
+
+The **wizard** (`/start`) — classify → pathway → computed **deadline** → draft → tiered
+help — is fully deterministic and needs **no keys**. The LLM powers ONLY `/ask` (free-text
+Q&A) and `/decode` (plain-English explanation of the user's own letter).
+
+To turn those two on:
+
+- **Locally:** set `ANTHROPIC_API_KEY` in `.env.local` and run `npm run dev` (dev uses an
+  in-memory KV, so no Upstash needed). `/ask` and `/decode` now return grounded, verified
+  answers; without the key they degrade to "not covered → get help".
+- **On Vercel:** set **both** `ANTHROPIC_API_KEY` **and** Upstash (`UPSTASH_REDIS_REST_*`
+  or `KV_REST_API_*`) — the cost guard fails closed in production, so the model needs a
+  metering store. Optionally set `ANTHROPIC_MODEL` to A/B different models. Redeploy after
+  changing env vars.
+
+Every model answer still passes the verifier (grounded-or-silent, no advice, no fabricated
+deadline) and the $5/session cost guard before it reaches the user.
+
 ## Layout
 
 ```
