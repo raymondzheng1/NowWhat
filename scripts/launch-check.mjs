@@ -41,6 +41,12 @@ need(
 // The 1200×630 social share image (handoff asset).
 need(existsSync(resolve(ROOT, "app/opengraph-image.tsx")), "no OG share image (app/opengraph-image.tsx)");
 
+// Users must be able to reach a human (proposed harness §16 standing gate).
+need(
+  existsSync(resolve(ROOT, "app/contact/page.tsx")) && existsSync(resolve(ROOT, "app/api/contact/route.ts")),
+  "no Contact page (app/contact/page.tsx + app/api/contact/route.ts)",
+);
+
 // --- Analytics: Vercel <Analytics/> mounted + GA loader present (harness §8.2/§8.5) ---
 const layout = read("app/layout.tsx");
 need(/@vercel\/analytics/.test(layout) && /<Analytics/.test(layout), "Vercel <Analytics/> not mounted in app/layout.tsx (§8.5)");
