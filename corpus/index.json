@@ -1,578 +1,962 @@
 {
-  "builtAt": "3d2106382b83eeca",
+  "builtAt": "114e77ce643d861c",
   "entries": [
     {
-      "id": "centrelink-debt",
-      "title": "Centrelink said I owe money or changed my payment",
-      "jurisdiction": "Commonwealth",
-      "status": "seed",
+      "id": "vic-fines",
+      "title": "I got a fine or infringement notice in Victoria",
+      "jurisdiction": "Victoria",
+      "status": "verified",
       "decisionTypes": [
-        "debt notice",
-        "overpayment",
-        "account payable",
-        "payment cancelled",
-        "payment reduced",
-        "payment suspended",
-        "claim rejected",
-        "claim refused"
+        "infringement notice",
+        "penalty reminder notice",
+        "notice of final demand",
+        "fine",
+        "enforcement warrant",
+        "overdue fine",
+        "parking fine",
+        "speeding fine"
       ],
       "issuers": [
-        "Services Australia",
-        "Centrelink"
+        "Fines Victoria",
+        "Victoria Police",
+        "council",
+        "Safe Transport Victoria",
+        "enforcement agency"
       ],
       "keywords": [
-        "robodebt",
-        "jobseeker",
-        "youth allowance",
-        "age pension",
-        "disability support pension",
-        "family tax benefit",
-        "mutual obligation",
-        "income report"
+        "infringement",
+        "traffic",
+        "toll",
+        "public transport",
+        "demerit points",
+        "penalty",
+        "sheriff"
       ],
       "reviewable": {
         "value": "yes",
-        "basis": "Most Centrelink decisions can be reviewed.",
-        "verified": false
+        "basis": "You can ask for a review on set grounds, nominate the real driver, ask to go to court, or get help to pay. What you can do depends on the stage your fine has reached.",
+        "verified": true
       },
       "pathways": [
         {
           "deadlineDays": null,
           "deadlineVerified": false,
           "cost": "free",
-          "howCounted": "from the date of the decision",
-          "name": "Internal review (ask a review officer to look again)",
-          "body": "Services Australia",
-          "deadline": "There is a time limit — VERIFY current timeframe + source before launch",
-          "howToStart": "ask Services Australia for a formal review of the decision",
-          "source": "VERIFY (servicesaustralia.gov.au / Social Security (Administration) Act)"
+          "howCounted": "before the fine is registered (before a Notice of Final Demand)",
+          "name": "Ask for a review (on one of the five grounds)",
+          "body": "the agency that issued the fine, or Fines Victoria",
+          "deadline": "You can usually ask before your fine is registered — that is, before a 'Notice of Final Demand'. You can only ask for one review per fine.",
+          "howToStart": "apply for a review and choose a ground",
+          "source": "fines.vic.gov.au — request a review; Infringements Act 2006 (Vic)"
+        },
+        {
+          "deadlineDays": 14,
+          "deadlineVerified": true,
+          "cost": "free",
+          "howCounted": "from the day you found out about the fine",
+          "name": "Ask for a review because you did not know about the fine",
+          "body": "the agency that issued the fine, or Fines Victoria",
+          "deadline": "Apply within 14 days of finding out about the fine.",
+          "howToStart": "apply for a review on the 'person was unaware' ground (you may need a statutory declaration)",
+          "source": "fines.vic.gov.au — if you didn't know about your fine"
+        },
+        {
+          "deadlineDays": 28,
+          "deadlineVerified": true,
+          "cost": "no fee to ask. Going to court can lead to a different penalty, so free legal help is available.",
+          "howCounted": "for serious driving offences, from the date your infringement notice was issued",
+          "name": "Ask to have the matter heard in court",
+          "body": "Magistrates' Court of Victoria (Children's Court if you are under 18)",
+          "deadline": "For excessive-speed, drink-driving or drug-driving offences: within 28 days of the notice. For other fines: before the fine is registered (before a Notice of Final Demand).",
+          "howToStart": "ask to have the matter heard in court",
+          "source": "fines.vic.gov.au — go to court; Infringements Act 2006 (Vic)"
         },
         {
           "deadlineDays": null,
           "deadlineVerified": false,
           "cost": "free",
-          "howCounted": "from the internal review decision",
-          "name": "External merits review (an independent tribunal looks at it)",
-          "body": "Administrative Review Tribunal (ART)",
-          "deadline": "There is a time limit — VERIFY current timeframe + source before launch",
-          "howToStart": "apply to the ART",
-          "source": "VERIFY (art.gov.au)"
-        },
-        {
-          "deadlineDays": null,
-          "deadlineVerified": false,
-          "cost": "free",
-          "name": "Complaint",
-          "body": "Commonwealth Ombudsman",
-          "deadline": "no fixed time limit",
-          "howToStart": "make a complaint online",
-          "source": "VERIFY (ombudsman.gov.au)"
+          "name": "Get help to pay or clear the fine",
+          "body": "Fines Victoria",
+          "deadline": "available at any stage",
+          "howToStart": "ask for a payment plan, or ask about a Work and Development Permit if you are in hardship (for example illness, disability, addiction, homelessness or family violence)",
+          "source": "fines.vic.gov.au — pay by instalments; Work and Development Permit"
         }
       ],
       "rightToReasons": {
         "available": "yes",
-        "how": "you can ask Services Australia for the reasons for the decision in writing",
-        "provision": "VERIFY exact provision + source",
-        "source": "VERIFY",
-        "verified": false
+        "how": "after a review, the agency must tell you the outcome in writing",
+        "provision": "Infringements Act 2006 (Vic)",
+        "source": "fines.vic.gov.au; legislation.vic.gov.au",
+        "verified": true
       },
       "groundsOrCriteria": [
-        "the decision used wrong information, such as income or dates (VERIFY framing + source)",
-        "the law or the payment rate was applied incorrectly (VERIFY)",
-        "your actual circumstances were not taken into account (VERIFY)"
+        "you did not know about the fine (apply within 14 days of finding out)",
+        "the decision to fine you was contrary to law",
+        "it was a mistake of identity — you were not the person responsible",
+        "exceptional circumstances explain what happened, such as a medical emergency",
+        "special circumstances: at the time you had a mental illness or disability, a serious addiction, were homeless, or were affected by family violence, and this affected your behaviour"
       ],
       "evidenceChecklist": [
-        "payslips or income records for the period in question",
-        "letters and dates from Centrelink about the decision",
-        "anything that shows your actual circumstances at the time"
+        "the fine or notice, including the infringement number",
+        "for 'did not know': a statutory declaration about when and how you found out",
+        "for mistake of identity: proof you were not the driver or owner",
+        "for special circumstances: letters or reports from a doctor, caseworker or support service",
+        "any letters showing what stage your fine has reached"
       ],
       "getHelp": [
         {
-          "service": "Legal Aid",
-          "who": "your state or territory Legal Aid commission",
-          "link": "VERIFY"
+          "service": "Fines Victoria",
+          "who": "manage, review or get help with a Victorian fine — (03) 9200 8111",
+          "link": "https://online.fines.vic.gov.au"
         },
         {
-          "service": "Welfare rights / Economic Justice Australia",
-          "who": "free, specialist social-security help",
-          "link": "VERIFY"
+          "service": "Victoria Legal Aid",
+          "who": "free legal help with fines — Legal Help line 1300 792 387",
+          "link": "https://www.legalaid.vic.gov.au/fines-and-infringements"
+        },
+        {
+          "service": "Victorian Aboriginal Legal Service (VALS)",
+          "who": "free legal help for Aboriginal and Torres Strait Islander people — 1800 064 865",
+          "link": "https://www.vals.org.au"
+        },
+        {
+          "service": "National Debt Helpline",
+          "who": "free, independent financial counselling — 1800 007 007",
+          "link": "https://ndh.org.au/debt-problems/fines/"
         }
       ],
-      "plainLanguageExplainer": "Centrelink has made a decision about your payment, or says you owe money. In most cases you can ask them to look at it again, and if you still disagree you can ask an independent tribunal to review it for free. There is a time limit, so it helps to find out the date early.",
+      "plainLanguageExplainer": "If you got a fine or infringement notice in Victoria and you disagree with it, or you can't pay, you have options. You can ask for a review on set grounds, nominate the real driver, ask to go to court, or get help to pay. What you can do depends on the stage your fine has reached, so it helps to act early, before it becomes a 'Notice of Final Demand'. Free help is available.",
       "sources": [
-        "VERIFY: Social Security (Administration) Act 1999 (Cth)",
-        "VERIFY: servicesaustralia.gov.au — reviews and appeals",
-        "VERIFY: art.gov.au — applying for review"
+        "Fines Victoria — online.fines.vic.gov.au",
+        "Infringements Act 2006 (Vic) — legislation.vic.gov.au",
+        "Victoria Legal Aid — Fines and infringements — legalaid.vic.gov.au"
       ],
-      "lastVerified": null,
-      "body": "Centrelink (Services Australia) has made a decision about your payment, or says you\nhave a debt. In most cases you can ask them to look at the decision again, and if you\nstill disagree you can ask an independent tribunal to review it — and that review is\nfree. There is a time limit, so it helps to find out the date early.\n\n> All of the figures and time limits in this entry are marked **VERIFY** and must be\n> confirmed against the cited source by a human before launch. Until then the app does\n> not state a specific deadline — it explains that a time limit applies and routes the\n> person to a free service that can confirm it."
+      "lastVerified": "2026-06-16",
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nVictorian fines move through stages: an Infringement Notice, then a Penalty Reminder\nNotice, then a Notice of Final Demand, then enforcement. Some options — like going to\ncourt or nominating another driver — are only available before the fine is registered\n(before the Notice of Final Demand). The exact date to pay is the due date printed on\nyour own notice, so check the notice itself."
     },
     {
-      "id": "commonwealth-generic",
-      "title": "A Commonwealth (federal) government decision I disagree with",
-      "jurisdiction": "Commonwealth",
-      "status": "seed",
+      "id": "vic-generic",
+      "title": "A Victorian government decision I disagree with",
+      "jurisdiction": "Victoria",
+      "status": "verified",
       "decisionTypes": [
-        "government decision",
+        "decision",
+        "notice of decision",
         "decision letter",
-        "refused",
-        "declined",
-        "rejected",
-        "cancelled",
-        "notice of decision"
+        "application refused",
+        "application declined",
+        "application rejected",
+        "notice of refusal"
       ],
       "issuers": [
-        "Commonwealth department",
-        "federal government agency",
-        "Australian Government"
+        "Victorian government department",
+        "government agency",
+        "council",
+        "statutory authority",
+        "local government"
       ],
       "keywords": [
+        "VCAT",
+        "review",
+        "statement of reasons",
         "merits review",
-        "right to reasons",
-        "administrative decision",
-        "tribunal",
-        "ombudsman"
+        "Ombudsman",
+        "administrative decision"
       ],
       "reviewable": {
         "value": "sometimes",
-        "basis": "Many — but not all — Commonwealth decisions can be reviewed. Whether yours can, and how, depends on the law that the decision was made under.",
-        "verified": false
+        "basis": "Many Victorian government decisions can be reviewed at VCAT, but not all — it depends on whether the Act the decision was made under gives VCAT that power. Your decision letter should say if you can apply to VCAT.",
+        "verified": true
       },
       "pathways": [
         {
-          "deadlineDays": null,
-          "deadlineVerified": false,
-          "cost": "usually free",
-          "howCounted": "usually from the decision date, if a time limit applies",
-          "name": "Internal review (ask the agency to look again)",
-          "body": "the agency that made the decision",
-          "deadline": "There may be a time limit — VERIFY whether one applies + source",
-          "howToStart": "ask the agency in writing to review the decision",
-          "source": "VERIFY (the Act the decision was made under)"
+          "deadlineDays": 28,
+          "deadlineVerified": true,
+          "cost": "free",
+          "howCounted": "from the day the decision was made",
+          "name": "Ask for the reasons in writing (a statement of reasons)",
+          "body": "the decision-maker (the agency that made the decision)",
+          "deadline": "Ask within 28 days of the decision. The decision-maker then usually has 28 days to give you written reasons.",
+          "howToStart": "write to the decision-maker asking for a written statement of reasons under section 45 of the VCAT Act",
+          "source": "Victorian Civil and Administrative Tribunal Act 1998 (Vic) ss 45-46; vcat.vic.gov.au"
         },
         {
           "deadlineDays": null,
           "deadlineVerified": false,
-          "cost": "VERIFY (many are free or low-cost)",
-          "howCounted": "usually from the decision being reviewed",
-          "name": "External merits review (an independent tribunal looks at it)",
-          "body": "Administrative Review Tribunal (ART)",
-          "deadline": "There is usually a time limit — VERIFY current timeframe + source",
-          "howToStart": "check whether the decision is one the ART can review, then apply",
-          "source": "VERIFY (art.gov.au)"
+          "cost": "a fee usually applies, but fee waivers and concessions are available",
+          "howCounted": "usually from the decision, or from when you get the statement of reasons",
+          "name": "Apply to VCAT to review the decision (if the law allows it)",
+          "body": "VCAT (Review and Regulation list)",
+          "deadline": "Often 28 days, counted from the decision or from when you get the reasons — but the law that applies can set a different, sometimes shorter, limit. Check the time limit on your decision letter.",
+          "howToStart": "check your decision letter for a review right and the Act it names, then apply to VCAT to review the decision",
+          "source": "Victorian Civil and Administrative Tribunal Act 1998 (Vic) s 70; vcat.vic.gov.au — application for review of a decision"
         },
         {
           "deadlineDays": null,
           "deadlineVerified": false,
           "cost": "free",
-          "name": "Complaint",
-          "body": "Commonwealth Ombudsman",
-          "deadline": "no fixed time limit",
-          "howToStart": "make a complaint online if you think the agency acted unfairly",
-          "source": "VERIFY (ombudsman.gov.au)"
+          "name": "Complain to the Victorian Ombudsman",
+          "body": "Victorian Ombudsman",
+          "deadline": "No fixed deadline, though the Ombudsman may not look at complaints older than 12 months. Complain to the organisation first.",
+          "howToStart": "complain to the organisation first, then to the Victorian Ombudsman if you are still unhappy",
+          "source": "ombudsman.vic.gov.au"
+        }
+      ],
+      "rightToReasons": {
+        "available": "yes",
+        "how": "you can ask the decision-maker, in writing, for a statement of reasons within 28 days of the decision",
+        "provision": "Victorian Civil and Administrative Tribunal Act 1998 (Vic) s 45",
+        "source": "vcat.vic.gov.au; legislation.vic.gov.au",
+        "verified": true
+      },
+      "groundsOrCriteria": [
+        "if VCAT can review your decision, it usually takes a fresh look and can make its own decision in place of the original one — not just check whether the rules were followed",
+        "review is about what the correct or preferable decision is on the facts and the law"
+      ],
+      "evidenceChecklist": [
+        "the decision letter or notice, and the date you received it",
+        "any statement of reasons, or your dated request for one",
+        "the name of the Act and any section mentioned in your letter",
+        "forms and letters you sent the agency, and their replies",
+        "documents that support your side, such as records, reports or photos"
+      ],
+      "getHelp": [
+        {
+          "service": "Victoria Legal Aid",
+          "who": "free legal information and advice — Legal Help line 1300 792 387",
+          "link": "https://www.legalaid.vic.gov.au/contact-us"
+        },
+        {
+          "service": "Community legal centres",
+          "who": "free local legal help — find your nearest centre",
+          "link": "https://www.fclc.org.au"
+        },
+        {
+          "service": "Victorian Ombudsman",
+          "who": "free complaints about Victorian government bodies (cannot overturn a decision)",
+          "link": "https://www.ombudsman.vic.gov.au/complaints/"
+        },
+        {
+          "service": "VCAT",
+          "who": "self-help guides on applying to review a decision",
+          "link": "https://www.vcat.vic.gov.au/case-types/review-and-regulation/application-for-review-of-a-decision"
+        }
+      ],
+      "plainLanguageExplainer": "If a Victorian government agency or council made a decision you disagree with, your options depend on the law behind the decision. Many decisions can be reviewed by VCAT, but not all. Your decision letter should say if you can apply, and by when. Asking for the reasons in writing within 28 days is one option, and it can help protect your time to apply. If you think an agency acted unfairly, you can also complain to the Victorian Ombudsman. Free legal help can explain what applies to you.",
+      "sources": [
+        "Victorian Civil and Administrative Tribunal Act 1998 (Vic) — legislation.vic.gov.au",
+        "VCAT — Application for review of a decision — vcat.vic.gov.au",
+        "Victorian Ombudsman — ombudsman.vic.gov.au",
+        "Victoria Legal Aid — legalaid.vic.gov.au"
+      ],
+      "lastVerified": "2026-06-16",
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nThis is the general guide for a Victorian state-government decision when there isn't a\nmore specific one. The most important point is honest uncertainty: VCAT can only review\na decision if the Act it was made under gives VCAT that power, so the decision letter\nitself is the best guide to whether review is available and by when. The 28-day VCAT\nreview limit is a common default but can be shorter under a particular Act — so the safe\nstep is to check the letter and get free legal help quickly. The Victorian Ombudsman can\nlook into unfair treatment but cannot overturn or change a decision."
+    },
+    {
+      "id": "vic-public-housing",
+      "title": "I disagree with a public or community housing decision in Victoria",
+      "jurisdiction": "Victoria",
+      "status": "verified",
+      "decisionTypes": [
+        "application not approved",
+        "priority access not granted",
+        "transfer refused",
+        "rebate cancelled",
+        "rental rebate assessment",
+        "removal from the Victorian Housing Register",
+        "offer of public housing",
+        "notice to vacate",
+        "eviction"
+      ],
+      "issuers": [
+        "Department of Families, Fairness and Housing",
+        "DFFH",
+        "Homes Victoria",
+        "community housing provider",
+        "Housing Appeals Office"
+      ],
+      "keywords": [
+        "public housing",
+        "social housing",
+        "community housing",
+        "Homes Victoria",
+        "rebate",
+        "transfer",
+        "Victorian Housing Register",
+        "housing appeal"
+      ],
+      "reviewable": {
+        "value": "yes",
+        "basis": "Most social-housing decisions can be challenged, but the route depends on the type of decision: housing-application decisions go to the Housing Appeals Office, while an eviction goes to VCAT.",
+        "verified": true
+      },
+      "pathways": [
+        {
+          "deadlineDays": null,
+          "deadlineVerified": false,
+          "cost": "free",
+          "howCounted": "as soon as possible after the decision",
+          "name": "Ask for a housing appeal (for decisions about your application, priority, transfer or rebate)",
+          "body": "the Housing Appeals Office (an independent reviewer within the housing department)",
+          "deadline": "There is no strict published deadline, but lodge as soon as you can. If the first review does not fix it, it automatically goes to the Housing Appeals Office for an independent review.",
+          "howToStart": "talk to your local housing office first, then lodge a housing appeal online, by post or by phone",
+          "source": "housing.vic.gov.au — appeal a decision; Housing Act 1983 (Vic)"
+        },
+        {
+          "deadlineDays": 30,
+          "deadlineVerified": true,
+          "cost": "an application fee may apply, but fee waivers and concessions are available",
+          "howCounted": "from the day you receive the notice to vacate",
+          "name": "Challenge a notice to vacate (eviction) at VCAT",
+          "body": "VCAT (Residential Tenancies list)",
+          "deadline": "Apply within 30 days to challenge the notice early. If you miss that, you can still argue the notice is not valid at the possession hearing.",
+          "howToStart": "apply to VCAT to challenge the notice",
+          "source": "Residential Tenancies Act 1997 (Vic) s 91ZZS; vcat.vic.gov.au; tenantsvic.org.au"
+        },
+        {
+          "deadlineDays": null,
+          "deadlineVerified": false,
+          "cost": "free",
+          "name": "Community housing: complain to the provider, then the Housing Registrar",
+          "body": "your community housing provider, then the Victorian Housing Registrar",
+          "deadline": "Use the provider's complaints process first. If you are not happy with the outcome, you can ask the Housing Registrar to look at it.",
+          "howToStart": "use the provider's internal complaints process, then contact the Housing Registrar",
+          "source": "tenantsvic.org.au — community housing"
+        }
+      ],
+      "rightToReasons": {
+        "available": "yes",
+        "how": "if your application is not approved you get a letter explaining why, and a notice to vacate must state the reason",
+        "provision": "Housing Act 1983 (Vic); Residential Tenancies Act 1997 (Vic)",
+        "source": "housing.vic.gov.au; tenantsvic.org.au",
+        "verified": true
+      },
+      "groundsOrCriteria": [
+        "for housing decisions: whether the housing department applied its policies and procedures correctly",
+        "for an eviction: whether the notice to vacate is valid",
+        "for an eviction: whether it is reasonable and proportionate to make you leave — VCAT must weigh the impact on you and your household",
+        "family violence or serious hardship affecting your housing"
+      ],
+      "evidenceChecklist": [
+        "the decision letter or notice, and the date you received it",
+        "documents showing you meet the housing rules, such as income, residency, or medical, disability or family-violence evidence",
+        "for an eviction: evidence of hardship — children or dependants, health, disability, family violence, how long you have lived there, and any plan to pay arrears",
+        "any letters between you and the housing office or provider"
+      ],
+      "getHelp": [
+        {
+          "service": "Tenants Victoria — Social Housing line",
+          "who": "free advice for public, community and rooming-house renters — 1800 068 860",
+          "link": "https://tenantsvic.org.au"
+        },
+        {
+          "service": "Justice Connect — Homeless Law",
+          "who": "free legal help for people at risk of homelessness, including evictions — 1800 606 313",
+          "link": "https://justiceconnect.org.au/our-services/homeless-law/"
+        },
+        {
+          "service": "Victoria Legal Aid",
+          "who": "free legal help and duty lawyers — Legal Help line 1300 792 387",
+          "link": "https://www.legalaid.vic.gov.au/renting"
+        },
+        {
+          "service": "Housing Appeals Office",
+          "who": "free, independent reviews of housing decisions — 1800 807 702",
+          "link": "https://www.housing.vic.gov.au/appeal-decision"
+        }
+      ],
+      "plainLanguageExplainer": "If you live in or applied for social housing in Victoria and you disagree with a decision, what you can do depends on the type of decision. Decisions about your application, priority, a transfer or your rebate can be appealed for free through the Housing Appeals Office. An eviction notice is different — it goes to VCAT, and there is a 30-day time limit to challenge it early. Free help is available.",
+      "sources": [
+        "Housing Act 1983 (Vic) — legislation.vic.gov.au",
+        "Victorian housing department — Appeal a decision (Housing Appeals Office) — housing.vic.gov.au",
+        "Residential Tenancies Act 1997 (Vic); VCAT — vcat.vic.gov.au",
+        "Tenants Victoria — tenantsvic.org.au"
+      ],
+      "lastVerified": "2026-06-16",
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nSocial-housing problems split into two separate paths, and getting into the right one\nmatters. Decisions about a housing *application* — eligibility, priority, a transfer, or\na rebate — are reviewed by the **Housing Appeals Office** and have no strict deadline.\nAn *eviction* (a notice to vacate) is a tenancy matter under the Residential Tenancies\nAct, goes to **VCAT**, and has a 30-day window to challenge it early. The 30-day window\nis the time to challenge *early* — a renter can still argue the notice is invalid at the\npossession hearing."
+    },
+    {
+      "id": "vic-renting",
+      "title": "I'm renting in Victoria and got a notice or a rent increase I disagree with",
+      "jurisdiction": "Victoria",
+      "status": "verified",
+      "decisionTypes": [
+        "notice to vacate",
+        "notice of rent increase",
+        "rent increase",
+        "application for a possession order",
+        "possession order",
+        "warrant of possession",
+        "bond claim",
+        "eviction",
+        "notice for repairs"
+      ],
+      "issuers": [
+        "rental provider",
+        "landlord",
+        "real estate agent",
+        "Consumer Affairs Victoria",
+        "VCAT",
+        "Rental Dispute Resolution Victoria"
+      ],
+      "keywords": [
+        "tenant",
+        "renter",
+        "lease",
+        "rental agreement",
+        "RTBA",
+        "bond",
+        "repairs",
+        "Tenants Victoria"
+      ],
+      "reviewable": {
+        "value": "yes",
+        "basis": "Renters can challenge a notice to vacate and an excessive rent increase, and can resolve bond, repairs and compensation disputes for free.",
+        "verified": true
+      },
+      "pathways": [
+        {
+          "deadlineDays": 30,
+          "deadlineVerified": true,
+          "cost": "an application fee may apply, but fee waivers and concessions are available",
+          "howCounted": "from the day you receive the notice to vacate",
+          "name": "Challenge a notice to vacate at VCAT",
+          "body": "VCAT (Residential Tenancies list)",
+          "deadline": "Apply within 30 days to challenge the notice early. If you miss that, you can still argue the notice is not valid at the possession hearing, and you can ask for more time.",
+          "howToStart": "apply to VCAT to challenge the notice (the case type is 'challenge a notice to vacate')",
+          "source": "Residential Tenancies Act 1997 (Vic) s 91ZZS; consumer.vic.gov.au — challenging a notice to vacate; vcat.vic.gov.au"
+        },
+        {
+          "deadlineDays": 30,
+          "deadlineVerified": true,
+          "cost": "free",
+          "howCounted": "from the day the rental provider gave you the written rent-increase notice",
+          "name": "Ask Consumer Affairs Victoria to check an excessive rent increase",
+          "body": "Consumer Affairs Victoria",
+          "deadline": "Ask within 30 days for a free rent assessment.",
+          "howToStart": "ask Consumer Affairs Victoria for a free rent assessment",
+          "source": "consumer.vic.gov.au — challenging rent increases or high rent"
+        },
+        {
+          "deadlineDays": null,
+          "deadlineVerified": false,
+          "cost": "free",
+          "howCounted": "from the day you get the rent assessment report",
+          "name": "Take a rent, bond, repairs or compensation dispute to Rental Dispute Resolution Victoria",
+          "body": "Rental Dispute Resolution Victoria (RDRV), which can refer it to VCAT",
+          "deadline": "If you got a rent assessment report, apply within 30 days of getting the report. Bond, repairs and compensation disputes can also be brought here.",
+          "howToStart": "apply to RDRV (free)",
+          "source": "consumer.vic.gov.au — challenging rent increases or high rent; rdrv.vic.gov.au"
         }
       ],
       "rightToReasons": {
         "available": "sometimes",
-        "how": "for many Commonwealth decisions you can ask, in writing, for a statement of reasons",
-        "provision": "VERIFY exact provision + source",
-        "source": "VERIFY",
-        "verified": false
+        "how": "a notice to vacate must be on the correct form and give a valid reason — if it isn't, it may not be valid, and a rent increase must use the correct form",
+        "provision": "Residential Tenancies Act 1997 (Vic)",
+        "source": "consumer.vic.gov.au; tenantsvic.org.au",
+        "verified": true
       },
       "groundsOrCriteria": [
-        "whether the decision-maker applied the right law and criteria (VERIFY)",
-        "whether all the relevant facts about your situation were considered (VERIFY)"
+        "the notice is on the wrong or out-of-date form, or is missing required information",
+        "the notice period is too short for the reason given",
+        "the reason on the notice is not a lawful reason, or is not genuine (for example, a 'sale' notice when there is no real plan to sell)",
+        "the notice was given because you asked for repairs or stood up for your rights",
+        "for a rent increase: it came less than 12 months after the last one, the notice was too short, or the rent is high compared with similar nearby homes and the condition of the place"
       ],
       "evidenceChecklist": [
-        "the decision letter and any reference numbers",
-        "the date the decision was made or sent",
-        "anything that shows your actual circumstances"
+        "the notice or letter itself, so you can check the date, the form and the reason",
+        "your rental agreement (lease) and any condition report",
+        "your rent payment records",
+        "messages with the rental provider or agent, including when you got the notice",
+        "photos of the condition of the place and any repairs needed",
+        "the envelope or postmark showing when the notice arrived"
       ],
       "getHelp": [
         {
-          "service": "Legal Aid",
-          "who": "your state or territory Legal Aid commission",
-          "link": "VERIFY"
+          "service": "Tenants Victoria",
+          "who": "free advice for Victorian renters — Rental Support Line (03) 9416 2577",
+          "link": "https://tenantsvic.org.au"
         },
         {
-          "service": "Community Legal Centre",
-          "who": "free local legal help",
-          "link": "VERIFY"
+          "service": "Rental Dispute Resolution Victoria (RDRV)",
+          "who": "free help to resolve bond, rent, repairs and compensation disputes — 1300 017 378",
+          "link": "https://www.rdrv.vic.gov.au"
+        },
+        {
+          "service": "Victoria Legal Aid",
+          "who": "free legal help and duty lawyers — Legal Help line 1300 792 387",
+          "link": "https://www.legalaid.vic.gov.au/renting"
+        },
+        {
+          "service": "Consumer Affairs Victoria",
+          "who": "free renting information and rent assessments",
+          "link": "https://www.consumer.vic.gov.au/housing/renting"
         }
       ],
-      "plainLanguageExplainer": "This is a general guide for a decision made by a federal government office. Many government decisions can be reviewed if you disagree, but not all of them. The time limits and steps depend on the law behind the decision. Because the details matter, it helps to check with a free legal service. They can tell you if your decision can be reviewed, and by when.",
+      "plainLanguageExplainer": "If you rent in Victoria and you got a notice to vacate or a rent increase you think is unfair, you have options. You can ask VCAT to check whether a notice to vacate is valid. You can ask Consumer Affairs Victoria for a free check of a rent increase. Bond, repairs and rent disputes can be sorted out for free through Rental Dispute Resolution Victoria. There are time limits, so it helps to act early, and free help is available.",
       "sources": [
-        "VERIFY: Administrative Review Tribunal Act 2024 (Cth)",
-        "VERIFY: art.gov.au — what decisions can be reviewed",
-        "VERIFY: ombudsman.gov.au"
+        "Residential Tenancies Act 1997 (Vic) — legislation.vic.gov.au",
+        "Consumer Affairs Victoria — Challenging a notice to vacate; Challenging rent increases or high rent — consumer.vic.gov.au",
+        "VCAT — Residential tenancies — vcat.vic.gov.au",
+        "Rental Dispute Resolution Victoria — rdrv.vic.gov.au",
+        "Tenants Victoria — tenantsvic.org.au"
       ],
-      "lastVerified": null,
-      "body": "This is a general guide for a decision made by a Commonwealth (federal) government\nagency when there isn't a more specific guide for your exact situation. Many\ngovernment decisions can be reviewed, but not all of them, and the time limits and\nsteps depend on the law the decision was made under. Because the details matter, the\nsafest next step is to talk to a free legal service, who can confirm whether your\ndecision can be reviewed and by when.\n\n> This is the fallback entry. It deliberately stays general and routes the person to\n> human help rather than asserting a pathway or deadline that may not apply to them."
-    },
-    {
-      "id": "ndis-plan",
-      "title": "The NDIS made a decision about my plan or my eligibility",
-      "jurisdiction": "Commonwealth",
-      "status": "seed",
-      "decisionTypes": [
-        "plan decision",
-        "plan review",
-        "funding reduced",
-        "support not approved",
-        "support not funded",
-        "access decision",
-        "eligibility refused",
-        "access refused"
-      ],
-      "issuers": [
-        "National Disability Insurance Agency",
-        "NDIA",
-        "NDIS"
-      ],
-      "keywords": [
-        "reasonable and necessary",
-        "access request",
-        "plan reassessment",
-        "participant",
-        "support coordination"
-      ],
-      "reviewable": {
-        "value": "yes",
-        "basis": "NDIS decisions have an internal review, then an external review path.",
-        "verified": false
-      },
-      "pathways": [
-        {
-          "deadlineDays": null,
-          "deadlineVerified": false,
-          "cost": "free",
-          "howCounted": "from the decision date",
-          "name": "Internal review (review of a reviewable decision)",
-          "body": "NDIA",
-          "deadline": "There is a time limit — VERIFY current timeframe + source before launch",
-          "howToStart": "ask the NDIA to review the decision",
-          "source": "VERIFY (ndis.gov.au / National Disability Insurance Scheme Act)"
-        },
-        {
-          "deadlineDays": null,
-          "deadlineVerified": false,
-          "cost": "free",
-          "howCounted": "from the internal review decision",
-          "name": "External merits review (an independent tribunal looks at it)",
-          "body": "Administrative Review Tribunal (ART)",
-          "deadline": "There is a time limit — VERIFY current timeframe + source before launch",
-          "howToStart": "apply to the ART; free advocacy may be available to help you",
-          "source": "VERIFY (art.gov.au)"
-        }
-      ],
-      "rightToReasons": {
-        "available": "yes",
-        "how": "you can ask the NDIA for the reasons for the decision",
-        "provision": "VERIFY exact provision + source",
-        "source": "VERIFY",
-        "verified": false
-      },
-      "groundsOrCriteria": [
-        "whether a support meets the 'reasonable and necessary' test (VERIFY exact criteria + source)",
-        "new evidence about your needs that wasn't considered (VERIFY)"
-      ],
-      "evidenceChecklist": [
-        "reports from your treating professionals (doctors, therapists)",
-        "evidence of how a support helps you take part in daily life, work or study",
-        "quotes or assessments for the supports you need"
-      ],
-      "getHelp": [
-        {
-          "service": "NDIS Appeals advocacy",
-          "who": "free, funded advocates who help with NDIS reviews",
-          "link": "VERIFY"
-        },
-        {
-          "service": "Legal Aid / disability advocacy",
-          "who": "free legal and advocacy help",
-          "link": "VERIFY"
-        }
-      ],
-      "plainLanguageExplainer": "The NDIA has made a decision about whether you can access the NDIS, or about what is in your plan. You can ask the NDIA to review the decision, and if you still disagree you can ask an independent tribunal to review it for free. Free advocates can help you. There is a time limit, so it helps to find out the date early.",
-      "sources": [
-        "VERIFY: National Disability Insurance Scheme Act 2013 (Cth)",
-        "VERIFY: ndis.gov.au — reviews and appeals",
-        "VERIFY: art.gov.au — applying for review"
-      ],
-      "lastVerified": null,
-      "body": "The NDIA has made a decision about whether you can access the NDIS, or about what is\nin your plan. You can ask the NDIA to review the decision, and if you still disagree\nyou can ask an independent tribunal to review it for free. Free advocates can help you\nthrough the process. There is a time limit, so it helps to find out the date early.\n\n> All figures and time limits here are marked **VERIFY** and must be confirmed by a\n> human before launch. The app does not state a specific deadline until that happens."
+      "lastVerified": "2026-06-16",
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nTwo recent changes matter when reading a renter's letter: since June 2025, bond,\nrent-increase, repairs and compensation disputes start at **Rental Dispute Resolution\nVictoria** (which can refer them to VCAT), while evictions and notices to vacate still\ngo to **VCAT**. From 25 November 2025 the minimum notice period for a rent increase\nchanged from 60 to 90 days, so an older letter may lawfully use the shorter period.\n\nThe 30-day window to challenge a notice to vacate is the time to challenge it *early* —\nit is not the only chance. A renter can still argue a notice is invalid at the\npossession hearing, so missing 30 days does not end their options."
     }
   ],
   "classification": [
     {
-      "token": "debt notice",
-      "entryId": "centrelink-debt",
+      "token": "infringement notice",
+      "entryId": "vic-fines",
       "kind": "decisionType"
     },
     {
-      "token": "overpayment",
-      "entryId": "centrelink-debt",
+      "token": "penalty reminder notice",
+      "entryId": "vic-fines",
       "kind": "decisionType"
     },
     {
-      "token": "account payable",
-      "entryId": "centrelink-debt",
+      "token": "notice of final demand",
+      "entryId": "vic-fines",
       "kind": "decisionType"
     },
     {
-      "token": "payment cancelled",
-      "entryId": "centrelink-debt",
+      "token": "fine",
+      "entryId": "vic-fines",
       "kind": "decisionType"
     },
     {
-      "token": "payment reduced",
-      "entryId": "centrelink-debt",
+      "token": "enforcement warrant",
+      "entryId": "vic-fines",
       "kind": "decisionType"
     },
     {
-      "token": "payment suspended",
-      "entryId": "centrelink-debt",
+      "token": "overdue fine",
+      "entryId": "vic-fines",
       "kind": "decisionType"
     },
     {
-      "token": "claim rejected",
-      "entryId": "centrelink-debt",
+      "token": "parking fine",
+      "entryId": "vic-fines",
       "kind": "decisionType"
     },
     {
-      "token": "claim refused",
-      "entryId": "centrelink-debt",
+      "token": "speeding fine",
+      "entryId": "vic-fines",
       "kind": "decisionType"
     },
     {
-      "token": "services australia",
-      "entryId": "centrelink-debt",
+      "token": "fines victoria",
+      "entryId": "vic-fines",
       "kind": "issuer"
     },
     {
-      "token": "centrelink",
-      "entryId": "centrelink-debt",
+      "token": "victoria police",
+      "entryId": "vic-fines",
       "kind": "issuer"
     },
     {
-      "token": "robodebt",
-      "entryId": "centrelink-debt",
+      "token": "council",
+      "entryId": "vic-fines",
+      "kind": "issuer"
+    },
+    {
+      "token": "safe transport victoria",
+      "entryId": "vic-fines",
+      "kind": "issuer"
+    },
+    {
+      "token": "enforcement agency",
+      "entryId": "vic-fines",
+      "kind": "issuer"
+    },
+    {
+      "token": "infringement",
+      "entryId": "vic-fines",
       "kind": "keyword"
     },
     {
-      "token": "jobseeker",
-      "entryId": "centrelink-debt",
+      "token": "traffic",
+      "entryId": "vic-fines",
       "kind": "keyword"
     },
     {
-      "token": "youth allowance",
-      "entryId": "centrelink-debt",
+      "token": "toll",
+      "entryId": "vic-fines",
       "kind": "keyword"
     },
     {
-      "token": "age pension",
-      "entryId": "centrelink-debt",
+      "token": "public transport",
+      "entryId": "vic-fines",
       "kind": "keyword"
     },
     {
-      "token": "disability support pension",
-      "entryId": "centrelink-debt",
+      "token": "demerit points",
+      "entryId": "vic-fines",
       "kind": "keyword"
     },
     {
-      "token": "family tax benefit",
-      "entryId": "centrelink-debt",
+      "token": "penalty",
+      "entryId": "vic-fines",
       "kind": "keyword"
     },
     {
-      "token": "mutual obligation",
-      "entryId": "centrelink-debt",
+      "token": "sheriff",
+      "entryId": "vic-fines",
       "kind": "keyword"
     },
     {
-      "token": "income report",
-      "entryId": "centrelink-debt",
-      "kind": "keyword"
-    },
-    {
-      "token": "centrelink said i owe money or changed my payment",
-      "entryId": "centrelink-debt",
+      "token": "i got a fine or infringement notice in victoria",
+      "entryId": "vic-fines",
       "kind": "title"
     },
     {
-      "token": "government decision",
-      "entryId": "commonwealth-generic",
-      "kind": "decisionType"
-    },
-    {
-      "token": "decision letter",
-      "entryId": "commonwealth-generic",
-      "kind": "decisionType"
-    },
-    {
-      "token": "refused",
-      "entryId": "commonwealth-generic",
-      "kind": "decisionType"
-    },
-    {
-      "token": "declined",
-      "entryId": "commonwealth-generic",
-      "kind": "decisionType"
-    },
-    {
-      "token": "rejected",
-      "entryId": "commonwealth-generic",
-      "kind": "decisionType"
-    },
-    {
-      "token": "cancelled",
-      "entryId": "commonwealth-generic",
+      "token": "decision",
+      "entryId": "vic-generic",
       "kind": "decisionType"
     },
     {
       "token": "notice of decision",
-      "entryId": "commonwealth-generic",
+      "entryId": "vic-generic",
       "kind": "decisionType"
     },
     {
-      "token": "commonwealth department",
-      "entryId": "commonwealth-generic",
+      "token": "decision letter",
+      "entryId": "vic-generic",
+      "kind": "decisionType"
+    },
+    {
+      "token": "application refused",
+      "entryId": "vic-generic",
+      "kind": "decisionType"
+    },
+    {
+      "token": "application declined",
+      "entryId": "vic-generic",
+      "kind": "decisionType"
+    },
+    {
+      "token": "application rejected",
+      "entryId": "vic-generic",
+      "kind": "decisionType"
+    },
+    {
+      "token": "notice of refusal",
+      "entryId": "vic-generic",
+      "kind": "decisionType"
+    },
+    {
+      "token": "victorian government department",
+      "entryId": "vic-generic",
       "kind": "issuer"
     },
     {
-      "token": "federal government agency",
-      "entryId": "commonwealth-generic",
+      "token": "government agency",
+      "entryId": "vic-generic",
       "kind": "issuer"
     },
     {
-      "token": "australian government",
-      "entryId": "commonwealth-generic",
+      "token": "council",
+      "entryId": "vic-generic",
       "kind": "issuer"
+    },
+    {
+      "token": "statutory authority",
+      "entryId": "vic-generic",
+      "kind": "issuer"
+    },
+    {
+      "token": "local government",
+      "entryId": "vic-generic",
+      "kind": "issuer"
+    },
+    {
+      "token": "vcat",
+      "entryId": "vic-generic",
+      "kind": "keyword"
+    },
+    {
+      "token": "review",
+      "entryId": "vic-generic",
+      "kind": "keyword"
+    },
+    {
+      "token": "statement of reasons",
+      "entryId": "vic-generic",
+      "kind": "keyword"
     },
     {
       "token": "merits review",
-      "entryId": "commonwealth-generic",
-      "kind": "keyword"
-    },
-    {
-      "token": "right to reasons",
-      "entryId": "commonwealth-generic",
-      "kind": "keyword"
-    },
-    {
-      "token": "administrative decision",
-      "entryId": "commonwealth-generic",
-      "kind": "keyword"
-    },
-    {
-      "token": "tribunal",
-      "entryId": "commonwealth-generic",
+      "entryId": "vic-generic",
       "kind": "keyword"
     },
     {
       "token": "ombudsman",
-      "entryId": "commonwealth-generic",
+      "entryId": "vic-generic",
       "kind": "keyword"
     },
     {
-      "token": "a commonwealth (federal) government decision i disagree with",
-      "entryId": "commonwealth-generic",
+      "token": "administrative decision",
+      "entryId": "vic-generic",
+      "kind": "keyword"
+    },
+    {
+      "token": "a victorian government decision i disagree with",
+      "entryId": "vic-generic",
       "kind": "title"
     },
     {
-      "token": "plan decision",
-      "entryId": "ndis-plan",
+      "token": "application not approved",
+      "entryId": "vic-public-housing",
       "kind": "decisionType"
     },
     {
-      "token": "plan review",
-      "entryId": "ndis-plan",
+      "token": "priority access not granted",
+      "entryId": "vic-public-housing",
       "kind": "decisionType"
     },
     {
-      "token": "funding reduced",
-      "entryId": "ndis-plan",
+      "token": "transfer refused",
+      "entryId": "vic-public-housing",
       "kind": "decisionType"
     },
     {
-      "token": "support not approved",
-      "entryId": "ndis-plan",
+      "token": "rebate cancelled",
+      "entryId": "vic-public-housing",
       "kind": "decisionType"
     },
     {
-      "token": "support not funded",
-      "entryId": "ndis-plan",
+      "token": "rental rebate assessment",
+      "entryId": "vic-public-housing",
       "kind": "decisionType"
     },
     {
-      "token": "access decision",
-      "entryId": "ndis-plan",
+      "token": "removal from the victorian housing register",
+      "entryId": "vic-public-housing",
       "kind": "decisionType"
     },
     {
-      "token": "eligibility refused",
-      "entryId": "ndis-plan",
+      "token": "offer of public housing",
+      "entryId": "vic-public-housing",
       "kind": "decisionType"
     },
     {
-      "token": "access refused",
-      "entryId": "ndis-plan",
+      "token": "notice to vacate",
+      "entryId": "vic-public-housing",
       "kind": "decisionType"
     },
     {
-      "token": "national disability insurance agency",
-      "entryId": "ndis-plan",
+      "token": "eviction",
+      "entryId": "vic-public-housing",
+      "kind": "decisionType"
+    },
+    {
+      "token": "department of families, fairness and housing",
+      "entryId": "vic-public-housing",
       "kind": "issuer"
     },
     {
-      "token": "ndia",
-      "entryId": "ndis-plan",
+      "token": "dffh",
+      "entryId": "vic-public-housing",
       "kind": "issuer"
     },
     {
-      "token": "ndis",
-      "entryId": "ndis-plan",
+      "token": "homes victoria",
+      "entryId": "vic-public-housing",
       "kind": "issuer"
     },
     {
-      "token": "reasonable and necessary",
-      "entryId": "ndis-plan",
+      "token": "community housing provider",
+      "entryId": "vic-public-housing",
+      "kind": "issuer"
+    },
+    {
+      "token": "housing appeals office",
+      "entryId": "vic-public-housing",
+      "kind": "issuer"
+    },
+    {
+      "token": "public housing",
+      "entryId": "vic-public-housing",
       "kind": "keyword"
     },
     {
-      "token": "access request",
-      "entryId": "ndis-plan",
+      "token": "social housing",
+      "entryId": "vic-public-housing",
       "kind": "keyword"
     },
     {
-      "token": "plan reassessment",
-      "entryId": "ndis-plan",
+      "token": "community housing",
+      "entryId": "vic-public-housing",
       "kind": "keyword"
     },
     {
-      "token": "participant",
-      "entryId": "ndis-plan",
+      "token": "homes victoria",
+      "entryId": "vic-public-housing",
       "kind": "keyword"
     },
     {
-      "token": "support coordination",
-      "entryId": "ndis-plan",
+      "token": "rebate",
+      "entryId": "vic-public-housing",
       "kind": "keyword"
     },
     {
-      "token": "the ndis made a decision about my plan or my eligibility",
-      "entryId": "ndis-plan",
+      "token": "transfer",
+      "entryId": "vic-public-housing",
+      "kind": "keyword"
+    },
+    {
+      "token": "victorian housing register",
+      "entryId": "vic-public-housing",
+      "kind": "keyword"
+    },
+    {
+      "token": "housing appeal",
+      "entryId": "vic-public-housing",
+      "kind": "keyword"
+    },
+    {
+      "token": "i disagree with a public or community housing decision in victoria",
+      "entryId": "vic-public-housing",
+      "kind": "title"
+    },
+    {
+      "token": "notice to vacate",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "notice of rent increase",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "rent increase",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "application for a possession order",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "possession order",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "warrant of possession",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "bond claim",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "eviction",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "notice for repairs",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "rental provider",
+      "entryId": "vic-renting",
+      "kind": "issuer"
+    },
+    {
+      "token": "landlord",
+      "entryId": "vic-renting",
+      "kind": "issuer"
+    },
+    {
+      "token": "real estate agent",
+      "entryId": "vic-renting",
+      "kind": "issuer"
+    },
+    {
+      "token": "consumer affairs victoria",
+      "entryId": "vic-renting",
+      "kind": "issuer"
+    },
+    {
+      "token": "vcat",
+      "entryId": "vic-renting",
+      "kind": "issuer"
+    },
+    {
+      "token": "rental dispute resolution victoria",
+      "entryId": "vic-renting",
+      "kind": "issuer"
+    },
+    {
+      "token": "tenant",
+      "entryId": "vic-renting",
+      "kind": "keyword"
+    },
+    {
+      "token": "renter",
+      "entryId": "vic-renting",
+      "kind": "keyword"
+    },
+    {
+      "token": "lease",
+      "entryId": "vic-renting",
+      "kind": "keyword"
+    },
+    {
+      "token": "rental agreement",
+      "entryId": "vic-renting",
+      "kind": "keyword"
+    },
+    {
+      "token": "rtba",
+      "entryId": "vic-renting",
+      "kind": "keyword"
+    },
+    {
+      "token": "bond",
+      "entryId": "vic-renting",
+      "kind": "keyword"
+    },
+    {
+      "token": "repairs",
+      "entryId": "vic-renting",
+      "kind": "keyword"
+    },
+    {
+      "token": "tenants victoria",
+      "entryId": "vic-renting",
+      "kind": "keyword"
+    },
+    {
+      "token": "i'm renting in victoria and got a notice or a rent increase i disagree with",
+      "entryId": "vic-renting",
       "kind": "title"
     }
   ],
   "sources": [
-    "VERIFY: Administrative Review Tribunal Act 2024 (Cth)",
-    "VERIFY: National Disability Insurance Scheme Act 2013 (Cth)",
-    "VERIFY: Social Security (Administration) Act 1999 (Cth)",
-    "VERIFY: art.gov.au — applying for review",
-    "VERIFY: art.gov.au — what decisions can be reviewed",
-    "VERIFY: ndis.gov.au — reviews and appeals",
-    "VERIFY: ombudsman.gov.au",
-    "VERIFY: servicesaustralia.gov.au — reviews and appeals"
+    "Consumer Affairs Victoria — Challenging a notice to vacate; Challenging rent increases or high rent — consumer.vic.gov.au",
+    "Fines Victoria — online.fines.vic.gov.au",
+    "Housing Act 1983 (Vic) — legislation.vic.gov.au",
+    "Infringements Act 2006 (Vic) — legislation.vic.gov.au",
+    "Rental Dispute Resolution Victoria — rdrv.vic.gov.au",
+    "Residential Tenancies Act 1997 (Vic) — legislation.vic.gov.au",
+    "Residential Tenancies Act 1997 (Vic); VCAT — vcat.vic.gov.au",
+    "Tenants Victoria — tenantsvic.org.au",
+    "VCAT — Application for review of a decision — vcat.vic.gov.au",
+    "VCAT — Residential tenancies — vcat.vic.gov.au",
+    "Victoria Legal Aid — Fines and infringements — legalaid.vic.gov.au",
+    "Victoria Legal Aid — legalaid.vic.gov.au",
+    "Victorian Civil and Administrative Tribunal Act 1998 (Vic) — legislation.vic.gov.au",
+    "Victorian Ombudsman — ombudsman.vic.gov.au",
+    "Victorian housing department — Appeal a decision (Housing Appeals Office) — housing.vic.gov.au"
   ]
 }

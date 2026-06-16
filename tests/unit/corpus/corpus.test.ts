@@ -8,18 +8,23 @@ describe("corpus index", () => {
     expect(() => CorpusIndexSchema.parse(raw)).not.toThrow();
   });
 
-  it("classifies a Centrelink letter to the centrelink entry", () => {
-    const r = classify("Services Australia debt notice — you have an overpayment");
-    expect(r?.entryId).toBe("centrelink-debt");
+  it("classifies a renting letter to the renting entry", () => {
+    const r = classify("I got a notice to vacate from my landlord");
+    expect(r?.entryId).toBe("vic-renting");
   });
 
-  it("classifies an NDIS letter to the ndis entry", () => {
-    const r = classify("The NDIA decided your plan funding was reduced");
-    expect(r?.entryId).toBe("ndis-plan");
+  it("classifies a fine to the fines entry", () => {
+    const r = classify("I got a parking infringement notice / fine");
+    expect(r?.entryId).toBe("vic-fines");
   });
 
-  it("falls back to the generic entry for an unrecognised government letter", () => {
-    const r = classifyForDecode("This is a notice of decision from an Australian Government office");
+  it("classifies a public-housing decision to the housing entry", () => {
+    const r = classify("the housing office did not approve my public housing application");
+    expect(r?.entryId).toBe("vic-public-housing");
+  });
+
+  it("routes an unrecognised Victorian decision to the generic fallback", () => {
+    const r = classifyForDecode("I disagree with a decision from a Victorian government agency");
     expect(r?.entryId).toBe(FALLBACK_ENTRY_ID);
     expect(r?.isFallback).toBe(true);
   });
@@ -30,14 +35,20 @@ describe("corpus index", () => {
     }
   });
 
-  it("no SEED entry asserts a computable deadline (never an unsourced deadline)", () => {
+  it("never asserts a numeric deadline without a verified, real source", () => {
     for (const e of CorpusIndexSchema.parse(raw).entries) {
-      if (e.status === "seed") {
-        for (const p of e.pathways) {
-          expect(p.deadlineDays).toBeNull();
-          expect(p.deadlineVerified).toBe(false);
+      for (const p of e.pathways) {
+        if (typeof p.deadlineDays === "number") {
+          expect(p.deadlineVerified).toBe(true);
+          expect(/verify/i.test(p.source)).toBe(false);
         }
       }
+    }
+  });
+
+  it("every Victorian entry is in the Victorian jurisdiction", () => {
+    for (const e of CorpusIndexSchema.parse(raw).entries) {
+      expect(e.jurisdiction.toLowerCase()).toContain("victoria");
     }
   });
 

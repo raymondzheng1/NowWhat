@@ -21,6 +21,7 @@ export interface EntrySummary {
   title: string;
   jurisdiction: string;
   status: "seed" | "verified";
+  plainLanguageExplainer: string;
   reviewable: { value: string; basis: string };
   rightToReasons: { available: string; how: string; provision: string };
   pathways: PathwaySummary[];
@@ -37,6 +38,7 @@ export function toEntrySummary(e: PathwayEntry): EntrySummary {
     title: e.title,
     jurisdiction: e.jurisdiction,
     status: e.status,
+    plainLanguageExplainer: e.plainLanguageExplainer,
     reviewable: { value: e.reviewable.value, basis: e.reviewable.basis },
     rightToReasons: {
       available: e.rightToReasons.available,

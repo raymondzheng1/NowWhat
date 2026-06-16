@@ -21,8 +21,8 @@ export function getEntry(id: string): PathwayEntry | undefined {
   return getCorpus().entries.find((e) => e.id === id);
 }
 
-/** The generic Commonwealth fallback entry, if present. */
-export const FALLBACK_ENTRY_ID = "commonwealth-generic";
+/** The generic Victorian fallback entry, if present. */
+export const FALLBACK_ENTRY_ID = "vic-generic";
 
 export interface ClassifyResult {
   entryId: string;

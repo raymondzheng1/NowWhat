@@ -24,9 +24,10 @@ describe("deadline computation (verified-only)", () => {
     expect(r?.renderable && r.passed).toBe(true);
   });
 
-  it("returns a non-renderable, honest result for a seed entry (no verified figure)", () => {
-    const seed = getEntry("centrelink-debt")!;
-    const r = computeDeadline(seed, seed.pathways[0]!.name, "2026-06-01");
+  it("returns a non-renderable, honest result for a pathway with no verified figure", () => {
+    const fines = getEntry("vic-fines")!;
+    const reviewPathway = fines.pathways.find((p) => p.deadlineDays === null)!;
+    const r = computeDeadline(fines, reviewPathway.name, "2026-06-01");
     expect(r?.renderable).toBe(false);
   });
 

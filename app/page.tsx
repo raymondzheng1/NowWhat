@@ -21,7 +21,7 @@ export default function HomePage() {
           </h1>
           <p className="mx-auto mt-4 max-w-prose text-lg text-ink-soft">{t("heroSubtitle")}</p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link href="/decode" className="btn-primary">{t("ctaScan")}</Link>
+            <Link href="/start" className="btn-primary">{t("ctaStart")}</Link>
             <Link href="/ask" className="btn-secondary">{t("ctaAsk")}</Link>
           </div>
         </div>
@@ -88,7 +88,7 @@ export default function HomePage() {
           <h2 className="font-display text-2xl font-bold text-help-ink">{t("closingTitle")}</h2>
           <p className="mx-auto mt-3 max-w-prose text-ink-soft">{t("closingBody")}</p>
           <div className="mt-6 flex flex-col justify-center gap-3 sm:flex-row">
-            <Link href="/decode" className="btn-primary">{t("ctaScan")}</Link>
+            <Link href="/start" className="btn-primary">{t("ctaStart")}</Link>
             <Link href="/help" className="btn-secondary">{nav("help")}</Link>
           </div>
         </div>

@@ -13,13 +13,14 @@ describe("draft builder", () => {
     }
   });
 
-  it("includes a real provision but never leaks a VERIFY placeholder", () => {
+  it("includes a real provision and never leaks a VERIFY placeholder", () => {
     const withReal = buildDraft(verifiedEntry, "reasons-request");
     expect(withReal.body).toContain("s 1 Test Act 2000");
 
-    const seed = getEntry("centrelink-debt")!; // provision is VERIFY
-    const fromSeed = buildDraft(seed, "reasons-request");
-    expect(fromSeed.body.toLowerCase()).not.toContain("verify");
+    const generic = getEntry("vic-generic")!; // real provision (VCAT Act s 45)
+    const fromGeneric = buildDraft(generic, "reasons-request");
+    expect(fromGeneric.body).toContain("s 45");
+    expect(fromGeneric.body.toLowerCase()).not.toContain("verify");
   });
 
   it("review-application lists the evidence checklist", () => {

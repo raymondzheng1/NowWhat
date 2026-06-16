@@ -12,8 +12,8 @@ export function Header() {
           <span className="text-xs text-ink-faint">{c("tagline")}</span>
         </Link>
         <nav aria-label="Main" className="flex items-center gap-3 text-sm">
-          <Link href="/decode" className="link">{t("scan")}</Link>
-          <Link href="/ask" className="link">{t("ask")}</Link>
+          <Link href="/start" className="link">{t("start")}</Link>
+          <Link href="/ask" className="link hidden sm:inline">{t("ask")}</Link>
           <Link href="/faq" className="link hidden sm:inline">{t("faq")}</Link>
           <Link href="/help" className="btn-secondary py-2 text-sm">{t("help")}</Link>
         </nav>

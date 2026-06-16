@@ -1,5 +1,4 @@
-import type { PathwayEntry, Pathway } from "@/lib/schemas/corpus";
-import { deadlineIsRenderable } from "@/lib/schemas/corpus";
+import type { PathwayEntry } from "@/lib/schemas/corpus";
 import { checkNoAdvice, checkNoAiMentions } from "@/lib/safety/no-advice";
 import { fkGrade } from "@/lib/text/readability";
 import { READING_GRADE } from "@/lib/config";
@@ -32,8 +31,10 @@ export interface VerifyResult {
   failures: VerifyFailure[];
 }
 
-// State tribunals/bodies that must not appear in a Commonwealth answer (and vice versa).
+// State tribunals that must not appear in a Commonwealth answer.
 const STATE_BODIES = ["vcat", "ncat", "qcat", "sacat", "sat ", "tascat"];
+// Interstate tribunals that must not appear in a Victorian answer (VCAT is fine).
+const OTHER_STATE_BODIES = ["ncat", "qcat", "sacat", "tascat"];
 
 const norm = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
 
@@ -59,11 +60,49 @@ function allowedSourceList(entry: PathwayEntry): string[] {
   ].map(norm);
 }
 
-/** Verified, renderable day-counts the entry actually supports. */
-function verifiedDeadlineDays(entry: PathwayEntry): number[] {
-  return entry.pathways
-    .filter((p: Pathway) => deadlineIsRenderable(p))
-    .map((p) => p.deadlineDays as number);
+function normUnit(u: string): string {
+  const x = u.toLowerCase();
+  if (x.startsWith("day")) return "day";
+  if (x.startsWith("week")) return "week";
+  if (x.startsWith("month")) return "month";
+  if (x.startsWith("year")) return "year";
+  return x;
+}
+
+const TIME_FIGURE_RE =
+  /\b(\d{1,4})\s*(?:calendar|business|working)?\s*(day|days|week|weeks|month|months|year|years)\b/gi;
+
+function collectFigures(text: string, into: Set<string>): void {
+  for (const m of text.matchAll(TIME_FIGURE_RE)) {
+    into.add(`${Number(m[1])} ${normUnit(m[2]!)}`);
+  }
+}
+
+/**
+ * Every time-figure the entry GROUNDS — collected from the entry's own customer-visible
+ * text plus its verified deadlineDays. A model output may only state a time figure that
+ * appears here; anything else is an unsourced/fabricated figure.
+ */
+function groundedTimeFigures(entry: PathwayEntry): Set<string> {
+  const set = new Set<string>();
+  const parts: string[] = [
+    entry.reviewable.basis,
+    entry.rightToReasons.how,
+    entry.plainLanguageExplainer,
+    entry.body,
+    ...entry.groundsOrCriteria,
+    ...entry.evidenceChecklist,
+  ];
+  for (const p of entry.pathways) {
+    parts.push(p.deadline);
+    if (p.howCounted) parts.push(p.howCounted);
+    if (p.cost) parts.push(p.cost);
+    if (p.deadlineVerified && typeof p.deadlineDays === "number") {
+      set.add(`${p.deadlineDays} day`);
+    }
+  }
+  collectFigures(parts.join("  "), set);
+  return set;
 }
 
 export function verifyOutput(input: VerifyInput): VerifyResult {
@@ -102,24 +141,28 @@ export function verifyOutput(input: VerifyInput): VerifyResult {
     }
   }
 
-  // 4. No fabricated/unsourced deadline. Any day/month count in the prose must equal a
-  //    verified deadline the entry supports — otherwise it's an unsourced figure.
-  const verified = verifiedDeadlineDays(entry);
-  const dayRe = /\b(\d{1,4})\s*(calendar|business|working)?\s*(days?|months?|weeks?)\b/gi;
-  for (const m of text.matchAll(dayRe)) {
-    const n = Number(m[1]);
-    const unit = (m[3] ?? "").toLowerCase();
-    const days = unit.startsWith("month") ? n * 30 : unit.startsWith("week") ? n * 7 : n;
-    if (!verified.includes(days) && !verified.includes(n)) {
+  // 4. No fabricated/unsourced deadline. Every time figure in the prose must appear in
+  //    the corpus entry's own grounded figures — otherwise it's an unsourced number.
+  const grounded = groundedTimeFigures(entry);
+  for (const m of text.matchAll(TIME_FIGURE_RE)) {
+    const tok = `${Number(m[1])} ${normUnit(m[2]!)}`;
+    if (!grounded.has(tok)) {
       failures.push({
         gate: "no-fabricated-deadline",
-        detail: `states a time figure ("${m[0].trim()}") that the corpus entry does not verify`,
+        detail: `states a time figure ("${m[0].trim()}") that is not grounded in the corpus entry`,
       });
     }
   }
 
   // 5. Jurisdiction — no cross-jurisdiction bodies.
-  if (/commonwealth/i.test(entry.jurisdiction)) {
+  const jur = entry.jurisdiction.toLowerCase();
+  if (jur.includes("victoria")) {
+    for (const b of OTHER_STATE_BODIES) {
+      if (t.includes(b)) {
+        failures.push({ gate: "jurisdiction", detail: `mentions an interstate body "${b.trim()}" in a Victorian matter` });
+      }
+    }
+  } else if (jur.includes("commonwealth")) {
     for (const b of STATE_BODIES) {
       if (t.includes(b)) {
         failures.push({ gate: "jurisdiction", detail: `mentions a state body "${b.trim()}" in a Commonwealth matter` });

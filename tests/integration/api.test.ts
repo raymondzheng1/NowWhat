@@ -13,13 +13,14 @@ import { SESSION_CAP_USD } from "@/lib/config";
  * blocked, (d) not-covered + escalation, (e) the letter is never echoed back.
  */
 
-const GOOD_SOURCE = "VERIFY: servicesaustralia.gov.au — reviews and appeals";
+const GOOD_SOURCE =
+  "Residential Tenancies Act 1997 (Vic) — legislation.vic.gov.au";
 
 const askModel = (over: Record<string, unknown> = {}): ModelFn => async (call) => ({
   text: JSON.stringify({
     covered: true,
-    restated: "You asked about a Centrelink decision.",
-    answer: "You may be able to ask for a review. The review is free.",
+    restated: "You asked about a notice to vacate.",
+    answer: "You may be able to ask VCAT to check whether the notice to vacate is valid. The review is free.",
     nextStep: "A free legal service can help with your situation.",
     sources: [GOOD_SOURCE],
     ...over,
@@ -54,22 +55,22 @@ afterEach(() => {
 describe("/api/ask", () => {
   it("returns a grounded answer for a covered question (happy path)", async () => {
     __setModelForTests(askModel());
-    const res = await askPost(jsonReq("http://t/api/ask", { question: "Centrelink says I owe a debt, can I ask for a review?", locale: "en" }));
+    const res = await askPost(jsonReq("http://t/api/ask", { question: "I got a notice to vacate from my landlord, can I challenge it?", locale: "en" }));
     const body = await res.json();
     expect(body.status).toBe("answered");
-    expect(body.entry.id).toBe("centrelink-debt");
+    expect(body.entry.id).toBe("vic-renting");
   });
 
   it("(a) rejects an answer that cites a source not in the corpus → not-covered", async () => {
     __setModelForTests(askModel({ sources: ["Totally Made Up Authority 2099"] }));
-    const res = await askPost(jsonReq("http://t/api/ask", { question: "Centrelink debt, can I get a review?", locale: "en" }));
+    const res = await askPost(jsonReq("http://t/api/ask", { question: "notice to vacate, can I challenge it at VCAT?", locale: "en" }));
     const body = await res.json();
     expect(body.status).toBe("not-covered");
   });
 
   it("(b) rejects advice / prediction → not-covered", async () => {
     __setModelForTests(askModel({ answer: "You should appeal and you will win." }));
-    const res = await askPost(jsonReq("http://t/api/ask", { question: "Centrelink debt, can I get a review?", locale: "en" }));
+    const res = await askPost(jsonReq("http://t/api/ask", { question: "notice to vacate, can I challenge it?", locale: "en" }));
     const body = await res.json();
     expect(body.status).toBe("not-covered");
   });
@@ -77,7 +78,7 @@ describe("/api/ask", () => {
   it("(c) blocks when the session cost cap is reached (fail-closed posture)", async () => {
     await record({ sessionId: "capper", ip: "9.9.9.9", byoKey: false }, SESSION_CAP_USD);
     __setModelForTests(throwingModel);
-    const res = await askPost(jsonReq("http://t/api/ask", { question: "Centrelink debt review?", locale: "en" }, "wn_sid=capper"));
+    const res = await askPost(jsonReq("http://t/api/ask", { question: "notice to vacate, can I challenge it?", locale: "en" }, "wn_sid=capper"));
     const body = await res.json();
     expect(body.status).toBe("blocked");
   });
@@ -98,16 +99,16 @@ describe("/api/decode", () => {
     __setModelForTests(async (call) => ({
       text: JSON.stringify({
         covered: true,
-        whatItIs: "A debt notice from Services Australia.",
-        whatItMeans: "It says you may owe money. You can ask them to look at it again.",
-        options: ["You may be able to ask for a review."],
+        whatItIs: "A notice to vacate from your rental provider.",
+        whatItMeans: "It says your rental provider wants you to move out. You may be able to ask VCAT to check whether the notice is valid.",
+        options: ["You may be able to challenge the notice at VCAT."],
         sources: [GOOD_SOURCE],
       }),
       inputTokens: 50,
       outputTokens: 50,
       model: call.model,
     }));
-    const letter = `Services Australia debt notice overpayment. Reference ${SECRET}.`;
+    const letter = `Notice to vacate. Your rental provider is ending your lease. Reference ${SECRET}.`;
     const res = await decodePost(jsonReq("http://t/api/decode", { text: letter, locale: "en" }));
     const raw = JSON.stringify(await res.json());
     expect(raw).not.toContain(SECRET);

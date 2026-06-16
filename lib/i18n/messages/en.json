@@ -13,6 +13,7 @@
   },
   "nav": {
     "home": "Home",
+    "start": "Get started",
     "ask": "Ask a question",
     "scan": "Scan a letter",
     "faq": "Common questions",
@@ -20,7 +21,8 @@
   },
   "home": {
     "heroTitle": "Government said no? Find out what you can do.",
-    "heroSubtitle": "Free, in plain English. We explain the letter, find the time limit, and point you to free help. We never keep your letter.",
+    "heroSubtitle": "Free, in plain English, for Victorian government decisions. We explain your options, find the time limit, and point you to free help. We never keep your details.",
+    "ctaStart": "Find out what you can do",
     "ctaScan": "Scan or paste a letter",
     "ctaAsk": "Ask a question",
     "trust1Title": "Plain language",
@@ -34,11 +36,35 @@
     "howStep2": "We explain it in plain language, find the review pathway and the time limit, and list what helps.",
     "howStep3": "Get a draft you can edit, save your deadline, and connect with a free service if you want a person's help.",
     "exampleTitle": "What an answer looks like",
-    "exampleBody": "Take Centrelink as an example. We explain what a debt notice means, that most decisions can be reviewed for free, that a time limit applies, and which free service can confirm the details — and we show the rule each point comes from.",
+    "exampleBody": "Take a notice to vacate as an example. We explain what it means, that you can ask VCAT to check whether it's valid, that there's a 30-day window to challenge it early, and which free service can help — and we show the rule each point comes from.",
     "faqTeaserTitle": "Common questions",
     "faqTeaserBody": "Plain-language answers to the questions people ask most.",
     "closingTitle": "You don't have to work this out alone.",
     "closingBody": "Start with the letter or a question. It's free, and a free legal service is always one tap away."
+  },
+  "wizard": {
+    "title": "Let's work out what you can do",
+    "intro": "Answer a couple of quick questions. We'll explain your options in plain English, find the time limit, and point you to free help. We never keep your details.",
+    "step1Title": "What is your decision about?",
+    "step1Help": "Pick the closest one. If none fit, you can paste your letter instead.",
+    "pasteOption": "None of these — let me paste my letter",
+    "pasteTitle": "Paste your letter",
+    "pasteHelp": "Paste the words from your letter. We read it on the spot to work out which guide fits, then discard it.",
+    "pastePlaceholder": "Paste what the letter says here…",
+    "pasteSubmit": "Find my guide",
+    "step2Title": "When was the decision made?",
+    "step2Help": "This is usually the date printed on your letter, or the day you received it. We use it to work out any time limit. You can skip this if you're not sure.",
+    "dateLabel": "Date on the decision (optional)",
+    "contextLabel": "Anything you'd like to add? (optional)",
+    "contextPlaceholder": "A short note in your own words. Don't include anything you'd rather not write down.",
+    "next": "Next",
+    "back": "Back",
+    "seeResult": "See what I can do",
+    "aboutThis": "What this is about",
+    "fallbackNote": "We matched this to a general guide. The details of your situation matter, so it's worth checking with a free service.",
+    "notCoveredTitle": "We don't have a guide for this yet",
+    "notCoveredBody": "We couldn't match this to confirmed Victorian information, so we won't guess. A free legal service can explain your options.",
+    "startOver": "Start over"
   },
   "ask": {
     "title": "Ask a question",
@@ -93,10 +119,16 @@
   },
   "help": {
     "title": "Get free help",
-    "intro": "These services are free and independent. Talking to a person is often the best next step, especially for advice about your own situation.",
+    "intro": "These services are free and independent. Talking to a person is often a good next step, especially for advice about your own situation.",
     "forThis": "Help for this kind of decision",
     "general": "General free legal help",
-    "alwaysFree": "These services are free."
+    "government": "Free government and tribunal help",
+    "legal": "Free legal services",
+    "alwaysFree": "These services are free.",
+    "privateTitle": "If you want a private lawyer",
+    "privateIntro": "These are paid services. The Law Institute of Victoria can refer you to a lawyer, and you can search online for lawyers who handle this kind of matter.",
+    "livLabel": "Law Institute of Victoria — Find Your Lawyer Referral Service",
+    "searchLabel": "Search online for a lawyer who handles this"
   },
   "faq": {
     "title": "Common questions",

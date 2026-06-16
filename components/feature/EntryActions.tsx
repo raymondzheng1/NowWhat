@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
 import type { EntrySummary } from "@/lib/corpus/summary";
 import type { DeadlineResult } from "@/lib/deadline/compute";
 import type { Draft } from "@/lib/draft/build";
 import { SourcesPanel } from "@/components/ui/SourcesPanel";
 import { GetHelp } from "@/components/ui/GetHelp";
+import { LawyerSearch } from "@/components/ui/LawyerSearch";
+import { lawyerTermForEntry } from "@/lib/help/services";
 import { postDeadline, postDraft } from "@/components/feature/api";
 
 function downloadText(filename: string, content: string, mime = "text/plain") {
@@ -24,21 +26,35 @@ function downloadText(filename: string, content: string, mime = "text/plain") {
  * deadline calculator (verified-only), the editable draft, sources, and get-help.
  * Reused by both the Ask and Decode results (one core, harness §3.1).
  */
-export function EntryActions({ entry }: { entry: EntrySummary }) {
+export function EntryActions({
+  entry,
+  initialDecisionDate,
+  initialContext,
+}: {
+  entry: EntrySummary;
+  initialDecisionDate?: string;
+  initialContext?: string;
+}) {
   const td = useTranslations("deadline");
   const tdr = useTranslations("draft");
   const tc = useTranslations("common");
   const th = useTranslations("help");
 
-  const [decisionDate, setDecisionDate] = useState("");
+  const [decisionDate, setDecisionDate] = useState(initialDecisionDate ?? "");
   const [deadlines, setDeadlines] = useState<Record<string, { result: DeadlineResult; ics?: string }>>({});
   const [computing, setComputing] = useState(false);
 
   const [draft, setDraft] = useState<Draft | null>(null);
-  const [draftContext, setDraftContext] = useState("");
+  const [draftContext, setDraftContext] = useState(initialContext ?? "");
   const [draftBusy, setDraftBusy] = useState(false);
 
   const today = new Date().toISOString().slice(0, 10);
+
+  // If the wizard already collected the decision date, compute deadlines on mount.
+  useEffect(() => {
+    if (initialDecisionDate) void computeAll();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   async function computeAll() {
     if (!decisionDate) return;
@@ -193,6 +209,7 @@ export function EntryActions({ entry }: { entry: EntrySummary }) {
 
       <SourcesPanel sources={entry.sources} lastVerified={entry.lastVerified} />
       <GetHelp services={entry.getHelp} title={th("forThis")} />
+      <LawyerSearch term={lawyerTermForEntry(entry.id, entry.title)} />
     </div>
   );
 }

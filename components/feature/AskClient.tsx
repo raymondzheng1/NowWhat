@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { postAsk, type AskResponse } from "@/components/feature/api";
 import { EntryActions } from "@/components/feature/EntryActions";
 import { NotCovered } from "@/components/feature/NotCovered";
-import { ByoKeyField } from "@/components/feature/ByoKeyField";
 import { Disclaimer } from "@/components/ui/Disclaimer";
 
 export function AskClient() {
@@ -14,7 +13,6 @@ export function AskClient() {
   const te = useTranslations("errors");
 
   const [question, setQuestion] = useState("");
-  const [byoKey, setByoKey] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AskResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -30,7 +28,7 @@ export function AskClient() {
     setError(null);
     setResult(null);
     try {
-      const r = await postAsk(question.trim(), byoKey || undefined);
+      const r = await postAsk(question.trim());
       if (r.ok) setResult(r);
       else setError(msg(r.message));
     } catch {
@@ -54,7 +52,6 @@ export function AskClient() {
           rows={4}
           className="w-full rounded-card border border-line px-3 py-2"
         />
-        <ByoKeyField value={byoKey} onChange={setByoKey} />
         <button type="submit" className="btn-primary mt-3" disabled={loading || question.trim().length < 3}>
           {loading ? tc("loading") : t("submit")}
         </button>

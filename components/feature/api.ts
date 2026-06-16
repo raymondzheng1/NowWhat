@@ -6,12 +6,8 @@ import type { DeadlineResult } from "@/lib/deadline/compute";
 import type { Draft } from "@/lib/draft/build";
 import type { HelpService } from "@/lib/schemas/corpus";
 
-const BYO_HEADER = "x-byo-anthropic-key";
-
-function headers(byoKey?: string): HeadersInit {
-  const h: Record<string, string> = { "Content-Type": "application/json" };
-  if (byoKey) h[BYO_HEADER] = byoKey;
-  return h;
+function headers(): HeadersInit {
+  return { "Content-Type": "application/json" };
 }
 
 export type AskResponse =
@@ -31,32 +27,45 @@ export type DeadlineResponse =
 
 export type DraftResponse = { ok: true; draft: Draft } | { ok: false; message: string };
 
-export async function postAsk(question: string, byoKey?: string): Promise<AskResponse> {
+export type ClassifyResponse =
+  | { ok: true; status: "matched"; entryId: string; isFallback: boolean }
+  | { ok: true; status: "not-covered" }
+  | { ok: false; message: string };
+
+export async function postClassify(text: string): Promise<ClassifyResponse> {
+  const res = await fetch("/api/classify", {
+    method: "POST",
+    headers: headers(),
+    body: JSON.stringify({ text }),
+    cache: "no-store",
+  });
+  return res.json();
+}
+
+export async function postAsk(question: string): Promise<AskResponse> {
   const res = await fetch("/api/ask", {
     method: "POST",
-    headers: headers(byoKey),
+    headers: headers(),
     body: JSON.stringify({ question, locale: "en" }),
     cache: "no-store",
   });
   return res.json();
 }
 
-export async function postDecodeText(text: string, byoKey?: string): Promise<DecodeResponse> {
+export async function postDecodeText(text: string): Promise<DecodeResponse> {
   const res = await fetch("/api/decode", {
     method: "POST",
-    headers: headers(byoKey),
+    headers: headers(),
     body: JSON.stringify({ text, locale: "en" }),
     cache: "no-store",
   });
   return res.json();
 }
 
-export async function postDecodeFile(file: File, byoKey?: string): Promise<DecodeResponse> {
+export async function postDecodeFile(file: File): Promise<DecodeResponse> {
   const form = new FormData();
   form.append("file", file);
-  const h: Record<string, string> = {};
-  if (byoKey) h[BYO_HEADER] = byoKey;
-  const res = await fetch("/api/decode", { method: "POST", headers: h, body: form, cache: "no-store" });
+  const res = await fetch("/api/decode", { method: "POST", body: form, cache: "no-store" });
   return res.json();
 }
 

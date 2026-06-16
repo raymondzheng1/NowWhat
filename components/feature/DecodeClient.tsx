@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import { postDecodeText, postDecodeFile, type DecodeResponse } from "@/components/feature/api";
 import { EntryActions } from "@/components/feature/EntryActions";
 import { NotCovered } from "@/components/feature/NotCovered";
-import { ByoKeyField } from "@/components/feature/ByoKeyField";
 import { Disclaimer } from "@/components/ui/Disclaimer";
 
 export function DecodeClient() {
@@ -15,7 +14,6 @@ export function DecodeClient() {
 
   const [file, setFile] = useState<File | null>(null);
   const [text, setText] = useState("");
-  const [byoKey, setByoKey] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<DecodeResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -32,8 +30,8 @@ export function DecodeClient() {
     setResult(null);
     try {
       const r = text.trim().length >= 10
-        ? await postDecodeText(text.trim(), byoKey || undefined)
-        : await postDecodeFile(file as File, byoKey || undefined);
+        ? await postDecodeText(text.trim())
+        : await postDecodeFile(file as File);
       if (r.ok) setResult(r);
       else setError(msg(r.message));
     } catch {
@@ -69,7 +67,6 @@ export function DecodeClient() {
           className="w-full rounded-card border border-line px-3 py-2"
         />
 
-        <ByoKeyField value={byoKey} onChange={setByoKey} />
         <button type="submit" className="btn-primary mt-3" disabled={loading || (!file && text.trim().length < 10)}>
           {loading ? tc("loading") : t("submit")}
         </button>
