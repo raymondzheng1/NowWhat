@@ -1,0 +1,6 @@
+# Normalise line endings in the repo (LF), so Windows checkouts don't churn diffs.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
+*.webmanifest text eol=lf
