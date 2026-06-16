@@ -33,11 +33,13 @@ function need(cond, msg) {
 const hasManifest = existsSync(resolve(ROOT, "app/manifest.ts")) || existsSync(resolve(ROOT, "public/manifest.webmanifest"));
 need(hasManifest, "no PWA manifest (app/manifest.ts) — installable app required");
 need(
-  existsSync(resolve(ROOT, "public/icon-192.png")) ||
+  existsSync(resolve(ROOT, "app/icon.svg")) ||
     existsSync(resolve(ROOT, "app/icon.png")) ||
-    existsSync(resolve(ROOT, "public/icons")),
-  "no app icon set (public/icon-192.png or app/icon.png)",
+    existsSync(resolve(ROOT, "public/icon-192.png")),
+  "no app icon (app/icon.svg or app/icon.png)",
 );
+// The 1200×630 social share image (handoff asset).
+need(existsSync(resolve(ROOT, "app/opengraph-image.tsx")), "no OG share image (app/opengraph-image.tsx)");
 
 // --- Analytics: Vercel <Analytics/> mounted + GA loader present (harness §8.2/§8.5) ---
 const layout = read("app/layout.tsx");
