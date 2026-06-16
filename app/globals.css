@@ -2,9 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Direction C "Chambers" — CSS custom properties mirror design-tokens/tokens.css.
+   --font-display is provided by next/font (Libre Baskerville) in the root layout. */
 :root {
-  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display: Georgia, "Times New Roman", serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
+    sans-serif;
+
+  --wn-navy: #1b3a5b;
+  --wn-brass: #b08d57;
+  --wn-focus-ring: 0 0 0 3px rgba(27, 58, 91, 0.35); /* visible keyboard focus */
 }
 
 @layer base {
@@ -15,15 +21,17 @@
     @apply bg-paper-warm text-ink antialiased;
     font-family: var(--font-sans);
   }
+  /* Serif (Libre Baskerville) for all headings + the wordmark — the "Chambers" voice. */
   h1,
   h2,
   h3 {
     font-family: var(--font-display);
     @apply text-ink;
+    font-weight: 700;
   }
-  /* Visible, high-contrast focus for keyboard users (WCAG AA). */
+  /* Visible, high-contrast focus for keyboard users (WCAG AA, handoff non-negotiable). */
   :focus-visible {
-    outline: 3px solid theme("colors.brand.DEFAULT");
+    outline: 3px solid var(--wn-navy);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -31,37 +39,82 @@
 
 @layer components {
   .container-prose {
-    @apply mx-auto w-full max-w-prose px-4;
+    @apply mx-auto w-full max-w-prose px-[18px] sm:px-5;
   }
   .container-wide {
-    @apply mx-auto w-full max-w-5xl px-4;
+    @apply mx-auto w-full max-w-6xl px-[18px] sm:px-10;
   }
+
+  /* Card — the single card pattern (paper, hairline, formal radius, soft shadow). */
   .card {
-    @apply rounded-card border border-line bg-paper p-5 shadow-card;
+    @apply rounded-card border border-line-card bg-paper p-5 shadow-card sm:p-6;
   }
+
+  /* Eyebrow / label tag — uppercase, tracked, brass-toned (the letterhead motif). */
+  .eyebrow {
+    @apply text-[11.5px] font-bold uppercase tracking-[0.14em] text-brass-text;
+  }
+
+  /* Buttons — ≥48px floor; primary CTAs use the .btn-lg size (54px). */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-card px-5 py-3 text-base font-semibold transition-colors;
-    min-height: 48px; /* generous touch target (mobile-first, a11y) */
+    @apply inline-flex items-center justify-center gap-2 rounded-button px-6 text-ui font-semibold transition-colors;
+    min-height: 48px;
+  }
+  .btn-lg {
+    min-height: 54px;
+    @apply text-[16.5px];
   }
   .btn-primary {
-    @apply btn bg-brand text-white hover:bg-brand-dark;
+    @apply btn bg-navy text-white hover:bg-navy-dark;
   }
   .btn-secondary {
-    @apply btn border border-brand bg-paper text-brand hover:bg-brand-soft;
+    @apply btn border-[1.5px] border-[#c3cad3] bg-paper text-navy hover:bg-paper-sunk;
   }
+  .btn-deadline {
+    @apply btn bg-gold text-white hover:bg-gold-strong;
+  }
+  .btn-help {
+    @apply btn bg-help text-white hover:bg-help-ink;
+  }
+  .btn-brass {
+    @apply btn bg-brass font-bold text-[#1c1605] hover:brightness-95;
+  }
+
   .link {
-    @apply text-brand underline underline-offset-2 hover:text-brand-dark;
+    @apply text-navy underline underline-offset-2 hover:text-navy-dark;
   }
+
+  /* Form control */
+  .input {
+    @apply w-full rounded-input border border-line bg-paper px-3.5 py-2.5 text-ink placeholder:text-ink-faint;
+    min-height: 48px;
+  }
+
   /* Skip link for screen-reader / keyboard users. */
   .skip-link {
     @apply sr-only;
   }
   .skip-link:focus {
-    @apply not-sr-only fixed left-4 top-4 z-50 rounded bg-brand px-4 py-2 text-white;
+    @apply not-sr-only fixed left-4 top-4 z-50 rounded bg-navy px-4 py-2 text-white;
   }
 }
 
-/* Respect reduced-motion (harness §14.7) — neutralise non-essential animation. */
+/* Wizard step transition (subtle; neutralised under reduced-motion below). */
+@keyframes wn-fade {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.wn-step {
+  animation: wn-fade 0.18s ease both;
+}
+
+/* Respect reduced-motion (handoff motion notes) — neutralise non-essential animation. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

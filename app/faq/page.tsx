@@ -27,8 +27,8 @@ export default function FaqIndexPage() {
               .filter((f) => (f.category ?? "General") === cat)
               .map((f) => (
                 <li key={f.slug}>
-                  <Link href={`/faq/${f.slug}`} className="card block hover:border-brand">
-                    <span className="font-semibold text-brand-ink">{f.question}</span>
+                  <Link href={`/faq/${f.slug}`} className="card block hover:border-navy">
+                    <span className="font-semibold text-navy-ink">{f.question}</span>
                     <p className="mt-1 text-sm text-ink-soft">{f.description}</p>
                   </Link>
                 </li>
@@ -37,8 +37,8 @@ export default function FaqIndexPage() {
         </section>
       ))}
 
-      <div className="card bg-brand-soft">
-        <h2 className="font-display text-lg font-bold text-brand-ink">{t("ctaTitle")}</h2>
+      <div className="card bg-navy-soft">
+        <h2 className="font-serif text-lg font-bold text-navy-ink">{t("ctaTitle")}</h2>
         <p className="mt-1 text-ink-soft">{t("ctaBody")}</p>
         <Link href="/decode" className="btn-primary mt-3">{t("ctaButton")}</Link>
       </div>

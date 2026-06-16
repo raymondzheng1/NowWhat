@@ -88,8 +88,8 @@ export default async function FaqPage({ params }: { params: Promise<{ slug: stri
       </div>
 
       {/* Conversion CTA into the tool (tracked) — harness §14.2 */}
-      <div className="card mt-6 bg-brand-soft">
-        <h2 className="font-display text-lg font-bold text-brand-ink">{t("ctaTitle")}</h2>
+      <div className="card mt-6 bg-navy-soft">
+        <h2 className="font-serif text-lg font-bold text-navy-ink">{t("ctaTitle")}</h2>
         <p className="mt-1 text-ink-soft">{t("ctaBody")}</p>
         <Link href={`/decode?source=faq&topic=${slug}`} className="btn-primary mt-3">
           {t("ctaButton")}

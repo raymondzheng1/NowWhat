@@ -1,8 +1,19 @@
 import type { Metadata, Viewport } from "next";
+import { Libre_Baskerville } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
+
+// Wordmark + all headings (handoff "Chambers"). Self-hosted at build by next/font —
+// no runtime Google request, so the CSP needs no font-origin allowance.
+const baskerville = Libre_Baskerville({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-display",
+  display: "swap",
+});
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { JsonLd } from "@/components/site/JsonLd";
@@ -34,7 +45,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1f6f78",
+  themeColor: "#1b3a5b",
   width: "device-width",
   initialScale: 1,
 };
@@ -57,7 +68,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   };
 
   return (
-    <html lang={locale}>
+    <html lang={locale} className={baskerville.variable}>
       <body className="flex min-h-screen flex-col">
         <JsonLd data={websiteLd} />
         <NextIntlClientProvider locale={locale} messages={messages}>

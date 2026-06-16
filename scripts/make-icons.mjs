@@ -1,6 +1,6 @@
-// Generates valid placeholder PWA icons (solid brand colour with a lighter inner
-// square) so the app is installable. Replace with a designed icon before launch.
-// Hand-rolled PNG encoder — no image dependency.
+// Generates the PWA / favicon crest: a navy rounded field with a brass inset frame
+// (the "Chambers" monogram crest, minus the WN lettering). Replace with the final
+// designed icon before launch. Hand-rolled PNG encoder — no image dependency.
 
 import { writeFileSync, mkdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -11,8 +11,8 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const PUBLIC = resolve(ROOT, "public");
 mkdirSync(PUBLIC, { recursive: true });
 
-const BRAND = [31, 111, 120]; // #1f6f78
-const INNER = [227, 240, 240]; // #e3f0f0
+const NAVY = [27, 58, 91]; // #1b3a5b
+const BRASS = [176, 141, 87]; // #b08d57
 
 const CRC_TABLE = (() => {
   const t = new Uint32Array(256);
@@ -40,12 +40,16 @@ function chunk(type, data) {
 
 function makePng(size) {
   const raw = Buffer.alloc(size * (size * 3 + 1));
-  const pad = Math.floor(size * 0.18);
+  const pad = Math.floor(size * 0.14);
+  const thk = Math.max(2, Math.round(size * 0.03));
   for (let y = 0; y < size; y++) {
     raw[y * (size * 3 + 1)] = 0; // filter byte
     for (let x = 0; x < size; x++) {
-      const inner = x >= pad && x < size - pad && y >= pad && y < size - pad;
-      const [r, g, b] = inner ? INNER : BRAND;
+      const insideFrame = x >= pad && x < size - pad && y >= pad && y < size - pad;
+      const onRing =
+        insideFrame &&
+        (x < pad + thk || x >= size - pad - thk || y < pad + thk || y >= size - pad - thk);
+      const [r, g, b] = onRing ? BRASS : NAVY;
       const off = y * (size * 3 + 1) + 1 + x * 3;
       raw[off] = r;
       raw[off + 1] = g;

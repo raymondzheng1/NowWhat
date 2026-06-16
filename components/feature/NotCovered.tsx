@@ -1,11 +1,10 @@
-"use client";
-
 import { GetHelp } from "@/components/ui/GetHelp";
+import { Icon } from "@/components/ui/icons";
 import type { HelpService } from "@/lib/schemas/corpus";
 
 /**
- * The honest "not covered" state (CLAUDE.md invariant #4). We never guess — we say so
- * and route to a real free service. Always renders help.
+ * The honest "not covered" state (CLAUDE.md invariant #4; handoff: feels safe, not failed).
+ * We never guess — we say so and route to a real free service. Always renders help.
  */
 export function NotCovered({
   title,
@@ -20,18 +19,18 @@ export function NotCovered({
     services.length > 0
       ? services
       : [
-          {
-            service: "Community Legal Centres Australia",
-            who: "find your nearest free community legal centre",
-            link: "VERIFY",
-          },
-          { service: "Legal Aid", who: "your state or territory Legal Aid", link: "VERIFY" },
+          { service: "Victoria Legal Aid", who: "free legal information and advice — 1300 792 387", link: "https://www.legalaid.vic.gov.au" },
+          { service: "Community legal centres", who: "free local legal help — find your nearest centre", link: "https://www.fclc.org.au" },
         ];
   return (
     <div className="space-y-4">
-      <div className="card border-clock-soft bg-clock-soft">
-        <h2 className="font-display text-xl font-bold text-clock-ink">{title}</h2>
-        <p className="mt-2 text-ink-soft">{body}</p>
+      <div className="rounded-panel border border-gold-line bg-gold-soft p-5 sm:p-6">
+        <div className="flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-[0.12em] text-brass-text">
+          <Icon.Info className="h-[17px] w-[17px] text-gold" strokeWidth={2} />
+          We&rsquo;re not sure
+        </div>
+        <h2 className="mt-2.5 font-serif text-[22px] font-bold leading-snug text-gold-strong">{title}</h2>
+        <p className="mt-2 leading-relaxed text-gold-text">{body}</p>
       </div>
       <GetHelp services={fallback} />
     </div>

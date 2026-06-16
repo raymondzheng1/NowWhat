@@ -69,6 +69,29 @@ export const VIC_HELP_DIRECTORY: DirectoryService[] = [
   },
 ];
 
+/**
+ * Classify a matter's help service into Tier 1 (free government / tribunal) or Tier 2
+ * (free legal service) for the result's tiered "get help" display. Keyword-based on the
+ * organisation name; defaults to legal (the safer "talk to a free lawyer" tier).
+ */
+const GOVERNMENT_HINTS = [
+  "vcat",
+  "tribunal",
+  "ombudsman",
+  "fines victoria",
+  "housing appeals",
+  "rental dispute",
+  "rdrv",
+  "consumer affairs",
+  "services australia",
+  "magistrates",
+];
+
+export function classifyHelpTier(service: HelpService): "government" | "legal" {
+  const hay = `${service.service} ${service.who}`.toLowerCase();
+  return GOVERNMENT_HINTS.some((h) => hay.includes(h)) ? "government" : "legal";
+}
+
 export function directoryByTier(tier: DirectoryService["tier"]): HelpService[] {
   return VIC_HELP_DIRECTORY.filter((s) => s.tier === tier).map(({ service, who, link }) => ({
     service,

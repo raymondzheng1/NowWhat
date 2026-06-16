@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
 import { listEntries } from "@/lib/corpus/index";
 import { toEntrySummary } from "@/lib/corpus/summary";
 import { WizardClient } from "@/components/feature/WizardClient";
@@ -14,8 +13,7 @@ export const metadata: Metadata = {
 // Show the most common, specific areas first; the generic guide last.
 const ORDER = ["vic-renting", "vic-fines", "vic-public-housing", "vic-generic"];
 
-export default async function StartPage() {
-  const t = await getTranslations("wizard");
+export default function StartPage() {
   const entries = listEntries()
     .map(toEntrySummary)
     .sort((a, b) => {
@@ -24,11 +22,7 @@ export default async function StartPage() {
       return (ia === -1 ? 99 : ia) - (ib === -1 ? 99 : ib);
     });
 
-  return (
-    <div className="container-prose py-10">
-      <h1 className="font-display text-3xl font-bold text-ink">{t("title")}</h1>
-      <p className="mt-2 mb-6 text-ink-soft">{t("intro")}</p>
-      <WizardClient entries={entries} />
-    </div>
-  );
+  // The wizard renders its own focused shell (the marketing header/footer are hidden on
+  // /start via the pathname gate in Header/Footer).
+  return <WizardClient entries={entries} />;
 }

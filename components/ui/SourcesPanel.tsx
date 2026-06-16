@@ -1,8 +1,9 @@
 import { useTranslations } from "next-intl";
+import { Icon } from "@/components/ui/icons";
 
 /**
- * The trust surface (PRD §9): shows exactly where each statement is grounded. Sources
- * come straight from the corpus entry — the user can see what every answer rests on.
+ * "Where this comes from" — the trust surface (handoff: load-bearing, always visible).
+ * Each source sits on a brass left-border (the letterhead motif); links go to the source.
  */
 export function SourcesPanel({
   sources,
@@ -14,17 +15,34 @@ export function SourcesPanel({
   const t = useTranslations("common");
   if (sources.length === 0) return null;
   return (
-    <section aria-label={t("sources")} className="rounded-card border border-line bg-paper-sunk p-4">
-      <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-ink-faint">
+    <section aria-label={t("sources")} className="card">
+      <h3 className="flex items-center gap-2 font-serif text-[17px] font-bold text-ink">
+        <Icon.Shield className="h-[18px] w-[18px] text-navy" />
         {t("sources")}
       </h3>
-      <ul className="space-y-1 text-sm text-ink-soft">
-        {sources.map((s, i) => (
-          <li key={i} className="break-words">• {s}</li>
-        ))}
+      <ul className="mt-3 space-y-2.5">
+        {sources.map((s, i) => {
+          const isUrl = /^https?:\/\//.test(s);
+          return (
+            <li key={i} className="border-l-2 border-brass pl-3 text-[13.5px] leading-snug">
+              {isUrl ? (
+                <a
+                  href={s}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-semibold text-navy underline-offset-2 hover:underline"
+                >
+                  {s}
+                </a>
+              ) : (
+                <span className="font-semibold text-ink">{s}</span>
+              )}
+            </li>
+          );
+        })}
       </ul>
       {lastVerified ? (
-        <p className="mt-2 text-xs text-ink-faint">
+        <p className="mt-3 text-meta text-ink-faint">
           {t("lastVerified")}: {lastVerified}
         </p>
       ) : null}

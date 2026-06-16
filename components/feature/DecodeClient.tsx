@@ -3,9 +3,11 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { postDecodeText, postDecodeFile, type DecodeResponse } from "@/components/feature/api";
-import { EntryActions } from "@/components/feature/EntryActions";
+import { ResultView } from "@/components/feature/ResultView";
 import { NotCovered } from "@/components/feature/NotCovered";
-import { Disclaimer } from "@/components/ui/Disclaimer";
+import { ToolTopBar } from "@/components/site/ToolTopBar";
+import { PrivacyNote } from "@/components/ui/PrivacyNote";
+import { CATEGORY } from "@/components/feature/WizardClient";
 
 export function DecodeClient() {
   const t = useTranslations("decode");
@@ -18,9 +20,7 @@ export function DecodeClient() {
   const [result, setResult] = useState<DecodeResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
 
-  function msg(m: string): string {
-    return m.startsWith("errors.") ? te(m.slice(7)) : m;
-  }
+  const msg = (m: string) => (m.startsWith("errors.") ? te(m.slice(7)) : m);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -29,9 +29,10 @@ export function DecodeClient() {
     setError(null);
     setResult(null);
     try {
-      const r = text.trim().length >= 10
-        ? await postDecodeText(text.trim())
-        : await postDecodeFile(file as File);
+      const r =
+        text.trim().length >= 10
+          ? await postDecodeText(text.trim())
+          : await postDecodeFile(file as File);
       if (r.ok) setResult(r);
       else setError(msg(r.message));
     } catch {
@@ -41,76 +42,71 @@ export function DecodeClient() {
     }
   }
 
+  if (result?.ok && result.status === "answered") {
+    return (
+      <ResultView
+        entry={result.entry}
+        category={CATEGORY[result.entry.id] ?? result.entry.title}
+        answer={result.decode.whatItIs}
+        about={result.decode.whatItMeans}
+        options={result.decode.options}
+        isFallback={result.isFallback}
+      />
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      <form onSubmit={submit} className="card">
-        <label htmlFor="file" className="mb-1 block font-medium text-ink">
-          {t("uploadLabel")}
-        </label>
-        <input
-          id="file"
-          type="file"
-          accept="image/*,application/pdf"
-          onChange={(e) => setFile(e.target.files?.[0] ?? null)}
-          className="block w-full text-sm"
-        />
+    <>
+      <ToolTopBar />
+      <div className="min-h-[60vh] bg-paper-warm">
+        <div className="container-prose py-10">
+          <h1 className="font-serif text-h1 font-bold text-navy-ink">{t("title")}</h1>
+          <p className="mt-2 text-ink-soft">{t("intro")}</p>
 
-        <label htmlFor="text" className="mb-1 mt-4 block font-medium text-ink">
-          {t("pasteLabel")}
-        </label>
-        <textarea
-          id="text"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder={t("pastePlaceholder")}
-          rows={6}
-          className="w-full rounded-card border border-line px-3 py-2"
-        />
+          <form onSubmit={submit} className="card mt-6">
+            <label htmlFor="file" className="mb-1.5 block font-semibold text-ink">
+              {t("uploadLabel")}
+            </label>
+            <input id="file" type="file" accept="image/*,application/pdf" onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="block w-full text-sm" />
 
-        <button type="submit" className="btn-primary mt-3" disabled={loading || (!file && text.trim().length < 10)}>
-          {loading ? tc("loading") : t("submit")}
-        </button>
-        <p className="mt-3 text-xs text-ink-faint">{t("intro")}</p>
-      </form>
+            <label htmlFor="text" className="mb-1.5 mt-5 block font-semibold text-ink">
+              {t("pasteLabel")}
+            </label>
+            <textarea
+              id="text"
+              value={text}
+              onChange={(e) => setText(e.target.value)}
+              placeholder={t("pastePlaceholder")}
+              rows={6}
+              className="input leading-relaxed"
+            />
 
-      {error && (
-        <div role="alert" className="card border-danger/30 bg-clock-soft text-clock-ink">{error}</div>
-      )}
+            <button type="submit" className="btn-primary btn-lg mt-4 w-full sm:w-auto" disabled={loading || (!file && text.trim().length < 10)}>
+              {loading ? tc("loading") : t("submit")}
+            </button>
+            <PrivacyNote className="mt-4">{t("intro")}</PrivacyNote>
+          </form>
 
-      {result?.ok && result.status === "ocr-unavailable" && (
-        <div className="card">
-          <h2 className="font-display text-lg font-bold text-ink">{t("ocrUnavailableTitle")}</h2>
-          <p className="mt-2 text-ink-soft">{t("ocrUnavailableBody")}</p>
+          {error && (
+            <div role="alert" className="card mt-4 border-l-[3px] border-gold bg-gold-soft text-gold-strong">
+              {error}
+            </div>
+          )}
+
+          {result?.ok && result.status === "ocr-unavailable" && (
+            <div className="card mt-4">
+              <h2 className="font-serif text-h3 font-bold text-ink">{t("ocrUnavailableTitle")}</h2>
+              <p className="mt-2 text-ink-soft">{t("ocrUnavailableBody")}</p>
+            </div>
+          )}
+
+          {result?.ok && result.status === "not-covered" && (
+            <div className="mt-6">
+              <NotCovered title={t("notCoveredTitle")} body={t("notCoveredBody")} services={result.getHelp} />
+            </div>
+          )}
         </div>
-      )}
-
-      {result?.ok && result.status === "answered" && (
-        <div className="space-y-6">
-          <div className="card">
-            <h2 className="font-display text-xl font-bold text-ink">{t("whatItIs")}</h2>
-            <p className="mt-1 text-ink-soft">{result.decode.whatItIs}</p>
-            <h3 className="mt-4 font-display text-lg font-semibold text-ink">{t("whatItMeans")}</h3>
-            <p className="mt-1 whitespace-pre-line text-ink-soft">{result.decode.whatItMeans}</p>
-            {result.decode.options.length > 0 && (
-              <>
-                <h3 className="mt-4 font-display text-lg font-semibold text-ink">{t("options")}</h3>
-                <ul className="mt-1 list-disc space-y-1 pl-5 text-ink-soft">
-                  {result.decode.options.map((o, i) => <li key={i}>{o}</li>)}
-                </ul>
-              </>
-            )}
-            {result.isFallback && (
-              <p className="mt-3 rounded-card bg-paper-sunk p-3 text-sm text-ink-soft">{t("fallbackNote")}</p>
-            )}
-            <Disclaimer className="mt-4" />
-          </div>
-          <EntryActions entry={result.entry} />
-        </div>
-      )}
-
-      {result?.ok && result.status === "not-covered" && (
-        <NotCovered title={t("notCoveredTitle")} body={t("notCoveredBody")} services={result.getHelp} />
-      )}
-    </div>
+      </div>
+    </>
   );
 }
