@@ -60,6 +60,27 @@ scripts/               build-corpus + the verify-gate linters
 tests/                  unit · integration (the safety contract) · drift defence
 ```
 
+## FAQ content pipeline (generate → review → publish)
+
+Grounded FAQ articles are search front-doors into the tool. The pipeline follows FairGo's
+gold-standard process, adapted for Tier B (no DB, no admin login): **a human always
+reviews before publish — nothing auto-publishes.**
+
+1. **Queue** a topic in `content/faq/queue.json` (`slug`, `question`, `entryId` it's
+   grounded in, `category`, `status: "pending"`).
+2. **Draft** locally: `ANTHROPIC_API_KEY=… npm run faq:draft`. It generates the next
+   pending topic grounded **only** in its corpus entry, runs pre-gates (no-advice,
+   no-fabricated-deadline, structure, /start CTA, dedupe), and writes
+   `content/faq/_drafts/<slug>.md` (or `_drafts/REJECTED/<slug>.md` with reasons).
+   The article's **sources come from the corpus entry, not the model** (guaranteed provenance).
+3. **Review** the draft: read it, edit as needed, set `updated:`, and **move** it to
+   `content/faq/<slug>.md`. Drafts in `_drafts/` are never served.
+4. **Gate + publish**: `npm run verify` (the authoritative gate — runs no-advice,
+   reading-level, links, SEO over the now-published file), then commit + push. Mark the
+   queue topic `"published"`.
+
+The gate logic is also a tested TS spec in `lib/faq/validate.ts` (see `tests/unit/faq/`).
+
 ## The four invariants (must never regress)
 
 1. Every model output passes `lib/verification` — grounded in the corpus, sourced, **and

@@ -1,0 +1,45 @@
+{
+  "version": 1,
+  "topics": [
+    {
+      "slug": "can-i-challenge-a-rent-increase-in-victoria",
+      "question": "Can I challenge a rent increase in Victoria?",
+      "entryId": "vic-renting",
+      "category": "Renting",
+      "related": ["challenge-a-notice-to-vacate-in-victoria"],
+      "status": "published"
+    },
+    {
+      "slug": "how-do-i-get-more-time-to-pay-a-fine-in-victoria",
+      "question": "How do I get more time to pay a fine in Victoria?",
+      "entryId": "vic-fines",
+      "category": "Fines",
+      "related": ["dispute-a-fine-in-victoria"],
+      "status": "published"
+    },
+    {
+      "slug": "what-is-a-statement-of-reasons-and-how-do-i-ask-for-one",
+      "question": "What is a statement of reasons, and how do I ask for one?",
+      "entryId": "vic-generic",
+      "category": "Government decisions",
+      "related": ["can-i-ask-for-a-government-decision-to-be-reviewed"],
+      "status": "pending"
+    },
+    {
+      "slug": "what-happens-at-a-vcat-hearing",
+      "question": "What happens at a VCAT hearing?",
+      "entryId": "vic-renting",
+      "category": "Renting",
+      "related": ["challenge-a-notice-to-vacate-in-victoria"],
+      "status": "pending"
+    },
+    {
+      "slug": "i-did-not-know-about-my-fine-what-can-i-do",
+      "question": "I didn't know about my fine until now — what can I do?",
+      "entryId": "vic-fines",
+      "category": "Fines",
+      "related": ["dispute-a-fine-in-victoria"],
+      "status": "pending"
+    }
+  ]
+}

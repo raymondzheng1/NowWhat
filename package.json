@@ -11,6 +11,7 @@
     "test": "vitest run",
     "coverage": "vitest run --coverage",
     "build:corpus": "node scripts/build-corpus.mjs",
+    "faq:draft": "node scripts/faq-draft.mjs",
     "corpus:check": "node scripts/corpus-check.mjs",
     "no-advice:check": "node scripts/no-advice-check.mjs",
     "no-ai-mentions:check": "node scripts/no-ai-mentions-check.mjs",
