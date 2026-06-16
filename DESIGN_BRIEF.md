@@ -120,6 +120,14 @@ overwhelmed. In order, it currently shows:
 Progressive disclosure is welcome **as long as the deadline, sources and get-help stay
 visible/obvious**.
 
+**Two content flavours, one page.** The top of the result is either a short *written*
+answer (Ask: the question restated → a plain answer → a neutral next step; Decode: "what
+this is" / "what it means" / your options) **or**, from the wizard, the pre-written guide.
+Both sit above the *same* pathway+deadline, draft, sources and help blocks — design them to
+feel like **one consistent page**, not two different ones. The written-answer paths take a
+few seconds to produce, so design a **calm loading state** (e.g. "Finding the rules…") —
+neutral and reassuring, never "AI is thinking" or any tech framing.
+
 ### 6.3 Tiered "get help"
 Three visually distinct tiers, in this order: **(1) free government / tribunal** (VCAT, the
 Victorian Ombudsman, Fines Victoria, Housing Appeals Office) → **(2) free legal services**
