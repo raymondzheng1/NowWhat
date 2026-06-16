@@ -31,6 +31,15 @@ export function __setModelForTests(fn: ModelFn | null): void {
   injected = fn;
 }
 
+/**
+ * Whether a model is available at all (a real key, or an injected test fake). When false,
+ * the model-backed routes degrade gracefully to "here's who can help" rather than failing
+ * closed on the cost guard — there is no spend to meter if we never call the model.
+ */
+export function isModelConfigured(): boolean {
+  return injected !== null || Boolean(process.env.ANTHROPIC_API_KEY);
+}
+
 let defaultClient: Anthropic | null = null;
 function client(byoKeyValue?: string): Anthropic {
   if (byoKeyValue) return new Anthropic({ apiKey: byoKeyValue });

@@ -83,6 +83,16 @@ describe("/api/ask", () => {
     expect(body.status).toBe("blocked");
   });
 
+  it("degrades to help (not a blocked error) when no model is configured", async () => {
+    // No model injected and no ANTHROPIC_API_KEY → isModelConfigured() is false.
+    const res = await askPost(
+      jsonReq("http://t/api/ask", { question: "I got a notice to vacate, can I challenge it?", locale: "en" }),
+    );
+    const body = await res.json();
+    expect(body.status).toBe("not-covered");
+    expect(body.getHelp.length).toBeGreaterThan(0);
+  });
+
   it("(d) routes to not-covered + help when nothing matches", async () => {
     __setModelForTests(throwingModel); // must not be called
     const res = await askPost(jsonReq("http://t/api/ask", { question: "zxqw qwzx flarn blibble", locale: "en" }));

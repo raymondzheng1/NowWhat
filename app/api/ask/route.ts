@@ -5,6 +5,7 @@ import { apiJson } from "@/lib/http/respond";
 import { precheck } from "@/lib/cost/guard";
 import { retrieveForAsk, buildContext } from "@/lib/retrieval/select";
 import { runAsk } from "@/lib/generation/runner";
+import { isModelConfigured } from "@/lib/generation/anthropic";
 import { getEntry, FALLBACK_ENTRY_ID } from "@/lib/corpus/index";
 import { toEntrySummary } from "@/lib/corpus/summary";
 
@@ -24,6 +25,13 @@ export async function POST(req: NextRequest) {
   const parsed = AskRequestSchema.safeParse(body);
   if (!parsed.success) {
     return apiJson({ ok: false, status: "error", message: "errors.badInput" }, ctx, 400);
+  }
+
+  // If no model is configured at all, there's nothing to meter — degrade gracefully to
+  // help (route to the step-by-step guide / real services) instead of failing closed.
+  if (!isModelConfigured()) {
+    const help = (retrieveForAsk(parsed.data.question)?.entry ?? getEntry(FALLBACK_ENTRY_ID))?.getHelp ?? [];
+    return apiJson({ ok: true, status: "not-covered", getHelp: help }, ctx);
   }
 
   // Cost guard FIRST (fail-closed), before any model call.

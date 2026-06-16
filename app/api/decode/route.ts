@@ -7,6 +7,7 @@ import { runOcr } from "@/lib/intake/ocr";
 import { classifyForDecode, getEntry, FALLBACK_ENTRY_ID } from "@/lib/corpus/index";
 import { buildContext } from "@/lib/retrieval/select";
 import { runDecode } from "@/lib/generation/runner";
+import { isModelConfigured } from "@/lib/generation/anthropic";
 import { toEntrySummary } from "@/lib/corpus/summary";
 
 export const runtime = "nodejs";
@@ -57,6 +58,14 @@ export async function POST(req: NextRequest) {
 
   if (letterText.length < 10) {
     return apiJson({ ok: false, status: "error", message: "errors.badInput" }, ctx, 400);
+  }
+
+  // No model configured → nothing to meter. Classify (deterministic) so we can route to
+  // the right help, and degrade gracefully instead of failing closed on the cost guard.
+  if (!isModelConfigured()) {
+    const match = classifyForDecode(letterText);
+    const help = (match ? getEntry(match.entryId) : getEntry(FALLBACK_ENTRY_ID))?.getHelp ?? [];
+    return apiJson({ ok: true, status: "not-covered", getHelp: help }, ctx);
   }
 
   // --- Cost guard before any model call (fail-closed). ---
