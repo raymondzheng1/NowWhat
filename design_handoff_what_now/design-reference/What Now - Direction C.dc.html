@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+</helmet>
+
+<div style="background:#e8e9eb;min-height:100vh;padding:48px 44px 80px;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#14253a;-webkit-font-smoothing:antialiased;">
+
+  <!-- ===== PAGE HEADER ===== -->
+  <div style="max-width:1640px;margin:0 auto 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;">
+    <div style="display:flex;align-items:center;gap:13px;">
+      <svg width="46" height="46" viewBox="0 0 44 44" aria-hidden="true"><rect width="44" height="44" rx="7" fill="#1b3a5b"></rect><rect x="3.5" y="3.5" width="37" height="37" rx="4.5" fill="none" stroke="#b08d57" stroke-width="1"></rect><text x="22" y="28.5" text-anchor="middle" font-family="Libre Baskerville,Georgia,serif" font-size="16" font-weight="700" fill="#f3e7d0">WN</text></svg>
+      <div style="display:flex;flex-direction:column;line-height:1;">
+        <span style="font-family:'Libre Baskerville',Georgia,serif;font-size:22px;font-weight:700;color:#14253a;letter-spacing:-.01em;">What&nbsp;Now<span style="color:#9c7a3e;">?</span></span>
+        <span style="font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#7b8794;font-weight:700;margin-top:6px;">Know your next step</span>
+      </div>
+    </div>
+    <div style="text-align:right;">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:#1b3a5b;color:#f3e7d0;font-size:12px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;padding:6px 13px;border-radius:6px;border:1px solid #b08d57;">Direction C · Chambers</div>
+      <div style="font-size:13px;color:#7b8794;margin-top:6px;">Baskerville serif · navy &amp; brass · ivory · hairline rules — desktop + 375&nbsp;px mobile</div>
+    </div>
+  </div>
+
+  <!-- ===== SYSTEM STRIP ===== -->
+  <div style="max-width:1640px;margin:0 auto 44px;background:#fff;border:1px solid #e2e5ea;border-radius:12px;padding:22px 26px;display:flex;gap:34px;flex-wrap:wrap;align-items:center;box-shadow:0 1px 2px rgba(20,37,58,.05);">
+    <div style="display:flex;flex-direction:column;gap:9px;">
+      <span style="font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7b8794;">Palette</span>
+      <div style="display:flex;gap:7px;">
+        <div style="width:34px;height:34px;border-radius:6px;background:#1b3a5b;"></div>
+        <div style="width:34px;height:34px;border-radius:6px;background:#122a44;"></div>
+        <div style="width:34px;height:34px;border-radius:6px;background:#e7edf3;border:1px solid #dde1e6;"></div>
+        <div style="width:34px;height:34px;border-radius:6px;background:#b08d57;"></div>
+        <div style="width:34px;height:34px;border-radius:6px;background:#f6edda;border:1px solid #e6d5ab;"></div>
+        <div style="width:34px;height:34px;border-radius:6px;background:#2c5544;"></div>
+        <div style="width:34px;height:34px;border-radius:6px;background:#14253a;"></div>
+        <div style="width:34px;height:34px;border-radius:6px;background:#f7f4ee;border:1px solid #e2e5ea;"></div>
+      </div>
+    </div>
+    <div style="width:1px;height:46px;background:#eceef1;"></div>
+    <div style="display:flex;flex-direction:column;gap:7px;">
+      <span style="font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7b8794;">Type</span>
+      <div style="display:flex;align-items:baseline;gap:14px;">
+        <span style="font-family:'Libre Baskerville',Georgia,serif;font-size:25px;font-weight:700;color:#14253a;">Libre Baskerville</span>
+        <span style="font-size:15px;color:#44566b;">System sans for body &amp; UI</span>
+      </div>
+    </div>
+    <div style="width:1px;height:46px;background:#eceef1;"></div>
+    <div style="display:flex;flex-direction:column;gap:8px;">
+      <span style="font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#7b8794;">Primitives</span>
+      <div style="display:flex;gap:10px;align-items:center;">
+        <span style="display:inline-flex;align-items:center;height:40px;padding:0 18px;background:#1b3a5b;color:#fff;font-size:14px;font-weight:600;border-radius:8px;">Primary 48px+</span>
+        <span style="display:inline-flex;align-items:center;height:40px;padding:0 16px;background:#fff;border:1.5px solid #c3cad3;color:#1b3a5b;font-size:14px;font-weight:600;border-radius:8px;">Secondary</span>
+        <span style="font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#6f5527;border:1px solid #e0d3b4;padding:5px 10px;border-radius:5px;">Label tag</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 1 — LANDING -->
+  <!-- ============================================================ -->
+  <div data-screen-label="Landing" style="max-width:1640px;margin:0 auto;">
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:18px;">
+      <span style="font-family:'Libre Baskerville',serif;font-size:19px;font-weight:700;color:#14253a;">01 · Landing</span>
+      <span style="font-size:13.5px;color:#7b8794;">Restrained, letterhead authority — serif headings, hairline brass rules, one measured CTA.</span>
+    </div>
+
+    <div style="display:flex;gap:42px;align-items:flex-start;flex-wrap:wrap;margin-bottom:64px;">
+
+      <!-- DESKTOP -->
+      <div style="display:flex;flex-direction:column;gap:11px;">
+        <span style="font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#8a939c;">Desktop</span>
+        <div style="width:1180px;background:#fff;border:1px solid #d5dadf;border-radius:12px;overflow:hidden;box-shadow:0 26px 60px -24px rgba(20,37,58,.42);">
+          <div style="height:42px;background:#f1f3f5;border-bottom:1px solid #e3e6ea;display:flex;align-items:center;padding:0 16px;gap:14px;"><div style="display:flex;gap:7px;"><span style="width:11px;height:11px;border-radius:50%;background:#cdd3da;"></span><span style="width:11px;height:11px;border-radius:50%;background:#cdd3da;"></span><span style="width:11px;height:11px;border-radius:50%;background:#cdd3da;"></span></div><div style="flex:1;max-width:340px;height:24px;background:#fff;border:1px solid #e1e5e9;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#8a939c;">whatnow.org.au</div></div>
+          <!-- header -->
+          <div style="height:74px;padding:0 40px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #1b3a5b;background:#fff;">
+            <div style="display:flex;align-items:center;gap:11px;">
+              <svg width="34" height="34" viewBox="0 0 44 44"><rect width="44" height="44" rx="7" fill="#1b3a5b"></rect><rect x="3.5" y="3.5" width="37" height="37" rx="4.5" fill="none" stroke="#b08d57" stroke-width="1"></rect><text x="22" y="28.5" text-anchor="middle" font-family="Libre Baskerville,serif" font-size="16" font-weight="700" fill="#f3e7d0">WN</text></svg>
+              <span style="font-family:'Libre Baskerville',serif;font-size:19px;font-weight:700;color:#14253a;">What Now<span style="color:#9c7a3e;">?</span></span>
+            </div>
+            <div style="display:flex;align-items:center;gap:26px;">
+              <span style="font-size:14.5px;color:#44566b;">How it works</span>
+              <span style="font-size:14.5px;color:#44566b;">Get help</span>
+              <span style="font-size:14.5px;color:#44566b;">FAQ</span>
+              <span style="display:inline-flex;align-items:center;height:42px;padding:0 18px;background:#fff;border:1.5px solid #c3cad3;color:#1b3a5b;font-size:14.5px;font-weight:600;border-radius:8px;">Ask a question</span>
+            </div>
+          </div>
+
+          <!-- hero -->
+          <div style="padding:58px 40px 52px;background:#f7f4ee;display:flex;gap:46px;align-items:center;">
+            <div style="flex:1.15;">
+              <div style="display:flex;align-items:center;gap:12px;"><span style="width:30px;height:1.5px;background:#b08d57;"></span><span style="font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#6f5527;">Free · Victoria · Nothing saved</span></div>
+              <h1 style="font-family:'Libre Baskerville',serif;font-size:41px;line-height:1.16;font-weight:700;color:#102744;margin:18px 0 0;letter-spacing:-.005em;text-wrap:balance;">Got a government &lsquo;no&rsquo;? Let&rsquo;s work out what you can do.</h1>
+              <p style="font-size:18px;line-height:1.55;color:#44566b;margin:18px 0 0;max-width:34rem;">Answer a few plain questions. We&rsquo;ll explain it simply, show your review pathway and the exact time limit, and point you to free help. No logins, no jargon.</p>
+              <div style="display:flex;gap:14px;align-items:center;margin-top:30px;flex-wrap:wrap;">
+                <span style="display:inline-flex;align-items:center;gap:10px;min-height:56px;padding:0 28px;background:#1b3a5b;color:#fff;font-size:17.5px;font-weight:600;border-radius:8px;box-shadow:0 10px 22px -10px rgba(27,58,91,.6);">Find out what you can do →</span>
+                <span style="display:inline-flex;align-items:center;min-height:56px;padding:0 24px;background:#fff;border:1.5px solid #c3cad3;color:#1b3a5b;font-size:16.5px;font-weight:600;border-radius:8px;">Ask a question</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:9px;margin-top:22px;color:#7b8794;font-size:14px;">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2c5544" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg>
+                <span>We never keep your details. Nothing you type is stored.</span>
+              </div>
+            </div>
+            <!-- payoff teaser -->
+            <div style="flex:.85;background:#fff;border:1px solid #e6e2d8;border-radius:12px;box-shadow:0 18px 40px -22px rgba(20,37,58,.4);padding:24px;">
+              <div style="display:flex;align-items:center;gap:9px;border-bottom:1px solid #ece4d4;padding-bottom:12px;"><span style="font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#6f5527;">What you get back</span></div>
+              <div style="margin-top:16px;background:#f6edda;border:1px solid #e6d5ab;border-radius:10px;padding:18px;">
+                <div style="display:flex;align-items:center;gap:8px;color:#6f5527;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8a5a14" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg> Your time limit</div>
+                <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-top:12px;">
+                  <div style="font-family:'Libre Baskerville',serif;font-size:23px;font-weight:700;color:#5c3a0a;line-height:1.12;">Tue 8 July<br>2025</div>
+                  <div style="text-align:center;background:#fff;border:1px solid #e6d5ab;border-radius:8px;padding:8px 13px;"><div style="font-family:'Libre Baskerville',serif;font-size:23px;font-weight:700;color:#8a5a14;line-height:1;">14</div><div style="font-size:9.5px;color:#7a5a2a;font-weight:700;text-transform:uppercase;letter-spacing:.07em;margin-top:3px;">days left</div></div>
+                </div>
+              </div>
+              <div style="margin-top:16px;display:flex;flex-direction:column;gap:10px;">
+                <div style="display:flex;align-items:center;gap:9px;font-size:13.5px;color:#44566b;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="2"><path d="M5 12l4 4 10-10"></path></svg> A plain-English explanation</div>
+                <div style="display:flex;align-items:center;gap:9px;font-size:13.5px;color:#44566b;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="2"><path d="M5 12l4 4 10-10"></path></svg> A draft letter you can use</div>
+                <div style="display:flex;align-items:center;gap:9px;font-size:13.5px;color:#44566b;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="2"><path d="M5 12l4 4 10-10"></path></svg> Free help, with the sources</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- trust band -->
+          <div style="padding:48px 40px;background:#fff;">
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid #e2e5ea;border-radius:10px;overflow:hidden;">
+              <div style="padding:24px;border-right:1px solid #e2e5ea;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.7"><path d="M4 5h16M4 10h16M4 15h10"></path></svg>
+                <div style="font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:#14253a;margin-top:13px;">Plain English</div>
+                <div style="font-size:14.5px;line-height:1.5;color:#5b6671;margin-top:6px;">Year-6 reading level. No jargon, no legalese — just what it means for you.</div>
+              </div>
+              <div style="padding:24px;border-right:1px solid #e2e5ea;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.7"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg>
+                <div style="font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:#14253a;margin-top:13px;">Always sourced</div>
+                <div style="font-size:14.5px;line-height:1.5;color:#5b6671;margin-top:6px;">Every answer shows where it comes from — or honestly says &ldquo;I&rsquo;m not sure&rdquo;.</div>
+              </div>
+              <div style="padding:24px;">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#2c5544" stroke-width="1.7"><circle cx="9" cy="8" r="3"></circle><path d="M4 19c0-3 2.5-5 5-5s5 2 5 5"></path><path d="M16 7a3 3 0 0 1 0 6"></path></svg>
+                <div style="font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:#14253a;margin-top:13px;">Real free help</div>
+                <div style="font-size:14.5px;line-height:1.5;color:#5b6671;margin-top:6px;">A warm hand-off to VCAT, Legal Aid and community legal centres near you.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- how it works -->
+          <div style="padding:46px 40px;background:#f7f4ee;border-top:1px solid #eceef1;">
+            <div style="display:flex;align-items:center;gap:12px;"><span style="width:30px;height:1.5px;background:#b08d57;"></span><span style="font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#6f5527;">How it works</span></div>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:20px;">
+              <div><div style="font-family:'Libre Baskerville',serif;width:38px;height:38px;border:1.5px solid #b08d57;border-radius:50%;color:#1b3a5b;font-weight:700;font-size:17px;display:flex;align-items:center;justify-content:center;">1</div><div style="font-family:'Libre Baskerville',serif;font-size:17.5px;font-weight:700;color:#14253a;margin-top:13px;">Answer a few questions</div><div style="font-size:14px;color:#5b6671;line-height:1.5;margin-top:5px;">One thing at a time. Skip anything you&rsquo;re unsure of.</div></div>
+              <div><div style="font-family:'Libre Baskerville',serif;width:38px;height:38px;border:1.5px solid #b08d57;border-radius:50%;color:#1b3a5b;font-weight:700;font-size:17px;display:flex;align-items:center;justify-content:center;">2</div><div style="font-family:'Libre Baskerville',serif;font-size:17.5px;font-weight:700;color:#14253a;margin-top:13px;">Get your pathway &amp; date</div><div style="font-size:14px;color:#5b6671;line-height:1.5;margin-top:5px;">The review route and the exact time limit that applies.</div></div>
+              <div><div style="font-family:'Libre Baskerville',serif;width:38px;height:38px;border:1.5px solid #b08d57;border-radius:50%;color:#1b3a5b;font-weight:700;font-size:17px;display:flex;align-items:center;justify-content:center;">3</div><div style="font-family:'Libre Baskerville',serif;font-size:17.5px;font-weight:700;color:#14253a;margin-top:13px;">Use the draft &amp; get help</div><div style="font-size:14px;color:#5b6671;line-height:1.5;margin-top:5px;">A letter you can send, plus free people who can help.</div></div>
+            </div>
+          </div>
+
+          <!-- get help strip -->
+          <div style="padding:42px 40px;background:#1b3a5b;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap;">
+            <div><div style="font-family:'Libre Baskerville',serif;font-size:23px;font-weight:700;color:#fff;">Would rather talk to a person?</div><div style="font-size:15px;color:#aebfd2;margin-top:6px;">Free help is always one tap away — no account needed.</div></div>
+            <span style="display:inline-flex;align-items:center;min-height:54px;padding:0 26px;background:#b08d57;color:#1c1605;font-size:16px;font-weight:700;border-radius:8px;">Get free help</span>
+          </div>
+
+          <!-- footer -->
+          <div style="padding:32px 40px;background:#102744;color:#9fb0c4;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;border-top:2px solid #b08d57;">
+            <div style="display:flex;align-items:center;gap:11px;"><svg width="28" height="28" viewBox="0 0 44 44"><rect width="44" height="44" rx="7" fill="#1b3a5b"></rect><rect x="3.5" y="3.5" width="37" height="37" rx="4.5" fill="none" stroke="#b08d57" stroke-width="1"></rect><text x="22" y="28.5" text-anchor="middle" font-family="Libre Baskerville,serif" font-size="16" font-weight="700" fill="#f3e7d0">WN</text></svg><span style="font-family:'Libre Baskerville',serif;font-size:16px;color:#fff;font-weight:700;">What Now?</span></div>
+            <div style="font-size:13px;max-width:30rem;line-height:1.5;">General information, not legal advice. We never store what you enter. Victoria, Australia.</div>
+            <div style="display:flex;gap:18px;font-size:13px;"><span>About</span><span>Your privacy</span><span>Get help</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MOBILE -->
+      <div style="display:flex;flex-direction:column;gap:11px;">
+        <span style="font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#8a939c;">Mobile · 375</span>
+        <div style="width:375px;background:#fff;border:1px solid #d5dadf;border-radius:30px;overflow:hidden;box-shadow:0 26px 60px -24px rgba(20,37,58,.42);">
+          <div style="height:34px;background:#f7f4ee;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:12px;font-weight:600;color:#14253a;"><span>9:41</span><span>●●● ▮</span></div>
+          <div style="height:58px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #1b3a5b;">
+            <div style="display:flex;align-items:center;gap:9px;"><svg width="28" height="28" viewBox="0 0 44 44"><rect width="44" height="44" rx="7" fill="#1b3a5b"></rect><rect x="3.5" y="3.5" width="37" height="37" rx="4.5" fill="none" stroke="#b08d57" stroke-width="1"></rect><text x="22" y="28.5" text-anchor="middle" font-family="Libre Baskerville,serif" font-size="16" font-weight="700" fill="#f3e7d0">WN</text></svg><span style="font-family:'Libre Baskerville',serif;font-size:17px;font-weight:700;color:#14253a;">What Now<span style="color:#9c7a3e;">?</span></span></div>
+            <svg width="24" height="24" viewBox="0 0 24 24" stroke="#44566b" stroke-width="2"><path d="M4 7h16M4 12h16M4 17h16"></path></svg>
+          </div>
+          <div style="padding:28px 20px 30px;background:#f7f4ee;">
+            <div style="display:flex;align-items:center;gap:10px;"><span style="width:24px;height:1.5px;background:#b08d57;"></span><span style="font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6f5527;">Free · Victoria · Nothing saved</span></div>
+            <h1 style="font-family:'Libre Baskerville',serif;font-size:28px;line-height:1.18;font-weight:700;color:#102744;margin:14px 0 0;">Got a government &lsquo;no&rsquo;?</h1>
+            <p style="font-size:16px;line-height:1.5;color:#44566b;margin:13px 0 0;">A few plain questions, then your pathway, the exact time limit, and free help. No logins.</p>
+            <div style="margin-top:24px;display:flex;flex-direction:column;gap:11px;">
+              <span style="display:flex;align-items:center;justify-content:center;gap:9px;min-height:56px;background:#1b3a5b;color:#fff;font-size:17px;font-weight:600;border-radius:8px;box-shadow:0 10px 22px -10px rgba(27,58,91,.5);">Find out what you can do →</span>
+              <span style="display:flex;align-items:center;justify-content:center;min-height:54px;background:#fff;border:1.5px solid #c3cad3;color:#1b3a5b;font-size:16px;font-weight:600;border-radius:8px;">Ask a question</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;margin-top:18px;color:#7b8794;font-size:13px;justify-content:center;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2c5544" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg><span>We never keep your details.</span></div>
+          </div>
+          <div style="padding:24px 20px;display:flex;flex-direction:column;gap:0;border-top:1px solid #eceef1;">
+            <div style="padding:16px 4px;border-bottom:1px solid #eceef1;display:flex;gap:13px;align-items:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.8" style="flex-shrink:0;"><path d="M4 5h16M4 10h16M4 15h10"></path></svg><div><div style="font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:#14253a;">Plain English</div><div style="font-size:13.5px;color:#5b6671;line-height:1.4;margin-top:2px;">What it means for you — no legalese.</div></div></div>
+            <div style="padding:16px 4px;border-bottom:1px solid #eceef1;display:flex;gap:13px;align-items:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.8" style="flex-shrink:0;"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"></path><path d="M9 12l2 2 4-4"></path></svg><div><div style="font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:#14253a;">Always sourced</div><div style="font-size:13.5px;color:#5b6671;line-height:1.4;margin-top:2px;">Shows where it comes from, every time.</div></div></div>
+            <div style="padding:16px 4px;display:flex;gap:13px;align-items:center;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2c5544" stroke-width="1.8" style="flex-shrink:0;"><circle cx="9" cy="8" r="3"></circle><path d="M4 19c0-3 2.5-5 5-5s5 2 5 5"></path></svg><div><div style="font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:#14253a;">Real free help</div><div style="font-size:13.5px;color:#5b6671;line-height:1.4;margin-top:2px;">A warm hand-off to free services.</div></div></div>
+          </div>
+          <div style="padding:26px 20px;background:#1b3a5b;text-align:center;">
+            <div style="font-family:'Libre Baskerville',serif;font-size:19px;font-weight:700;color:#fff;">Rather talk to a person?</div>
+            <span style="display:flex;align-items:center;justify-content:center;min-height:52px;background:#b08d57;color:#1c1605;font-size:15.5px;font-weight:700;border-radius:8px;margin-top:14px;">Get free help</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 2 — WIZARD -->
+  <!-- ============================================================ -->
+  <div data-screen-label="Wizard" style="max-width:1640px;margin:0 auto;">
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:18px;">
+      <span style="font-family:'Libre Baskerville',serif;font-size:19px;font-weight:700;color:#14253a;">02 · Guided wizard</span>
+      <span style="font-size:13.5px;color:#7b8794;">Measured progress rule, bordered selectable cards, formal tone. Step 1 shown.</span>
+    </div>
+
+    <div style="display:flex;gap:42px;align-items:flex-start;flex-wrap:wrap;margin-bottom:64px;">
+
+      <!-- DESKTOP -->
+      <div style="display:flex;flex-direction:column;gap:11px;">
+        <span style="font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#8a939c;">Desktop · Step 1</span>
+        <div style="width:1180px;background:#fff;border:1px solid #d5dadf;border-radius:12px;overflow:hidden;box-shadow:0 26px 60px -24px rgba(20,37,58,.42);">
+          <div style="height:42px;background:#f1f3f5;border-bottom:1px solid #e3e6ea;display:flex;align-items:center;padding:0 16px;gap:14px;"><div style="display:flex;gap:7px;"><span style="width:11px;height:11px;border-radius:50%;background:#cdd3da;"></span><span style="width:11px;height:11px;border-radius:50%;background:#cdd3da;"></span><span style="width:11px;height:11px;border-radius:50%;background:#cdd3da;"></span></div><div style="flex:1;max-width:340px;height:24px;background:#fff;border:1px solid #e1e5e9;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#8a939c;">whatnow.org.au/start</div></div>
+          <div style="padding:20px 40px;border-bottom:1px solid #eceef1;display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:11px;"><svg width="30" height="30" viewBox="0 0 44 44"><rect width="44" height="44" rx="7" fill="#1b3a5b"></rect><rect x="3.5" y="3.5" width="37" height="37" rx="4.5" fill="none" stroke="#b08d57" stroke-width="1"></rect><text x="22" y="28.5" text-anchor="middle" font-family="Libre Baskerville,serif" font-size="16" font-weight="700" fill="#f3e7d0">WN</text></svg><span style="font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:#14253a;">What Now?</span></div>
+            <div style="flex:1;max-width:360px;margin:0 30px;">
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:#7b8794;font-weight:600;margin-bottom:8px;"><span style="color:#1b3a5b;">Step 1 of 3 · About your decision</span><span>33%</span></div>
+              <div style="height:5px;background:#eceef1;border-radius:0;overflow:hidden;"><div style="width:33%;height:100%;background:#b08d57;"></div></div>
+            </div>
+            <div style="width:42px;height:42px;border-radius:8px;border:1px solid #e3e6ea;display:flex;align-items:center;justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" stroke="#7b8794" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg></div>
+          </div>
+          <div style="padding:54px 40px 58px;background:#f7f4ee;">
+            <div style="max-width:780px;margin:0 auto;">
+              <h2 style="font-family:'Libre Baskerville',serif;font-size:34px;font-weight:700;color:#102744;text-align:center;margin:0;">What is your decision about?</h2>
+              <p style="font-size:16.5px;color:#5b6671;text-align:center;margin:12px 0 0;">Pick the closest one. You can change it later.</p>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:36px;">
+                <div style="background:#fff;border:1.5px solid #1b3a5b;border-radius:10px;padding:22px;display:flex;gap:16px;align-items:center;box-shadow:0 8px 20px -12px rgba(27,58,91,.4);">
+                  <div style="width:52px;height:52px;border-radius:9px;background:#e7edf3;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.7"><path d="M4 11l8-6 8 6"></path><path d="M6 10v9h12v-9"></path><path d="M10 19v-5h4v5"></path></svg></div>
+                  <div><div style="font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:#14253a;">Renting / notice to vacate</div><div style="font-size:14px;color:#5b6671;margin-top:4px;line-height:1.4;">Eviction, rent increase, repairs, bond.</div></div>
+                </div>
+                <div style="background:#fff;border:1.5px solid #e2e5ea;border-radius:10px;padding:22px;display:flex;gap:16px;align-items:center;">
+                  <div style="width:52px;height:52px;border-radius:9px;background:#f4f5f7;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.7"><path d="M5 4h14v16l-2.5-1.5L14 20l-2-1.5L10 20l-2.5-1.5L5 20z"></path><path d="M9 9h6M9 13h6"></path></svg></div>
+                  <div><div style="font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:#14253a;">Fines &amp; infringements</div><div style="font-size:14px;color:#5b6671;margin-top:4px;line-height:1.4;">Parking, tolls, public transport, council.</div></div>
+                </div>
+                <div style="background:#fff;border:1.5px solid #e2e5ea;border-radius:10px;padding:22px;display:flex;gap:16px;align-items:center;">
+                  <div style="width:52px;height:52px;border-radius:9px;background:#f4f5f7;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.7"><path d="M4 20V8l5-3v15"></path><path d="M9 20V9l7-4v15"></path><path d="M16 20V10l4 2v8"></path><path d="M3 20h18"></path></svg></div>
+                  <div><div style="font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:#14253a;">Public &amp; community housing</div><div style="font-size:14px;color:#5b6671;margin-top:4px;line-height:1.4;">A decision from your housing provider.</div></div>
+                </div>
+                <div style="background:#fff;border:1.5px solid #e2e5ea;border-radius:10px;padding:22px;display:flex;gap:16px;align-items:center;">
+                  <div style="width:52px;height:52px;border-radius:9px;background:#f4f5f7;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="27" height="27" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.7"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M9 8h6M9 12h6M9 16h3"></path></svg></div>
+                  <div><div style="font-family:'Libre Baskerville',serif;font-size:18px;font-weight:700;color:#14253a;">A Victorian gov decision</div><div style="font-size:14px;color:#5b6671;margin-top:4px;line-height:1.4;">Any other state government &lsquo;no&rsquo;.</div></div>
+                </div>
+              </div>
+              <div style="margin-top:16px;background:#fff;border:1.5px dashed #c3cad3;border-radius:10px;padding:20px 24px;display:flex;gap:14px;align-items:center;justify-content:center;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7b8794" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M8 9h8M8 13h8M8 17h5"></path></svg>
+                <span style="font-size:15.5px;color:#44566b;">None of these — <span style="color:#1b3a5b;font-weight:600;">let me paste my letter</span></span>
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:34px;">
+                <span style="display:inline-flex;align-items:center;gap:8px;color:#9aa3ac;font-size:15.5px;font-weight:600;">← Back</span>
+                <span style="display:inline-flex;align-items:center;gap:9px;min-height:54px;padding:0 32px;background:#1b3a5b;color:#fff;font-size:16.5px;font-weight:600;border-radius:8px;">Continue →</span>
+              </div>
+              <div style="text-align:center;margin-top:18px;color:#7b8794;font-size:13px;display:flex;align-items:center;justify-content:center;gap:8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#2c5544" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg> Nothing you enter here is stored.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MOBILE step 1 -->
+      <div style="display:flex;flex-direction:column;gap:11px;">
+        <span style="font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#8a939c;">Mobile · Step 1</span>
+        <div style="width:375px;background:#fff;border:1px solid #d5dadf;border-radius:30px;overflow:hidden;box-shadow:0 26px 60px -24px rgba(20,37,58,.42);">
+          <div style="height:34px;background:#f7f4ee;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:12px;font-weight:600;color:#14253a;"><span>9:41</span><span>●●● ▮</span></div>
+          <div style="padding:14px 18px;border-bottom:1px solid #eceef1;">
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <span style="font-size:13px;font-weight:700;color:#1b3a5b;">Step 1 of 3</span>
+              <div style="width:36px;height:36px;border-radius:8px;border:1px solid #e3e6ea;display:flex;align-items:center;justify-content:center;"><svg width="16" height="16" viewBox="0 0 24 24" stroke="#7b8794" stroke-width="2"><path d="M6 6l12 12M18 6L6 18"></path></svg></div>
+            </div>
+            <div style="height:5px;background:#eceef1;overflow:hidden;margin-top:11px;"><div style="width:33%;height:100%;background:#b08d57;"></div></div>
+          </div>
+          <div style="padding:24px 18px 26px;background:#f7f4ee;">
+            <h2 style="font-family:'Libre Baskerville',serif;font-size:23px;font-weight:700;color:#102744;margin:0;line-height:1.2;">What is your decision about?</h2>
+            <p style="font-size:14.5px;color:#5b6671;margin:8px 0 0;">Pick the closest one.</p>
+            <div style="display:flex;flex-direction:column;gap:11px;margin-top:22px;">
+              <div style="background:#fff;border:1.5px solid #1b3a5b;border-radius:10px;padding:16px;display:flex;gap:13px;align-items:center;box-shadow:0 8px 18px -12px rgba(27,58,91,.4);"><div style="width:46px;height:46px;border-radius:9px;background:#e7edf3;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.7"><path d="M4 11l8-6 8 6"></path><path d="M6 10v9h12v-9"></path><path d="M10 19v-5h4v5"></path></svg></div><div><div style="font-family:'Libre Baskerville',serif;font-size:15.5px;font-weight:700;color:#14253a;">Renting / notice to vacate</div><div style="font-size:13px;color:#5b6671;margin-top:2px;">Eviction, rent rise, repairs.</div></div></div>
+              <div style="background:#fff;border:1.5px solid #e2e5ea;border-radius:10px;padding:16px;display:flex;gap:13px;align-items:center;"><div style="width:46px;height:46px;border-radius:9px;background:#f4f5f7;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.7"><path d="M5 4h14v16l-2.5-1.5L14 20l-2-1.5L10 20l-2.5-1.5L5 20z"></path><path d="M9 9h6M9 13h6"></path></svg></div><div><div style="font-family:'Libre Baskerville',serif;font-size:15.5px;font-weight:700;color:#14253a;">Fines &amp; infringements</div><div style="font-size:13px;color:#5b6671;margin-top:2px;">Parking, tolls, transport.</div></div></div>
+              <div style="background:#fff;border:1.5px solid #e2e5ea;border-radius:10px;padding:16px;display:flex;gap:13px;align-items:center;"><div style="width:46px;height:46px;border-radius:9px;background:#f4f5f7;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.7"><path d="M4 20V8l5-3v15"></path><path d="M9 20V9l7-4v15"></path><path d="M16 20V10l4 2v8"></path><path d="M3 20h18"></path></svg></div><div><div style="font-family:'Libre Baskerville',serif;font-size:15.5px;font-weight:700;color:#14253a;">Public &amp; community housing</div><div style="font-size:13px;color:#5b6671;margin-top:2px;">A housing provider decision.</div></div></div>
+              <div style="background:#fff;border:1.5px solid #e2e5ea;border-radius:10px;padding:16px;display:flex;gap:13px;align-items:center;"><div style="width:46px;height:46px;border-radius:9px;background:#f4f5f7;display:flex;align-items:center;justify-content:center;flex-shrink:0;"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.7"><rect x="5" y="3" width="14" height="18" rx="2"></rect><path d="M9 8h6M9 12h6M9 16h3"></path></svg></div><div><div style="font-family:'Libre Baskerville',serif;font-size:15.5px;font-weight:700;color:#14253a;">A Victorian gov decision</div><div style="font-size:13px;color:#5b6671;margin-top:2px;">Any other state &lsquo;no&rsquo;.</div></div></div>
+              <div style="background:#fff;border:1.5px dashed #c3cad3;border-radius:10px;padding:14px 16px;display:flex;gap:11px;align-items:center;justify-content:center;"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#7b8794" stroke-width="1.7"><rect x="4" y="4" width="16" height="16" rx="2"></rect><path d="M8 9h8M8 13h8M8 17h5"></path></svg><span style="font-size:14px;color:#44566b;">None of these — <span style="color:#1b3a5b;font-weight:600;">paste my letter</span></span></div>
+            </div>
+          </div>
+          <div style="padding:14px 18px;border-top:1px solid #eceef1;display:flex;gap:12px;align-items:center;">
+            <span style="color:#9aa3ac;font-size:15px;font-weight:600;">← Back</span>
+            <span style="flex:1;display:flex;align-items:center;justify-content:center;min-height:52px;background:#1b3a5b;color:#fff;font-size:16px;font-weight:600;border-radius:8px;">Continue →</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- SCREEN 3 — RESULT -->
+  <!-- ============================================================ -->
+  <div data-screen-label="Result" style="max-width:1640px;margin:0 auto;">
+    <div style="display:flex;align-items:baseline;gap:14px;margin-bottom:18px;">
+      <span style="font-family:'Libre Baskerville',serif;font-size:19px;font-weight:700;color:#14253a;">03 · Result &amp; deadline</span>
+      <span style="font-size:13.5px;color:#7b8794;">Letterhead hierarchy — gold deadline panel framed by a brass rule; sources &amp; tiered help in view.</span>
+    </div>
+
+    <div style="display:flex;gap:42px;align-items:flex-start;flex-wrap:wrap;margin-bottom:30px;">
+
+      <!-- DESKTOP -->
+      <div style="display:flex;flex-direction:column;gap:11px;">
+        <span style="font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#8a939c;">Desktop · confirmed deadline</span>
+        <div style="width:1180px;background:#fff;border:1px solid #d5dadf;border-radius:12px;overflow:hidden;box-shadow:0 26px 60px -24px rgba(20,37,58,.42);">
+          <div style="height:42px;background:#f1f3f5;border-bottom:1px solid #e3e6ea;display:flex;align-items:center;padding:0 16px;gap:14px;"><div style="display:flex;gap:7px;"><span style="width:11px;height:11px;border-radius:50%;background:#cdd3da;"></span><span style="width:11px;height:11px;border-radius:50%;background:#cdd3da;"></span><span style="width:11px;height:11px;border-radius:50%;background:#cdd3da;"></span></div><div style="flex:1;max-width:340px;height:24px;background:#fff;border:1px solid #e1e5e9;border-radius:6px;display:flex;align-items:center;padding:0 10px;font-size:12px;color:#8a939c;">whatnow.org.au/result</div></div>
+          <div style="height:64px;padding:0 36px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #1b3a5b;">
+            <span style="display:inline-flex;align-items:center;gap:8px;font-size:14.5px;color:#1b3a5b;font-weight:600;">← Start over</span>
+            <div style="display:flex;align-items:center;gap:9px;"><svg width="28" height="28" viewBox="0 0 44 44"><rect width="44" height="44" rx="7" fill="#1b3a5b"></rect><rect x="3.5" y="3.5" width="37" height="37" rx="4.5" fill="none" stroke="#b08d57" stroke-width="1"></rect><text x="22" y="28.5" text-anchor="middle" font-family="Libre Baskerville,serif" font-size="16" font-weight="700" fill="#f3e7d0">WN</text></svg><span style="font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:#14253a;">What Now?</span></div>
+            <span style="display:inline-flex;align-items:center;gap:7px;font-size:14px;color:#44566b;border:1px solid #e3e6ea;border-radius:8px;height:40px;padding:0 14px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#44566b" stroke-width="1.8"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M8 14h8v7H8z"></path></svg> Print</span>
+          </div>
+          <div style="display:flex;background:#f7f4ee;">
+            <!-- MAIN -->
+            <div style="flex:1.7;padding:36px;min-width:0;">
+              <span style="font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#6f5527;">Renting · Notice to vacate</span>
+              <h1 style="font-family:'Libre Baskerville',serif;font-size:30px;font-weight:700;color:#102744;margin:10px 0 0;line-height:1.22;">You can ask VCAT to review your notice to vacate.</h1>
+
+              <div style="margin-top:22px;background:#fff;border:1px solid #e2e5ea;border-radius:10px;padding:24px;">
+                <div style="font-family:'Libre Baskerville',serif;font-size:19px;font-weight:700;color:#14253a;">What this is about</div>
+                <p style="font-size:15.5px;line-height:1.6;color:#44566b;margin:10px 0 0;">A notice to vacate is your rental provider asking you to leave. It must give a valid reason and the correct notice period. If you think it&rsquo;s wrong, you can apply to VCAT (the tribunal) to challenge it — and there&rsquo;s a deadline to do that.</p>
+                <div style="margin-top:14px;border-left:3px solid #b08d57;background:#f7f4ee;border-radius:0 8px 8px 0;padding:12px 15px;font-size:13px;color:#5b6671;line-height:1.5;display:flex;gap:9px;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#9aa3ac" stroke-width="1.8" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="9"></circle><path d="M12 11v5M12 8h.01"></path></svg><span>This is general information to help you understand your options — not legal advice. For advice about your situation, see the free help below.</span></div>
+              </div>
+
+              <!-- DEADLINE CARD — signature, framed -->
+              <div style="margin-top:20px;background:#f6edda;border:1px solid #e6d5ab;border-radius:12px;padding:6px;box-shadow:0 14px 30px -18px rgba(138,90,20,.4);">
+                <div style="border:1px solid #ddc794;border-radius:9px;padding:24px;">
+                  <div style="display:flex;align-items:center;gap:9px;color:#6f5527;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8a5a14" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg> Your time limit to apply</div>
+                  <div style="display:flex;align-items:center;gap:26px;margin-top:16px;flex-wrap:wrap;">
+                    <div style="flex:1;min-width:200px;">
+                      <div style="font-family:'Libre Baskerville',serif;font-size:34px;font-weight:700;color:#5c3a0a;line-height:1.12;">Tuesday<br>8 July 2025</div>
+                      <div style="font-size:14.5px;color:#7a5a2a;margin-top:8px;">Apply to VCAT by this date to challenge the notice.</div>
+                    </div>
+                    <div style="text-align:center;background:#fff;border:1px solid #e6d5ab;border-radius:10px;padding:18px 26px;">
+                      <div style="font-family:'Libre Baskerville',serif;font-size:44px;font-weight:700;color:#8a5a14;line-height:1;">14</div>
+                      <div style="font-size:12px;color:#7a5a2a;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-top:4px;">days left</div>
+                    </div>
+                  </div>
+                  <div style="margin-top:16px;background:#fff;border:1px solid #ecdcb6;border-radius:8px;padding:12px 15px;font-size:13.5px;color:#7a5a2a;line-height:1.5;"><strong style="color:#5c3a0a;">How it&rsquo;s counted:</strong> 30 days from the date on your notice (8 June 2025). Counting includes weekends and public holidays.</div>
+                  <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;">
+                    <span style="display:inline-flex;align-items:center;gap:9px;min-height:50px;padding:0 22px;background:#8a5a14;color:#fff;font-size:15.5px;font-weight:600;border-radius:8px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9"><rect x="4" y="5" width="16" height="16" rx="2"></rect><path d="M4 9h16M8 3v4M16 3v4M12 13v4M10 15h4"></path></svg> Add a reminder to my calendar</span>
+                    <span style="display:inline-flex;align-items:center;min-height:50px;padding:0 18px;background:#fff;border:1px solid #e6d5ab;color:#8a5a14;font-size:15px;font-weight:600;border-radius:8px;">How this date works</span>
+                  </div>
+                </div>
+              </div>
+
+              <div style="margin-top:20px;background:#fff;border:1px solid #e2e5ea;border-radius:10px;padding:24px;">
+                <div style="font-family:'Libre Baskerville',serif;font-size:19px;font-weight:700;color:#14253a;">What can help your case</div>
+                <p style="font-size:14.5px;color:#5b6671;margin:8px 0 14px;">Gather what you can before your VCAT date:</p>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                  <div style="display:flex;gap:11px;align-items:flex-start;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2c5544" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M8 12l3 3 5-6"></path></svg><span style="font-size:15px;color:#44566b;line-height:1.45;">A copy of the notice to vacate you received</span></div>
+                  <div style="display:flex;gap:11px;align-items:flex-start;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2c5544" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M8 12l3 3 5-6"></path></svg><span style="font-size:15px;color:#44566b;line-height:1.45;">Your rental agreement and rent payment records</span></div>
+                  <div style="display:flex;gap:11px;align-items:flex-start;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2c5544" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><rect x="4" y="4" width="16" height="16" rx="3"></rect><path d="M8 12l3 3 5-6"></path></svg><span style="font-size:15px;color:#44566b;line-height:1.45;">Any messages with your rental provider or agent</span></div>
+                </div>
+              </div>
+
+              <div style="margin-top:20px;background:#fff;border:1px solid #e2e5ea;border-radius:10px;padding:24px;">
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+                  <div style="font-family:'Libre Baskerville',serif;font-size:19px;font-weight:700;color:#14253a;">A draft letter to start with</div>
+                  <div style="display:flex;gap:9px;"><span style="display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 14px;border:1.5px solid #c3cad3;border-radius:8px;font-size:13.5px;font-weight:600;color:#1b3a5b;">Edit</span><span style="display:inline-flex;align-items:center;gap:7px;height:38px;padding:0 14px;background:#1b3a5b;color:#fff;border-radius:8px;font-size:13.5px;font-weight:600;">Download</span></div>
+                </div>
+                <div style="margin-top:14px;background:#f7f4ee;border:1px solid #eceef1;border-radius:8px;padding:18px;font-size:14px;color:#44566b;line-height:1.65;font-family:'Libre Baskerville',serif;">To the Victorian Civil and Administrative Tribunal,<br><br>I am applying to challenge a notice to vacate dated 8 June 2025 for my rental at [your address]. I believe the notice is not valid because&hellip;</div>
+              </div>
+            </div>
+
+            <!-- RAIL -->
+            <div style="flex:1;padding:36px 36px 36px 0;min-width:300px;">
+              <div style="position:sticky;top:20px;display:flex;flex-direction:column;gap:18px;">
+                <div style="background:#fff;border:1px solid #e2e5ea;border-radius:10px;padding:22px;">
+                  <div style="display:flex;align-items:center;gap:8px;font-family:'Libre Baskerville',serif;font-size:17px;font-weight:700;color:#14253a;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.8"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"></path></svg> Where this comes from</div>
+                  <div style="margin-top:13px;display:flex;flex-direction:column;gap:11px;">
+                    <div style="font-size:13.5px;line-height:1.45;border-left:2px solid #b08d57;padding-left:11px;"><a style="color:#1b3a5b;font-weight:600;text-decoration:none;">Residential Tenancies Act 1997 (Vic), s 91ZZ</a><div style="color:#8a939c;font-size:12.5px;margin-top:1px;">Notice to vacate — validity &amp; periods</div></div>
+                    <div style="font-size:13.5px;line-height:1.45;border-left:2px solid #b08d57;padding-left:11px;"><a style="color:#1b3a5b;font-weight:600;text-decoration:none;">VCAT — Apply for a tenancy review</a><div style="color:#8a939c;font-size:12.5px;margin-top:1px;">vcat.vic.gov.au · application process</div></div>
+                    <div style="font-size:13.5px;line-height:1.45;border-left:2px solid #b08d57;padding-left:11px;"><a style="color:#1b3a5b;font-weight:600;text-decoration:none;">Consumer Affairs Victoria — Renting</a><div style="color:#8a939c;font-size:12.5px;margin-top:1px;">Plain-language guidance</div></div>
+                  </div>
+                </div>
+                <div style="background:#fff;border:1px solid #e2e5ea;border-radius:10px;padding:22px;">
+                  <div style="display:flex;align-items:center;gap:8px;font-family:'Libre Baskerville',serif;font-size:17px;font-weight:700;color:#14253a;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2c5544" stroke-width="1.8"><circle cx="9" cy="8" r="3"></circle><path d="M4 19c0-3 2.5-5 5-5s5 2 5 5"></path></svg> Get free help</div>
+                  <div style="margin-top:14px;background:#e4ede7;border-radius:9px;padding:14px;border-left:3px solid #2c5544;"><div style="font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#2c5544;">Tier 1 · Free government</div><div style="font-size:14.5px;font-weight:600;color:#173e2c;margin-top:6px;">VCAT</div><div style="font-size:12.5px;color:#3c5a4d;">Lodge your review · 1300 018 228</div></div>
+                  <div style="margin-top:10px;background:#e7edf3;border-radius:9px;padding:14px;border-left:3px solid #1b3a5b;"><div style="font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#1b3a5b;">Tier 2 · Free legal help</div><div style="font-size:14.5px;font-weight:600;color:#102744;margin-top:6px;">Tenants Victoria · Legal Aid</div><div style="font-size:12.5px;color:#44566b;">Free advice for renters</div></div>
+                  <div style="margin-top:10px;border:1px solid #e2e5ea;border-radius:9px;padding:14px;border-left:3px solid #cdd3da;"><div style="font-size:10.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#8a939c;">Tier 3 · Paid</div><div style="font-size:14.5px;font-weight:600;color:#44566b;margin-top:6px;">Find a private lawyer</div><div style="font-size:12.5px;color:#9aa3ac;">Law Institute referral · fees apply</div></div>
+                </div>
+                <div style="background:#f7f4ee;border:1px solid #eceef1;border-radius:9px;padding:14px 16px;display:flex;gap:10px;align-items:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#2c5544" stroke-width="1.9" style="flex-shrink:0;"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg><span style="font-size:13px;color:#44566b;line-height:1.45;">Nothing on this page was saved. Close the tab and it&rsquo;s gone.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MOBILE result -->
+      <div style="display:flex;flex-direction:column;gap:11px;">
+        <span style="font-size:11px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#8a939c;">Mobile · result</span>
+        <div style="width:375px;background:#fff;border:1px solid #d5dadf;border-radius:30px;overflow:hidden;box-shadow:0 26px 60px -24px rgba(20,37,58,.42);">
+          <div style="height:34px;background:#f7f4ee;display:flex;align-items:center;justify-content:space-between;padding:0 22px;font-size:12px;font-weight:600;color:#14253a;"><span>9:41</span><span>●●● ▮</span></div>
+          <div style="height:52px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #1b3a5b;"><span style="font-size:13.5px;color:#1b3a5b;font-weight:600;">← Start over</span><span style="font-family:'Libre Baskerville',serif;font-size:15px;font-weight:700;color:#14253a;">What Now?</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#44566b" stroke-width="1.8"><path d="M6 9V3h12v6M6 18H4v-7h16v7h-2M8 14h8v7H8z"></path></svg></div>
+          <div style="padding:20px 18px 26px;background:#f7f4ee;">
+            <span style="font-size:10.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#6f5527;">Renting · Notice to vacate</span>
+            <h1 style="font-family:'Libre Baskerville',serif;font-size:22px;font-weight:700;color:#102744;margin:9px 0 0;line-height:1.24;">You can ask VCAT to review your notice.</h1>
+            <div style="margin-top:16px;background:#fff;border:1px solid #e2e5ea;border-radius:10px;padding:17px;">
+              <div style="font-family:'Libre Baskerville',serif;font-size:16.5px;font-weight:700;color:#14253a;">What this is about</div>
+              <p style="font-size:14px;line-height:1.55;color:#44566b;margin:7px 0 0;">A notice to vacate must give a valid reason and the right notice period. You can apply to VCAT to challenge it.</p>
+              <div style="margin-top:11px;border-left:3px solid #b08d57;background:#f7f4ee;padding:10px 12px;font-size:11.5px;color:#5b6671;line-height:1.45;">General information, not legal advice. See free help below.</div>
+            </div>
+            <!-- deadline card mobile -->
+            <div style="margin-top:14px;background:#f6edda;border:1px solid #e6d5ab;border-radius:11px;padding:5px;box-shadow:0 12px 26px -16px rgba(138,90,20,.4);">
+              <div style="border:1px solid #ddc794;border-radius:8px;padding:16px;">
+                <div style="display:flex;align-items:center;gap:8px;color:#6f5527;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#8a5a14" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 7v5l3 2"></path></svg> Your time limit to apply</div>
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;margin-top:12px;">
+                  <div style="font-family:'Libre Baskerville',serif;font-size:23px;font-weight:700;color:#5c3a0a;line-height:1.12;">Tue 8 July<br>2025</div>
+                  <div style="text-align:center;background:#fff;border:1px solid #e6d5ab;border-radius:9px;padding:10px 16px;"><div style="font-family:'Libre Baskerville',serif;font-size:30px;font-weight:700;color:#8a5a14;line-height:1;">14</div><div style="font-size:10px;color:#7a5a2a;font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-top:2px;">days left</div></div>
+                </div>
+                <div style="margin-top:12px;background:#fff;border:1px solid #ecdcb6;border-radius:7px;padding:10px 12px;font-size:12px;color:#7a5a2a;line-height:1.45;"><strong style="color:#5c3a0a;">Counted as</strong> 30 days from the date on your notice (8 June).</div>
+                <span style="display:flex;align-items:center;justify-content:center;gap:8px;min-height:50px;background:#8a5a14;color:#fff;font-size:15px;font-weight:600;border-radius:8px;margin-top:13px;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.9"><rect x="4" y="5" width="16" height="16" rx="2"></rect><path d="M4 9h16M8 3v4M16 3v4"></path></svg> Add reminder to calendar</span>
+              </div>
+            </div>
+            <!-- get help tiered mobile -->
+            <div style="margin-top:14px;background:#fff;border:1px solid #e2e5ea;border-radius:10px;padding:17px;">
+              <div style="display:flex;align-items:center;gap:7px;font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:#14253a;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2c5544" stroke-width="1.8"><circle cx="9" cy="8" r="3"></circle><path d="M4 19c0-3 2.5-5 5-5s5 2 5 5"></path></svg> Get free help</div>
+              <div style="margin-top:11px;background:#e4ede7;border-radius:9px;padding:12px;border-left:3px solid #2c5544;"><div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#2c5544;">Tier 1 · Free government</div><div style="font-size:14px;font-weight:600;color:#173e2c;margin-top:4px;">VCAT · 1300 018 228</div></div>
+              <div style="margin-top:8px;background:#e7edf3;border-radius:9px;padding:12px;border-left:3px solid #1b3a5b;"><div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#1b3a5b;">Tier 2 · Free legal help</div><div style="font-size:14px;font-weight:600;color:#102744;margin-top:4px;">Tenants Victoria · Legal Aid</div></div>
+              <div style="margin-top:8px;border:1px solid #e2e5ea;border-radius:9px;padding:12px;border-left:3px solid #cdd3da;"><div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8a939c;">Tier 3 · Paid</div><div style="font-size:14px;font-weight:600;color:#44566b;margin-top:4px;">Find a private lawyer</div></div>
+            </div>
+            <!-- sources mobile -->
+            <div style="margin-top:14px;background:#fff;border:1px solid #e2e5ea;border-radius:10px;padding:17px;">
+              <div style="display:flex;align-items:center;gap:7px;font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:#14253a;"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1b3a5b" stroke-width="1.8"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"></path></svg> Where this comes from</div>
+              <div style="font-size:13px;color:#1b3a5b;font-weight:600;margin-top:10px;line-height:1.6;border-left:2px solid #b08d57;padding-left:11px;">Residential Tenancies Act 1997 (Vic)<br>VCAT — tenancy review<br>Consumer Affairs Victoria</div>
+            </div>
+            <div style="margin-top:14px;background:#f7f4ee;border:1px solid #eceef1;border-radius:9px;padding:12px 14px;display:flex;gap:9px;align-items:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2c5544" stroke-width="1.9" style="flex-shrink:0;"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V8a4 4 0 0 1 8 0v3"></path></svg><span style="font-size:12px;color:#44566b;line-height:1.4;">Nothing here was saved. Close the tab and it&rsquo;s gone.</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- can't-confirm variant -->
+    <div style="display:flex;align-items:baseline;gap:12px;margin:8px 0 16px;">
+      <span style="font-family:'Libre Baskerville',serif;font-size:16px;font-weight:700;color:#14253a;">State · deadline can&rsquo;t be confirmed</span>
+      <span style="font-size:13px;color:#7b8794;">Same calm treatment — honest, not an error.</span>
+    </div>
+    <div style="width:640px;max-width:100%;background:#f6edda;border:1px solid #e6d5ab;border-radius:12px;padding:6px;box-shadow:0 14px 36px -22px rgba(20,37,58,.4);margin-bottom:50px;">
+      <div style="border:1px solid #ddc794;border-radius:9px;padding:24px;">
+        <div style="display:flex;align-items:center;gap:9px;color:#6f5527;font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#8a5a14" stroke-width="2"><circle cx="12" cy="12" r="9"></circle><path d="M12 8v4M12 16h.01"></path></svg> A time limit applies</div>
+        <div style="font-family:'Libre Baskerville',serif;font-size:23px;font-weight:700;color:#5c3a0a;margin-top:12px;line-height:1.3;">There&rsquo;s a deadline here — but we couldn&rsquo;t confirm the exact date.</div>
+        <p style="font-size:15px;color:#7a5a2a;line-height:1.55;margin:10px 0 0;">Time limits for this kind of decision are often short. To be safe, treat it as urgent and check the exact date with a free service today.</p>
+        <div style="display:flex;gap:11px;margin-top:18px;flex-wrap:wrap;">
+          <span style="display:inline-flex;align-items:center;gap:8px;min-height:50px;padding:0 22px;background:#2c5544;color:#fff;font-size:15px;font-weight:600;border-radius:8px;">Who can confirm my date →</span>
+          <span style="display:inline-flex;align-items:center;min-height:50px;padding:0 20px;background:#fff;border:1px solid #e6d5ab;color:#8a5a14;font-size:15px;font-weight:600;border-radius:8px;">Why we&rsquo;re not sure</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+</x-dc>
+</body>
+</html>

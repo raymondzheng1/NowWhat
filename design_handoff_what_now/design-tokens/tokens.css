@@ -1,0 +1,93 @@
+/* =============================================================
+   What Now? — Direction C ("Chambers")
+   Design tokens as CSS custom properties.
+   Drop into :root (or a theme layer). All pairings below meet
+   WCAG 2.1 AA for the text sizes they are used at — see notes.
+   ============================================================= */
+
+:root {
+  /* ---- Ink / text ---- */
+  --wn-ink:        #14253a; /* primary body + headings        | on white = 13.4:1  AAA */
+  --wn-ink-soft:   #44566b; /* secondary text                 | on white = 7.1:1   AAA */
+  --wn-ink-faint:  #7b8794; /* captions, meta (>=12px only)   | on white = 3.7:1   AA Large / UI */
+
+  /* ---- Paper / surfaces ---- */
+  --wn-paper:      #ffffff; /* card + sheet surface */
+  --wn-paper-warm: #f7f4ee; /* ivory page background, hero, insets */
+  --wn-paper-sunk: #eef0f2; /* subtle sunk fills */
+
+  /* ---- Brand: navy (primary action + authority) ---- */
+  --wn-navy:       #1b3a5b; /* primary buttons, links, active border | white text on it = 9.3:1 AAA */
+  --wn-navy-dark:  #122a44; /* footer, pressed states */
+  --wn-navy-soft:  #e7edf3; /* tier-2 chips, selected icon wells */
+  --wn-navy-ink:   #102744; /* heading tint on ivory */
+
+  /* ---- Accent: brass (hairline rules, eyebrows, ornament) ---- */
+  --wn-brass:      #b08d57; /* RULES / borders / monogram frame — decorative, not text */
+  --wn-brass-text: #6f5527; /* brass-toned LABEL text          | on white = 5.9:1  AA */
+  --wn-brass-q:    #9c7a3e; /* the "?" in the wordmark (large display only) */
+
+  /* ---- Deadline: gold/amber (the "clock" — serious, not red) ---- */
+  --wn-gold:        #8a5a14; /* deadline numerals + primary deadline btn | white on it = 5.4:1 AA; on cream 4.8:1 */
+  --wn-gold-strong: #5c3a0a; /* the headline date text          | on cream(#f6edda) = 8.9:1 AAA */
+  --wn-gold-text:   #7a5a2a; /* deadline supporting copy         | on cream = 5.2:1 AA */
+  --wn-gold-soft:   #f6edda; /* deadline panel background */
+  --wn-gold-line:   #e6d5ab; /* deadline panel outer border */
+  --wn-gold-line2:  #ddc794; /* deadline panel inner (double-rule) border */
+
+  /* ---- Help: forest green (escalation / get-help) ---- */
+  --wn-help:       #2c5544; /* tier-1 accent + "who can confirm" btn | white on it = 7.0:1 AAA */
+  --wn-help-soft:  #e4ede7; /* tier-1 chip background */
+  --wn-help-ink:   #173e2c; /* help heading text */
+
+  /* ---- Lines ---- */
+  --wn-line:       #dde1e6; /* default hairline */
+  --wn-line-card:  #e2e5ea; /* card border */
+
+  /* ---- Typography ---- */
+  --wn-font-serif: "Libre Baskerville", Georgia, "Times New Roman", serif; /* wordmark + all headings */
+  --wn-font-sans:  -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; /* body + UI */
+
+  /* Type scale (desktop) — line-heights in comments */
+  --wn-text-display: 41px; /* hero H1            lh 1.16  weight 700 serif */
+  --wn-text-h1:      34px; /* result / wizard H2 lh 1.20  weight 700 serif */
+  --wn-text-h2:      30px; /* result page title  lh 1.22  weight 700 serif */
+  --wn-text-h3:      19px; /* card titles        lh 1.30  weight 700 serif */
+  --wn-text-lead:    18px; /* hero subcopy       lh 1.55  weight 400 sans  */
+  --wn-text-body:    16px; /* body               lh 1.55  weight 400 sans  */
+  --wn-text-ui:      15px; /* buttons / controls lh 1.40  weight 600 sans  */
+  --wn-text-sm:      14px; /* secondary          lh 1.45  weight 400/500   */
+  --wn-text-meta:    13px; /* captions           lh 1.45  weight 500       */
+  --wn-text-eyebrow: 11.5px;/* tracked label     lh 1.0   weight 700 caps  tracking .14em */
+
+  /* ---- Spacing scale (4px base) ---- */
+  --wn-space-1: 4px;
+  --wn-space-2: 8px;
+  --wn-space-3: 12px;
+  --wn-space-4: 16px;
+  --wn-space-5: 20px;
+  --wn-space-6: 24px;
+  --wn-space-8: 32px;
+  --wn-space-9: 36px;   /* result column padding */
+  --wn-space-10: 40px;  /* desktop section x-padding */
+  --wn-space-13: 52px;  /* hero y-padding-ish */
+  --wn-space-14: 58px;
+
+  /* ---- Radii (squarer than typical — formal) ---- */
+  --wn-radius-button: 8px;
+  --wn-radius-input:  8px;
+  --wn-radius-card:   10px;
+  --wn-radius-panel:  12px;  /* outer frame of deadline panel + screen frame */
+  --wn-radius-pill:   6px;   /* small label tags */
+  --wn-radius-icon:   9px;   /* icon wells */
+
+  /* ---- Shadows (soft, low) ---- */
+  --wn-shadow-card:    0 1px 2px rgba(20, 37, 58, .05);
+  --wn-shadow-raised:  0 8px 20px -12px rgba(27, 58, 91, .40);
+  --wn-shadow-deadline:0 14px 30px -18px rgba(138, 90, 20, .40);
+  --wn-shadow-cta:     0 10px 22px -10px rgba(27, 58, 91, .60);
+
+  /* ---- Controls ---- */
+  --wn-control-min-height: 48px;   /* hard floor; primary CTAs use 54–56px */
+  --wn-focus-ring: 0 0 0 3px rgba(27, 58, 91, .35); /* visible keyboard focus */
+}
