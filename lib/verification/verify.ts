@@ -60,6 +60,28 @@ function allowedSourceList(entry: PathwayEntry): string[] {
   ].map(norm);
 }
 
+const DOMAIN_RE = /\b[a-z0-9-]+(?:\.[a-z0-9-]+)+\b/g;
+
+/**
+ * Is a declared source grounded in the corpus entry? Models reword/shorten source
+ * strings, so we don't require byte-equality (that rejected legitimate answers). A
+ * source is grounded if it (a) overlaps a known source as a substring, (b) shares a
+ * domain with a known source (the strongest real-source signal), or (c) has strong word
+ * overlap with the allowed sources. A genuinely foreign citation matches none of these.
+ * (The sources SHOWN to the user are always the canonical corpus ones, never these.)
+ */
+function sourceGrounded(d: string, allowList: string[], blob: string): boolean {
+  if (allowList.some((a) => a.includes(d) || d.includes(a))) return true;
+  const domains = d.match(DOMAIN_RE) ?? [];
+  if (domains.some((dom) => dom.includes(".") && blob.includes(dom))) return true;
+  const toks = d.split(/[^a-z0-9.]+/).filter((w) => w.length > 3);
+  if (toks.length > 0) {
+    const hits = toks.filter((w) => blob.includes(w)).length;
+    if (hits / toks.length >= 0.6) return true;
+  }
+  return false;
+}
+
 function normUnit(u: string): string {
   const x = u.toLowerCase();
   if (x.startsWith("day")) return "day";
@@ -109,14 +131,15 @@ export function verifyOutput(input: VerifyInput): VerifyResult {
   const failures: VerifyFailure[] = [];
   const { text, declaredSources, entry } = input;
   const t = norm(text);
+  const blob = allowedSourceBlob(entry);
 
-  // 1. Source allow-list — every declared source maps to the entry's sources.
+  // 1. Source allow-list — every declared source must be grounded in the entry's sources
+  //    (substring, shared domain, or strong word overlap — models reword sources).
   const allowList = allowedSourceList(entry);
   for (const src of declaredSources) {
     const d = norm(src);
     if (!d) continue;
-    const ok = allowList.some((a) => a.includes(d) || d.includes(a));
-    if (!ok) {
+    if (!sourceGrounded(d, allowList, blob)) {
       failures.push({
         gate: "source-allowlist",
         detail: `cited a source not in the corpus entry: "${src}"`,
@@ -130,7 +153,6 @@ export function verifyOutput(input: VerifyInput): VerifyResult {
   }
 
   // 3. No out-of-corpus legal citation in the prose.
-  const blob = allowedSourceBlob(entry);
   const citationRe = /\b(?:section|sections|s\.?|ss\.?)\s?\d+[a-z]*\b|\b[A-Z][A-Za-z'’]+(?:\s+[A-Z][A-Za-z'’]+)*\s+Act\s+\d{4}\b/g;
   for (const m of text.match(citationRe) ?? []) {
     if (!blob.includes(norm(m))) {

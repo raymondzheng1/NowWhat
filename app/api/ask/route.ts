@@ -54,9 +54,6 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  // TEMPORARY: surface the verifier's failing gates for diagnosis (?debug=1). Remove after.
-  const debug = req.nextUrl.searchParams.get("debug") === "1";
-
   let result;
   try {
     result = await runAsk({
@@ -66,15 +63,10 @@ export async function POST(req: NextRequest) {
       guard: ctx.guard,
       byoKeyValue: ctx.byoKeyValue,
     });
-  } catch (e) {
+  } catch {
     // Provider/network error — never expose internals; degrade to honest help.
     return apiJson(
-      {
-        ok: true,
-        status: "not-covered",
-        getHelp: retrieved.entry.getHelp ?? fallbackHelp?.getHelp ?? [],
-        ...(debug ? { debugError: e instanceof Error ? e.message.slice(0, 160) : "unknown" } : {}),
-      },
+      { ok: true, status: "not-covered", getHelp: retrieved.entry.getHelp ?? fallbackHelp?.getHelp ?? [] },
       ctx,
     );
   }
@@ -85,7 +77,6 @@ export async function POST(req: NextRequest) {
         ok: true,
         status: "not-covered",
         getHelp: (retrieved.entry.getHelp.length ? retrieved.entry : fallbackHelp)?.getHelp ?? [],
-        ...(debug ? { attempts: result.attempts, lastFailures: result.lastFailures } : {}),
       },
       ctx,
     );

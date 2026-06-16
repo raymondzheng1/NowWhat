@@ -91,6 +91,16 @@ describe("verifier — grounded-or-silent + info-not-advice", () => {
     expect(bad.failures.some((f) => f.gate === "jurisdiction")).toBe(true);
   });
 
+  it("accepts a reworded/shortened real source (model paraphrase, same domain)", () => {
+    // The model dropped a clause but kept the real consumer.vic.gov.au source.
+    const r = verifyOutput({
+      text: "You may be able to challenge the notice to vacate.",
+      declaredSources: ["Consumer Affairs Victoria — Challenging a notice to vacate — consumer.vic.gov.au"],
+      entry: renting,
+    });
+    expect(r.failures.some((f) => f.gate === "source-allowlist")).toBe(false);
+  });
+
   it("rejects content with no source (provenance)", () => {
     const r = verifyOutput({
       text: "You may be able to ask for a review.",

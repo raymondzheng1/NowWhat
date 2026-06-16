@@ -25,7 +25,7 @@ Return JSON:
   "restated": string,           // the question in plain words
   "answer": string,             // grounded answer, short plain sentences
   "nextStep": string,           // a neutral next step (information, never advice)
-  "sources": string[]           // source strings copied from the context's SOURCES/PATHWAY source fields
+  "sources": string[]           // copy 1-3 source strings VERBATIM from the context's "source:" / SOURCES lines — do not shorten, merge, or reword them
 }
 `.trim();
 
@@ -36,7 +36,7 @@ Return JSON:
   "whatItIs": string,           // one plain line: what this letter is
   "whatItMeans": string,        // 2-3 plain sentences: what it means for the person
   "options": string[],          // neutral list of options the person may have (no advice)
-  "sources": string[]           // source strings copied from the context
+  "sources": string[]           // copy 1-3 source strings VERBATIM from the context's "source:" / SOURCES lines — do not shorten, merge, or reword them
 }
 `.trim();
 
