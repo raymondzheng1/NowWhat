@@ -175,10 +175,28 @@
     "budget": "We've reached today's free usage limit. Please try again tomorrow.",
     "unavailable": "The service is temporarily unavailable. Please try again in a little while.",
     "badInput": "Please check what you entered and try again.",
-    "generic": "Something went wrong. Please try again."
+    "generic": "Something went wrong. Please try again.",
+    "contactUnavailable": "Messages aren't set up yet. In the meantime, the Get help page lists free services.",
+    "contactRateLimited": "You've sent a few messages already. Please try again later.",
+    "contactFailed": "We couldn't send your message right now. Please try again in a moment."
+  },
+  "contact": {
+    "title": "Contact us",
+    "intro": "Send us a message about the service and we'll read it. For help with your own situation, the free services on the Get help page are the fastest route.",
+    "name": "Your name",
+    "email": "Your email",
+    "message": "Your message",
+    "submit": "Send message",
+    "sending": "Sending…",
+    "sentEyebrow": "Message sent",
+    "sentTitle": "Thanks — we'll get back to you.",
+    "sentBody": "We read every message. We never share your details.",
+    "privacyNote": "We use your message and email only to reply. We don't store them on this site or share them."
   },
   "footer": {
     "infoNotAdvice": "General information, not legal advice. We can't tell you what will happen in your case.",
+    "contact": "Contact us",
+    "terms": "Terms",
     "privacy": "Privacy",
     "about": "About",
     "help": "Get help",

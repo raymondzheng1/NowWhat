@@ -20,15 +20,19 @@ export function Footer() {
         <Wordmark size={28} tone="light" textClassName="text-[16px]" />
         <p className="max-w-prose text-sm leading-relaxed">{t("infoNotAdvice")}</p>
         <nav aria-label="Footer" className="flex flex-wrap gap-5 text-sm">
-          <Link href="/about" className="text-[#9fb0c4] underline-offset-2 hover:text-white hover:underline">
-            {t("about")}
-          </Link>
-          <Link href="/privacy" className="text-[#9fb0c4] underline-offset-2 hover:text-white hover:underline">
-            {t("privacy")}
-          </Link>
-          <Link href="/help" className="text-[#9fb0c4] underline-offset-2 hover:text-white hover:underline">
-            {t("help")}
-          </Link>
+          {(
+            [
+              ["/about", t("about")],
+              ["/help", t("help")],
+              ["/contact", t("contact")],
+              ["/privacy", t("privacy")],
+              ["/terms", t("terms")],
+            ] as const
+          ).map(([href, label]) => (
+            <Link key={href} href={href} className="text-[#9fb0c4] underline-offset-2 hover:text-white hover:underline">
+              {label}
+            </Link>
+          ))}
         </nav>
       </div>
     </footer>
