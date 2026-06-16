@@ -12,8 +12,13 @@ export interface SendResult {
 
 const FROM = () => process.env.CONTACT_FROM_EMAIL?.trim() || "What Now? <noreply@whatnow.local>";
 
+/** Operator inbox (harness §16.3 uses ADMIN_NOTIFY_EMAIL; CONTACT_TO_EMAIL is a fallback). */
+export function operatorEmail(): string | undefined {
+  return process.env.ADMIN_NOTIFY_EMAIL?.trim() || process.env.CONTACT_TO_EMAIL?.trim();
+}
+
 export function isEmailConfigured(): boolean {
-  return Boolean(process.env.RESEND_API_KEY && process.env.CONTACT_TO_EMAIL);
+  return Boolean(process.env.RESEND_API_KEY && operatorEmail());
 }
 
 export async function sendEmail(opts: {

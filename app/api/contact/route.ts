@@ -3,8 +3,8 @@ import { z } from "zod";
 import { getRequestContext } from "@/lib/http/request-context";
 import { apiJson } from "@/lib/http/respond";
 import { getKv } from "@/lib/kv/redis";
-import { sendEmail, isEmailConfigured, escapeHtml } from "@/lib/email/send";
-import { todayUtc } from "@/lib/time/clock";
+import { sendEmail, isEmailConfigured, operatorEmail, escapeHtml } from "@/lib/email/send";
+import { now } from "@/lib/time/clock";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -17,7 +17,7 @@ const ContactSchema = z.object({
   company: z.string().max(0).optional().or(z.literal("")),
 });
 
-const MAX_PER_IP_PER_DAY = 5;
+const MAX_PER_IP_PER_HOUR = 3; // harness §16.3
 
 /** Contact form (harness §16). Sends to the operator via Resend; nothing is stored. */
 export async function POST(req: NextRequest) {
@@ -39,13 +39,14 @@ export async function POST(req: NextRequest) {
     return apiJson({ ok: false, message: "errors.contactUnavailable" }, ctx, 503);
   }
 
-  // Light per-IP daily limit (best-effort; never blocks on KV error).
+  // Light per-IP hourly limit (best-effort; never blocks on KV error). Harness §16.3.
   try {
-    const key = `contact:${ctx.guard.ip}:${todayUtc()}`;
+    const hour = new Date(now()).toISOString().slice(0, 13); // YYYY-MM-DDTHH
+    const key = `contact:${ctx.guard.ip}:${hour}`;
     const kv = getKv();
     const n = await kv.incr(key);
-    if (n === 1) await kv.expire(key, 86_400);
-    if (n > MAX_PER_IP_PER_DAY) {
+    if (n === 1) await kv.expire(key, 3600);
+    if (n > MAX_PER_IP_PER_HOUR) {
       return apiJson({ ok: false, message: "errors.contactRateLimited" }, ctx, 429);
     }
   } catch {
@@ -53,8 +54,9 @@ export async function POST(req: NextRequest) {
   }
 
   const { name, email, message } = parsed.data;
+  const to = operatorEmail() as string;
   const result = await sendEmail({
-    to: process.env.CONTACT_TO_EMAIL as string,
+    to,
     replyTo: email,
     subject: `What Now? — contact form: ${name}`.slice(0, 200),
     tag: "contact",
@@ -65,5 +67,15 @@ export async function POST(req: NextRequest) {
   if (!result.ok) {
     return apiJson({ ok: false, message: "errors.contactFailed" }, ctx, 502);
   }
+
+  // Acknowledge to the user (best-effort; never blocks the success response). §16.3.
+  void sendEmail({
+    to: email,
+    subject: "We've received your message — What Now?",
+    tag: "contact-ack",
+    text: `Hi ${name},\n\nThanks for reaching out — we've received your message and will get back to you. This inbox is for the service; for help with your own situation, free legal services are listed at our Get help page.\n\n— What Now?`,
+    html: `<p>Hi ${escapeHtml(name)},</p><p>Thanks for reaching out — we&rsquo;ve received your message and will get back to you.</p><p>For help with your own situation, free legal services are listed on our Get help page.</p><p>— What Now?</p>`,
+  });
+
   return apiJson({ ok: true }, ctx);
 }
