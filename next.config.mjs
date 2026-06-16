@@ -18,7 +18,9 @@ function contentSecurityPolicy() {
   const ga = "https://www.googletagmanager.com https://www.google-analytics.com";
   const gaConnect =
     "https://www.google-analytics.com https://region1.google-analytics.com https://*.google-analytics.com https://www.googletagmanager.com";
-  const devScript = isDev ? " https://va.vercel-scripts.com" : "";
+  // Dev only: Next's React Refresh / HMR uses eval, so dev needs 'unsafe-eval' or the
+  // client bundle is CSP-blocked and the app never hydrates. Production never uses eval.
+  const devScript = isDev ? " 'unsafe-eval' https://va.vercel-scripts.com" : "";
   return [
     "default-src 'self'",
     `script-src 'self' 'unsafe-inline' ${ga}${devScript}`,

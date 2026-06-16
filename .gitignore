@@ -27,6 +27,9 @@ pnpm-debug.log*
 
 # test / coverage
 /coverage
+/test-results
+/playwright-report
+/playwright/.cache
 
 # vercel
 .vercel

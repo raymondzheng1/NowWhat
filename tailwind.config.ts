@@ -15,7 +15,9 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: { DEFAULT: "#14253a", soft: "#44566b", faint: "#7b8794" },
+        // faint darkened from the handoff's #7b8794 (3.7:1) to meet WCAG AA (4.5:1) for
+        // the small meta/caption text it's used on — axe-verified on white + paper-warm.
+        ink: { DEFAULT: "#14253a", soft: "#44566b", faint: "#5f6b78" },
         paper: { DEFAULT: "#ffffff", warm: "#f7f4ee", sunk: "#eef0f2" },
         navy: { DEFAULT: "#1b3a5b", dark: "#122a44", soft: "#e7edf3", ink: "#102744" },
         brass: { DEFAULT: "#b08d57", text: "#6f5527", q: "#9c7a3e" },

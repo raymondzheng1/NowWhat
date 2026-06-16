@@ -9,6 +9,7 @@
     "start": "next start",
     "lint": "eslint . && tsc --noEmit",
     "test": "vitest run",
+    "e2e": "playwright test",
     "coverage": "vitest run --coverage",
     "build:corpus": "node scripts/build-corpus.mjs",
     "faq:draft": "node scripts/faq-draft.mjs",
@@ -35,7 +36,9 @@
     "zod": "^3.24.1"
   },
   "devDependencies": {
+    "@axe-core/playwright": "^4.11.3",
     "@eslint/eslintrc": "^3.2.0",
+    "@playwright/test": "^1.61.0",
     "@types/node": "^22.10.7",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
