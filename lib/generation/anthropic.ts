@@ -75,3 +75,61 @@ export const callModel: ModelFn = async (call) => {
     model: call.model,
   };
 };
+
+// --- Vision (used only for in-memory OCR transcription of an uploaded letter) ---
+
+export interface VisionCall {
+  bytes: Uint8Array;
+  /** e.g. "image/jpeg", "image/png", "image/webp", "application/pdf". */
+  mediaType: string;
+  prompt: string;
+  model: string;
+  maxTokens: number;
+}
+export type VisionFn = (call: VisionCall) => Promise<ModelResult>;
+
+let injectedVision: VisionFn | null = null;
+/** Test seam — inject a fake vision model in tests. */
+export function __setVisionForTests(fn: VisionFn | null): void {
+  injectedVision = fn;
+}
+
+const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/gif", "image/webp"]);
+
+/** Read text from an image/PDF held in memory (no network/key needed in tests). */
+export const callVision: VisionFn = async (call) => {
+  if (injectedVision) return injectedVision(call);
+
+  const anthropic = client();
+  const data = Buffer.from(call.bytes).toString("base64");
+  let block: Anthropic.ContentBlockParam;
+  if (call.mediaType === "application/pdf") {
+    block = { type: "document", source: { type: "base64", media_type: "application/pdf", data } };
+  } else {
+    const media_type = (IMAGE_TYPES.has(call.mediaType) ? call.mediaType : "image/png") as
+      | "image/jpeg"
+      | "image/png"
+      | "image/gif"
+      | "image/webp";
+    block = { type: "image", source: { type: "base64", media_type, data } };
+  }
+  const content: Anthropic.ContentBlockParam[] = [block, { type: "text", text: call.prompt }];
+
+  const res = await anthropic.messages.create({
+    model: call.model,
+    max_tokens: call.maxTokens,
+    messages: [{ role: "user", content }],
+  });
+
+  const text = res.content
+    .filter((b): b is Anthropic.TextBlock => b.type === "text")
+    .map((b) => b.text)
+    .join("");
+
+  return {
+    text,
+    inputTokens: res.usage.input_tokens,
+    outputTokens: res.usage.output_tokens,
+    model: call.model,
+  };
+};

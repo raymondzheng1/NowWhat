@@ -3,7 +3,7 @@ import { NextRequest } from "next/server";
 import { POST as askPost } from "@/app/api/ask/route";
 import { POST as decodePost } from "@/app/api/decode/route";
 import { __setKvForTests, MemoryKv } from "@/lib/kv/redis";
-import { __setModelForTests, type ModelFn } from "@/lib/generation/anthropic";
+import { __setModelForTests, __setVisionForTests, type ModelFn } from "@/lib/generation/anthropic";
 import { record } from "@/lib/cost/guard";
 import { SESSION_CAP_USD } from "@/lib/config";
 
@@ -50,6 +50,7 @@ beforeEach(() => __setKvForTests(new MemoryKv()));
 afterEach(() => {
   __setKvForTests(null);
   __setModelForTests(null);
+  __setVisionForTests(null);
 });
 
 describe("/api/ask", () => {
@@ -122,5 +123,34 @@ describe("/api/decode", () => {
     const res = await decodePost(jsonReq("http://t/api/decode", { text: letter, locale: "en" }));
     const raw = JSON.stringify(await res.json());
     expect(raw).not.toContain(SECRET);
+  });
+
+  it("OCRs an uploaded photo, decodes it, and never echoes the transcribed text", async () => {
+    const SECRET = "OCRSECRET_DO_NOT_LEAK_77";
+    __setVisionForTests(async (c) => ({
+      text: `Notice to vacate from your rental provider. Reference ${SECRET}.`,
+      inputTokens: 600,
+      outputTokens: 30,
+      model: c.model,
+    }));
+    __setModelForTests(async (call) => ({
+      text: JSON.stringify({
+        covered: true,
+        whatItIs: "A notice to vacate from your rental provider.",
+        whatItMeans: "It says your rental provider wants you to move out. You may be able to ask VCAT to check whether the notice is valid.",
+        options: [],
+        sources: [GOOD_SOURCE],
+      }),
+      inputTokens: 50,
+      outputTokens: 50,
+      model: call.model,
+    }));
+    const fd = new FormData();
+    fd.append("file", new File([new Uint8Array([137, 80, 78, 71])], "letter.png", { type: "image/png" }));
+    const res = await decodePost(new NextRequest("http://t/api/decode", { method: "POST", body: fd }));
+    const body = await res.json();
+    expect(body.status).toBe("answered");
+    expect(body.entry.id).toBe("vic-renting");
+    expect(JSON.stringify(body)).not.toContain(SECRET);
   });
 });

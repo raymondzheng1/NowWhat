@@ -231,6 +231,12 @@ export function WizardClient({ entries }: { entries: EntrySummary[] }) {
                 rows={9}
                 className="input mt-4 leading-relaxed"
               />
+              <p className="mt-3 text-sm text-ink-soft">
+                Got a photo of the letter instead?{" "}
+                <Link href="/decode" className="link font-semibold">
+                  Scan or upload it →
+                </Link>
+              </p>
             </>
           )}
 
