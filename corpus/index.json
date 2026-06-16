@@ -1,0 +1,578 @@
+{
+  "builtAt": "3d2106382b83eeca",
+  "entries": [
+    {
+      "id": "centrelink-debt",
+      "title": "Centrelink said I owe money or changed my payment",
+      "jurisdiction": "Commonwealth",
+      "status": "seed",
+      "decisionTypes": [
+        "debt notice",
+        "overpayment",
+        "account payable",
+        "payment cancelled",
+        "payment reduced",
+        "payment suspended",
+        "claim rejected",
+        "claim refused"
+      ],
+      "issuers": [
+        "Services Australia",
+        "Centrelink"
+      ],
+      "keywords": [
+        "robodebt",
+        "jobseeker",
+        "youth allowance",
+        "age pension",
+        "disability support pension",
+        "family tax benefit",
+        "mutual obligation",
+        "income report"
+      ],
+      "reviewable": {
+        "value": "yes",
+        "basis": "Most Centrelink decisions can be reviewed.",
+        "verified": false
+      },
+      "pathways": [
+        {
+          "deadlineDays": null,
+          "deadlineVerified": false,
+          "cost": "free",
+          "howCounted": "from the date of the decision",
+          "name": "Internal review (ask a review officer to look again)",
+          "body": "Services Australia",
+          "deadline": "There is a time limit — VERIFY current timeframe + source before launch",
+          "howToStart": "ask Services Australia for a formal review of the decision",
+          "source": "VERIFY (servicesaustralia.gov.au / Social Security (Administration) Act)"
+        },
+        {
+          "deadlineDays": null,
+          "deadlineVerified": false,
+          "cost": "free",
+          "howCounted": "from the internal review decision",
+          "name": "External merits review (an independent tribunal looks at it)",
+          "body": "Administrative Review Tribunal (ART)",
+          "deadline": "There is a time limit — VERIFY current timeframe + source before launch",
+          "howToStart": "apply to the ART",
+          "source": "VERIFY (art.gov.au)"
+        },
+        {
+          "deadlineDays": null,
+          "deadlineVerified": false,
+          "cost": "free",
+          "name": "Complaint",
+          "body": "Commonwealth Ombudsman",
+          "deadline": "no fixed time limit",
+          "howToStart": "make a complaint online",
+          "source": "VERIFY (ombudsman.gov.au)"
+        }
+      ],
+      "rightToReasons": {
+        "available": "yes",
+        "how": "you can ask Services Australia for the reasons for the decision in writing",
+        "provision": "VERIFY exact provision + source",
+        "source": "VERIFY",
+        "verified": false
+      },
+      "groundsOrCriteria": [
+        "the decision used wrong information, such as income or dates (VERIFY framing + source)",
+        "the law or the payment rate was applied incorrectly (VERIFY)",
+        "your actual circumstances were not taken into account (VERIFY)"
+      ],
+      "evidenceChecklist": [
+        "payslips or income records for the period in question",
+        "letters and dates from Centrelink about the decision",
+        "anything that shows your actual circumstances at the time"
+      ],
+      "getHelp": [
+        {
+          "service": "Legal Aid",
+          "who": "your state or territory Legal Aid commission",
+          "link": "VERIFY"
+        },
+        {
+          "service": "Welfare rights / Economic Justice Australia",
+          "who": "free, specialist social-security help",
+          "link": "VERIFY"
+        }
+      ],
+      "plainLanguageExplainer": "Centrelink has made a decision about your payment, or says you owe money. In most cases you can ask them to look at it again, and if you still disagree you can ask an independent tribunal to review it for free. There is a time limit, so it helps to find out the date early.",
+      "sources": [
+        "VERIFY: Social Security (Administration) Act 1999 (Cth)",
+        "VERIFY: servicesaustralia.gov.au — reviews and appeals",
+        "VERIFY: art.gov.au — applying for review"
+      ],
+      "lastVerified": null,
+      "body": "Centrelink (Services Australia) has made a decision about your payment, or says you\nhave a debt. In most cases you can ask them to look at the decision again, and if you\nstill disagree you can ask an independent tribunal to review it — and that review is\nfree. There is a time limit, so it helps to find out the date early.\n\n> All of the figures and time limits in this entry are marked **VERIFY** and must be\n> confirmed against the cited source by a human before launch. Until then the app does\n> not state a specific deadline — it explains that a time limit applies and routes the\n> person to a free service that can confirm it."
+    },
+    {
+      "id": "commonwealth-generic",
+      "title": "A Commonwealth (federal) government decision I disagree with",
+      "jurisdiction": "Commonwealth",
+      "status": "seed",
+      "decisionTypes": [
+        "government decision",
+        "decision letter",
+        "refused",
+        "declined",
+        "rejected",
+        "cancelled",
+        "notice of decision"
+      ],
+      "issuers": [
+        "Commonwealth department",
+        "federal government agency",
+        "Australian Government"
+      ],
+      "keywords": [
+        "merits review",
+        "right to reasons",
+        "administrative decision",
+        "tribunal",
+        "ombudsman"
+      ],
+      "reviewable": {
+        "value": "sometimes",
+        "basis": "Many — but not all — Commonwealth decisions can be reviewed. Whether yours can, and how, depends on the law that the decision was made under.",
+        "verified": false
+      },
+      "pathways": [
+        {
+          "deadlineDays": null,
+          "deadlineVerified": false,
+          "cost": "usually free",
+          "howCounted": "usually from the decision date, if a time limit applies",
+          "name": "Internal review (ask the agency to look again)",
+          "body": "the agency that made the decision",
+          "deadline": "There may be a time limit — VERIFY whether one applies + source",
+          "howToStart": "ask the agency in writing to review the decision",
+          "source": "VERIFY (the Act the decision was made under)"
+        },
+        {
+          "deadlineDays": null,
+          "deadlineVerified": false,
+          "cost": "VERIFY (many are free or low-cost)",
+          "howCounted": "usually from the decision being reviewed",
+          "name": "External merits review (an independent tribunal looks at it)",
+          "body": "Administrative Review Tribunal (ART)",
+          "deadline": "There is usually a time limit — VERIFY current timeframe + source",
+          "howToStart": "check whether the decision is one the ART can review, then apply",
+          "source": "VERIFY (art.gov.au)"
+        },
+        {
+          "deadlineDays": null,
+          "deadlineVerified": false,
+          "cost": "free",
+          "name": "Complaint",
+          "body": "Commonwealth Ombudsman",
+          "deadline": "no fixed time limit",
+          "howToStart": "make a complaint online if you think the agency acted unfairly",
+          "source": "VERIFY (ombudsman.gov.au)"
+        }
+      ],
+      "rightToReasons": {
+        "available": "sometimes",
+        "how": "for many Commonwealth decisions you can ask, in writing, for a statement of reasons",
+        "provision": "VERIFY exact provision + source",
+        "source": "VERIFY",
+        "verified": false
+      },
+      "groundsOrCriteria": [
+        "whether the decision-maker applied the right law and criteria (VERIFY)",
+        "whether all the relevant facts about your situation were considered (VERIFY)"
+      ],
+      "evidenceChecklist": [
+        "the decision letter and any reference numbers",
+        "the date the decision was made or sent",
+        "anything that shows your actual circumstances"
+      ],
+      "getHelp": [
+        {
+          "service": "Legal Aid",
+          "who": "your state or territory Legal Aid commission",
+          "link": "VERIFY"
+        },
+        {
+          "service": "Community Legal Centre",
+          "who": "free local legal help",
+          "link": "VERIFY"
+        }
+      ],
+      "plainLanguageExplainer": "This is a general guide for a decision made by a federal government office. Many government decisions can be reviewed if you disagree, but not all of them. The time limits and steps depend on the law behind the decision. Because the details matter, it helps to check with a free legal service. They can tell you if your decision can be reviewed, and by when.",
+      "sources": [
+        "VERIFY: Administrative Review Tribunal Act 2024 (Cth)",
+        "VERIFY: art.gov.au — what decisions can be reviewed",
+        "VERIFY: ombudsman.gov.au"
+      ],
+      "lastVerified": null,
+      "body": "This is a general guide for a decision made by a Commonwealth (federal) government\nagency when there isn't a more specific guide for your exact situation. Many\ngovernment decisions can be reviewed, but not all of them, and the time limits and\nsteps depend on the law the decision was made under. Because the details matter, the\nsafest next step is to talk to a free legal service, who can confirm whether your\ndecision can be reviewed and by when.\n\n> This is the fallback entry. It deliberately stays general and routes the person to\n> human help rather than asserting a pathway or deadline that may not apply to them."
+    },
+    {
+      "id": "ndis-plan",
+      "title": "The NDIS made a decision about my plan or my eligibility",
+      "jurisdiction": "Commonwealth",
+      "status": "seed",
+      "decisionTypes": [
+        "plan decision",
+        "plan review",
+        "funding reduced",
+        "support not approved",
+        "support not funded",
+        "access decision",
+        "eligibility refused",
+        "access refused"
+      ],
+      "issuers": [
+        "National Disability Insurance Agency",
+        "NDIA",
+        "NDIS"
+      ],
+      "keywords": [
+        "reasonable and necessary",
+        "access request",
+        "plan reassessment",
+        "participant",
+        "support coordination"
+      ],
+      "reviewable": {
+        "value": "yes",
+        "basis": "NDIS decisions have an internal review, then an external review path.",
+        "verified": false
+      },
+      "pathways": [
+        {
+          "deadlineDays": null,
+          "deadlineVerified": false,
+          "cost": "free",
+          "howCounted": "from the decision date",
+          "name": "Internal review (review of a reviewable decision)",
+          "body": "NDIA",
+          "deadline": "There is a time limit — VERIFY current timeframe + source before launch",
+          "howToStart": "ask the NDIA to review the decision",
+          "source": "VERIFY (ndis.gov.au / National Disability Insurance Scheme Act)"
+        },
+        {
+          "deadlineDays": null,
+          "deadlineVerified": false,
+          "cost": "free",
+          "howCounted": "from the internal review decision",
+          "name": "External merits review (an independent tribunal looks at it)",
+          "body": "Administrative Review Tribunal (ART)",
+          "deadline": "There is a time limit — VERIFY current timeframe + source before launch",
+          "howToStart": "apply to the ART; free advocacy may be available to help you",
+          "source": "VERIFY (art.gov.au)"
+        }
+      ],
+      "rightToReasons": {
+        "available": "yes",
+        "how": "you can ask the NDIA for the reasons for the decision",
+        "provision": "VERIFY exact provision + source",
+        "source": "VERIFY",
+        "verified": false
+      },
+      "groundsOrCriteria": [
+        "whether a support meets the 'reasonable and necessary' test (VERIFY exact criteria + source)",
+        "new evidence about your needs that wasn't considered (VERIFY)"
+      ],
+      "evidenceChecklist": [
+        "reports from your treating professionals (doctors, therapists)",
+        "evidence of how a support helps you take part in daily life, work or study",
+        "quotes or assessments for the supports you need"
+      ],
+      "getHelp": [
+        {
+          "service": "NDIS Appeals advocacy",
+          "who": "free, funded advocates who help with NDIS reviews",
+          "link": "VERIFY"
+        },
+        {
+          "service": "Legal Aid / disability advocacy",
+          "who": "free legal and advocacy help",
+          "link": "VERIFY"
+        }
+      ],
+      "plainLanguageExplainer": "The NDIA has made a decision about whether you can access the NDIS, or about what is in your plan. You can ask the NDIA to review the decision, and if you still disagree you can ask an independent tribunal to review it for free. Free advocates can help you. There is a time limit, so it helps to find out the date early.",
+      "sources": [
+        "VERIFY: National Disability Insurance Scheme Act 2013 (Cth)",
+        "VERIFY: ndis.gov.au — reviews and appeals",
+        "VERIFY: art.gov.au — applying for review"
+      ],
+      "lastVerified": null,
+      "body": "The NDIA has made a decision about whether you can access the NDIS, or about what is\nin your plan. You can ask the NDIA to review the decision, and if you still disagree\nyou can ask an independent tribunal to review it for free. Free advocates can help you\nthrough the process. There is a time limit, so it helps to find out the date early.\n\n> All figures and time limits here are marked **VERIFY** and must be confirmed by a\n> human before launch. The app does not state a specific deadline until that happens."
+    }
+  ],
+  "classification": [
+    {
+      "token": "debt notice",
+      "entryId": "centrelink-debt",
+      "kind": "decisionType"
+    },
+    {
+      "token": "overpayment",
+      "entryId": "centrelink-debt",
+      "kind": "decisionType"
+    },
+    {
+      "token": "account payable",
+      "entryId": "centrelink-debt",
+      "kind": "decisionType"
+    },
+    {
+      "token": "payment cancelled",
+      "entryId": "centrelink-debt",
+      "kind": "decisionType"
+    },
+    {
+      "token": "payment reduced",
+      "entryId": "centrelink-debt",
+      "kind": "decisionType"
+    },
+    {
+      "token": "payment suspended",
+      "entryId": "centrelink-debt",
+      "kind": "decisionType"
+    },
+    {
+      "token": "claim rejected",
+      "entryId": "centrelink-debt",
+      "kind": "decisionType"
+    },
+    {
+      "token": "claim refused",
+      "entryId": "centrelink-debt",
+      "kind": "decisionType"
+    },
+    {
+      "token": "services australia",
+      "entryId": "centrelink-debt",
+      "kind": "issuer"
+    },
+    {
+      "token": "centrelink",
+      "entryId": "centrelink-debt",
+      "kind": "issuer"
+    },
+    {
+      "token": "robodebt",
+      "entryId": "centrelink-debt",
+      "kind": "keyword"
+    },
+    {
+      "token": "jobseeker",
+      "entryId": "centrelink-debt",
+      "kind": "keyword"
+    },
+    {
+      "token": "youth allowance",
+      "entryId": "centrelink-debt",
+      "kind": "keyword"
+    },
+    {
+      "token": "age pension",
+      "entryId": "centrelink-debt",
+      "kind": "keyword"
+    },
+    {
+      "token": "disability support pension",
+      "entryId": "centrelink-debt",
+      "kind": "keyword"
+    },
+    {
+      "token": "family tax benefit",
+      "entryId": "centrelink-debt",
+      "kind": "keyword"
+    },
+    {
+      "token": "mutual obligation",
+      "entryId": "centrelink-debt",
+      "kind": "keyword"
+    },
+    {
+      "token": "income report",
+      "entryId": "centrelink-debt",
+      "kind": "keyword"
+    },
+    {
+      "token": "centrelink said i owe money or changed my payment",
+      "entryId": "centrelink-debt",
+      "kind": "title"
+    },
+    {
+      "token": "government decision",
+      "entryId": "commonwealth-generic",
+      "kind": "decisionType"
+    },
+    {
+      "token": "decision letter",
+      "entryId": "commonwealth-generic",
+      "kind": "decisionType"
+    },
+    {
+      "token": "refused",
+      "entryId": "commonwealth-generic",
+      "kind": "decisionType"
+    },
+    {
+      "token": "declined",
+      "entryId": "commonwealth-generic",
+      "kind": "decisionType"
+    },
+    {
+      "token": "rejected",
+      "entryId": "commonwealth-generic",
+      "kind": "decisionType"
+    },
+    {
+      "token": "cancelled",
+      "entryId": "commonwealth-generic",
+      "kind": "decisionType"
+    },
+    {
+      "token": "notice of decision",
+      "entryId": "commonwealth-generic",
+      "kind": "decisionType"
+    },
+    {
+      "token": "commonwealth department",
+      "entryId": "commonwealth-generic",
+      "kind": "issuer"
+    },
+    {
+      "token": "federal government agency",
+      "entryId": "commonwealth-generic",
+      "kind": "issuer"
+    },
+    {
+      "token": "australian government",
+      "entryId": "commonwealth-generic",
+      "kind": "issuer"
+    },
+    {
+      "token": "merits review",
+      "entryId": "commonwealth-generic",
+      "kind": "keyword"
+    },
+    {
+      "token": "right to reasons",
+      "entryId": "commonwealth-generic",
+      "kind": "keyword"
+    },
+    {
+      "token": "administrative decision",
+      "entryId": "commonwealth-generic",
+      "kind": "keyword"
+    },
+    {
+      "token": "tribunal",
+      "entryId": "commonwealth-generic",
+      "kind": "keyword"
+    },
+    {
+      "token": "ombudsman",
+      "entryId": "commonwealth-generic",
+      "kind": "keyword"
+    },
+    {
+      "token": "a commonwealth (federal) government decision i disagree with",
+      "entryId": "commonwealth-generic",
+      "kind": "title"
+    },
+    {
+      "token": "plan decision",
+      "entryId": "ndis-plan",
+      "kind": "decisionType"
+    },
+    {
+      "token": "plan review",
+      "entryId": "ndis-plan",
+      "kind": "decisionType"
+    },
+    {
+      "token": "funding reduced",
+      "entryId": "ndis-plan",
+      "kind": "decisionType"
+    },
+    {
+      "token": "support not approved",
+      "entryId": "ndis-plan",
+      "kind": "decisionType"
+    },
+    {
+      "token": "support not funded",
+      "entryId": "ndis-plan",
+      "kind": "decisionType"
+    },
+    {
+      "token": "access decision",
+      "entryId": "ndis-plan",
+      "kind": "decisionType"
+    },
+    {
+      "token": "eligibility refused",
+      "entryId": "ndis-plan",
+      "kind": "decisionType"
+    },
+    {
+      "token": "access refused",
+      "entryId": "ndis-plan",
+      "kind": "decisionType"
+    },
+    {
+      "token": "national disability insurance agency",
+      "entryId": "ndis-plan",
+      "kind": "issuer"
+    },
+    {
+      "token": "ndia",
+      "entryId": "ndis-plan",
+      "kind": "issuer"
+    },
+    {
+      "token": "ndis",
+      "entryId": "ndis-plan",
+      "kind": "issuer"
+    },
+    {
+      "token": "reasonable and necessary",
+      "entryId": "ndis-plan",
+      "kind": "keyword"
+    },
+    {
+      "token": "access request",
+      "entryId": "ndis-plan",
+      "kind": "keyword"
+    },
+    {
+      "token": "plan reassessment",
+      "entryId": "ndis-plan",
+      "kind": "keyword"
+    },
+    {
+      "token": "participant",
+      "entryId": "ndis-plan",
+      "kind": "keyword"
+    },
+    {
+      "token": "support coordination",
+      "entryId": "ndis-plan",
+      "kind": "keyword"
+    },
+    {
+      "token": "the ndis made a decision about my plan or my eligibility",
+      "entryId": "ndis-plan",
+      "kind": "title"
+    }
+  ],
+  "sources": [
+    "VERIFY: Administrative Review Tribunal Act 2024 (Cth)",
+    "VERIFY: National Disability Insurance Scheme Act 2013 (Cth)",
+    "VERIFY: Social Security (Administration) Act 1999 (Cth)",
+    "VERIFY: art.gov.au — applying for review",
+    "VERIFY: art.gov.au — what decisions can be reviewed",
+    "VERIFY: ndis.gov.au — reviews and appeals",
+    "VERIFY: ombudsman.gov.au",
+    "VERIFY: servicesaustralia.gov.au — reviews and appeals"
+  ]
+}

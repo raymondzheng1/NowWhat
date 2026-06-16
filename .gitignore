@@ -1,0 +1,35 @@
+# dependencies
+/node_modules
+.pnp
+.pnp.js
+
+# next
+/.next/
+/out/
+next-env.d.ts
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+Thumbs.db
+
+# debug
+npm-debug.log*
+pnpm-debug.log*
+
+# env — real secrets never committed (harness §2.4)
+.env
+.env*.local
+.env.local
+
+# test / coverage
+/coverage
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo

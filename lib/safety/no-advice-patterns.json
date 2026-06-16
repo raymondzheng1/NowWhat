@@ -1,0 +1,35 @@
+{
+  "_comment": "SoT for the no-advice / no-prediction gate AND the no-advice-check linter (harness §11.2 tone gate, PRD §11). Both the runtime gate (lib/safety/no-advice.ts) and scripts/no-advice-check.mjs read THIS file. Patterns are JS regex source strings, matched case-insensitively. Keep precise to avoid flagging legitimate plain-language copy ('you may be able to...').",
+  "advice": [
+    { "pattern": "\\byou should\\b", "why": "first-person advice ('you should…')" },
+    { "pattern": "\\byou ought to\\b", "why": "first-person advice" },
+    { "pattern": "\\byou must\\b(?!\\s+(apply|lodge|act)\\s+(by|within|before))", "why": "directive advice" },
+    { "pattern": "\\bI (would |strongly )?(advise|recommend|suggest)\\b", "why": "first-person advice" },
+    { "pattern": "\\bwe (advise|recommend|suggest)\\b", "why": "first-person advice" },
+    { "pattern": "\\byour best (option|bet|move|choice) is\\b", "why": "directs a choice" },
+    { "pattern": "\\bthe best (option|thing|course) (for you|is to)\\b", "why": "directs a choice" },
+    { "pattern": "\\bI think you\\b", "why": "first-person advice" },
+    { "pattern": "\\byou'?d be better off\\b", "why": "directs a choice" }
+  ],
+  "prediction": [
+    { "pattern": "\\byou('| wi)?ll (win|lose|succeed|fail)\\b", "why": "predicts the outcome" },
+    { "pattern": "\\byou (will|won'?t|wo n't) (win|lose|succeed|get)\\b", "why": "predicts the outcome" },
+    { "pattern": "\\b(guarantee|guaranteed|guaranteeing)\\b", "why": "guarantees an outcome" },
+    { "pattern": "\\b(definitely|certainly|surely) (win|lose|succeed|fail|get)\\b", "why": "predicts the outcome" },
+    { "pattern": "\\byour (claim|appeal|case|review) will (succeed|fail|be (approved|rejected|won|lost))\\b", "why": "predicts the outcome" },
+    { "pattern": "\\b(high|good|strong|low|poor) chance(s)? of (winning|success|losing)\\b", "why": "predicts the outcome" },
+    { "pattern": "\\byou are (sure|certain) to\\b", "why": "predicts the outcome" }
+  ],
+  "aiMentions": [
+    { "pattern": "\\bAI\\b", "why": "no AI mentions in customer copy" },
+    { "pattern": "\\bA\\.I\\.", "why": "no AI mentions in customer copy" },
+    { "pattern": "\\bLLM\\b", "why": "no AI mentions in customer copy" },
+    { "pattern": "\\bClaude\\b", "why": "no model mentions in customer copy" },
+    { "pattern": "\\bChatGPT\\b", "why": "no model mentions in customer copy" },
+    { "pattern": "\\bAnthropic\\b", "why": "no vendor mentions in customer copy" },
+    { "pattern": "\\b(large )?language model\\b", "why": "no AI mentions in customer copy" },
+    { "pattern": "\\bartificial intelligence\\b", "why": "no AI mentions in customer copy" },
+    { "pattern": "\\bchatbot\\b", "why": "no AI mentions in customer copy" },
+    { "pattern": "\\bgenerative\\b", "why": "no AI mentions in customer copy" }
+  ]
+}

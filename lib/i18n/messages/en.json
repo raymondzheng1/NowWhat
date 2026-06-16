@@ -1,0 +1,148 @@
+{
+  "common": {
+    "productName": "What Now?",
+    "tagline": "Your rights when government says no",
+    "getHelp": "Get free help",
+    "sources": "Where this comes from",
+    "lastVerified": "Last checked",
+    "loading": "Working on it…",
+    "tryAgain": "Try again",
+    "back": "Back",
+    "print": "Print or save",
+    "download": "Download"
+  },
+  "nav": {
+    "home": "Home",
+    "ask": "Ask a question",
+    "scan": "Scan a letter",
+    "faq": "Common questions",
+    "help": "Get help"
+  },
+  "home": {
+    "heroTitle": "Government said no? Find out what you can do.",
+    "heroSubtitle": "Free, in plain English. We explain the letter, find the time limit, and point you to free help. We never keep your letter.",
+    "ctaScan": "Scan or paste a letter",
+    "ctaAsk": "Ask a question",
+    "trust1Title": "Plain language",
+    "trust1Body": "No jargon. We explain what the letter means and what steps people in your situation can take.",
+    "trust2Title": "Grounded in the rules",
+    "trust2Body": "Every answer points to the rule or service it comes from. If we're not sure, we say so and point you to a person who can help.",
+    "trust3Title": "Private by design",
+    "trust3Body": "Your letter is read on the spot and then discarded. We never store it, and you don't need an account.",
+    "howTitle": "How it works",
+    "howStep1": "Tell us about the decision — scan a photo of the letter, paste the text, or ask a question.",
+    "howStep2": "We explain it in plain language, find the review pathway and the time limit, and list what helps.",
+    "howStep3": "Get a draft you can edit, save your deadline, and connect with a free service if you want a person's help.",
+    "exampleTitle": "What an answer looks like",
+    "exampleBody": "Take Centrelink as an example. We explain what a debt notice means, that most decisions can be reviewed for free, that a time limit applies, and which free service can confirm the details — and we show the rule each point comes from.",
+    "faqTeaserTitle": "Common questions",
+    "faqTeaserBody": "Plain-language answers to the questions people ask most.",
+    "closingTitle": "You don't have to work this out alone.",
+    "closingBody": "Start with the letter or a question. It's free, and a free legal service is always one tap away."
+  },
+  "ask": {
+    "title": "Ask a question",
+    "intro": "Ask about a government decision in your own words. We answer in plain language and show where the answer comes from.",
+    "placeholder": "For example: Centrelink says I owe a debt — can I ask them to look at it again?",
+    "submit": "Get a plain-language answer",
+    "yourQuestion": "Your question",
+    "answer": "In plain language",
+    "nextStep": "A possible next step",
+    "notCoveredTitle": "We're not sure about this one",
+    "notCoveredBody": "We don't have confirmed information that covers your question, so we won't guess. A free legal service can help with your situation.",
+    "disclaimerNote": "This is general information, not advice about your case."
+  },
+  "decode": {
+    "title": "Scan or paste a letter",
+    "intro": "Take a photo of the letter, upload it, or paste the text. We read it on the spot to explain it — and then we discard it. We never store your letter.",
+    "uploadLabel": "Photo or PDF of the letter",
+    "pasteLabel": "Or paste the text of the letter",
+    "pastePlaceholder": "Paste what the letter says here…",
+    "submit": "Explain this letter",
+    "ocrUnavailableTitle": "Please paste the text",
+    "ocrUnavailableBody": "Reading photos isn't available right now. You can type or paste the words from your letter into the box and we'll explain them.",
+    "whatItIs": "What this letter is",
+    "whatItMeans": "What it means for you",
+    "options": "What you may be able to do",
+    "fallbackNote": "We matched this to a general guide. The details of your situation matter, so it's worth checking with a free service.",
+    "notCoveredTitle": "We don't have a guide for this yet",
+    "notCoveredBody": "We couldn't match this letter to confirmed information, so we won't guess. A free legal service can explain it and your options."
+  },
+  "deadline": {
+    "title": "The important date",
+    "decisionDateLabel": "What date is on the decision letter?",
+    "compute": "Work out the time limit",
+    "renderableLead": "Based on the date you gave, the time limit for this step is",
+    "daysRemaining": "{days} days left",
+    "passedWarning": "This date may have already passed. A time limit being missed doesn't always end things — a free service can tell you what's still possible.",
+    "howCounted": "Counted {howCounted}.",
+    "unverifiedTitle": "A time limit applies",
+    "addReminder": "Add a reminder to my calendar",
+    "reminderLabel": "Reminder name",
+    "reminderDefault": "Time limit to act on a government decision"
+  },
+  "draft": {
+    "title": "A draft you can use",
+    "intro": "Here's a starting letter you can edit and send yourself. It's a scaffold, not a finished document — change anything that doesn't fit, and fill in the parts in brackets.",
+    "reasonsRequest": "Ask for the reasons",
+    "reviewApplication": "Ask for a review",
+    "contextLabel": "Anything you'd like the letter to mention (optional)",
+    "contextPlaceholder": "A short note in your own words. Don't include anything you'd rather not write down.",
+    "generate": "Make my draft",
+    "editNote": "You can edit this text before you save or print it."
+  },
+  "help": {
+    "title": "Get free help",
+    "intro": "These services are free and independent. Talking to a person is often the best next step, especially for advice about your own situation.",
+    "forThis": "Help for this kind of decision",
+    "general": "General free legal help",
+    "alwaysFree": "These services are free."
+  },
+  "faq": {
+    "title": "Common questions",
+    "intro": "Plain-language answers, grounded in the rules and checked by a person before we publish them.",
+    "question": "The question",
+    "answer": "In plain language",
+    "ctaTitle": "Have a letter or a question of your own?",
+    "ctaBody": "Scan a letter or ask a question — free, in plain English.",
+    "ctaButton": "Start now",
+    "relatedTitle": "Related questions"
+  },
+  "privacy": {
+    "title": "Your privacy",
+    "intro": "This service is built so that we don't keep your letter or your answers.",
+    "point1": "Your letter is read on the spot to explain it, then discarded. We don't store it on our servers and we don't log what it says.",
+    "point2": "There's no account and no login. Anything kept for your convenience stays on your own device, and you can clear it any time.",
+    "point3": "We don't put your personal details into analytics.",
+    "point4": "When you connect with a free legal service, you deal with them directly under their own privacy rules."
+  },
+  "about": {
+    "title": "About this service",
+    "intro": "This is a free service that helps people understand and respond to government decisions.",
+    "infoNotAdvice": "This service gives general information, not legal advice, and cannot tell you what will happen in your case. For advice about your own situation, talk to a free legal service.",
+    "groundedTitle": "Grounded in the rules",
+    "groundedBody": "Every answer is grounded in a checked set of rules and points to where it comes from. When something isn't covered, the service says so and points you to a person who can help — it never guesses.",
+    "currencyTitle": "Keeping it current",
+    "currencyBody": "Rules and time limits change. Each entry carries the date it was last checked, and entries are reviewed on a regular cycle."
+  },
+  "consent": {
+    "message": "We use privacy-friendly analytics to understand how the service is used. No personal details are collected.",
+    "accept": "OK",
+    "decline": "No thanks"
+  },
+  "errors": {
+    "rateLimited": "You've made a lot of requests. Please wait a little while and try again.",
+    "capReached": "You've reached this session's free usage limit. You can use your own key to continue.",
+    "budget": "We've reached today's free usage limit. Please try again tomorrow.",
+    "unavailable": "The service is temporarily unavailable. Please try again in a little while.",
+    "badInput": "Please check what you entered and try again.",
+    "generic": "Something went wrong. Please try again."
+  },
+  "footer": {
+    "infoNotAdvice": "General information, not legal advice. We can't tell you what will happen in your case.",
+    "privacy": "Privacy",
+    "about": "About",
+    "help": "Get help",
+    "faq": "Common questions"
+  }
+}
