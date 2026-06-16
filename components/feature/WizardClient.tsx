@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import type { EntrySummary } from "@/lib/corpus/summary";
 import { postClassify } from "@/components/feature/api";
@@ -60,6 +60,24 @@ export function WizardClient({ entries }: { entries: EntrySummary[] }) {
   const progress = step === "choose" || step === "paste" ? 33 : pct;
   const stepNo = step === "details" ? 2 : 1;
   const stepTitle = step === "details" ? "Your details" : "About your decision";
+
+  // Handoff from the chat (/chat) or a deep link: /start?area=<id>&date=<YYYY-MM-DD>
+  // jumps straight to the Result. Read from window.location (client-only) so /start
+  // stays statically prerendered (no useSearchParams Suspense boundary needed).
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const area = params.get("area");
+    const date = params.get("date");
+    if (!area) return;
+    const e = entries.find((x) => x.id === area);
+    if (!e) return;
+    setSelected(e);
+    setSelectedId(e.id);
+    setIsFallback(e.id === "vic-generic");
+    if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) setDecisionDate(date);
+    setStep("result");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function reset() {
     setStep("choose");

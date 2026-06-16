@@ -10,7 +10,7 @@ const CONTENT_UPDATED = "2026-06-16";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = siteUrl();
-  const staticRoutes = ["", "/start", "/ask", "/decode", "/faq", "/help", "/about", "/contact", "/privacy", "/terms"];
+  const staticRoutes = ["", "/start", "/chat", "/ask", "/decode", "/faq", "/help", "/about", "/contact", "/privacy", "/terms"];
   const pages: MetadataRoute.Sitemap = staticRoutes.map((r) => ({
     url: `${base}${r}`,
     lastModified: CONTENT_UPDATED,

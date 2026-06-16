@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { NextRequest } from "next/server";
 import { POST as askPost } from "@/app/api/ask/route";
 import { POST as decodePost } from "@/app/api/decode/route";
+import { POST as chatPost } from "@/app/api/chat/route";
 import { __setKvForTests, MemoryKv } from "@/lib/kv/redis";
 import { __setModelForTests, __setVisionForTests, type ModelFn } from "@/lib/generation/anthropic";
 import { record } from "@/lib/cost/guard";
@@ -152,5 +153,49 @@ describe("/api/decode", () => {
     expect(body.status).toBe("answered");
     expect(body.entry.id).toBe("vic-renting");
     expect(JSON.stringify(body)).not.toContain(SECRET);
+  });
+});
+
+describe("/api/chat (conversational intake)", () => {
+  const chatReq = (messages: { role: string; content: string }[]) =>
+    jsonReq("http://t/api/chat", { messages });
+
+  it("routes a grounded reply and hands off to the matched area", async () => {
+    __setModelForTests(async (call) => ({
+      text: JSON.stringify({
+        reply: "In Victoria you may be able to ask VCAT to check a notice to vacate. Want me to pull up the guide?",
+        area: "vic-renting",
+        decisionDate: null,
+        handoff: true,
+      }),
+      inputTokens: 30,
+      outputTokens: 30,
+      model: call.model,
+    }));
+    const res = await chatPost(chatReq([{ role: "user", content: "I got a notice to vacate" }]));
+    const body = await res.json();
+    expect(body.status).toBe("ok");
+    expect(body.area).toBe("vic-renting");
+    expect(body.reply).toContain("VCAT");
+  });
+
+  it("gates an advice reply to the safe fallback", async () => {
+    __setModelForTests(async (call) => ({
+      text: JSON.stringify({ reply: "You should appeal immediately.", area: "vic-renting", decisionDate: null, handoff: false }),
+      inputTokens: 30,
+      outputTokens: 30,
+      model: call.model,
+    }));
+    const res = await chatPost(chatReq([{ role: "user", content: "renting notice to vacate" }]));
+    const body = await res.json();
+    expect(body.status).toBe("ok");
+    expect(body.reply.toLowerCase()).not.toContain("you should");
+  });
+
+  it("degrades to 'unavailable' when no model is configured", async () => {
+    // no model injected → isModelConfigured() is false
+    const res = await chatPost(chatReq([{ role: "user", content: "hello" }]));
+    const body = await res.json();
+    expect(body.status).toBe("unavailable");
   });
 });

@@ -47,7 +47,9 @@
     "howStep3Body": "A letter you can send, plus free people who can help.",
     "helpTitle": "Would rather talk to a person?",
     "helpBody": "Free help is always one tap away — no account needed.",
-    "helpCta": "Get free help"
+    "helpCta": "Get free help",
+    "chatLead": "Rather talk it through?",
+    "chatCta": "Start a chat →"
   },
   "wizard": {
     "title": "Let's work out what you can do",

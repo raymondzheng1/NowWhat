@@ -41,7 +41,11 @@ export default function HomePage() {
                 {t("ctaAsk")}
               </Link>
             </div>
-            <PrivacyNote className="mt-5">We never keep your letter or your details.</PrivacyNote>
+            <p className="mt-4 text-sm text-ink-soft">
+              {t("chatLead")}{" "}
+              <Link href="/chat" className="link font-semibold">{t("chatCta")}</Link>
+            </p>
+            <PrivacyNote className="mt-4">We never keep your letter or your details.</PrivacyNote>
           </div>
 
           {/* Payoff teaser — hidden on mobile (as in the reference) */}

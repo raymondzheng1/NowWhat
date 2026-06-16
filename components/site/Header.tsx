@@ -8,7 +8,7 @@ import { Wordmark } from "@/components/ui/Wordmark";
 import { Icon } from "@/components/ui/icons";
 
 // Focused tool surfaces provide their own header (progress / start-over / close).
-const APP_ROUTES = ["/start", "/ask", "/decode"];
+const APP_ROUTES = ["/start", "/ask", "/decode", "/chat"];
 export function isAppRoute(pathname: string): boolean {
   return APP_ROUTES.some((r) => pathname === r || pathname.startsWith(`${r}/`));
 }
