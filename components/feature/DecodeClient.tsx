@@ -7,7 +7,7 @@ import { ResultView } from "@/components/feature/ResultView";
 import { NotCovered } from "@/components/feature/NotCovered";
 import { ToolTopBar } from "@/components/site/ToolTopBar";
 import { PrivacyNote } from "@/components/ui/PrivacyNote";
-import { CATEGORY } from "@/components/feature/WizardClient";
+import { CATEGORY } from "@/components/feature/categories";
 
 export function DecodeClient() {
   const t = useTranslations("decode");

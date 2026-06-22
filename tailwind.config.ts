@@ -26,7 +26,9 @@ const config: Config = {
         // ---- K2 canonical ----
         rail: { DEFAULT: "#10363d", dark: "#0c2a30", fg: "#eef0e8", accent: "#c79a52" },
         sand: { DEFAULT: "#e8ddc7", surface: "#f4eedd" },
-        accent: "#8a6526",
+        // accent darkened from the README's #8a6526 (actually 3.93:1 on sand, not the
+        // claimed 4.6:1) to #7a5618 (~4.9:1) to meet WCAG AA for link/label text — axe-verified.
+        accent: "#7a5618",
         // ink-faint darkened from the README's #6c7678 (3.47:1 on sand) to #586466
         // (~4.55:1) to meet WCAG AA on the small meta text it carries — axe-verified.
         ink: { DEFAULT: "#1c2a2b", soft: "#566163", faint: "#586466" },
