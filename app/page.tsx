@@ -1,133 +1,123 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { Eyebrow, BrassRule } from "@/components/ui/Eyebrow";
-import { PrivacyNote } from "@/components/ui/PrivacyNote";
-import { Icon } from "@/components/ui/icons";
 
 /**
- * Landing (Direction C "Chambers") — trust funnel: hero + payoff teaser → trust band →
- * how-it-works → navy get-help strip → footer. One primary action: the wizard at /start.
+ * Landing (Direction K2 "Deep teal & sand") — the trust funnel: hero → numbered
+ * how-it-works index → deadline band → trust band → teal get-help band. One primary
+ * action: "Find out what you can do" (/start). The brand rail, top nav, footer and the
+ * persistent chat launcher are provided by SiteShell.
+ *
+ * The deadline band is illustrative and deliberately shows the RULE + "checked and
+ * dated", never a computed countdown (BRD safety contract — no "X days left").
  */
 export default function HomePage() {
   const t = useTranslations("home");
 
-  const trust = [
-    { icon: Icon.ListLines, title: t("trust1Title"), body: t("trust1Body") },
-    { icon: Icon.ShieldCheck, title: t("trust2Title"), body: t("trust2Body") },
-    { icon: Icon.People, title: t("trust3Title"), body: t("trust3Body") },
-  ];
   const steps = [
-    { n: 1, title: t("howStep1Title"), body: t("howStep1Body") },
-    { n: 2, title: t("howStep2Title"), body: t("howStep2Body") },
-    { n: 3, title: t("howStep3Title"), body: t("howStep3Body") },
+    { n: "01", title: t("howStep1Title"), body: t("howStep1Body") },
+    { n: "02", title: t("howStep2Title"), body: t("howStep2Body") },
+    { n: "03", title: t("howStep3Title"), body: t("howStep3Body") },
+  ];
+  const trust = [
+    { title: t("trust1Title"), body: t("trust1Body") },
+    { title: t("trust2Title"), body: t("trust2Body") },
+    { title: t("trust3Title"), body: t("trust3Body") },
+    { title: t("trust4Title"), body: t("trust4Body") },
   ];
 
   return (
     <div>
       {/* ===== Hero ===== */}
-      <section className="bg-paper-warm">
-        <div className="container-wide grid gap-10 py-12 sm:py-14 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:gap-12">
-          <div>
-            <Eyebrow>{t("heroEyebrow")}</Eyebrow>
-            <h1 className="mt-4 font-serif text-[28px] font-bold leading-tight text-navy-ink sm:text-display">
-              {t("heroTitle")}
-            </h1>
-            <p className="mt-4 max-w-[34rem] text-lead text-ink-soft">{t("heroLead")}</p>
-            <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-              <Link href="/start" className="btn-primary btn-lg w-full shadow-cta sm:w-auto">
-                {t("ctaStart")} →
-              </Link>
-              <Link href="/ask" className="btn-secondary btn-lg w-full sm:w-auto">
-                {t("ctaAsk")}
-              </Link>
-            </div>
-            <p className="mt-4 text-sm text-ink-soft">
-              {t("chatLead")}{" "}
-              <Link href="/chat" className="link font-semibold">{t("chatCta")}</Link>
-            </p>
-            <PrivacyNote className="mt-4">We never keep your letter or your details.</PrivacyNote>
-          </div>
+      <header className="container-wide pb-9 pt-8 sm:pt-16">
+        <p className="text-[11px] uppercase tracking-[0.28em] text-accent">{t("heroEyebrow")}</p>
+        <h1 className="mt-5 max-w-[760px] font-display text-[40px] font-semibold leading-[1.06] sm:text-display">
+          {t("heroTitle")}
+        </h1>
+        <p className="mt-6 max-w-[560px] font-display text-[16px] leading-[1.7] text-ink-soft sm:text-lede">
+          {t("heroLead")}
+        </p>
+        <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
+          <Link href="/start" className="btn-primary px-7">
+            {t("ctaStart")}
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
+              <path d="M5 12h14M13 6l6 6-6 6" />
+            </svg>
+          </Link>
+          <Link href="/decode" className="link-text">
+            {t("ctaScan")}
+          </Link>
+        </div>
+      </header>
 
-          {/* Payoff teaser — hidden on mobile (as in the reference) */}
-          <div className="hidden lg:block">
-            <div className="rounded-panel border border-line-card bg-paper p-6 shadow-card">
-              <span className="flex flex-col gap-2">
-                <BrassRule />
-                <span className="eyebrow">{t("teaserEyebrow")}</span>
-              </span>
-              <div className="mt-4 flex items-center gap-3 rounded-icon border border-gold-line bg-gold-soft p-3">
-                <div className="font-serif text-[23px] font-bold leading-[1.12] text-gold-strong">
-                  Tue 8 July
-                  <br />
-                  2025
-                </div>
-                <div className="rounded-button border border-gold-line bg-paper px-3 py-2 text-center">
-                  <div className="font-serif text-[23px] font-bold leading-none text-gold">14</div>
-                  <div className="mt-0.5 text-[9.5px] font-bold uppercase tracking-[0.07em] text-gold-text">
-                    days left
-                  </div>
-                </div>
-              </div>
-              <ul className="mt-4 space-y-2.5">
-                {[t("teaser1"), t("teaser2"), t("teaser3")].map((x) => (
-                  <li key={x} className="flex items-start gap-2.5 text-[14.5px] text-ink-soft">
-                    <Icon.CheckSquare className="h-5 w-5 shrink-0 text-navy" strokeWidth={2} />
-                    {x}
-                  </li>
-                ))}
-              </ul>
-            </div>
+      {/* ===== Numbered "how it works" index ===== */}
+      <section id="how" aria-label={t("howTitle")} className="container-wide scroll-mt-6 py-2">
+        {steps.map((s, i) => (
+          <div
+            key={s.n}
+            className={`flex flex-wrap items-baseline gap-x-6 gap-y-1 py-[22px] ${
+              i === 0 ? "border-t border-line-strong" : "border-t border-line"
+            } ${i === steps.length - 1 ? "border-b border-line" : ""}`}
+          >
+            <span className="w-[42px] flex-none font-display text-[22px] font-semibold text-accent">{s.n}</span>
+            <h2 className="flex-none font-display text-[22px] font-bold text-ink sm:w-[240px]">{s.title}</h2>
+            <p className="hidden flex-1 text-[14.5px] leading-[1.6] text-ink-soft sm:block">{s.body}</p>
           </div>
+        ))}
+      </section>
+
+      {/* ===== Deadline band (illustrative — rule, never a countdown) ===== */}
+      <section aria-label={t("deadlineLabel")} className="container-wide py-6">
+        <div className="flex flex-wrap items-center gap-5 rounded-deadline border border-gold-line bg-gold-soft px-6 py-6">
+          <div className="flex h-[54px] w-[54px] flex-none items-center justify-center rounded-full border-2 border-gold">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8a5a14" strokeWidth="2" aria-hidden="true">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 7v5l3 2" />
+            </svg>
+          </div>
+          <div className="min-w-0">
+            <p className="text-[11px] uppercase tracking-[0.18em] text-gold">{t("deadlineLabel")}</p>
+            <p className="mt-1 font-display text-[22px] font-bold leading-[1.1] text-ink sm:text-[26px]">
+              {t("deadlineRule")}
+            </p>
+            <p className="mt-1 text-meta text-ink-soft">{t("deadlineSub")}</p>
+          </div>
+          <Link href="/faq" className="link-text ml-auto whitespace-nowrap text-gold">
+            {t("deadlineMore")}
+          </Link>
         </div>
       </section>
 
       {/* ===== Trust band ===== */}
-      <section className="bg-paper">
-        <div className="container-wide py-12">
-          <div className="overflow-hidden rounded-card border border-line-card sm:grid sm:grid-cols-3 sm:divide-x sm:divide-line-card">
-            {trust.map(({ icon: Glyph, title, body }) => (
-              <div
-                key={title}
-                className="flex items-start gap-4 border-b border-line p-5 last:border-b-0 sm:block sm:border-b-0 sm:p-6"
-              >
-                <Glyph className="h-7 w-7 shrink-0 text-navy sm:mb-3" strokeWidth={1.8} />
-                <div>
-                  <h3 className="font-serif text-h3 font-bold text-ink">{title}</h3>
-                  <p className="mt-1 text-sm text-ink-soft">{body}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+      <section aria-label="What you can rely on" className="container-wide py-2">
+        <div className="grid grid-cols-2 divide-x divide-y divide-line border-y border-line md:grid-cols-4 md:divide-y-0">
+          {trust.map((c) => (
+            <div key={c.title} className="p-5 sm:p-6">
+              <h2 className="font-display text-[18px] font-bold text-ink">{c.title}</h2>
+              <p className="mt-1 hidden text-meta leading-[1.5] text-ink-faint sm:block">{c.body}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* ===== How it works ===== */}
-      <section id="how" className="scroll-mt-24 bg-paper-warm">
-        <div className="container-wide py-12">
-          <Eyebrow>{t("howEyebrow")}</Eyebrow>
-          <h2 className="mt-3 font-serif text-h2 font-bold text-navy-ink">{t("howTitle")}</h2>
-          <ol className="mt-8 grid gap-8 sm:grid-cols-3">
-            {steps.map((s) => (
-              <li key={s.n}>
-                <div className="flex h-[38px] w-[38px] items-center justify-center rounded-full border-[1.5px] border-brass font-serif text-[17px] font-bold text-navy">
-                  {s.n}
-                </div>
-                <h3 className="mt-3.5 font-serif text-[17.5px] font-bold text-ink">{s.title}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-ink-soft">{s.body}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* ===== Get-help strip ===== */}
-      <section className="bg-navy">
-        <div className="container-wide flex flex-col gap-5 py-11 sm:flex-row sm:items-center sm:justify-between">
+      {/* ===== Get-help band (full-bleed teal) ===== */}
+      <section aria-label={t("helpTitle")} className="mt-12 bg-rail text-rail-fg">
+        <div className="container-wide flex flex-col gap-6 py-11 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="font-serif text-[23px] font-bold text-white">{t("helpTitle")}</h2>
-            <p className="mt-1.5 text-[15px] text-[#aebfd2]">{t("helpBody")}</p>
+            <h2 className="font-display text-h2 font-semibold text-rail-fg">{t("helpTitle")}</h2>
+            <p className="mt-1.5 max-w-[460px] text-[15px] text-rail-fg/80">{t("helpBody")}</p>
+            <div className="mt-3.5 flex flex-wrap gap-2">
+              <span className="rounded-pill bg-help px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-white">
+                {t("tier1")}
+              </span>
+              <span className="rounded-pill bg-rail-fg/10 px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-rail-fg">
+                {t("tier2")}
+              </span>
+              <span className="rounded-pill bg-rail-fg/10 px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-rail-fg">
+                {t("tier3")}
+              </span>
+            </div>
           </div>
-          <Link href="/help" className="btn-brass btn-lg w-full sm:w-auto">
+          <Link href="/help" className="btn-accent whitespace-nowrap sm:flex-none">
             {t("helpCta")}
           </Link>
         </div>

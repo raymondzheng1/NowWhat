@@ -22,8 +22,7 @@ const baskerville = Libre_Baskerville({
   variable: "--font-serif",
   display: "swap",
 });
-import { Header } from "@/components/site/Header";
-import { Footer } from "@/components/site/Footer";
+import { SiteShell } from "@/components/site/SiteShell";
 import { JsonLd } from "@/components/site/JsonLd";
 import { GoogleAnalytics } from "@/components/analytics/GoogleAnalytics";
 import { ConsentBanner } from "@/components/analytics/ConsentBanner";
@@ -88,12 +87,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body className="flex min-h-screen flex-col">
         <JsonLd data={websiteLd} />
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <a href="#main" className="skip-link">Skip to content</a>
-          <Header />
-          <main id="main" className="flex-1">
-            {children}
-          </main>
-          <Footer />
+          <SiteShell>{children}</SiteShell>
           <ConsentBanner />
         </NextIntlClientProvider>
         <Analytics />

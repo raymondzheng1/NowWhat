@@ -1,35 +1,35 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Wordmark } from "@/components/ui/Wordmark";
-import { isAppRoute } from "@/components/site/Header";
 
 /**
- * Footer (Direction C): navy-dark with a 2px brass top border. Crest + wordmark, the
- * standing disclaimer, and the quiet links.
+ * Footer (Direction K2) — quiet, on the sand page: the standing disclaimer with a bold
+ * "We never keep your details" privacy note, and an uppercase link row. Visibility is
+ * handled by SiteShell (hidden on the focused tool surfaces).
  */
 export function Footer() {
   const t = useTranslations("footer");
-  const pathname = usePathname();
-  if (isAppRoute(pathname)) return null;
   return (
-    <footer className="mt-16 border-t-2 border-brass bg-navy-dark text-[#9fb0c4]">
-      <div className="container-wide flex flex-col gap-5 py-10">
-        <Wordmark size={28} tone="light" textClassName="text-[16px]" />
-        <p className="max-w-prose text-sm leading-relaxed">{t("infoNotAdvice")}</p>
-        <nav aria-label="Footer" className="flex flex-wrap gap-5 text-sm">
+    <footer className="border-t border-line">
+      <div className="mx-auto flex max-w-content flex-col gap-5 px-[22px] py-8 sm:flex-row sm:items-center sm:justify-between sm:px-12">
+        <p className="max-w-[520px] text-meta leading-relaxed text-ink-faint">
+          {t("infoNotAdvice")}{" "}
+          <strong className="font-semibold text-ink-soft">{t("neverStored")}</strong>
+        </p>
+        <nav
+          aria-label="Footer"
+          className="flex flex-wrap gap-5 text-[12px] uppercase tracking-[0.12em] text-ink-soft"
+        >
           {(
             [
-              ["/about", t("about")],
+              ["/faq", t("faq")],
               ["/help", t("help")],
+              ["/about", t("about")],
               ["/contact", t("contact")],
               ["/privacy", t("privacy")],
               ["/terms", t("terms")],
             ] as const
           ).map(([href, label]) => (
-            <Link key={href} href={href} className="text-[#9fb0c4] underline-offset-2 hover:text-white hover:underline">
+            <Link key={href} href={href} className="hover:text-ink">
               {label}
             </Link>
           ))}
