@@ -2,36 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Direction C "Chambers" — CSS custom properties mirror design-tokens/tokens.css.
-   --font-display is provided by next/font (Libre Baskerville) in the root layout. */
+/* Direction K2 "Deep teal & sand" — CSS custom properties mirror the Tailwind tokens.
+   --font-display (Cormorant Garamond) + --font-serif (Libre Baskerville) come from
+   next/font in the root layout; --font-sans is the system stack. */
 :root {
-  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial,
-    sans-serif;
+  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-  --wn-navy: #1b3a5b;
-  --wn-brass: #b08d57;
-  --wn-focus-ring: 0 0 0 3px rgba(27, 58, 91, 0.35); /* visible keyboard focus */
+  --rail-bg: #10363d;
+  --rail-accent: #c79a52;
+  /* visible keyboard focus (teal, AA on sand) */
+  --wn-focus-ring: 0 0 0 3px rgba(16, 54, 61, 0.4);
 }
 
 @layer base {
   html {
     -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
   }
   body {
-    @apply bg-paper-warm text-ink antialiased;
+    @apply bg-sand text-ink antialiased;
     font-family: var(--font-sans);
   }
-  /* Serif (Libre Baskerville) for all headings + the wordmark — the "Chambers" voice. */
+  /* Cormorant Garamond for headings + the wordmark — the K2 editorial voice. */
   h1,
   h2,
   h3 {
     font-family: var(--font-display);
     @apply text-ink;
-    font-weight: 700;
+    font-weight: 600;
   }
-  /* Visible, high-contrast focus for keyboard users (WCAG AA, handoff non-negotiable). */
+  /* Visible, high-contrast focus for keyboard users (WCAG AA, non-negotiable). */
   :focus-visible {
-    outline: 3px solid var(--wn-navy);
+    outline: 3px solid var(--rail-bg);
     outline-offset: 2px;
     border-radius: 4px;
   }
@@ -39,36 +41,37 @@
 
 @layer components {
   .container-prose {
-    @apply mx-auto w-full max-w-prose px-[18px] sm:px-5;
+    @apply mx-auto w-full max-w-prose px-[22px] sm:px-12;
   }
   .container-wide {
-    @apply mx-auto w-full max-w-6xl px-[18px] sm:px-10;
+    @apply mx-auto w-full max-w-content px-[22px] sm:px-12;
   }
 
-  /* Card — the single card pattern (paper, hairline, formal radius, soft shadow). */
+  /* Card — single card pattern (white paper, hairline, squarer K2 radius). */
   .card {
-    @apply rounded-card border border-line-card bg-paper p-5 shadow-card sm:p-6;
+    @apply rounded-card border border-line bg-paper p-5 shadow-card sm:p-6;
   }
 
-  /* Eyebrow / label tag — uppercase, tracked, brass-toned (the letterhead motif). */
+  /* Eyebrow / kicker — uppercase, tracked, gold-on-sand accent (AA). */
   .eyebrow {
-    @apply text-[11.5px] font-bold uppercase tracking-[0.14em] text-brass-text;
+    @apply text-[11px] font-semibold uppercase tracking-[0.18em] text-accent;
   }
 
-  /* Buttons — ≥48px floor; primary CTAs use the .btn-lg size (54px). */
+  /* Buttons — Libre Baskerville, ≥48px floor (K2 spec). */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-button px-6 text-ui font-semibold transition-colors;
+    @apply inline-flex items-center justify-center gap-2 rounded-button px-6 font-serif text-[14px] font-bold tracking-[0.04em] transition-colors;
     min-height: 48px;
   }
   .btn-lg {
     min-height: 54px;
-    @apply text-[16.5px];
+    @apply text-[16px];
   }
+  /* Primary CTA — deep teal rail fill, cream type. */
   .btn-primary {
-    @apply btn bg-navy text-white hover:bg-navy-dark;
+    @apply btn bg-rail text-rail-fg hover:bg-rail-dark;
   }
   .btn-secondary {
-    @apply btn border-[1.5px] border-[#c3cad3] bg-paper text-navy hover:bg-paper-sunk;
+    @apply btn border-[1.5px] border-line bg-transparent text-rail hover:bg-sand-surface;
   }
   .btn-deadline {
     @apply btn bg-gold text-white hover:bg-gold-strong;
@@ -76,12 +79,21 @@
   .btn-help {
     @apply btn bg-help text-white hover:bg-help-ink;
   }
-  .btn-brass {
-    @apply btn bg-brass font-bold text-[#1c1605] hover:brightness-95;
+  /* Copper accent button — ONLY on the teal get-help band. */
+  .btn-accent {
+    @apply btn bg-rail-accent text-rail hover:brightness-95;
   }
 
+  /* In-content link — gold accent on sand, underlined. */
   .link {
-    @apply text-navy underline underline-offset-2 hover:text-navy-dark;
+    @apply text-accent underline underline-offset-2 hover:text-ink;
+  }
+
+  /* Text link — uppercase tracked accent with an accent underline (secondary action). */
+  .link-text {
+    @apply inline-flex items-center text-[13px] font-semibold uppercase tracking-[0.12em] text-accent;
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 3px;
   }
 
   /* Form control */
@@ -95,11 +107,11 @@
     @apply sr-only;
   }
   .skip-link:focus {
-    @apply not-sr-only fixed left-4 top-4 z-50 rounded bg-navy px-4 py-2 text-white;
+    @apply not-sr-only fixed left-4 top-4 z-50 rounded bg-rail px-4 py-2 text-rail-fg;
   }
 }
 
-/* Wizard step transition (subtle; neutralised under reduced-motion below). */
+/* Subtle step / panel transition (neutralised under reduced-motion below). */
 @keyframes wn-fade {
   from {
     opacity: 0;
@@ -114,7 +126,19 @@
   animation: wn-fade 0.18s ease both;
 }
 
-/* Respect reduced-motion (handoff motion notes) — neutralise non-essential animation. */
+/* Chat panel slide-in (disabled under reduced-motion). */
+@keyframes wn-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Respect reduced-motion — neutralise non-essential animation. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

@@ -1,17 +1,25 @@
 import type { Metadata, Viewport } from "next";
-import { Libre_Baskerville } from "next/font/google";
+import { Cormorant_Garamond, Libre_Baskerville } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 
-// Wordmark + all headings (handoff "Chambers"). Self-hosted at build by next/font —
-// no runtime Google request, so the CSP needs no font-origin allowance.
+// K2 "Deep teal & sand". Self-hosted at build by next/font — no runtime Google
+// request, so the CSP needs no font-origin allowance.
+// Cormorant Garamond (--font-display): H1, section/step titles, deadline date, wordmark.
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--font-display",
+  display: "swap",
+});
+// Libre Baskerville (--font-serif): buttons + wordmark fallback.
 const baskerville = Libre_Baskerville({
   subsets: ["latin"],
   weight: ["400", "700"],
   style: ["normal", "italic"],
-  variable: "--font-display",
+  variable: "--font-serif",
   display: "swap",
 });
 import { Header } from "@/components/site/Header";
@@ -33,6 +41,14 @@ export const metadata: Metadata = {
   description,
   applicationName: PRODUCT_NAME,
   alternates: { canonical: "/" },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/favicon-16.png", sizes: "16x16", type: "image/png" },
+    ],
+    apple: { url: "/apple-touch-icon-180.png" },
+  },
   openGraph: {
     type: "website",
     siteName: PRODUCT_NAME,
@@ -45,7 +61,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#1b3a5b",
+  themeColor: "#10363d",
   width: "device-width",
   initialScale: 1,
 };
@@ -68,7 +84,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   };
 
   return (
-    <html lang={locale} className={baskerville.variable}>
+    <html lang={locale} className={`${cormorant.variable} ${baskerville.variable}`}>
       <body className="flex min-h-screen flex-col">
         <JsonLd data={websiteLd} />
         <NextIntlClientProvider locale={locale} messages={messages}>

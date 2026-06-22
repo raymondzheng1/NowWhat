@@ -1,16 +1,17 @@
 /**
  * Shared JSX for next/og ImageResponse renders (satori subset — flexbox only, no
- * absolute layout tricks). The monogram crest: navy field, brass inset frame, serif "WN".
+ * absolute layout tricks). K2 monogram crest: deep-teal field, copper inset frame,
+ * serif "WN" in cream. Names kept (navy/brass/ivory) but pointed at K2 values.
  */
 export const OG = {
-  navy: "#1b3a5b",
-  brass: "#b08d57",
-  brassQ: "#9c7a3e",
-  brassText: "#6f5527",
-  ivory: "#f7f4ee",
-  ink: "#14253a",
-  inkSoft: "#44566b",
-  crestText: "#f3e7d0",
+  navy: "#10363d",
+  brass: "#c79a52",
+  brassQ: "#c79a52",
+  brassText: "#8a6526",
+  ivory: "#e8ddc7",
+  ink: "#1c2a2b",
+  inkSoft: "#566163",
+  crestText: "#eef0e8",
   serif: "Libre Baskerville",
 };
 

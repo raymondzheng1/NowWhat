@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Now? — Understand a government decision, in time</title>
+<meta name="description" content="A free, login-free Victorian service that explains a government decision in plain English, finds your deadline, and points you to free help. Nothing you enter is kept.">
+<link rel="icon" href="favicon/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon/favicon-32.png" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="favicon/apple-touch-icon-180.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ============== Design tokens — Option K2 "Deep teal & sand" ============== */
+  :root{
+    --display:'Cormorant Garamond',Georgia,'Times New Roman',serif;
+    --serif:'Libre Baskerville',Georgia,serif;
+    --sans:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+
+    --rail-bg:#10363d;       /* deep petrol teal — rail, CTA, get-help band */
+    --rail-fg:#eef0e8;       /* cream type on teal */
+    --rail-accent:#c79a52;   /* copper-gold accent on teal */
+
+    --page-bg:#e8ddc7;       /* warm sand — page background */
+    --surface:#f4eedd;       /* lifted card surface on sand */
+    --paper:#ffffff;         /* white — chat bubbles, inputs */
+
+    --ink:#1c2a2b;           /* headings + primary text (AA on sand & surface) */
+    --ink-soft:#566163;      /* secondary text (AA on sand) */
+    --ink-faint:#6c7678;     /* meta text (AA on sand) */
+
+    --accent:#8a6526;        /* gold for labels/links ON sand (AA) */
+    --line:#d3c6aa;          /* hairline on sand */
+    --line-strong:#1c2a2b;   /* ink rule under step 01 */
+
+    --gold:#8a5a14;          /* the deadline amber — never red */
+    --gold-soft:#f6edda;     /* deadline card fill */
+    --gold-line:#e6d5ab;     /* deadline card border */
+
+    --help:#2c5544;          /* tier-1 free help green */
+    --help-soft:#e2ede8;
+    --help-ink:#173e2c;
+
+    --rail-w:96px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;font-family:var(--sans);background:var(--page-bg);color:var(--ink);}
+  a{color:inherit;text-decoration:none;}
+  .kicker{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--accent);}
+  .btn-primary{display:inline-flex;align-items:center;gap:10px;font-family:var(--serif);font-weight:700;font-size:14px;
+    background:var(--rail-bg);color:var(--rail-fg);padding:15px 30px;border-radius:4px;border:0;cursor:pointer;min-height:48px;}
+  .btn-text{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border-bottom:1px solid var(--accent);padding-bottom:3px;}
+
+  /* ---------- vertical rail (desktop) ---------- */
+  .rail{position:fixed;top:0;left:0;bottom:0;width:var(--rail-w);background:var(--rail-bg);
+    display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:26px 0;z-index:20;}
+  .rail .crest{width:30px;height:30px;border:1px solid var(--rail-accent);display:flex;align-items:center;justify-content:center;}
+  .rail .crest span{font-family:var(--display);font-weight:700;font-size:13px;color:var(--rail-fg);}
+  .rail .wordmark{writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--display);font-weight:600;font-size:21px;letter-spacing:.12em;color:var(--rail-fg);}
+  .rail .wordmark b{color:var(--rail-accent);font-weight:600;}
+  .rail .tag{writing-mode:vertical-rl;transform:rotate(180deg);font-size:9.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--rail-accent);}
+
+  .main{margin-left:var(--rail-w);}
+  .wrap{max-width:1040px;margin:0 auto;padding:0 48px;}
+
+  /* ---------- top nav ---------- */
+  .topnav{display:flex;justify-content:flex-end;gap:30px;align-items:center;padding:24px 48px;
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-soft);border-bottom:1px solid var(--line);}
+  .topnav .ask{color:var(--accent);}
+
+  /* ---------- hero ---------- */
+  .hero{padding:64px 0 36px;}
+  .hero h1{font-family:var(--display);font-weight:600;font-size:58px;line-height:1.04;margin:20px 0 0;max-width:760px;}
+  .hero p{font-family:var(--display);font-size:19px;line-height:1.7;color:var(--ink-soft);margin:24px 0 0;max-width:560px;}
+  .hero .actions{display:flex;align-items:center;gap:26px;margin-top:36px;flex-wrap:wrap;}
+
+  /* ---------- numbered index (how it works) ---------- */
+  .index{padding:8px 0 8px;}
+  .row{display:flex;align-items:baseline;gap:24px;padding:22px 0;border-top:1px solid var(--line);}
+  .row:first-child{border-top:1px solid var(--line-strong);}
+  .row:last-child{border-bottom:1px solid var(--line);}
+  .row .num{font-family:var(--display);font-weight:600;font-size:22px;color:var(--accent);width:42px;flex:none;}
+  .row .ttl{flex:none;width:240px;font-family:var(--display);font-weight:700;font-size:22px;}
+  .row .desc{font-size:14.5px;line-height:1.6;color:var(--ink-soft);}
+
+  /* ---------- deadline band ---------- */
+  .deadline-band{padding:30px 0 8px;}
+  .deadline{display:flex;align-items:center;gap:20px;border:1px solid var(--gold-line);background:var(--gold-soft);border-radius:6px;padding:22px 26px;}
+  .deadline .clock{width:54px;height:54px;border-radius:50%;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;flex:none;}
+  .deadline .lbl{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);}
+  .deadline .date{font-family:var(--display);font-weight:700;font-size:30px;color:var(--ink);line-height:1.05;}
+  .deadline .cal{margin-left:auto;flex:none;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);border-bottom:1px solid var(--gold-line);padding-bottom:3px;}
+
+  /* ---------- trust band ---------- */
+  .trust{display:flex;gap:0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);margin-top:40px;}
+  .trust .cell{flex:1;padding:24px 28px;}
+  .trust .cell + .cell{border-left:1px solid var(--line);}
+  .trust .cell .t{font-family:var(--display);font-weight:700;font-size:18px;}
+  .trust .cell .d{font-size:13px;color:var(--ink-faint);margin-top:4px;line-height:1.5;}
+
+  /* ---------- get help band ---------- */
+  .help-band{background:var(--rail-bg);color:var(--rail-fg);margin-top:56px;}
+  .help-inner{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:44px 48px;max-width:1040px;margin:0 auto;}
+  .help-band h2{font-family:var(--display);font-weight:600;font-size:30px;margin:0;}
+  .help-band p{color:rgba(238,240,232,.78);margin:6px 0 0;font-size:15px;}
+  .tiers{display:flex;gap:8px;margin-top:14px;}
+  .tier{font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;border-radius:999px;}
+  .tier.one{background:var(--help);color:#fff;}
+  .tier.two,.tier.three{background:rgba(238,240,232,.12);color:var(--rail-fg);}
+  .help-band .btn{flex:none;background:var(--rail-accent);color:var(--rail-bg);font-family:var(--serif);font-weight:700;font-size:14px;padding:14px 26px;border-radius:4px;min-height:48px;display:inline-flex;align-items:center;}
+
+  /* ---------- footer ---------- */
+  footer{padding:30px 48px;display:flex;align-items:center;justify-content:space-between;gap:20px;max-width:1040px;margin:0 auto;}
+  footer .legal{font-size:13px;color:var(--ink-faint);max-width:520px;line-height:1.6;}
+  footer .links{display:flex;gap:20px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-soft);}
+
+  /* ---------- chat launcher ---------- */
+  .launcher{position:fixed;right:26px;bottom:26px;display:inline-flex;align-items:center;gap:10px;
+    background:var(--rail-bg);color:var(--rail-fg);padding:13px 20px;border-radius:999px;
+    box-shadow:0 8px 24px rgba(16,54,61,.34);cursor:pointer;z-index:30;border:1px solid var(--rail-accent);min-height:48px;}
+  .launcher span{font-size:13px;letter-spacing:.06em;font-weight:600;}
+
+  /* ---------- mobile top bar (hidden on desktop) ---------- */
+  .topbar{display:none;}
+
+  /* ============================= RESPONSIVE: 375 ============================= */
+  @media (max-width:767px){
+    .rail{display:none;}
+    .main{margin-left:0;}
+    .topnav{display:none;}
+    .wrap{padding:0 22px;}
+    .topbar{display:flex;align-items:center;justify-content:space-between;padding:16px 22px;background:var(--rail-bg);}
+    .topbar .wm{font-family:var(--display);font-weight:600;font-size:18px;color:var(--rail-fg);letter-spacing:.04em;}
+    .topbar .wm b{color:var(--rail-accent);font-weight:600;}
+    .topbar .tg{font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--rail-accent);}
+    .hero{padding:30px 0 18px;}
+    .hero h1{font-size:40px;}
+    .hero p{font-size:16px;}
+    .row .ttl{width:auto;}
+    .row .desc{display:none;}
+    .trust{flex-wrap:wrap;}
+    .trust .cell{flex:1 1 50%;border-left:1px solid var(--line);border-top:1px solid var(--line);}
+    .trust .cell .d{display:none;}
+    .help-inner{flex-direction:column;align-items:flex-start;padding:28px 22px;}
+    footer{flex-direction:column;align-items:flex-start;}
+    .deadline{flex-wrap:wrap;}
+    .deadline .cal{margin-left:0;}
+    .launcher{right:16px;bottom:16px;}
+  }
+</style>
+</head>
+<body>
+
+  <!-- vertical rail (desktop) -->
+  <nav class="rail" aria-label="Brand">
+    <div class="crest"><span>W</span></div>
+    <div class="wordmark">What Now<b>?</b></div>
+    <div class="tag">Free · No login</div>
+  </nav>
+
+  <!-- mobile top bar -->
+  <div class="topbar">
+    <div class="wm">What Now<b>?</b></div>
+    <div class="tg">Free · No login</div>
+  </div>
+
+  <div class="main">
+
+    <div class="topnav">
+      <a href="#how">How it works</a>
+      <a href="#">FAQ</a>
+      <a href="#">Get help</a>
+      <a href="#" class="ask">Ask a question</a>
+    </div>
+
+    <header class="hero wrap">
+      <div class="kicker">Understand · Act in time · Get help</div>
+      <h1>Got a government &ldquo;no&rdquo;? Let&rsquo;s work out what you can do.</h1>
+      <p>We explain the letter in plain English, find the exact deadline, draft your first letter, and route you to free help &mdash; grounded in sourced rules.</p>
+      <div class="actions">
+        <a href="/start" class="btn-primary">Find out what you can do
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+        <a href="/decode" class="btn-text">Scan a letter</a>
+      </div>
+    </header>
+
+    <section class="index wrap" id="how" aria-label="How it works">
+      <div class="row"><span class="num">01</span><div class="ttl">Tell us what happened</div><div class="desc">Pick the kind of decision, or paste the letter. A few plain questions &mdash; no logins.</div></div>
+      <div class="row"><span class="num">02</span><div class="ttl">See your deadline &amp; options</div><div class="desc">The real date and days remaining, with the sources we used.</div></div>
+      <div class="row"><span class="num">03</span><div class="ttl">Send the first letter</div><div class="desc">Edit a ready-made draft, or get routed to free help that can take it from here.</div></div>
+    </section>
+
+    <section class="deadline-band wrap" aria-label="Example deadline">
+      <div class="deadline">
+        <div class="clock"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8a5a14" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+        <div>
+          <div class="lbl">Your review deadline</div>
+          <div class="date">Wed 9 July &middot; 14 days left</div>
+        </div>
+        <a href="#" class="cal">Add to calendar</a>
+      </div>
+    </section>
+
+    <section class="trust wrap" aria-label="What you can rely on" style="max-width:1040px;">
+      <div class="cell"><div class="t">Plain English</div><div class="d">Year-6 reading level, no jargon.</div></div>
+      <div class="cell"><div class="t">Always sourced</div><div class="d">Every answer shows where it&rsquo;s from.</div></div>
+      <div class="cell"><div class="t">Never stored</div><div class="d">Nothing you type is kept.</div></div>
+      <div class="cell"><div class="t">Free human help</div><div class="d">Real people, when you need them.</div></div>
+    </section>
+
+    <section class="help-band" aria-label="Get help">
+      <div class="help-inner">
+        <div>
+          <h2>Not sure where to start?</h2>
+          <p>Free help is one tap away &mdash; government, tribunals, and community legal centres.</p>
+          <div class="tiers"><span class="tier one">Free · Government</span><span class="tier two">Community legal</span><span class="tier three">Private lawyer</span></div>
+        </div>
+        <a href="/help" class="btn">See the three tiers of help</a>
+      </div>
+    </section>
+
+    <footer>
+      <div class="legal">General information, not legal advice. What Now? is free and login-free. <strong style="color:var(--ink-soft);">We never keep your details.</strong></div>
+      <div class="links"><a href="#">FAQ</a><a href="#">Get help</a><a href="#">About</a><a href="#">Privacy</a><a href="#">Terms</a></div>
+    </footer>
+
+  </div>
+
+  <!-- persistent chat launcher (closed state) -->
+  <button class="launcher" aria-label="Open chat — work it out with us">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--rail-accent)" stroke-width="1.9"><path d="M4 5h16v11H9l-4 4z"/></svg>
+    <span>Work it out with us</span>
+  </button>
+
+</body>
+</html>

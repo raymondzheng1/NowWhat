@@ -10,13 +10,12 @@ export default function manifest(): MetadataRoute.Manifest {
       "Free, plain-English help to understand a government decision and respond to it.",
     start_url: "/",
     display: "standalone",
-    background_color: "#f7f4ee",
-    theme_color: "#1b3a5b",
+    background_color: "#e8ddc7",
+    theme_color: "#10363d",
     icons: [
-      { src: "/icon.svg", type: "image/svg+xml", sizes: "any" },
-      { src: "/icon-192", sizes: "192x192", type: "image/png", purpose: "any" },
-      { src: "/icon-512", sizes: "512x512", type: "image/png", purpose: "any" },
-      { src: "/icon-512", sizes: "512x512", type: "image/png", purpose: "maskable" },
+      { src: "/favicon.svg", type: "image/svg+xml", sizes: "any" },
+      { src: "/favicon-512.png", sizes: "512x512", type: "image/png", purpose: "any" },
+      { src: "/favicon-512.png", sizes: "512x512", type: "image/png", purpose: "maskable" },
     ],
   };
 }
