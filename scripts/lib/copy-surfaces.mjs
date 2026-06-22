@@ -81,6 +81,23 @@ export function collectCustomerCopy() {
     }
   }
 
+  // 4. Procedural data-layer customer-visible fields (the rule/reasons/criteria copy)
+  const dataPath = resolve(ROOT, "data/index.json");
+  if (existsSync(dataPath)) {
+    const idx = JSON.parse(readFileSync(dataPath, "utf8"));
+    for (const e of idx.entries ?? []) {
+      const rel = `data (entry ${e.id})`;
+      const add = (where, text) => {
+        if (typeof text === "string" && text.trim()) records.push({ file: rel, where, text });
+      };
+      add("title", e.title);
+      add("deadlineRule", e.deadlineRule);
+      add("avenue.noReviewEndpoint", e.avenue?.noReviewEndpoint);
+      add("reasonsRequest.how", e.reasonsRequest?.how);
+      (e.mrCriteria ?? []).forEach((c, i) => add(`mrCriteria[${i}]`, c));
+    }
+  }
+
   return records;
 }
 

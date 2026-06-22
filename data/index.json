@@ -1,0 +1,718 @@
+{
+  "builtAt": "9d64572269f489d4",
+  "entries": [
+    {
+      "id": "cth-centrelink",
+      "title": "Centrelink / social-security decision or debt",
+      "jurisdiction": "Cth",
+      "decisionMakers": [
+        "Services Australia",
+        "Centrelink",
+        "Child Support",
+        "Department of Social Services"
+      ],
+      "decisionTypes": [
+        "debt notice",
+        "overpayment",
+        "payment cancelled",
+        "payment reduced",
+        "claim rejected",
+        "social security"
+      ],
+      "keywords": [
+        "centrelink",
+        "welfare",
+        "pension",
+        "jobseeker"
+      ],
+      "avenue": {
+        "mr": {
+          "available": true,
+          "body": "ART",
+          "source": "VERIFY (art.gov.au + Social Security (Administration) Act 1999)"
+        },
+        "jr": {
+          "available": true,
+          "forum": "ADJR/FederalCourt",
+          "source": "VERIFY (ADJR Act / s 39B Judiciary Act)"
+        },
+        "noReviewEndpoint": null
+      },
+      "deadlineRule": "An application for review is generally due within a set period of the decision — VERIFY the current period and source. A first review by the agency is usually available with no strict time limit, but later steps are time-limited. Shown as a rule with a verified date and an official link; never a countdown.",
+      "verifiedAsAt": "VERIFY",
+      "sourceUrl": "VERIFY (servicesaustralia.gov.au / art.gov.au)",
+      "reviewCadenceDays": 90,
+      "reasonsRequest": {
+        "how": "ask Services Australia for a written statement of reasons",
+        "provision": "VERIFY",
+        "extendsMR": "depends — VERIFY",
+        "extendsJR": false
+      },
+      "privativeClause": false,
+      "forms": [],
+      "mrCriteria": [
+        "VERIFY against the Social Security Act 1991 / Administration Act 1999 — real substantive criteria only"
+      ],
+      "getHelp": [
+        {
+          "service": "Economic Justice Australia (welfare rights centres)",
+          "link": "https://www.ejaustralia.org.au"
+        },
+        {
+          "service": "Victoria Legal Aid",
+          "link": "https://www.legalaid.vic.gov.au"
+        },
+        {
+          "service": "Administrative Review Tribunal (ART)",
+          "link": "https://www.art.gov.au"
+        }
+      ],
+      "status": "seed",
+      "isFallback": false,
+      "body": "SEED procedural entry — placeholders only until lawyer-verified. Time limits are shown\nas a rule with a verified-as-at date and an official source link, never as a countdown."
+    },
+    {
+      "id": "cth-generic",
+      "title": "A Commonwealth government decision",
+      "jurisdiction": "Cth",
+      "decisionMakers": [
+        "Commonwealth agency",
+        "Australian Government department",
+        "Services Australia",
+        "Australian Taxation Office"
+      ],
+      "decisionTypes": [
+        "government decision",
+        "adverse decision",
+        "refusal",
+        "cancellation",
+        "review",
+        "debt"
+      ],
+      "keywords": [
+        "commonwealth",
+        "federal",
+        "decision"
+      ],
+      "avenue": {
+        "mr": {
+          "available": true,
+          "body": "ART (where the enabling Act provides)",
+          "source": "VERIFY (art.gov.au + the enabling Act)"
+        },
+        "jr": {
+          "available": true,
+          "forum": "ADJR/FederalCourt",
+          "source": "VERIFY (ADJR Act / s 39B Judiciary Act / s 75(v) Constitution)"
+        },
+        "noReviewEndpoint": "If no review right exists, the Commonwealth Ombudsman can look at how the decision was made, and a free legal service can explain your options."
+      },
+      "deadlineRule": "Most reviews have a strict time limit that runs from the decision — VERIFY the rule and source for the specific decision. Shown as a rule with a verified date and an official link; never a countdown.",
+      "verifiedAsAt": "VERIFY",
+      "sourceUrl": "VERIFY (the enabling Act + the body's website)",
+      "reviewCadenceDays": 90,
+      "reasonsRequest": {
+        "how": "ask the decision-maker for a written statement of reasons",
+        "provision": "VERIFY (e.g. s 13 ADJR Act / s 28 ART Act)",
+        "extendsMR": "depends — VERIFY",
+        "extendsJR": false
+      },
+      "privativeClause": false,
+      "forms": [],
+      "mrCriteria": [
+        "VERIFY against the relevant enabling Act — real substantive criteria only"
+      ],
+      "getHelp": [
+        {
+          "service": "Commonwealth Ombudsman",
+          "link": "https://www.ombudsman.gov.au"
+        },
+        {
+          "service": "Victoria Legal Aid",
+          "link": "https://www.legalaid.vic.gov.au"
+        },
+        {
+          "service": "Administrative Review Tribunal (ART)",
+          "link": "https://www.art.gov.au"
+        }
+      ],
+      "status": "seed",
+      "isFallback": true,
+      "body": "SEED generic fallback for a Commonwealth decision that doesn't match a specific entry —\nplaceholders only until lawyer-verified. Always routes to human help; never shows an\nunconfirmed deadline number."
+    },
+    {
+      "id": "vic-fines",
+      "title": "Fine or infringement notice",
+      "jurisdiction": "Vic",
+      "decisionMakers": [
+        "Fines Victoria",
+        "Victoria Police",
+        "local council",
+        "Department of Transport"
+      ],
+      "decisionTypes": [
+        "infringement notice",
+        "fine",
+        "penalty notice",
+        "toll fine",
+        "parking fine",
+        "enforcement"
+      ],
+      "keywords": [
+        "infringement",
+        "penalty",
+        "fines"
+      ],
+      "avenue": {
+        "mr": {
+          "available": true,
+          "body": "internal review then Magistrates' Court",
+          "source": "VERIFY (Fines Reform Act 2014 + fines.vic.gov.au)"
+        },
+        "jr": {
+          "available": true,
+          "forum": "SCV-O56",
+          "source": "VERIFY (Supreme Court Order 56)"
+        },
+        "noReviewEndpoint": "If review options have closed, a payment plan or financial-hardship option may still be available — VERIFY via Fines Victoria, and a free service can help."
+      },
+      "deadlineRule": "A request for internal review, or an election to go to court, is generally due within a set period of the notice — VERIFY the current period and source. Shown as a rule with a verified date and an official link; never a countdown.",
+      "verifiedAsAt": "VERIFY",
+      "sourceUrl": "VERIFY (fines.vic.gov.au)",
+      "reviewCadenceDays": 90,
+      "reasonsRequest": {
+        "how": "ask Fines Victoria or the issuing agency in writing for the reasons",
+        "provision": "VERIFY",
+        "extendsMR": "depends — VERIFY",
+        "extendsJR": false
+      },
+      "privativeClause": false,
+      "forms": [],
+      "mrCriteria": [
+        "VERIFY against the Fines Reform Act 2014 / Infringements Act 2006 — real substantive criteria only"
+      ],
+      "getHelp": [
+        {
+          "service": "Fines Victoria",
+          "link": "https://www.fines.vic.gov.au"
+        },
+        {
+          "service": "Victoria Legal Aid",
+          "link": "https://www.legalaid.vic.gov.au"
+        },
+        {
+          "service": "Community legal centres (Federation of CLCs)",
+          "link": "https://fclc.org.au"
+        }
+      ],
+      "status": "seed",
+      "isFallback": false,
+      "body": "SEED procedural entry — placeholders only until lawyer-verified. Time limits are shown\nas a rule with a verified-as-at date and an official source link, never as a countdown."
+    },
+    {
+      "id": "vic-generic",
+      "title": "A Victorian government decision",
+      "jurisdiction": "Vic",
+      "decisionMakers": [
+        "Victorian government agency",
+        "Victorian department",
+        "statutory authority",
+        "local council"
+      ],
+      "decisionTypes": [
+        "government decision",
+        "adverse decision",
+        "refusal",
+        "cancellation",
+        "review"
+      ],
+      "keywords": [
+        "victoria",
+        "decision",
+        "review"
+      ],
+      "avenue": {
+        "mr": {
+          "available": true,
+          "body": "VCAT (where the enabling Act provides)",
+          "source": "VERIFY (vcat.vic.gov.au + the enabling Act)"
+        },
+        "jr": {
+          "available": true,
+          "forum": "SCV-O56",
+          "source": "VERIFY (Supreme Court Order 56)"
+        },
+        "noReviewEndpoint": "If no review right exists, the Victorian Ombudsman can look at how the decision was made, and a free legal service can explain your options."
+      },
+      "deadlineRule": "Most reviews have a strict time limit that runs from the decision — VERIFY the rule and source for the specific decision. Shown as a rule with a verified date and an official link; never a countdown.",
+      "verifiedAsAt": "VERIFY",
+      "sourceUrl": "VERIFY (the enabling Act + the body's website)",
+      "reviewCadenceDays": 90,
+      "reasonsRequest": {
+        "how": "ask the decision-maker in writing for a statement of reasons",
+        "provision": "VERIFY (e.g. s 8 Administrative Law Act 1978 (Vic))",
+        "extendsMR": "depends — VERIFY",
+        "extendsJR": false
+      },
+      "privativeClause": false,
+      "forms": [],
+      "mrCriteria": [
+        "VERIFY against the relevant enabling Act — real substantive criteria only"
+      ],
+      "getHelp": [
+        {
+          "service": "Victorian Ombudsman",
+          "link": "https://www.ombudsman.vic.gov.au"
+        },
+        {
+          "service": "Victoria Legal Aid",
+          "link": "https://www.legalaid.vic.gov.au"
+        },
+        {
+          "service": "Community legal centres (Federation of CLCs)",
+          "link": "https://fclc.org.au"
+        }
+      ],
+      "status": "seed",
+      "isFallback": true,
+      "body": "SEED generic fallback for a Victorian decision that doesn't match a specific entry —\nplaceholders only until lawyer-verified. Always routes to human help; never shows an\nunconfirmed deadline number."
+    },
+    {
+      "id": "vic-public-housing",
+      "title": "Public or social housing decision",
+      "jurisdiction": "Vic",
+      "decisionMakers": [
+        "Director of Housing",
+        "Homes Victoria",
+        "Department of Families, Fairness and Housing",
+        "community housing provider"
+      ],
+      "decisionTypes": [
+        "public housing application",
+        "housing transfer",
+        "housing eligibility",
+        "priority access",
+        "housing termination"
+      ],
+      "keywords": [
+        "public housing",
+        "social housing",
+        "housing office"
+      ],
+      "avenue": {
+        "mr": {
+          "available": true,
+          "body": "Housing Appeals Office, then VCAT where applicable",
+          "source": "VERIFY (housing.vic.gov.au + VCAT)"
+        },
+        "jr": {
+          "available": true,
+          "forum": "SCV-O56",
+          "source": "VERIFY (Supreme Court Order 56)"
+        },
+        "noReviewEndpoint": null
+      },
+      "deadlineRule": "A request for review of a housing decision is generally due within a set period — VERIFY the current period and source. Shown as a rule with a verified date and an official link; never a countdown.",
+      "verifiedAsAt": "VERIFY",
+      "sourceUrl": "VERIFY (housing.vic.gov.au/review-decision)",
+      "reviewCadenceDays": 90,
+      "reasonsRequest": {
+        "how": "ask the housing office in writing for the reasons for the decision",
+        "provision": "VERIFY",
+        "extendsMR": "depends — VERIFY",
+        "extendsJR": false
+      },
+      "privativeClause": false,
+      "forms": [],
+      "mrCriteria": [
+        "VERIFY against the relevant housing policy / enabling Act — real substantive criteria only"
+      ],
+      "getHelp": [
+        {
+          "service": "Housing Appeals Office",
+          "link": "https://www.housing.vic.gov.au"
+        },
+        {
+          "service": "Tenants Victoria",
+          "link": "https://tenantsvic.org.au"
+        },
+        {
+          "service": "Victoria Legal Aid",
+          "link": "https://www.legalaid.vic.gov.au"
+        }
+      ],
+      "status": "seed",
+      "isFallback": false,
+      "body": "SEED procedural entry — placeholders only until lawyer-verified. Time limits are shown\nas a rule with a verified-as-at date and an official source link, never as a countdown."
+    },
+    {
+      "id": "vic-renting",
+      "title": "Renting decision (notice to vacate, rental dispute)",
+      "jurisdiction": "Vic",
+      "decisionMakers": [
+        "rental provider",
+        "landlord",
+        "real estate agent",
+        "Director of Housing",
+        "owners corporation"
+      ],
+      "decisionTypes": [
+        "notice to vacate",
+        "notice to leave",
+        "rental dispute",
+        "bond",
+        "repairs",
+        "eviction",
+        "rent increase"
+      ],
+      "keywords": [
+        "tenant",
+        "renting",
+        "lease",
+        "tenancy"
+      ],
+      "avenue": {
+        "mr": {
+          "available": true,
+          "body": "VCAT",
+          "source": "VERIFY (vcat.vic.gov.au + Residential Tenancies Act 1997)"
+        },
+        "jr": {
+          "available": true,
+          "forum": "SCV-O56",
+          "source": "VERIFY (Supreme Court (General Civil Procedure) Rules Order 56)"
+        },
+        "noReviewEndpoint": null
+      },
+      "deadlineRule": "An application to challenge or respond is generally due within a set period of the notice or decision — VERIFY the current period and source. Shown as a rule with a verified date and an official link; never a countdown.",
+      "verifiedAsAt": "VERIFY",
+      "sourceUrl": "VERIFY (consumer.vic.gov.au / vcat.vic.gov.au)",
+      "reviewCadenceDays": 90,
+      "reasonsRequest": {
+        "how": "ask the decision-maker in writing for the reasons for the decision",
+        "provision": "VERIFY",
+        "extendsMR": "depends — VERIFY",
+        "extendsJR": false
+      },
+      "privativeClause": false,
+      "forms": [],
+      "mrCriteria": [
+        "VERIFY against the Residential Tenancies Act 1997 — real substantive criteria only"
+      ],
+      "getHelp": [
+        {
+          "service": "VCAT — Residential Tenancies list",
+          "link": "https://www.vcat.vic.gov.au"
+        },
+        {
+          "service": "Tenants Victoria",
+          "link": "https://tenantsvic.org.au"
+        },
+        {
+          "service": "Victoria Legal Aid",
+          "link": "https://www.legalaid.vic.gov.au"
+        }
+      ],
+      "status": "seed",
+      "isFallback": false,
+      "body": "SEED procedural entry — every figure is a placeholder until a supervising Australian\nlawyer verifies it and flips `status` to `verified`. Time limits are shown as a rule\nwith a verified-as-at date and an official source link, never as a countdown."
+    }
+  ],
+  "classification": [
+    {
+      "token": "services australia",
+      "entryId": "cth-centrelink",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "centrelink",
+      "entryId": "cth-centrelink",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "child support",
+      "entryId": "cth-centrelink",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "department of social services",
+      "entryId": "cth-centrelink",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "debt notice",
+      "entryId": "cth-centrelink",
+      "kind": "decisionType"
+    },
+    {
+      "token": "overpayment",
+      "entryId": "cth-centrelink",
+      "kind": "decisionType"
+    },
+    {
+      "token": "payment cancelled",
+      "entryId": "cth-centrelink",
+      "kind": "decisionType"
+    },
+    {
+      "token": "payment reduced",
+      "entryId": "cth-centrelink",
+      "kind": "decisionType"
+    },
+    {
+      "token": "claim rejected",
+      "entryId": "cth-centrelink",
+      "kind": "decisionType"
+    },
+    {
+      "token": "social security",
+      "entryId": "cth-centrelink",
+      "kind": "decisionType"
+    },
+    {
+      "token": "centrelink",
+      "entryId": "cth-centrelink",
+      "kind": "keyword"
+    },
+    {
+      "token": "welfare",
+      "entryId": "cth-centrelink",
+      "kind": "keyword"
+    },
+    {
+      "token": "pension",
+      "entryId": "cth-centrelink",
+      "kind": "keyword"
+    },
+    {
+      "token": "jobseeker",
+      "entryId": "cth-centrelink",
+      "kind": "keyword"
+    },
+    {
+      "token": "centrelink / social-security decision or debt",
+      "entryId": "cth-centrelink",
+      "kind": "title"
+    },
+    {
+      "token": "fines victoria",
+      "entryId": "vic-fines",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "victoria police",
+      "entryId": "vic-fines",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "local council",
+      "entryId": "vic-fines",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "department of transport",
+      "entryId": "vic-fines",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "infringement notice",
+      "entryId": "vic-fines",
+      "kind": "decisionType"
+    },
+    {
+      "token": "fine",
+      "entryId": "vic-fines",
+      "kind": "decisionType"
+    },
+    {
+      "token": "penalty notice",
+      "entryId": "vic-fines",
+      "kind": "decisionType"
+    },
+    {
+      "token": "toll fine",
+      "entryId": "vic-fines",
+      "kind": "decisionType"
+    },
+    {
+      "token": "parking fine",
+      "entryId": "vic-fines",
+      "kind": "decisionType"
+    },
+    {
+      "token": "enforcement",
+      "entryId": "vic-fines",
+      "kind": "decisionType"
+    },
+    {
+      "token": "infringement",
+      "entryId": "vic-fines",
+      "kind": "keyword"
+    },
+    {
+      "token": "penalty",
+      "entryId": "vic-fines",
+      "kind": "keyword"
+    },
+    {
+      "token": "fines",
+      "entryId": "vic-fines",
+      "kind": "keyword"
+    },
+    {
+      "token": "fine or infringement notice",
+      "entryId": "vic-fines",
+      "kind": "title"
+    },
+    {
+      "token": "director of housing",
+      "entryId": "vic-public-housing",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "homes victoria",
+      "entryId": "vic-public-housing",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "department of families, fairness and housing",
+      "entryId": "vic-public-housing",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "community housing provider",
+      "entryId": "vic-public-housing",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "public housing application",
+      "entryId": "vic-public-housing",
+      "kind": "decisionType"
+    },
+    {
+      "token": "housing transfer",
+      "entryId": "vic-public-housing",
+      "kind": "decisionType"
+    },
+    {
+      "token": "housing eligibility",
+      "entryId": "vic-public-housing",
+      "kind": "decisionType"
+    },
+    {
+      "token": "priority access",
+      "entryId": "vic-public-housing",
+      "kind": "decisionType"
+    },
+    {
+      "token": "housing termination",
+      "entryId": "vic-public-housing",
+      "kind": "decisionType"
+    },
+    {
+      "token": "public housing",
+      "entryId": "vic-public-housing",
+      "kind": "keyword"
+    },
+    {
+      "token": "social housing",
+      "entryId": "vic-public-housing",
+      "kind": "keyword"
+    },
+    {
+      "token": "housing office",
+      "entryId": "vic-public-housing",
+      "kind": "keyword"
+    },
+    {
+      "token": "public or social housing decision",
+      "entryId": "vic-public-housing",
+      "kind": "title"
+    },
+    {
+      "token": "rental provider",
+      "entryId": "vic-renting",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "landlord",
+      "entryId": "vic-renting",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "real estate agent",
+      "entryId": "vic-renting",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "director of housing",
+      "entryId": "vic-renting",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "owners corporation",
+      "entryId": "vic-renting",
+      "kind": "decisionMaker"
+    },
+    {
+      "token": "notice to vacate",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "notice to leave",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "rental dispute",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "bond",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "repairs",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "eviction",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "rent increase",
+      "entryId": "vic-renting",
+      "kind": "decisionType"
+    },
+    {
+      "token": "tenant",
+      "entryId": "vic-renting",
+      "kind": "keyword"
+    },
+    {
+      "token": "renting",
+      "entryId": "vic-renting",
+      "kind": "keyword"
+    },
+    {
+      "token": "lease",
+      "entryId": "vic-renting",
+      "kind": "keyword"
+    },
+    {
+      "token": "tenancy",
+      "entryId": "vic-renting",
+      "kind": "keyword"
+    },
+    {
+      "token": "renting decision (notice to vacate, rental dispute)",
+      "entryId": "vic-renting",
+      "kind": "title"
+    }
+  ]
+}

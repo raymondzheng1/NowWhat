@@ -1,0 +1,91 @@
+{
+  "builtAt": "37b9ccb1d0741a67",
+  "grounds": [
+    {
+      "id": "improper-purpose",
+      "name": "Improper purpose",
+      "plainName": "The power was used for the wrong reason",
+      "test": "A statutory power must be used for the purpose for which it was given; using it for another purpose may be unlawful — VERIFY the exact test + authorities against the corpus.",
+      "elements": [
+        {
+          "id": "actual-purpose",
+          "name": "Power used for a different purpose",
+          "layPrompt": "Does it seem the real reason for the decision was something other than what the power is for?"
+        }
+      ],
+      "status": "seed",
+      "leadingCases": []
+    },
+    {
+      "id": "procedural-fairness",
+      "name": "Procedural fairness (natural justice)",
+      "plainName": "You weren't given a fair chance",
+      "test": "A decision-maker must give a person a fair hearing and be free of bias — VERIFY the exact test + authorities against the corpus.",
+      "elements": [
+        {
+          "id": "hearing",
+          "name": "Fair hearing",
+          "layPrompt": "Were you told what was being decided and given a real chance to respond before the decision was made?"
+        },
+        {
+          "id": "bias",
+          "name": "No bias",
+          "layPrompt": "Was there anything that suggests the decision-maker had already made up their mind, or had a personal interest?"
+        }
+      ],
+      "status": "seed",
+      "leadingCases": []
+    },
+    {
+      "id": "relevant-considerations",
+      "name": "Relevant and irrelevant considerations",
+      "plainName": "They ignored something they had to weigh, or relied on something they shouldn't",
+      "test": "A decision-maker must consider the matters the law requires, and must not rely on matters the law forbids — VERIFY the exact test + authorities against the corpus.",
+      "elements": [
+        {
+          "id": "ignored-relevant",
+          "name": "Ignored a required consideration",
+          "layPrompt": "Was there something important the law required them to take into account that they seem to have ignored?"
+        },
+        {
+          "id": "took-irrelevant",
+          "name": "Relied on an irrelevant consideration",
+          "layPrompt": "Did they rely on something that shouldn't have mattered to this decision?"
+        }
+      ],
+      "status": "seed",
+      "leadingCases": []
+    },
+    {
+      "id": "unreasonableness",
+      "name": "Legal unreasonableness",
+      "plainName": "The decision was one no reasonable decision-maker could make",
+      "test": "A decision may be unlawful if it lacks an evident and intelligible justification, or is one no reasonable decision-maker could have reached — VERIFY the exact test + authorities against the corpus.",
+      "elements": [
+        {
+          "id": "justification",
+          "name": "No intelligible justification",
+          "layPrompt": "Does the outcome seem to make no sense on the facts the decision-maker had?"
+        },
+        {
+          "id": "disproportionate",
+          "name": "Disproportionate or arbitrary",
+          "layPrompt": "Was the result far harsher than the situation called for, or seemingly arbitrary?"
+        }
+      ],
+      "status": "seed",
+      "leadingCases": []
+    }
+  ],
+  "triage": {
+    "jurisdictions": [
+      "Victoria",
+      "Commonwealth"
+    ],
+    "mrVsJr": "Merits review asks 'what is the correct or preferable decision?' — a tribunal stands in the decision-maker's shoes and can change the outcome. Judicial review asks 'was the decision lawful?' — a court checks the process and can set a decision aside, but cannot substitute its own. Choose by what the person wants: a different outcome points to merits review (if available); an unlawful process, or no merits-review right, points to judicial review. VERIFY the avenues for each decision against the data layer.",
+    "remedies": {
+      "mr": "affirm, vary, or set aside and substitute the decision (merits review)",
+      "jr": "quash / set aside and send back to be remade; cannot substitute a new decision (judicial review)"
+    }
+  }
+}

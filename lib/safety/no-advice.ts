@@ -29,6 +29,15 @@ export function checkNoAdvice(text: string): GateResult {
   return run(text, [...patterns.advice, ...patterns.prediction]);
 }
 
+/**
+ * Bans scoring/ranking the strength of grounds AND "this fact satisfies the element"
+ * phrasing (Review Builder: information not advice; show grounds neutrally; a fact may
+ * only "relate to" an element, never "satisfy" it). Applied to v2 elements/draft output.
+ */
+export function checkNoScore(text: string): GateResult {
+  return run(text, [...patterns.score, ...patterns.satisfies]);
+}
+
 export function checkNoAiMentions(text: string): GateResult {
   return run(text, patterns.aiMentions);
 }

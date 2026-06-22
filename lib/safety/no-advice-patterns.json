@@ -20,6 +20,20 @@
     { "pattern": "\\b(high|good|strong|low|poor) chance(s)? of (winning|success|losing)\\b", "why": "predicts the outcome" },
     { "pattern": "\\byou are (sure|certain) to\\b", "why": "predicts the outcome" }
   ],
+  "score": [
+    { "pattern": "\\b(strong|strongest|weak|weakest|good|poor|best) (ground|grounds|case|argument|claim|prospect|prospects)\\b", "why": "scores/ranks the strength of grounds (no score, no ranking)" },
+    { "pattern": "\\brank(s|ed|ing)?\\b.{0,20}\\bgrounds?\\b", "why": "ranks grounds (forbidden — show all grounds neutrally)" },
+    { "pattern": "\\b(prospects|chance|chances|odds|likelihood) of (success|winning|losing)\\b", "why": "predicts/quantifies prospects" },
+    { "pattern": "\\b(likely|unlikely) to (win|succeed|fail|lose)\\b", "why": "predicts likelihood of outcome" },
+    { "pattern": "\\byour (strongest|best) (ground|argument|point)\\b", "why": "privileges one ground (implicit strength score)" },
+    { "pattern": "\\b(focus on|lead with) (your |the )?(strongest|best)\\b", "why": "ranks grounds by strength" }
+  ],
+  "satisfies": [
+    { "pattern": "\\bsatisf(y|ies|ied)\\b.{0,20}\\b(element|elements|ground|test|requirement|limb)\\b", "why": "a fact may only 'relate to' an element, never 'satisfy' it" },
+    { "pattern": "\\b(meets|met|meeting) (this |the |that |each )?(element|test|requirement|limb)\\b", "why": "'meets the element' is a strength judgment (use 'relates to')" },
+    { "pattern": "\\b(establishes|proves|makes out|demonstrates) (this |the |that |your )?(element|ground|case|requirement)\\b", "why": "asserts the ground is made out (use 'relates to')" },
+    { "pattern": "\\bis sufficient (for|to (satisfy|establish|meet|prove))\\b", "why": "sufficiency is a strength judgment (use 'relates to')" }
+  ],
   "aiMentions": [
     { "pattern": "\\bAI\\b", "why": "no AI mentions in customer copy" },
     { "pattern": "\\bA\\.I\\.", "why": "no AI mentions in customer copy" },

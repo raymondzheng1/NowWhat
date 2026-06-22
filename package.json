@@ -5,22 +5,26 @@
   "description": "What Now? — a free, login-free web app that helps people understand and respond to an adverse government decision. Information, not advice. Grounded-or-silent.",
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/build-corpus.mjs && next build",
+    "build": "node scripts/build-corpus.mjs && node scripts/build-data.mjs && node scripts/build-legal.mjs && next build",
     "start": "next start",
     "lint": "eslint . && tsc --noEmit",
     "test": "vitest run",
     "e2e": "playwright test",
     "coverage": "vitest run --coverage",
     "build:corpus": "node scripts/build-corpus.mjs",
+    "build:data": "node scripts/build-data.mjs",
+    "build:legal": "node scripts/build-legal.mjs",
     "faq:draft": "node scripts/faq-draft.mjs",
     "corpus:check": "node scripts/corpus-check.mjs",
+    "data:check": "node scripts/data-check.mjs",
+    "legal:check": "node scripts/legal-check.mjs",
     "no-advice:check": "node scripts/no-advice-check.mjs",
     "no-ai-mentions:check": "node scripts/no-ai-mentions-check.mjs",
     "reading-level:check": "node scripts/reading-level-check.mjs",
     "links:check": "node scripts/links-check.mjs",
     "seo:check": "node scripts/seo-check.mjs",
     "launch:check": "node scripts/launch-check.mjs",
-    "verify": "node scripts/build-corpus.mjs && node scripts/corpus-check.mjs && node scripts/no-advice-check.mjs && node scripts/no-ai-mentions-check.mjs && node scripts/reading-level-check.mjs && node scripts/links-check.mjs && node scripts/seo-check.mjs && node scripts/launch-check.mjs && eslint . && tsc --noEmit && vitest run"
+    "verify": "node scripts/build-corpus.mjs && node scripts/build-data.mjs && node scripts/build-legal.mjs && node scripts/corpus-check.mjs && node scripts/data-check.mjs && node scripts/legal-check.mjs && node scripts/no-advice-check.mjs && node scripts/no-ai-mentions-check.mjs && node scripts/reading-level-check.mjs && node scripts/links-check.mjs && node scripts/seo-check.mjs && node scripts/launch-check.mjs && eslint . && tsc --noEmit && vitest run"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",

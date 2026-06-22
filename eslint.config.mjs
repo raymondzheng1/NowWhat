@@ -18,6 +18,8 @@ const eslintConfig = [
       "next-env.d.ts",
       "scripts/**",
       "corpus/index.json",
+      "corpus/legal/index.json",
+      "data/index.json",
       "coverage/**",
     ],
   },
