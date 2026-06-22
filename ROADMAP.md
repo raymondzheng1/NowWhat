@@ -32,7 +32,7 @@ Highest-value candidates beyond the four live areas (renting, fines, public hous
 - **Per-pathway "other steps" expansion** on the result, and richer evidence/grounds UI.
 
 ## How to add a vertical (process)
-1. Research the pathway/deadlines against official sources (vcat.vic.gov.au, legislation.vic.gov.au, the agency).
-2. Author `corpus/pathways/<id>.md` (YAML frontmatter; real `deadlineDays` + `deadlineVerified` + `source` + `lastVerified`; `status: seed` until human-verified).
-3. Add the area to the wizard card map (`CATEGORY` + `CARD` in `WizardClient.tsx`) and the lawyer-search term map (`lib/help/services.ts`).
-4. `npm run verify` (corpus-check, reading-level, etc.) → human legal sign-off → flip to `verified`.
+1. Research the pathway/deadlines against official sources (vcat.vic.gov.au, art.gov.au, legislation.vic.gov.au, the agency).
+2. **Procedural facts** → author `data/pathways/<id>.md` (avenue/deadlineRule/reasons/getHelp; `verifiedAsAt` + `sourceUrl` + `reviewCadenceDays`; `status: seed` until lawyer-verified). The M-Lean `/start` flow (`RightsSaverClient`) + `lib/triage`/`lib/data` pick it up automatically; add an icon in `RightsSaverClient`'s `AREA_ICON` if you want a custom glyph. (Legacy decode/ask still read `corpus/pathways/<id>.md` + the `CATEGORY` map in `components/feature/categories.ts`.)
+3. **Legal substance** (v2) → grounds/cases live in `corpus/legal/` (behind the legal-sign-off gate).
+4. `npm run verify` (data-check, corpus-check, reading-level, etc.) → supervising-lawyer sign-off → flip `status` to `verified` (the deadline then renders the rule + verified date + source instead of degrading).
