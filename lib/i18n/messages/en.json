@@ -52,7 +52,17 @@
     "helpCta": "See the three tiers of help",
     "tier1": "Free · Government",
     "tier2": "Community legal",
-    "tier3": "Private lawyer"
+    "tier3": "Private lawyer",
+    "learnKicker": "Understand your options",
+    "learnTitle": "How review works — explained in plain English",
+    "learnLead": "Challenging a government decision in Victoria or the Commonwealth usually means one of two paths: merits review or judicial review. Learn what each one is, who hears it, and the grounds people raise — free, and in plain language.",
+    "learnCta": "Explore how review works",
+    "linkMeritsTitle": "Merits review explained",
+    "linkJudicialTitle": "Judicial review explained",
+    "linkGroundsTitle": "The grounds of review",
+    "linkGroundsDesc": "{count} common grounds people raise, in plain English.",
+    "linkCompareTitle": "Merits review vs judicial review",
+    "linkCompareDesc": "Which one fits — side by side, with a quick guide."
   },
   "rights": {
     "stepOf": "Step {n} of 3",

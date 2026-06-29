@@ -1,14 +1,21 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { listProcesses, listGrounds } from "@/lib/legal";
+import { JsonLd } from "@/components/site/JsonLd";
+import { siteUrl } from "@/lib/config";
 
 /**
  * Landing (Direction K2 "Deep teal & sand") — the trust funnel: hero → numbered
- * how-it-works index → deadline band → trust band → teal get-help band. One primary
- * action: "Find out what you can do" (/start). The brand rail, top nav, footer and the
- * persistent chat launcher are provided by SiteShell.
+ * how-it-works index → deadline band → trust band → Learn band → teal get-help band. One
+ * primary action: "Find out what you can do" (/start). The brand rail, top nav, footer and
+ * the persistent chat launcher are provided by SiteShell.
  *
  * The deadline band is illustrative and deliberately shows the RULE + "checked and
  * dated", never a computed countdown (BRD safety contract — no "X days left").
+ *
+ * The Learn band is the educational entry point: keyword-rich copy + descriptive internal
+ * links to the /learn library (the homepage is the highest-authority page, so this funnels
+ * crawl + link equity to those pages) + ItemList structured data for richer results.
  */
 export default function HomePage() {
   const t = useTranslations("home");
@@ -25,8 +32,35 @@ export default function HomePage() {
     { title: t("trust4Title"), body: t("trust4Body") },
   ];
 
+  const processes = listProcesses();
+  const grounds = listGrounds();
+  const merits = processes.find((p) => p.id === "merits-review");
+  const judicial = processes.find((p) => p.id === "judicial-review");
+  const learnLinks = [
+    { href: "/learn/merits-review", title: t("linkMeritsTitle"), desc: merits?.oneLine ?? "" },
+    { href: "/learn/judicial-review", title: t("linkJudicialTitle"), desc: judicial?.oneLine ?? "" },
+    { href: "/learn/grounds", title: t("linkGroundsTitle"), desc: t("linkGroundsDesc", { count: grounds.length }) },
+    { href: "/learn/compare", title: t("linkCompareTitle"), desc: t("linkCompareDesc") },
+  ];
+
+  const base = siteUrl();
+  const learnLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: "How review works — understand your options",
+    description:
+      "Plain-English guides to challenging a government decision in Victoria or the Commonwealth: merits review, judicial review, and the grounds of review.",
+    itemListElement: learnLinks.map((l, i) => ({
+      "@type": "ListItem",
+      position: i + 1,
+      name: l.title,
+      url: `${base}${l.href}`,
+    })),
+  };
+
   return (
     <div>
+      <JsonLd data={learnLd} />
       {/* ===== Hero ===== */}
       <header className="container-wide pb-9 pt-8 sm:pt-16">
         <p className="text-[11px] uppercase tracking-[0.28em] text-accent">{t("heroEyebrow")}</p>
@@ -97,6 +131,31 @@ export default function HomePage() {
             </div>
           ))}
         </div>
+      </section>
+
+      {/* ===== Learn band (educational entry point — SEO: keyword copy + internal links) ===== */}
+      <section aria-labelledby="learn-band-title" className="container-wide py-12">
+        <p className="text-[11px] uppercase tracking-[0.28em] text-accent">{t("learnKicker")}</p>
+        <h2
+          id="learn-band-title"
+          className="mt-3 max-w-[680px] font-display text-[28px] font-semibold leading-[1.1] text-ink sm:text-[34px]"
+        >
+          {t("learnTitle")}
+        </h2>
+        <p className="mt-4 max-w-[60ch] text-[15px] leading-[1.65] text-ink-soft">{t("learnLead")}</p>
+        <div className="mt-7 grid gap-4 sm:grid-cols-2">
+          {learnLinks.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className="group rounded-card border border-line bg-paper p-5 transition-colors hover:border-rail-accent"
+            >
+              <h3 className="font-display text-[20px] font-semibold text-ink group-hover:text-accent">{l.title}</h3>
+              {l.desc ? <p className="mt-1.5 text-[14.5px] leading-[1.55] text-ink-soft">{l.desc}</p> : null}
+            </Link>
+          ))}
+        </div>
+        <Link href="/learn" className="link-text mt-6 inline-block">{t("learnCta")}</Link>
       </section>
 
       {/* ===== Get-help band (full-bleed teal) ===== */}
