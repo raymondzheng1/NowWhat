@@ -87,4 +87,15 @@ describe("handoff pack", () => {
     expect(pack.toLowerCase()).toContain("not confirmed");
     expect(pack.toLowerCase()).toContain("not stored");
   });
+
+  it("includes the person's selected grounds as neutral points to discuss, not conclusions", () => {
+    const r = triage({ jurisdiction: "Vic", decisionType: "notice to vacate" });
+    const pack = buildHandoff({
+      triage: r,
+      relatedGrounds: ["You weren't given a fair chance"],
+    });
+    expect(pack).toContain("GROUNDS THAT MIGHT RELATE");
+    expect(pack).toContain("You weren't given a fair chance");
+    expect(pack.toLowerCase()).toContain("not conclusions");
+  });
 });

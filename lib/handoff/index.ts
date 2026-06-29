@@ -15,6 +15,9 @@ export interface HandoffInput {
   wants?: string;
   /** Whether they've asked for reasons yet. */
   reasonsRequested?: boolean;
+  /** Grounds the person marked as possibly relating to their situation (their own view,
+   *  neutral — points to discuss with a lawyer, NOT conclusions that a ground is made out). */
+  relatedGrounds?: string[];
   note?: string;
 }
 
@@ -47,6 +50,15 @@ export function buildHandoff(input: HandoffInput): string {
     `Reasons requested yet: ${input.reasonsRequested ? "yes" : "not yet"}`,
     `What the person wants: ${dash(input.wants)}`,
     `Their note: ${dash(input.note)}`,
+  );
+  if (input.relatedGrounds && input.relatedGrounds.length > 0) {
+    lines.push(
+      "",
+      "GROUNDS THAT MIGHT RELATE (the person's own selection — points to discuss, NOT conclusions that any ground is made out):",
+      ...input.relatedGrounds.map((g) => `- ${g}`),
+    );
+  }
+  lines.push(
     "",
     "This summary was generated locally and is not stored anywhere.",
   );

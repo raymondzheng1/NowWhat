@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { listDataEntries, getDataEntry } from "@/lib/data";
 import type { DataPathway, Jurisdiction } from "@/lib/schemas/data";
+import type { Process, Ground } from "@/lib/schemas/legal";
 import { avenueView } from "@/lib/triage";
 import { deadlineRuleView } from "@/lib/deadline/rule";
 import { reasonsRequestTemplate, REASONS_CLOCK_WARNING } from "@/lib/reasons";
@@ -14,6 +15,8 @@ import { Disclaimer } from "@/components/ui/Disclaimer";
 import { PrivacyNote } from "@/components/ui/PrivacyNote";
 import { Crest } from "@/components/ui/Wordmark";
 import { Icon, type IconName } from "@/components/ui/icons";
+import { ProcessExplainer } from "@/components/feature/learn/ProcessExplainer";
+import { GroundsExplorer } from "@/components/feature/learn/GroundsExplorer";
 
 type Step = "who" | "what" | "result";
 
@@ -35,7 +38,15 @@ const FLAG_KEYS: { key: keyof TripwireFlags; label: string }[] = [
   { key: "deadlineImminentOrPassed", label: "flagDeadline" },
 ];
 
-export function RightsSaverClient() {
+export function RightsSaverClient({
+  meritsReview,
+  judicialReview,
+  jrGrounds,
+}: {
+  meritsReview: Process;
+  judicialReview: Process;
+  jrGrounds: Ground[];
+}) {
   const t = useTranslations("rights");
   const allEntries = useMemo(() => listDataEntries(), []);
 
@@ -46,6 +57,8 @@ export function RightsSaverClient() {
   const [flags, setFlags] = useState<TripwireFlags>({});
   const [consent, setConsent] = useState(false);
   const [copied, setCopied] = useState(false);
+  // Grounds the person marked as possibly relating to their situation (neutral; →handoff).
+  const [relatedGrounds, setRelatedGrounds] = useState<string[]>([]);
 
   // Deep link / chat handoff: /start?jur=Vic&area=vic-renting&date=YYYY-MM-DD
   useEffect(() => {
@@ -78,6 +91,11 @@ export function RightsSaverClient() {
     setDecisionDate("");
     setFlags({});
     setConsent(false);
+    setRelatedGrounds([]);
+  }
+
+  function toggleGround(id: string) {
+    setRelatedGrounds((prev) => (prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]));
   }
 
   const stepNo = step === "who" ? 1 : step === "what" ? 2 : 3;
@@ -126,6 +144,11 @@ export function RightsSaverClient() {
               flags={flags}
               copied={copied}
               setCopied={setCopied}
+              meritsReview={meritsReview}
+              judicialReview={judicialReview}
+              jrGrounds={jrGrounds}
+              relatedGrounds={relatedGrounds}
+              onToggleGround={toggleGround}
             />
           )}
 
@@ -327,6 +350,11 @@ function ResultStep({
   flags,
   copied,
   setCopied,
+  meritsReview,
+  judicialReview,
+  jrGrounds,
+  relatedGrounds,
+  onToggleGround,
 }: {
   t: ReturnType<typeof useTranslations>;
   entry: DataPathway;
@@ -335,6 +363,11 @@ function ResultStep({
   flags: TripwireFlags;
   copied: boolean;
   setCopied: (b: boolean) => void;
+  meritsReview: Process;
+  judicialReview: Process;
+  jrGrounds: Ground[];
+  relatedGrounds: string[];
+  onToggleGround: (id: string) => void;
 }) {
   const trip = checkTripwire({ jurisdiction, flags, entry });
 
@@ -367,12 +400,15 @@ function ResultStep({
     decisionDate: decisionDate || undefined,
   });
 
+  const groundNameById = new Map(jrGrounds.map((g) => [g.id, g.plainName] as const));
+
   function downloadHandoff() {
     const text = buildHandoff({
       triage: { entry, isFallback: entry.isFallback, jurisdiction, avenue: av },
       decisionAbout: entry.title,
       decisionDate: decisionDate || undefined,
       reasonsRequested: false,
+      relatedGrounds: relatedGrounds.map((id) => groundNameById.get(id) ?? id),
     });
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -429,6 +465,37 @@ function ResultStep({
         </ul>
       </section>
 
+      {/* Understand these options — in-flow Learn (progressive disclosure) */}
+      {(av.mrAvailable || av.jrAvailable) && (
+        <section className="rounded-card border border-line bg-paper p-5 sm:p-6">
+          <h2 className="font-display text-[20px] font-bold text-ink">{t("learnTitle")}</h2>
+          <p className="mt-2 text-[14.5px] text-ink-soft">{t("learnLead")}</p>
+          <div className="mt-4 space-y-3">
+            {av.mrAvailable && (
+              <details className="rounded-card border border-line bg-sand-surface px-4 py-3">
+                <summary className="cursor-pointer font-display text-[17px] font-semibold text-ink">
+                  {meritsReview.name} — {meritsReview.plainName}
+                </summary>
+                <div className="mt-4">
+                  <ProcessExplainer process={meritsReview} compact />
+                </div>
+              </details>
+            )}
+            {av.jrAvailable && (
+              <details className="rounded-card border border-line bg-sand-surface px-4 py-3">
+                <summary className="cursor-pointer font-display text-[17px] font-semibold text-ink">
+                  {judicialReview.name} — {judicialReview.plainName}
+                </summary>
+                <div className="mt-4">
+                  <ProcessExplainer process={judicialReview} compact />
+                </div>
+              </details>
+            )}
+          </div>
+          <Link href="/learn" className="link-text mt-4 inline-block">{t("learnMore")}</Link>
+        </section>
+      )}
+
       {/* Deadline — rule, never a countdown */}
       <section className="rounded-deadline border border-gold-line bg-gold-soft p-5 sm:p-6">
         <div className="flex items-start gap-4">
@@ -478,6 +545,24 @@ function ResultStep({
           {copied ? t("reasonsCopied") : t("reasonsCopy")}
         </button>
       </section>
+
+      {/* Grounds people raise — in-flow, neutral; selection flows into the hand-off */}
+      {av.jrAvailable && jrGrounds.length > 0 && (
+        <section className="rounded-card border border-line bg-paper p-5 sm:p-6">
+          <h2 className="font-display text-[20px] font-bold text-ink">{t("groundsTitle")}</h2>
+          <p className="mt-2 text-[14.5px] leading-relaxed text-ink-soft">{t("groundsLead")}</p>
+          <div className="mt-4">
+            <GroundsExplorer
+              grounds={jrGrounds}
+              selectable
+              selected={relatedGrounds}
+              onToggle={onToggleGround}
+              linkBase="/learn/grounds"
+            />
+          </div>
+          <Link href="/learn/grounds" className="link-text mt-4 inline-block">{t("groundsMore")}</Link>
+        </section>
+      )}
 
       {/* Hand-off + help */}
       <section className="rounded-card border border-line bg-paper p-5 sm:p-6">

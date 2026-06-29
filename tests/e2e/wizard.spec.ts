@@ -38,6 +38,10 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
   await expect(page.getByText(/ask for the reasons/i)).toBeVisible();
   await expect(page.getByText(/not legal advice/i)).toBeVisible(); // disclaimer
   await expect(page.getByText(/free help/i).first()).toBeVisible();
+
+  // In-flow Learn: the options are explained and the grounds can be marked (→ hand-off).
+  await expect(page.getByRole("heading", { name: /understand these options/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /grounds people raise/i })).toBeVisible();
 });
 
 test("tripwire: a sensitive matter routes straight to a person (no builder output)", async ({ page }) => {

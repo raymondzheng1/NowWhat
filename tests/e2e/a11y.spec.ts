@@ -2,7 +2,10 @@ import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
 /** WCAG 2 A/AA automated scan of the key surfaces (no serious/critical violations). */
-const PAGES = ["/", "/start", "/faq", "/help", "/contact", "/privacy", "/terms"];
+const PAGES = [
+  "/", "/start", "/faq", "/help", "/contact", "/privacy", "/terms",
+  "/learn", "/learn/merits-review", "/learn/compare", "/learn/grounds", "/learn/grounds/procedural-fairness", "/learn/tour",
+];
 
 for (const path of PAGES) {
   test(`a11y: ${path} has no serious/critical WCAG A/AA violations`, async ({ page }) => {

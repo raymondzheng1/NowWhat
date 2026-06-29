@@ -12,7 +12,8 @@ export const metadata: Metadata = {
 };
 
 export default function LearnHubPage() {
-  const processes = listProcesses();
+  // Merits review first — it's the path most people want (a different outcome).
+  const processes = [...listProcesses()].sort((a) => (a.id === "merits-review" ? -1 : 1));
   const grounds = listGrounds();
   const comparison = getComparison();
 
