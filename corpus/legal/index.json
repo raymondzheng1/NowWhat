@@ -1,17 +1,357 @@
 {
-  "builtAt": "37b9ccb1d0741a67",
+  "builtAt": "d86c2864d58b1605",
+  "processes": [
+    {
+      "id": "judicial-review",
+      "name": "Judicial review",
+      "plainName": "Asking a court to check the decision was made lawfully",
+      "oneLine": "A court checks whether the decision was made the right way — not whether it was a good decision.",
+      "question": "Was the decision made lawfully?",
+      "whatItIs": "Judicial review is different from merits review. A court does not ask whether the decision was right or fair — it asks whether it was made lawfully: did the decision-maker have the power, follow a fair process, and stay within the law? If the court finds a legal error — a 'ground of review' — it can set the decision aside. But the court cannot make a new decision for you. It usually sends the matter back to be decided again, properly.",
+      "bodies": [
+        {
+          "jurisdiction": "Vic",
+          "name": "Supreme Court of Victoria (Order 56)",
+          "note": "Judicial review of Victorian government decisions."
+        },
+        {
+          "jurisdiction": "Cth",
+          "name": "Federal Court / Federal Circuit and Family Court",
+          "note": "Judicial review of Australian Government decisions (ADJR Act; s 39B Judiciary Act)."
+        },
+        {
+          "jurisdiction": "Cth",
+          "name": "High Court (s 75(v) Constitution)",
+          "note": "Constitutional judicial review of Commonwealth officers."
+        }
+      ],
+      "canApply": [
+        "You need a 'ground of review' — a specific legal error in how the decision was made.",
+        "You usually need to be a person affected by the decision (standing).",
+        "There are strict time limits, and they are usually NOT paused by asking for reasons."
+      ],
+      "whatHappens": [
+        "You start a proceeding in the court.",
+        "You argue that one or more grounds of review apply.",
+        "The court looks at the legality of the decision, not its merits.",
+        "If a ground is made out, the court can set the decision aside."
+      ],
+      "remedies": [
+        "Set aside (quash) the decision.",
+        "Send it back (remit) to be decided again, lawfully.",
+        "Orders to require or stop action, in some cases."
+      ],
+      "limits": [
+        "The court cannot substitute its own decision — it cannot simply give you the outcome you want, only require a lawful re-decision.",
+        "Judicial review is about legality, not about whether the decision was harsh or wrong on the facts."
+      ],
+      "goodToKnow": [
+        "Judicial review can be technical and the time limits are tight — getting free legal help early really matters."
+      ],
+      "sources": [
+        "Supreme Court of Victoria — supremecourt.vic.gov.au",
+        "Federal Court of Australia — fedcourt.gov.au"
+      ],
+      "status": "seed"
+    },
+    {
+      "id": "merits-review",
+      "name": "Merits review",
+      "plainName": "Asking for a fresh look at the decision",
+      "oneLine": "A tribunal looks at your case again and can make a different decision.",
+      "question": "Is this the correct or preferable decision?",
+      "whatItIs": "Merits review means an independent tribunal looks at the decision again — on the facts and the law — as if it were being made fresh. The tribunal stands in the shoes of the original decision-maker and applies the same rules. It can agree with the decision, change part of it, or replace it with a different one. It is usually cheaper, faster, and less formal than going to court.",
+      "bodies": [
+        {
+          "jurisdiction": "Vic",
+          "name": "VCAT (Victorian Civil and Administrative Tribunal)",
+          "note": "Hears many Victorian decisions where an Act gives a right of review."
+        },
+        {
+          "jurisdiction": "Cth",
+          "name": "ART (Administrative Review Tribunal)",
+          "note": "Hears many Australian Government decisions, such as Centrelink."
+        }
+      ],
+      "canApply": [
+        "There must be a law that gives a right of review for this kind of decision.",
+        "You usually need to be a person affected by the decision (this is called standing).",
+        "There is almost always a time limit — this is the part people miss most."
+      ],
+      "whatHappens": [
+        "You lodge an application with the tribunal.",
+        "Often there is an informal stage that tries to sort it out first.",
+        "If it goes to a hearing, you explain your side and give your evidence.",
+        "The tribunal makes a fresh decision."
+      ],
+      "remedies": [
+        "Affirm — keep the decision the same.",
+        "Vary — change part of the decision.",
+        "Set aside and substitute — replace it with a new decision."
+      ],
+      "limits": [
+        "Merits review is only available where a law provides it — not every decision can be reviewed on the merits."
+      ],
+      "goodToKnow": [
+        "Because the tribunal can change the outcome, merits review is usually what people want when they disagree with the result."
+      ],
+      "sources": [
+        "VCAT — vcat.vic.gov.au",
+        "Administrative Review Tribunal — art.gov.au"
+      ],
+      "status": "seed"
+    }
+  ],
+  "comparison": {
+    "intro": "Most decisions can be challenged in one of two ways. They ask different questions, so the right one depends on what you are hoping for.",
+    "rows": [
+      {
+        "aspect": "The question it asks",
+        "mr": "Is this the correct or preferable decision?",
+        "jr": "Was the decision made lawfully?"
+      },
+      {
+        "aspect": "Who decides",
+        "mr": "A tribunal (VCAT or the ART)",
+        "jr": "A court (Supreme Court or Federal Court)"
+      },
+      {
+        "aspect": "What they look at",
+        "mr": "The facts and the law, fresh",
+        "jr": "Only how the decision was made — its legality"
+      },
+      {
+        "aspect": "What they can do",
+        "mr": "Change or replace the decision",
+        "jr": "Set it aside and send it back — not replace it"
+      },
+      {
+        "aspect": "Cost and formality",
+        "mr": "Usually cheaper and less formal",
+        "jr": "More formal, and often needs a lawyer"
+      },
+      {
+        "aspect": "When it is available",
+        "mr": "Only where a law gives a review right",
+        "jr": "Where there is a legal error (a ground of review)"
+      }
+    ],
+    "chooser": {
+      "question": "What are you hoping for?",
+      "options": [
+        {
+          "prompt": "A different outcome — I think the decision is wrong",
+          "leadsTo": "merits-review",
+          "because": "If you want the decision changed, merits review (where it is available) is usually the path, because a tribunal can replace the decision."
+        },
+        {
+          "prompt": "The decision was made unfairly or without power",
+          "leadsTo": "judicial-review",
+          "because": "If the problem is how the decision was made, judicial review asks a court to check that it was lawful."
+        },
+        {
+          "prompt": "Both might apply, or I am not sure",
+          "leadsTo": "both",
+          "because": "Sometimes both are possible, and the time limits are different. A free legal service can help you choose — and quickly, because of the time limits."
+        }
+      ]
+    }
+  },
   "grounds": [
+    {
+      "id": "bad-faith",
+      "name": "Bad faith",
+      "plainName": "The decision was not made honestly",
+      "oneLine": "The decision was made dishonestly, or for a deliberately improper reason.",
+      "whatItMeans": "A decision made dishonestly, or for a deliberately improper reason, can be unlawful. Bad faith is rare and hard to prove, and it is a serious allegation — it means much more than a mistake or even an unfair process.",
+      "plainExample": "A decision is made to deliberately harm someone for personal reasons.",
+      "whatRelates": [
+        "There are real signs the decision was not made honestly.",
+        "The decision looks deliberately aimed at harming you for an improper reason."
+      ],
+      "whatItIsNot": "It does not cover an honest mistake or an unfair process — those are other grounds. Bad faith is a high bar and a serious claim.",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "test": "A decision made in bad faith may be invalid; it is a serious allegation that needs strong material — VERIFY the exact test + authorities.",
+      "elements": [
+        {
+          "id": "dishonesty",
+          "name": "Dishonesty or deliberate impropriety",
+          "layPrompt": "Are there real signs the decision was not made honestly?"
+        }
+      ],
+      "sources": [
+        "Victoria Legal Aid — legalaid.vic.gov.au"
+      ],
+      "status": "seed",
+      "leadingCases": []
+    },
+    {
+      "id": "error-of-law",
+      "name": "Error of law",
+      "plainName": "They got the law wrong",
+      "oneLine": "The decision-maker applied the wrong legal test, or misread what the law requires.",
+      "whatItMeans": "A decision can be challenged where the decision-maker made a legal error — for example, applying the wrong test, misreading what a law requires, or misunderstanding a legal word. Some legal errors are reviewable even when they appear on the face of the written decision.",
+      "plainExample": "A decision applies a stricter test than the law actually sets.",
+      "whatRelates": [
+        "The decision seems to apply the wrong rule or test.",
+        "The written reasons misstate what the law requires.",
+        "A legal word or requirement looks like it was misunderstood."
+      ],
+      "whatItIsNot": "It does not cover a disagreement about the facts — it is about the law being applied wrongly.",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "test": "An error of law (including one on the face of the record) may be reviewable — VERIFY the exact test + authorities.",
+      "elements": [
+        {
+          "id": "wrong-test",
+          "name": "Wrong legal test",
+          "layPrompt": "Did they use the wrong legal test or standard?"
+        },
+        {
+          "id": "misread-law",
+          "name": "Misreading the law",
+          "layPrompt": "Do the reasons misstate what the law requires?"
+        }
+      ],
+      "sources": [
+        "Victoria Legal Aid — legalaid.vic.gov.au"
+      ],
+      "status": "seed",
+      "leadingCases": []
+    },
     {
       "id": "improper-purpose",
       "name": "Improper purpose",
       "plainName": "The power was used for the wrong reason",
-      "test": "A statutory power must be used for the purpose for which it was given; using it for another purpose may be unlawful — VERIFY the exact test + authorities against the corpus.",
+      "oneLine": "A power was used to achieve something other than what it was given for.",
+      "whatItMeans": "A statutory power must be used for the purpose Parliament gave it. Using it to achieve something else — even something the decision-maker thinks is a good idea — can be unlawful.",
+      "plainExample": "A permit is refused to punish someone for an unrelated complaint, rather than on the permit's merits.",
+      "whatRelates": [
+        "The real reason for the decision seems to be something other than what the power is for.",
+        "The decision looks like it was made to achieve an unrelated aim."
+      ],
+      "whatItIsNot": "It does not require a bad character — even a well-meant decision can be made for an improper purpose.",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "test": "A statutory power must be used for the purpose for which it was given; using it for another purpose may be unlawful — VERIFY the exact test + authorities.",
       "elements": [
         {
           "id": "actual-purpose",
           "name": "Power used for a different purpose",
           "layPrompt": "Does it seem the real reason for the decision was something other than what the power is for?"
         }
+      ],
+      "sources": [
+        "Victoria Legal Aid — legalaid.vic.gov.au"
+      ],
+      "status": "seed",
+      "leadingCases": []
+    },
+    {
+      "id": "inflexible-policy",
+      "name": "Inflexible policy / acting under dictation",
+      "plainName": "They followed a rule or an order instead of deciding your case",
+      "oneLine": "A discretion was applied so rigidly, or so much at someone else's direction, that your case wasn't really considered.",
+      "whatItMeans": "A decision-maker who has a discretion must actually use it. Applying a policy so rigidly that they do not consider your particular circumstances, or simply doing what another person or body directed, can be unlawful.",
+      "plainExample": "An application is refused 'because that is our policy', without anyone looking at your specific situation.",
+      "whatRelates": [
+        "You were told 'that is just our policy', with no look at your circumstances.",
+        "The decision-maker seemed to be following someone else's direction.",
+        "Your particular situation does not seem to have been considered at all."
+      ],
+      "whatItIsNot": "It does not mean policies are not allowed — only that they cannot be applied with no room for your case.",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "test": "Fettering a discretion by an inflexible policy, or acting under another's dictation, may make a decision invalid — VERIFY the exact test + authorities.",
+      "elements": [
+        {
+          "id": "rigid-policy",
+          "name": "Inflexible application of policy",
+          "layPrompt": "Was a policy applied without looking at your circumstances?"
+        },
+        {
+          "id": "dictation",
+          "name": "Acting under dictation",
+          "layPrompt": "Did the decision-maker just do what someone else told them to?"
+        }
+      ],
+      "sources": [
+        "Victoria Legal Aid — legalaid.vic.gov.au"
+      ],
+      "status": "seed",
+      "leadingCases": []
+    },
+    {
+      "id": "jurisdictional-error",
+      "name": "Jurisdictional error",
+      "plainName": "The decision-maker went beyond their power",
+      "oneLine": "The decision-maker acted outside their power, or asked the wrong question.",
+      "whatItMeans": "A decision can be unlawful if the decision-maker acted beyond the power the law gives them — for example by asking the wrong question, ignoring a step the law required first, or misunderstanding the limits of their role. This is a central idea in judicial review, especially for Commonwealth decisions.",
+      "plainExample": "A body decides something only a different body had the power to decide.",
+      "whatRelates": [
+        "The decision-maker may not have had the power to make this decision.",
+        "A step the law required first seems to have been skipped.",
+        "The decision-maker seems to have misunderstood what they were allowed to decide."
+      ],
+      "whatItIsNot": "It does not mean any mistake — it has to be an error that goes to the decision-maker's power.",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "test": "An error going to the existence or exercise of power (a jurisdictional error) may make a decision invalid — VERIFY the exact test + authorities.",
+      "elements": [
+        {
+          "id": "beyond-power",
+          "name": "Acting beyond power",
+          "layPrompt": "Did the decision-maker act outside what the law lets them do?"
+        },
+        {
+          "id": "wrong-question",
+          "name": "Asking the wrong question",
+          "layPrompt": "Did they decide on the wrong question, or ignore a required step?"
+        }
+      ],
+      "sources": [
+        "Victoria Legal Aid — legalaid.vic.gov.au"
+      ],
+      "status": "seed",
+      "leadingCases": []
+    },
+    {
+      "id": "no-evidence",
+      "name": "No evidence / mistake of material fact",
+      "plainName": "A key finding had no evidence behind it",
+      "oneLine": "A finding that mattered was made with no evidence to support it.",
+      "whatItMeans": "A decision can be challenged if a finding on a key fact was made with no evidence at all to support it, or rested on a clear mistake about a fact the decision turned on. It is not enough that the evidence was weak — there must be no evidence, or a clear error on a central point.",
+      "plainExample": "A debt is raised on the basis you were paid on dates that the records show you were not.",
+      "whatRelates": [
+        "A key finding was made with nothing to support it.",
+        "The decision turned on a fact that is simply wrong.",
+        "Evidence you gave that contradicts a central finding appears to have been overlooked."
+      ],
+      "whatItIsNot": "It does not cover a decision you just think got the facts wrong on balance — the error has to be on a critical point with no support.",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "test": "A material finding made with no evidence, or a decision based on a mistake of a material fact, may be reviewable — VERIFY the exact test + authorities.",
+      "elements": [
+        {
+          "id": "no-support",
+          "name": "No evidence for a key finding",
+          "layPrompt": "Was there an important finding with no evidence at all behind it?"
+        },
+        {
+          "id": "material-mistake",
+          "name": "Mistake about a central fact",
+          "layPrompt": "Did the decision rely on a fact that is plainly wrong?"
+        }
+      ],
+      "sources": [
+        "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "seed",
       "leadingCases": []
@@ -20,6 +360,19 @@
       "id": "procedural-fairness",
       "name": "Procedural fairness (natural justice)",
       "plainName": "You weren't given a fair chance",
+      "oneLine": "A fair hearing from a decision-maker who doesn't have a closed or biased mind.",
+      "whatItMeans": "Before a decision that affects you, the decision-maker usually has to tell you what is being considered and give you a real chance to respond. They also have to be free of bias — they should not have a personal interest in the outcome or have made up their mind in advance.",
+      "plainExample": "A payment is cancelled because of a report you were never shown and never had a chance to answer.",
+      "whatRelates": [
+        "You were not told what the decision would be about before it was made.",
+        "You were not given a real chance to explain your side.",
+        "Information was used against you that you never got to see or respond to.",
+        "The decision-maker seemed to have decided before hearing from you, or had a personal stake."
+      ],
+      "whatItIsNot": "It does not mean you were entitled to win — only that you were entitled to a fair process.",
+      "usedIn": [
+        "judicial-review"
+      ],
       "test": "A decision-maker must give a person a fair hearing and be free of bias — VERIFY the exact test + authorities against the corpus.",
       "elements": [
         {
@@ -30,8 +383,11 @@
         {
           "id": "bias",
           "name": "No bias",
-          "layPrompt": "Was there anything that suggests the decision-maker had already made up their mind, or had a personal interest?"
+          "layPrompt": "Was there anything suggesting the decision-maker had already made up their mind, or had a personal interest?"
         }
+      ],
+      "sources": [
+        "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "seed",
       "leadingCases": []
@@ -40,6 +396,18 @@
       "id": "relevant-considerations",
       "name": "Relevant and irrelevant considerations",
       "plainName": "They ignored something they had to weigh, or relied on something they shouldn't",
+      "oneLine": "A decision-maker must weigh what the law says matters — and ignore what it says doesn't.",
+      "whatItMeans": "A decision-maker must take into account the things the law requires them to consider, and must not rely on things the law says are irrelevant. Leaving out a required consideration, or relying on a forbidden one, can make a decision unlawful.",
+      "plainExample": "A housing decision ignores the medical evidence that the rules say must be taken into account.",
+      "whatRelates": [
+        "Something the rules say must be considered appears to have been left out.",
+        "The decision relied on something that should not have mattered.",
+        "You gave important information that the decision-maker did not appear to weigh."
+      ],
+      "whatItIsNot": "It does not mean every point you raised had to be accepted — only that the required matters had to be genuinely considered.",
+      "usedIn": [
+        "judicial-review"
+      ],
       "test": "A decision-maker must consider the matters the law requires, and must not rely on matters the law forbids — VERIFY the exact test + authorities against the corpus.",
       "elements": [
         {
@@ -53,6 +421,9 @@
           "layPrompt": "Did they rely on something that shouldn't have mattered to this decision?"
         }
       ],
+      "sources": [
+        "Victoria Legal Aid — legalaid.vic.gov.au"
+      ],
       "status": "seed",
       "leadingCases": []
     },
@@ -60,7 +431,19 @@
       "id": "unreasonableness",
       "name": "Legal unreasonableness",
       "plainName": "The decision was one no reasonable decision-maker could make",
-      "test": "A decision may be unlawful if it lacks an evident and intelligible justification, or is one no reasonable decision-maker could have reached — VERIFY the exact test + authorities against the corpus.",
+      "oneLine": "Even with power, a decision can be unlawful if it lacks any sensible justification.",
+      "whatItMeans": "Even where a decision-maker has the power, the decision can be unlawful if it lacks an evident and intelligible justification on the material before them, or is so unreasonable that no reasonable decision-maker could have reached it. This is a high bar — it is not enough to disagree.",
+      "plainExample": "A penalty far out of proportion to a tiny, first-time mistake, with no explanation.",
+      "whatRelates": [
+        "The outcome seems to make no sense on the facts the decision-maker had.",
+        "The result is far harsher than the situation called for.",
+        "There is no intelligible reason given for the decision."
+      ],
+      "whatItIsNot": "It does not mean you simply disagree with the decision — it has to lack a sensible basis.",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "test": "A decision may be unlawful if it lacks an evident and intelligible justification, or is one no reasonable decision-maker could have reached — VERIFY the exact test + authorities.",
       "elements": [
         {
           "id": "justification",
@@ -72,6 +455,9 @@
           "name": "Disproportionate or arbitrary",
           "layPrompt": "Was the result far harsher than the situation called for, or seemingly arbitrary?"
         }
+      ],
+      "sources": [
+        "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "seed",
       "leadingCases": []

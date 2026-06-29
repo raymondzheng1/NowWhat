@@ -98,6 +98,38 @@ export function collectCustomerCopy() {
     }
   }
 
+  // 5. Legal-substance "Learn" copy (processes, comparison, grounds)
+  const legalPath = resolve(ROOT, "corpus/legal/index.json");
+  if (existsSync(legalPath)) {
+    const idx = JSON.parse(readFileSync(legalPath, "utf8"));
+    const push = (rel, where, text) => {
+      if (typeof text === "string" && text.trim()) records.push({ file: rel, where, text });
+    };
+    for (const p of idx.processes ?? []) {
+      const rel = `legal (process ${p.id})`;
+      push(rel, "oneLine", p.oneLine);
+      push(rel, "whatItIs", p.whatItIs);
+      [...(p.canApply ?? []), ...(p.whatHappens ?? []), ...(p.remedies ?? []), ...(p.limits ?? []), ...(p.goodToKnow ?? [])].forEach(
+        (s, i) => push(rel, `point[${i}]`, s),
+      );
+    }
+    const cmp = idx.comparison;
+    if (cmp) {
+      push("legal (comparison)", "intro", cmp.intro);
+      (cmp.rows ?? []).forEach((r, i) => { push("legal (comparison)", `row[${i}].mr`, r.mr); push("legal (comparison)", `row[${i}].jr`, r.jr); });
+      (cmp.chooser?.options ?? []).forEach((o, i) => push("legal (comparison)", `chooser[${i}]`, o.because));
+    }
+    for (const g of idx.grounds ?? []) {
+      const rel = `legal (ground ${g.id})`;
+      push(rel, "oneLine", g.oneLine);
+      push(rel, "whatItMeans", g.whatItMeans);
+      push(rel, "plainExample", g.plainExample);
+      push(rel, "whatItIsNot", g.whatItIsNot);
+      (g.whatRelates ?? []).forEach((s, i) => push(rel, `whatRelates[${i}]`, s));
+      (g.elements ?? []).forEach((e, i) => push(rel, `element[${i}].layPrompt`, e.layPrompt));
+    }
+  }
+
   return records;
 }
 
