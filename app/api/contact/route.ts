@@ -3,7 +3,7 @@ import { z } from "zod";
 import { getRequestContext } from "@/lib/http/request-context";
 import { apiJson } from "@/lib/http/respond";
 import { getKv } from "@/lib/kv/redis";
-import { sendEmail, isEmailConfigured, operatorEmail, escapeHtml } from "@/lib/email/send";
+import { sendEmail, isEmailConfigured, operatorEmail, escapeHtml, hasVerifiedSender } from "@/lib/email/send";
 import { now } from "@/lib/time/clock";
 
 export const runtime = "nodejs";
@@ -69,13 +69,17 @@ export async function POST(req: NextRequest) {
   }
 
   // Acknowledge to the user (best-effort; never blocks the success response). §16.3.
-  void sendEmail({
-    to: email,
-    subject: "We've received your message — What Now?",
-    tag: "contact-ack",
-    text: `Hi ${name},\n\nThanks for reaching out — we've received your message and will get back to you. This inbox is for the service; for help with your own situation, free legal services are listed at our Get help page.\n\n— What Now?`,
-    html: `<p>Hi ${escapeHtml(name)},</p><p>Thanks for reaching out — we&rsquo;ve received your message and will get back to you.</p><p>For help with your own situation, free legal services are listed on our Get help page.</p><p>— What Now?</p>`,
-  });
+  // Only when a verified domain is configured — Resend's sandbox sender can't deliver to
+  // arbitrary visitor addresses, so we skip the ack rather than make a guaranteed-failing call.
+  if (hasVerifiedSender()) {
+    void sendEmail({
+      to: email,
+      subject: "We've received your message — What Now?",
+      tag: "contact-ack",
+      text: `Hi ${name},\n\nThanks for reaching out — we've received your message and will get back to you. This inbox is for the service; for help with your own situation, free legal services are listed at our Get help page.\n\n— What Now?`,
+      html: `<p>Hi ${escapeHtml(name)},</p><p>Thanks for reaching out — we&rsquo;ve received your message and will get back to you.</p><p>For help with your own situation, free legal services are listed on our Get help page.</p><p>— What Now?</p>`,
+    });
+  }
 
   return apiJson({ ok: true }, ctx);
 }

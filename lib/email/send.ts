@@ -3,14 +3,25 @@
  * object and fails loud (never throws into the caller); callers decide UX. The From and
  * Reply-To are configured, never echoing an operator's personal address into headers.
  *
- * Env: RESEND_API_KEY, CONTACT_FROM_EMAIL (verified sender), CONTACT_TO_EMAIL (operator).
+ * Env: RESEND_API_KEY (required), CONTACT_TO_EMAIL (operator inbox; required),
+ * CONTACT_FROM_EMAIL (OPTIONAL verified sender). With no verified domain we default to
+ * Resend's shared sandbox sender `onboarding@resend.dev`, which can only deliver to the
+ * Resend account owner's own address — so CONTACT_TO_EMAIL must be that address, and the
+ * visitor acknowledgement is suppressed until a real domain is set (see hasVerifiedSender).
  */
 export interface SendResult {
   ok: boolean;
   error?: string;
 }
 
-const FROM = () => process.env.CONTACT_FROM_EMAIL?.trim() || "What Now? <noreply@whatnow.local>";
+/** Resend's shared testing sender — works without verifying a domain (to your own inbox). */
+const RESEND_SANDBOX_FROM = "What Now? <onboarding@resend.dev>";
+const FROM = () => process.env.CONTACT_FROM_EMAIL?.trim() || RESEND_SANDBOX_FROM;
+
+/** True once a real verified sending domain is configured (then we can email visitors too). */
+export function hasVerifiedSender(): boolean {
+  return Boolean(process.env.CONTACT_FROM_EMAIL?.trim());
+}
 
 /** Operator inbox (harness §16.3 uses ADMIN_NOTIFY_EMAIL; CONTACT_TO_EMAIL is a fallback). */
 export function operatorEmail(): string | undefined {
