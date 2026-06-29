@@ -19,7 +19,7 @@ export function SiteNav() {
   const name = PRODUCT_NAME.replace(/\?$/, "");
 
   const links = [
-    { href: "/#how", label: t("howItWorks") },
+    { href: "/learn", label: t("howItWorks") },
     { href: "/faq", label: t("faq") },
     { href: "/help", label: t("help") },
   ];

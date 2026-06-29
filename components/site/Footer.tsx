@@ -21,6 +21,7 @@ export function Footer() {
         >
           {(
             [
+              ["/learn", t("learn")],
               ["/faq", t("faq")],
               ["/help", t("help")],
               ["/about", t("about")],
