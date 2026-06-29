@@ -256,7 +256,12 @@
     "sentEyebrow": "Message sent",
     "sentTitle": "Thanks — we'll get back to you.",
     "sentBody": "We read every message. We never share your details.",
-    "privacyNote": "We use your message and email only to reply. We don't store them on this site or share them."
+    "privacyNote": "We use your message and email only to reply. We don't store them on this site or share them.",
+    "errName": "Please enter your name.",
+    "errEmail": "Please enter a valid email address.",
+    "errMessage": "Please enter a message (at least 10 characters).",
+    "fixErrors": "Please check the highlighted fields and try again.",
+    "seeHelp": "See free help"
   },
   "footer": {
     "infoNotAdvice": "General information, not legal advice. We can't tell you what will happen in your case.",
