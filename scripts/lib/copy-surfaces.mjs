@@ -118,6 +118,7 @@ export function collectCustomerCopy() {
       push("legal (comparison)", "intro", cmp.intro);
       (cmp.rows ?? []).forEach((r, i) => { push("legal (comparison)", `row[${i}].mr`, r.mr); push("legal (comparison)", `row[${i}].jr`, r.jr); });
       (cmp.chooser?.options ?? []).forEach((o, i) => push("legal (comparison)", `chooser[${i}]`, o.because));
+      (cmp.faq ?? []).forEach((f, i) => { push("legal (comparison)", `faq[${i}].q`, f.q); push("legal (comparison)", `faq[${i}].a`, f.a); });
     }
     for (const g of idx.grounds ?? []) {
       const rel = `legal (ground ${g.id})`;

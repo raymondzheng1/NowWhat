@@ -101,6 +101,8 @@ export const ChooserOptionSchema = z.object({
   because: z.string(),
 });
 
+export const ComparisonFaqSchema = z.object({ q: z.string(), a: z.string() });
+
 export const ComparisonSchema = z.object({
   intro: z.string().default(""),
   rows: z.array(ComparisonRowSchema).min(1),
@@ -108,6 +110,8 @@ export const ComparisonSchema = z.object({
     question: z.string(),
     options: z.array(ChooserOptionSchema).min(2),
   }),
+  /** Plain-language Q&A — rendered visibly + emitted as FAQPage structured data (SEO). */
+  faq: z.array(ComparisonFaqSchema).default([]),
 });
 export type Comparison = z.infer<typeof ComparisonSchema>;
 

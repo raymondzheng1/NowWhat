@@ -3,6 +3,8 @@ import { listGrounds } from "@/lib/legal";
 import { LearnContainer } from "@/components/feature/learn/LearnContainer";
 import { LearnTrust } from "@/components/feature/learn/LearnTrust";
 import { GroundsExplorer } from "@/components/feature/learn/GroundsExplorer";
+import { JsonLd } from "@/components/site/JsonLd";
+import { definedTermSetLd } from "@/lib/seo/jsonld";
 
 export const metadata: Metadata = {
   title: "The grounds of review explained",
@@ -14,7 +16,26 @@ export const metadata: Metadata = {
 export default function GroundsPage() {
   const grounds = listGrounds();
   return (
-    <LearnContainer back={{ href: "/learn", label: "How review works" }}>
+    <LearnContainer
+      breadcrumb={[
+        { name: "Home", href: "/" },
+        { name: "How review works", href: "/learn" },
+        { name: "Grounds of review", href: "/learn/grounds" },
+      ]}
+    >
+      <JsonLd
+        data={definedTermSetLd({
+          name: "Grounds of review (Australian administrative law)",
+          description:
+            "The common grounds of judicial review — a specific legal problem with how a government decision was made.",
+          path: "/learn/grounds",
+          terms: grounds.map((g) => ({
+            name: g.plainName,
+            description: g.oneLine,
+            path: `/learn/grounds/${g.id}`,
+          })),
+        })}
+      />
       <header className="max-w-[720px]">
         <p className="text-[11px] uppercase tracking-[0.22em] text-accent">Grounds of review</p>
         <h1 className="mt-3 font-display text-[34px] font-semibold leading-[1.06] text-ink sm:text-[44px]">

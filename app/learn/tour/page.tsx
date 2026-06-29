@@ -13,7 +13,13 @@ export const metadata: Metadata = {
 
 export default function TourPage() {
   return (
-    <LearnContainer back={{ href: "/learn", label: "How review works" }}>
+    <LearnContainer
+      breadcrumb={[
+        { name: "Home", href: "/" },
+        { name: "How review works", href: "/learn" },
+        { name: "2-minute tour", href: "/learn/tour" },
+      ]}
+    >
       <LearnTour processes={listProcesses()} comparison={getComparison()} grounds={listGrounds()} />
       <LearnTrust />
     </LearnContainer>

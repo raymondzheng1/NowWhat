@@ -4,6 +4,8 @@ import { getProcess } from "@/lib/legal";
 import { ProcessExplainer } from "@/components/feature/learn/ProcessExplainer";
 import { LearnContainer } from "@/components/feature/learn/LearnContainer";
 import { LearnTrust } from "@/components/feature/learn/LearnTrust";
+import { JsonLd } from "@/components/site/JsonLd";
+import { articleLd } from "@/lib/seo/jsonld";
 
 /** Full library page body for one process — shared by the two process routes. */
 export function ProcessRoute({ id }: { id: ReviewKind }) {
@@ -13,7 +15,21 @@ export function ProcessRoute({ id }: { id: ReviewKind }) {
   const other = getProcess(otherId);
 
   return (
-    <LearnContainer back={{ href: "/learn", label: "How review works" }}>
+    <LearnContainer
+      breadcrumb={[
+        { name: "Home", href: "/" },
+        { name: "How review works", href: "/learn" },
+        { name: p.name, href: `/learn/${p.id}` },
+      ]}
+    >
+      <JsonLd
+        data={articleLd({
+          headline: `${p.name} explained`,
+          description: p.oneLine,
+          path: `/learn/${p.id}`,
+          section: "How review works",
+        })}
+      />
       <ProcessExplainer process={p} level="h1" />
 
       <div className="mt-10 grid gap-4 sm:grid-cols-2">

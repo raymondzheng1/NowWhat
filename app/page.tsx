@@ -2,7 +2,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { listProcesses, listGrounds } from "@/lib/legal";
 import { JsonLd } from "@/components/site/JsonLd";
-import { siteUrl } from "@/lib/config";
+import { itemListLd } from "@/lib/seo/jsonld";
 
 /**
  * Landing (Direction K2 "Deep teal & sand") — the trust funnel: hero → numbered
@@ -43,20 +43,12 @@ export default function HomePage() {
     { href: "/learn/compare", title: t("linkCompareTitle"), desc: t("linkCompareDesc") },
   ];
 
-  const base = siteUrl();
-  const learnLd = {
-    "@context": "https://schema.org",
-    "@type": "ItemList",
+  const learnLd = itemListLd({
     name: "How review works — understand your options",
     description:
       "Plain-English guides to challenging a government decision in Victoria or the Commonwealth: merits review, judicial review, and the grounds of review.",
-    itemListElement: learnLinks.map((l, i) => ({
-      "@type": "ListItem",
-      position: i + 1,
-      name: l.title,
-      url: `${base}${l.href}`,
-    })),
-  };
+    items: learnLinks.map((l) => ({ name: l.title, path: l.href })),
+  });
 
   return (
     <div>

@@ -5,6 +5,8 @@ import { listGrounds, getGround } from "@/lib/legal";
 import { LearnContainer } from "@/components/feature/learn/LearnContainer";
 import { LearnTrust } from "@/components/feature/learn/LearnTrust";
 import { GroundExplainer } from "@/components/feature/learn/GroundExplainer";
+import { JsonLd } from "@/components/site/JsonLd";
+import { articleLd } from "@/lib/seo/jsonld";
 
 export function generateStaticParams() {
   return listGrounds().map((g) => ({ id: g.id }));
@@ -27,7 +29,22 @@ export default async function GroundPage({ params }: { params: Promise<{ id: str
   if (!g) notFound();
 
   return (
-    <LearnContainer back={{ href: "/learn/grounds", label: "All grounds" }}>
+    <LearnContainer
+      breadcrumb={[
+        { name: "Home", href: "/" },
+        { name: "How review works", href: "/learn" },
+        { name: "Grounds of review", href: "/learn/grounds" },
+        { name: g.plainName, href: `/learn/grounds/${g.id}` },
+      ]}
+    >
+      <JsonLd
+        data={articleLd({
+          headline: `${g.plainName} — a ground of review`,
+          description: g.oneLine,
+          path: `/learn/grounds/${g.id}`,
+          section: "Grounds of review",
+        })}
+      />
       <GroundExplainer ground={g} level="h1" />
       <div className="mt-8 rounded-card border border-line bg-sand-surface p-5">
         <p className="text-[14.5px] leading-[1.6] text-ink-soft">

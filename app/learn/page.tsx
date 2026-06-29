@@ -3,6 +3,13 @@ import Link from "next/link";
 import { listProcesses, listGrounds, getComparison } from "@/lib/legal";
 import { LearnContainer } from "@/components/feature/learn/LearnContainer";
 import { LearnTrust } from "@/components/feature/learn/LearnTrust";
+import { JsonLd } from "@/components/site/JsonLd";
+import { itemListLd } from "@/lib/seo/jsonld";
+
+const CRUMB = [
+  { name: "Home", href: "/" },
+  { name: "How review works", href: "/learn" },
+];
 
 export const metadata: Metadata = {
   title: "How review works — your options explained",
@@ -17,8 +24,23 @@ export default function LearnHubPage() {
   const grounds = listGrounds();
   const comparison = getComparison();
 
+  const learnItems = [
+    { name: "Merits review explained", path: "/learn/merits-review" },
+    { name: "Judicial review explained", path: "/learn/judicial-review" },
+    { name: "The grounds of review", path: "/learn/grounds" },
+    { name: "Merits review vs judicial review", path: "/learn/compare" },
+  ];
+
   return (
-    <LearnContainer>
+    <LearnContainer breadcrumb={CRUMB}>
+      <JsonLd
+        data={itemListLd({
+          name: "How review works — understand your options",
+          description:
+            "Plain-English guides to challenging a government decision in Victoria or the Commonwealth: merits review, judicial review, and the grounds of review.",
+          items: learnItems,
+        })}
+      />
       <header className="max-w-[720px]">
         <p className="text-[11px] uppercase tracking-[0.28em] text-accent">Understand your options</p>
         <h1 className="mt-4 font-display text-[40px] font-semibold leading-[1.06] text-ink sm:text-[52px]">

@@ -30,6 +30,20 @@ if (!existsSync(faqTemplate)) {
   if (!/(GetHelp|get.?help|\/help)/i.test(t)) fails.push("FAQ template: no 'get help' CTA/escalation");
 }
 
+// 2b. Learn library structured data (harness §8): breadcrumbs + per-page schema.
+mustExist("lib/seo/jsonld.ts", "shared JSON-LD builders");
+const learnShell = resolve(ROOT, "components/feature/learn/LearnContainer.tsx");
+if (existsSync(learnShell)) {
+  const t = readFileSync(learnShell, "utf8");
+  if (!/breadcrumbLd|BreadcrumbList/.test(t)) fails.push("LearnContainer: no BreadcrumbList structured data");
+} else {
+  fails.push("missing components/feature/learn/LearnContainer.tsx");
+}
+const groundsIndex = resolve(ROOT, "app/learn/grounds/page.tsx");
+if (existsSync(groundsIndex) && !/definedTermSetLd|DefinedTermSet/.test(readFileSync(groundsIndex, "utf8"))) {
+  fails.push("Learn grounds index: no DefinedTermSet structured data");
+}
+
 // 3. Every published FAQ page has the required frontmatter.
 const faqDir = resolve(ROOT, "content/faq");
 let faqCount = 0;
