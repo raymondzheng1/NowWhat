@@ -46,9 +46,10 @@ describe("corpus index", () => {
     }
   });
 
-  it("every Victorian entry is in the Victorian jurisdiction", () => {
+  it("every entry is in a supported jurisdiction (Victoria or Commonwealth)", () => {
     for (const e of CorpusIndexSchema.parse(raw).entries) {
-      expect(e.jurisdiction.toLowerCase()).toContain("victoria");
+      const j = e.jurisdiction.toLowerCase();
+      expect(j.includes("victoria") || j.includes("commonwealth")).toBe(true);
     }
   });
 
