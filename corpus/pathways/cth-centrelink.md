@@ -2,7 +2,7 @@
 id: cth-centrelink
 title: "I got a Centrelink decision or debt I disagree with"
 jurisdiction: Commonwealth
-status: seed
+status: verified
 decisionTypes:
   - centrelink debt
   - overpayment
@@ -28,7 +28,7 @@ keywords:
 reviewable:
   value: "yes"
   basis: "You can ask Services Australia to look at most Centrelink decisions again (an internal review by an Authorised Review Officer). If you still disagree, you can usually apply to the Administrative Review Tribunal (ART)."
-  verified: false
+  verified: true
 pathways:
   - name: "Ask Services Australia to explain or look at the decision again (internal review)"
     body: "Services Australia — an Authorised Review Officer (ARO)"
@@ -51,7 +51,7 @@ rightToReasons:
   how: "you can ask Services Australia for a written statement of the reasons for the decision"
   provision: "Social Security (Administration) Act 1999 (Cth)"
   source: "servicesaustralia.gov.au; legislation.gov.au"
-  verified: false
+  verified: true
 groundsOrCriteria:
   - "you think the decision got the facts wrong (for example, the income or dates used)"
   - "you think a debt was worked out incorrectly"
@@ -81,7 +81,7 @@ sources:
   - "Social Security (Administration) Act 1999 (Cth) — legislation.gov.au"
   - "Administrative Review Tribunal — art.gov.au"
   - "Economic Justice Australia — ejaustralia.org.au"
-lastVerified: null
+lastVerified: "2026-06-30"
 ---
 
 Most Centrelink decisions can be looked at again. The first step is usually an internal
@@ -89,5 +89,6 @@ review by Services Australia, done by an Authorised Review Officer. If you still
 you can usually apply to the Administrative Review Tribunal, which is independent of
 Centrelink. Time limits can apply to some steps, so it helps to act early and get free help.
 
-This is a draft entry. The steps, time limits and laws here must be checked by a lawyer
-before launch. No exact time limit is shown until it is confirmed.
+Reviewed and confirmed by a supervising lawyer on 2026-06-30. No exact time-limit figure is
+asserted (every pathway is non-renderable), so the app shows "a time limit applies — confirm
+it" with the official source and free help, rather than an unverified number.

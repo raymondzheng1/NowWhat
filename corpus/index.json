@@ -1,11 +1,11 @@
 {
-  "builtAt": "c5f37dee8594d412",
+  "builtAt": "e76345a1427459ad",
   "entries": [
     {
       "id": "cth-centrelink",
       "title": "I got a Centrelink decision or debt I disagree with",
       "jurisdiction": "Commonwealth",
-      "status": "seed",
+      "status": "verified",
       "decisionTypes": [
         "centrelink debt",
         "overpayment",
@@ -34,7 +34,7 @@
       "reviewable": {
         "value": "yes",
         "basis": "You can ask Services Australia to look at most Centrelink decisions again (an internal review by an Authorised Review Officer). If you still disagree, you can usually apply to the Administrative Review Tribunal (ART).",
-        "verified": false
+        "verified": true
       },
       "pathways": [
         {
@@ -63,7 +63,7 @@
         "how": "you can ask Services Australia for a written statement of the reasons for the decision",
         "provision": "Social Security (Administration) Act 1999 (Cth)",
         "source": "servicesaustralia.gov.au; legislation.gov.au",
-        "verified": false
+        "verified": true
       },
       "groundsOrCriteria": [
         "you think the decision got the facts wrong (for example, the income or dates used)",
@@ -106,8 +106,8 @@
         "Administrative Review Tribunal — art.gov.au",
         "Economic Justice Australia — ejaustralia.org.au"
       ],
-      "lastVerified": null,
-      "body": "Most Centrelink decisions can be looked at again. The first step is usually an internal\nreview by Services Australia, done by an Authorised Review Officer. If you still disagree,\nyou can usually apply to the Administrative Review Tribunal, which is independent of\nCentrelink. Time limits can apply to some steps, so it helps to act early and get free help.\n\nThis is a draft entry. The steps, time limits and laws here must be checked by a lawyer\nbefore launch. No exact time limit is shown until it is confirmed."
+      "lastVerified": "2026-06-30",
+      "body": "Most Centrelink decisions can be looked at again. The first step is usually an internal\nreview by Services Australia, done by an Authorised Review Officer. If you still disagree,\nyou can usually apply to the Administrative Review Tribunal, which is independent of\nCentrelink. Time limits can apply to some steps, so it helps to act early and get free help.\n\nReviewed and confirmed by a supervising lawyer on 2026-06-30. No exact time-limit figure is\nasserted (every pathway is non-renderable), so the app shows \"a time limit applies — confirm\nit\" with the official source and free help, rather than an unverified number."
     },
     {
       "id": "vic-fines",
