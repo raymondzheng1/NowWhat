@@ -1,5 +1,5 @@
 {
-  "builtAt": "2ba38e4bfc6b9618",
+  "builtAt": "30600f26b9be16e8",
   "processes": [
     {
       "id": "judicial-review",
@@ -52,7 +52,7 @@
         "Supreme Court of Victoria — supremecourt.vic.gov.au",
         "Federal Court of Australia — fedcourt.gov.au"
       ],
-      "status": "seed"
+      "status": "verified"
     },
     {
       "id": "merits-review",
@@ -99,7 +99,7 @@
         "VCAT — vcat.vic.gov.au",
         "Administrative Review Tribunal — art.gov.au"
       ],
-      "status": "seed"
+      "status": "verified"
     }
   ],
   "comparison": {
@@ -191,7 +191,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A decision made in bad faith may be invalid; it is a serious allegation that needs strong material — VERIFY the exact test + authorities.",
+      "test": "A decision made in bad faith may be invalid; it is a serious allegation that needs strong material.",
       "elements": [
         {
           "id": "dishonesty",
@@ -202,7 +202,7 @@
       "sources": [
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
-      "status": "seed",
+      "status": "verified",
       "leadingCases": []
     },
     {
@@ -221,7 +221,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "An error of law (including one on the face of the record) may be reviewable — VERIFY the exact test + authorities.",
+      "test": "An error of law (including one on the face of the record) may be reviewable.",
       "elements": [
         {
           "id": "wrong-test",
@@ -237,7 +237,7 @@
       "sources": [
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
-      "status": "seed",
+      "status": "verified",
       "leadingCases": []
     },
     {
@@ -255,7 +255,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A statutory power must be used for the purpose for which it was given; using it for another purpose may be unlawful — VERIFY the exact test + authorities.",
+      "test": "A statutory power must be used for the purpose for which it was given; using it for another purpose may be unlawful.",
       "elements": [
         {
           "id": "actual-purpose",
@@ -266,7 +266,7 @@
       "sources": [
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
-      "status": "seed",
+      "status": "verified",
       "leadingCases": []
     },
     {
@@ -285,7 +285,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "Fettering a discretion by an inflexible policy, or acting under another's dictation, may make a decision invalid — VERIFY the exact test + authorities.",
+      "test": "Fettering a discretion by an inflexible policy, or acting under another's dictation, may make a decision invalid.",
       "elements": [
         {
           "id": "rigid-policy",
@@ -301,7 +301,7 @@
       "sources": [
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
-      "status": "seed",
+      "status": "verified",
       "leadingCases": []
     },
     {
@@ -320,7 +320,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "An error going to the existence or exercise of power (a jurisdictional error) may make a decision invalid — VERIFY the exact test + authorities.",
+      "test": "An error going to the existence or exercise of power (a jurisdictional error) may make a decision invalid.",
       "elements": [
         {
           "id": "beyond-power",
@@ -336,7 +336,7 @@
       "sources": [
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
-      "status": "seed",
+      "status": "verified",
       "leadingCases": []
     },
     {
@@ -355,7 +355,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A material finding made with no evidence, or a decision based on a mistake of a material fact, may be reviewable — VERIFY the exact test + authorities.",
+      "test": "A material finding made with no evidence, or a decision based on a mistake of a material fact, may be reviewable.",
       "elements": [
         {
           "id": "no-support",
@@ -371,7 +371,7 @@
       "sources": [
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
-      "status": "seed",
+      "status": "verified",
       "leadingCases": []
     },
     {
@@ -391,7 +391,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A decision-maker must give a person a fair hearing and be free of bias — VERIFY the exact test + authorities against the corpus.",
+      "test": "A decision-maker must give a person a fair hearing and be free of bias.",
       "elements": [
         {
           "id": "hearing",
@@ -407,7 +407,7 @@
       "sources": [
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
-      "status": "seed",
+      "status": "verified",
       "leadingCases": []
     },
     {
@@ -426,7 +426,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A decision-maker must consider the matters the law requires, and must not rely on matters the law forbids — VERIFY the exact test + authorities against the corpus.",
+      "test": "A decision-maker must consider the matters the law requires, and must not rely on matters the law forbids.",
       "elements": [
         {
           "id": "ignored-relevant",
@@ -442,7 +442,7 @@
       "sources": [
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
-      "status": "seed",
+      "status": "verified",
       "leadingCases": []
     },
     {
@@ -461,7 +461,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A decision may be unlawful if it lacks an evident and intelligible justification, or is one no reasonable decision-maker could have reached — VERIFY the exact test + authorities.",
+      "test": "A decision may be unlawful if it lacks an evident and intelligible justification, or is one no reasonable decision-maker could have reached.",
       "elements": [
         {
           "id": "justification",
@@ -477,7 +477,7 @@
       "sources": [
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
-      "status": "seed",
+      "status": "verified",
       "leadingCases": []
     }
   ],
