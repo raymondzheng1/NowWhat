@@ -6,12 +6,13 @@ import { itemListLd } from "@/lib/seo/jsonld";
 
 /**
  * Landing (Direction K2 "Deep teal & sand") — the trust funnel: hero → numbered
- * how-it-works index → deadline band → trust band → Learn band → teal get-help band. One
- * primary action: "Find out what you can do" (/start). The brand rail, top nav, footer and
- * the persistent chat launcher are provided by SiteShell.
+ * how-it-works index → trust band → Learn band → teal get-help band. One primary action:
+ * "Find out what you can do" (/start). The brand rail, top nav, footer and the persistent
+ * chat launcher are provided by SiteShell.
  *
- * The deadline band is illustrative and deliberately shows the RULE + "checked and
- * dated", never a computed countdown (BRD safety contract — no "X days left").
+ * Time limits are deliberately NOT headlined here (product decision, 2026-06-30): they are
+ * not critical for our users, so they appear only as a brief, generic, Act-referencing note
+ * inside the per-decision analysis on /start — never on the homepage, never a countdown.
  *
  * The Learn band is the educational entry point: keyword-rich copy + descriptive internal
  * links to the /learn library (the homepage is the highest-authority page, so this funnels
@@ -89,28 +90,6 @@ export default function HomePage() {
             <p className="hidden flex-1 text-[14.5px] leading-[1.6] text-ink-soft sm:block">{s.body}</p>
           </div>
         ))}
-      </section>
-
-      {/* ===== Deadline band (illustrative — rule, never a countdown) ===== */}
-      <section aria-label={t("deadlineLabel")} className="container-wide py-6">
-        <div className="flex flex-wrap items-center gap-5 rounded-deadline border border-gold-line bg-gold-soft px-6 py-6">
-          <div className="flex h-[54px] w-[54px] flex-none items-center justify-center rounded-full border-2 border-gold">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8a5a14" strokeWidth="2" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 7v5l3 2" />
-            </svg>
-          </div>
-          <div className="min-w-0">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-gold">{t("deadlineLabel")}</p>
-            <p className="mt-1 font-display text-[22px] font-bold leading-[1.1] text-ink sm:text-[26px]">
-              {t("deadlineRule")}
-            </p>
-            <p className="mt-1 text-meta text-ink-soft">{t("deadlineSub")}</p>
-          </div>
-          <Link href="/faq" className="link-text ml-auto whitespace-nowrap text-gold">
-            {t("deadlineMore")}
-          </Link>
-        </div>
       </section>
 
       {/* ===== Trust band ===== */}

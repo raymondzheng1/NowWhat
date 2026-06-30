@@ -40,14 +40,23 @@ describe("M-Lean triage (deterministic Rights Saver)", () => {
   });
 });
 
-describe("deadline rule (no countdown; staleness gate)", () => {
-  it("a seed entry degrades — never confirmable, never leaks a number or VERIFY", () => {
+describe("time-limit note (brief + generic; no countdown, no VERIFY)", () => {
+  it("every entry yields a non-empty rule with no day-count countdown and no VERIFY leak", () => {
+    for (const e of listDataEntries()) {
+      const dl = deadlineRuleView(e);
+      expect(dl.rule.length).toBeGreaterThan(0);
+      // No computed countdown / "X days left", and no leaked placeholder.
+      expect(dl.rule.toLowerCase()).not.toContain("days left");
+      expect(/verify/i.test(dl.rule)).toBe(false);
+      expect(/verify/i.test(dl.sourceUrl ?? "")).toBe(false);
+    }
+  });
+
+  it("points the renter to the relevant Act + a way to confirm the exact limit", () => {
     const r = triage({ jurisdiction: "Vic", decisionType: "notice to vacate" });
     const dl = deadlineRuleView(r.entry);
-    expect(dl.confirmable).toBe(false);
-    expect(dl.rule).toBeNull();
-    expect(dl.verifiedAsAt).toBeNull();
-    expect(dl.sourceUrl).toBeNull();
+    expect(dl.rule).toContain("Residential Tenancies Act 1997");
+    expect(dl.rule.toLowerCase()).toContain("check the exact limit");
   });
 });
 
@@ -88,13 +97,14 @@ describe("tripwire (stop and route)", () => {
 });
 
 describe("handoff pack", () => {
-  it("summarises the matter without leaking VERIFY and notes the unconfirmed time limit", () => {
+  it("summarises the matter without leaking VERIFY and states the generic time-limit rule", () => {
     const r = triage({ jurisdiction: "Vic", decisionType: "notice to vacate" });
     const pack = buildHandoff({ triage: r, decisionAbout: "a notice to vacate", reasonsRequested: false });
     expect(pack.toLowerCase()).not.toContain("verify");
     expect(pack).toContain("MATTER SUMMARY");
     expect(pack).toContain("Victoria");
-    expect(pack.toLowerCase()).toContain("not confirmed");
+    expect(pack).toContain("TIME LIMIT:");
+    expect(pack.toLowerCase()).toContain("check the exact limit");
     expect(pack.toLowerCase()).toContain("not stored");
   });
 

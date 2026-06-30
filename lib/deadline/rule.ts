@@ -1,32 +1,33 @@
-import { dataIsConfirmable, isVerifyMarker, type DataPathway } from "@/lib/schemas/data";
+import { isVerifyMarker, type DataPathway } from "@/lib/schemas/data";
 
 /**
- * Deadline RULE view for the procedural data layer (PRD §5 — the safety contract).
- * NEVER a computed countdown. When the entry is verified + sourced + fresh we show the
- * lawyer-verified RULE with its verified-as-at date and official source. Otherwise the
- * staleness gate degrades: the UI shows a calm "we can't confirm this time limit right
- * now — act quickly, here's the source + free help" and NEVER a number.
+ * Time-limit NOTE for the procedural data layer.
  *
- * (Distinct from lib/deadline/compute.ts, which serves the legacy What Now? decode
- * corpus. This module is the BRD-compliant, no-countdown renderer for Review Builder.)
+ * Product decision (2026-06-30, with legal sign-off): time limits are NOT a headline for
+ * our users. We do not chase exact day-counts or show a prominent countdown. Instead we
+ * state the GENERIC rule briefly and point to the relevant Act + free help, as one modest
+ * line inside the analysis (never on the homepage, never a computed countdown).
+ *
+ * So this view always returns a short, safe rule (the entry's generic Act-referencing
+ * text, or a generic fallback if an entry still holds a VERIFY placeholder) plus an
+ * official source link when one is real.
+ *
+ * (Distinct from lib/deadline/compute.ts, which serves the legacy What Now? decode corpus.)
  */
 
 export interface DeadlineRuleView {
-  /** When true, render `rule` + `verifiedAsAt` + `sourceUrl`. */
-  confirmable: boolean;
-  /** The plain rule (only safe to show when confirmable — seeds carry VERIFY text). */
-  rule: string | null;
-  verifiedAsAt: string | null;
+  /** A brief, generic statement of the time-limit rule (names the relevant Act where known). */
+  rule: string;
+  /** Official source link, when real (null while a source is still a placeholder). */
   sourceUrl: string | null;
 }
 
+const GENERIC_RULE =
+  "Most reviews have a strict time limit, set by the law for your decision. Check it with the official body or a free service.";
+
 export function deadlineRuleView(e: DataPathway): DeadlineRuleView {
-  const confirmable = dataIsConfirmable(e);
   return {
-    confirmable,
-    // Only surface the rule text once verified — never leak a VERIFY placeholder.
-    rule: confirmable && !isVerifyMarker(e.deadlineRule) ? e.deadlineRule : null,
-    verifiedAsAt: confirmable ? e.verifiedAsAt : null,
-    sourceUrl: confirmable ? e.sourceUrl : null,
+    rule: isVerifyMarker(e.deadlineRule) ? GENERIC_RULE : e.deadlineRule,
+    sourceUrl: isVerifyMarker(e.sourceUrl) ? null : e.sourceUrl,
   };
 }

@@ -463,6 +463,18 @@ function ResultStep({
           {!av.mrAvailable && !av.jrAvailable && <li className="text-[14px] text-ink-soft">{t("noReview")}</li>}
           {av.noReviewEndpoint && <li className="text-[14px] text-ink-soft">{av.noReviewEndpoint}</li>}
         </ul>
+        {/* Time limits — brief + generic, part of the analysis (not a headline). No countdown. */}
+        <p className="mt-4 flex items-start gap-2 border-t border-line/70 pt-3 text-[13px] leading-relaxed text-ink-soft">
+          <Icon.Clock className="mt-[2px] h-4 w-4 shrink-0 text-ink-faint" strokeWidth={2} aria-hidden />
+          <span>
+            <span className="font-semibold text-ink">{t("deadlineTitle")}:</span> {dl.rule}{" "}
+            {dl.sourceUrl && (
+              <a href={dl.sourceUrl} target="_blank" rel="noopener noreferrer" className="link">
+                {t("deadlineSource")}
+              </a>
+            )}
+          </span>
+        </p>
       </section>
 
       {/* Understand these options — in-flow Learn (progressive disclosure) */}
@@ -495,36 +507,6 @@ function ResultStep({
           <Link href="/learn" className="link-text mt-4 inline-block">{t("learnMore")}</Link>
         </section>
       )}
-
-      {/* Deadline — rule, never a countdown */}
-      <section className="rounded-deadline border border-gold-line bg-gold-soft p-5 sm:p-6">
-        <div className="flex items-start gap-4">
-          <span className="flex h-[46px] w-[46px] shrink-0 items-center justify-center rounded-full border-2 border-gold">
-            <Icon.Clock className="h-6 w-6 text-gold" strokeWidth={2} />
-          </span>
-          <div className="min-w-0">
-            <p className="text-[11px] uppercase tracking-[0.18em] text-gold">{t("deadlineTitle")}</p>
-            {dl.confirmable && dl.rule ? (
-              <>
-                <p className="mt-1 font-display text-[19px] font-bold leading-snug text-ink">{dl.rule}</p>
-                <p className="mt-2 text-[13px] text-ink-soft">
-                  {t("deadlineChecked", { date: dl.verifiedAsAt ?? "" })} ·{" "}
-                  {dl.sourceUrl && (
-                    <a href={dl.sourceUrl} target="_blank" rel="noopener noreferrer" className="link text-gold">
-                      {t("deadlineSource")}
-                    </a>
-                  )}
-                </p>
-              </>
-            ) : (
-              <>
-                <p className="mt-1 font-display text-[19px] font-bold leading-snug text-ink">{t("deadlineUnconfirmed")}</p>
-                <p className="mt-1 text-[14px] text-ink-soft">{t("deadlineUnconfirmedSub")}</p>
-              </>
-            )}
-          </div>
-        </div>
-      </section>
 
       {/* Ask for the reasons */}
       <section className="rounded-card border border-line bg-paper p-5 sm:p-6">

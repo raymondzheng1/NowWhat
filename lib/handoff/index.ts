@@ -43,9 +43,7 @@ export function buildHandoff(input: HandoffInput): string {
   lines.push(
     "",
     "TIME LIMIT:",
-    dl.confirmable && dl.rule
-      ? `- ${dl.rule}  (verified ${dl.verifiedAsAt}; source: ${dl.sourceUrl})`
-      : "- Not confirmed by the tool — a time limit very likely applies and may be short. Confirm against the official source urgently.",
+    `- ${dl.rule}${dl.sourceUrl ? `  (source: ${dl.sourceUrl})` : ""}`,
     "",
     `Reasons requested yet: ${input.reasonsRequested ? "yes" : "not yet"}`,
     `What the person wants: ${dash(input.wants)}`,

@@ -34,7 +34,7 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
   // Step 3 — the result + load-bearing trust surfaces.
   await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
   await expect(page.getByRole("heading", { name: /who can review this/i })).toBeVisible();
-  await expect(page.getByText(/your time limit/i)).toBeVisible();
+  await expect(page.getByText(/time limits:/i)).toBeVisible(); // brief generic note, not a headline
   await expect(page.getByText(/ask for the reasons/i)).toBeVisible();
   await expect(page.getByText(/not legal advice/i)).toBeVisible(); // disclaimer
   await expect(page.getByText(/free help/i).first()).toBeVisible();

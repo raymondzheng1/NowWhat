@@ -30,10 +30,9 @@ avenue:
     source: VERIFY (ADJR Act / s 39B Judiciary Act)
   noReviewEndpoint: null
 deadlineRule: >-
-  You can ask Services Australia for an internal review at any time. But if you
-  want a favourable change backdated to the original decision, apply within 13
-  weeks of being told. There is also a time limit to apply to the ART after the
-  internal review — confirm the current period for your decision.
+  Centrelink reviews have a time limit, set by the Social Security
+  (Administration) Act 1999 (Cth). Check the exact limit with Services Australia
+  or a free service.
 verifiedAsAt: '2026-06-30'
 sourceUrl: 'https://www.servicesaustralia.gov.au/reviews-and-appeals'
 reviewCadenceDays: 90

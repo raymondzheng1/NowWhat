@@ -28,9 +28,8 @@ avenue:
     source: VERIFY (Supreme Court Order 56)
   noReviewEndpoint: null
 deadlineRule: >-
-  There is no strict deadline to ask for a review of a housing decision, but it
-  is best to apply promptly. Ask the local housing office first, then the
-  Housing Appeals Office.
+  A housing review can have a time limit, set by the relevant housing law or
+  policy. Check the limit with the Housing Appeals Office or a free service.
 verifiedAsAt: '2026-06-30'
 sourceUrl: 'https://www.housing.vic.gov.au'
 reviewCadenceDays: 90

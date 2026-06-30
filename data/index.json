@@ -1,5 +1,5 @@
 {
-  "builtAt": "c2c0bd896e646f0e",
+  "builtAt": "b8e956ab9addf92c",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -38,7 +38,7 @@
         },
         "noReviewEndpoint": null
       },
-      "deadlineRule": "You can ask Services Australia for an internal review at any time. But if you want a favourable change backdated to the original decision, apply within 13 weeks of being told. There is also a time limit to apply to the ART after the internal review — confirm the current period for your decision.",
+      "deadlineRule": "Centrelink reviews have a time limit, set by the Social Security (Administration) Act 1999 (Cth). Check the exact limit with Services Australia or a free service.",
       "verifiedAsAt": "2026-06-30",
       "sourceUrl": "https://www.servicesaustralia.gov.au/reviews-and-appeals",
       "reviewCadenceDays": 90,
@@ -107,9 +107,9 @@
         },
         "noReviewEndpoint": "If no review right exists, the Commonwealth Ombudsman can look at how the decision was made, and a free legal service can explain your options."
       },
-      "deadlineRule": "Most reviews have a strict time limit that runs from the decision — VERIFY the rule and source for the specific decision. Shown as a rule with a verified date and an official link; never a countdown.",
+      "deadlineRule": "Most reviews have a strict time limit, set by the law for your decision. Check it with the official body or a free service.",
       "verifiedAsAt": "VERIFY",
-      "sourceUrl": "VERIFY (the enabling Act + the body's website)",
+      "sourceUrl": "https://www.ombudsman.gov.au",
       "reviewCadenceDays": 90,
       "reasonsRequest": {
         "how": "ask the decision-maker for a written statement of reasons",
@@ -176,9 +176,9 @@
         },
         "noReviewEndpoint": "If review options have closed, a payment plan or financial-hardship option may still be available through Fines Victoria, and a free service can help."
       },
-      "deadlineRule": "A request for an internal review, or an election to go to court, is generally due within 28 days of the notice (an extension may be possible). If you did not know about the fine, apply within 14 days of finding out. Many options are only available before the fine is registered — that is, before a Notice of Final Demand.",
+      "deadlineRule": "Fines have a strict time limit, set by the Fines Reform Act 2014 (Vic). Check the exact limit with Fines Victoria or a free service.",
       "verifiedAsAt": "2026-06-30",
-      "sourceUrl": "https://www.fines.vic.gov.au/infringement-review",
+      "sourceUrl": "https://www.fines.vic.gov.au",
       "reviewCadenceDays": 90,
       "reasonsRequest": {
         "how": "ask Fines Victoria or the issuing agency in writing for the reasons",
@@ -244,9 +244,9 @@
         },
         "noReviewEndpoint": "If no review right exists, the Victorian Ombudsman can look at how the decision was made, and a free legal service can explain your options."
       },
-      "deadlineRule": "Most reviews have a strict time limit that runs from the decision — VERIFY the rule and source for the specific decision. Shown as a rule with a verified date and an official link; never a countdown.",
+      "deadlineRule": "Most reviews have a strict time limit, set by the law for your decision. Check it with the official body or a free service.",
       "verifiedAsAt": "VERIFY",
-      "sourceUrl": "VERIFY (the enabling Act + the body's website)",
+      "sourceUrl": "https://www.ombudsman.vic.gov.au",
       "reviewCadenceDays": 90,
       "reasonsRequest": {
         "how": "ask the decision-maker in writing for a statement of reasons",
@@ -312,7 +312,7 @@
         },
         "noReviewEndpoint": null
       },
-      "deadlineRule": "There is no strict deadline to ask for a review of a housing decision, but it is best to apply promptly. Ask the local housing office first, then the Housing Appeals Office.",
+      "deadlineRule": "A housing review can have a time limit, set by the relevant housing law or policy. Check the limit with the Housing Appeals Office or a free service.",
       "verifiedAsAt": "2026-06-30",
       "sourceUrl": "https://www.housing.vic.gov.au",
       "reviewCadenceDays": 90,
@@ -384,9 +384,9 @@
         },
         "noReviewEndpoint": null
       },
-      "deadlineRule": "An application to challenge or respond is generally due within a set period of the notice or decision — VERIFY the current period and source. Shown as a rule with a verified date and an official link; never a countdown.",
+      "deadlineRule": "Renting reviews have a strict time limit, set by the Residential Tenancies Act 1997 (Vic). Check the exact limit for your situation with VCAT or a free service.",
       "verifiedAsAt": "VERIFY",
-      "sourceUrl": "VERIFY (consumer.vic.gov.au / vcat.vic.gov.au)",
+      "sourceUrl": "https://www.vcat.vic.gov.au",
       "reviewCadenceDays": 90,
       "reasonsRequest": {
         "how": "ask the decision-maker in writing for the reasons for the decision",
