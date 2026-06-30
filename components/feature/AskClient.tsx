@@ -44,8 +44,8 @@ export function AskClient() {
       <ResultView
         entry={result.entry}
         category={CATEGORY[result.entry.id] ?? result.entry.title}
-        answer={result.answer.answer}
-        about={result.answer.restated || result.entry.plainLanguageExplainer}
+        answer={result.answer.restated || result.entry.title}
+        body={result.answer.answer}
         options={result.answer.nextStep ? [result.answer.nextStep] : []}
       />
     );

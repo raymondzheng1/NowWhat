@@ -11,6 +11,7 @@ import { SourcesPanel } from "@/components/ui/SourcesPanel";
 import { PrivacyNote } from "@/components/ui/PrivacyNote";
 import { DeadlineCard } from "@/components/feature/DeadlineCard";
 import { TieredHelp } from "@/components/feature/TieredHelp";
+import { Markdown } from "@/components/ui/Markdown";
 import { postDraft } from "@/components/feature/api";
 
 function downloadText(filename: string, content: string) {
@@ -29,10 +30,12 @@ export interface ResultViewProps {
   entry: EntrySummary;
   /** Eyebrow category, e.g. "Renting · Notice to vacate". */
   category: string;
-  /** The serif headline answer/statement. */
+  /** The serif headline answer/statement — keep it short; it renders as the H1. */
   answer: string;
-  /** The "What this is about" paragraph. */
-  about: string;
+  /** The "What this is about" paragraph (decode/wizard). Ignored when `body` is set. */
+  about?: string;
+  /** A full Markdown answer body (ask) — rendered as readable prose in place of `about`. */
+  body?: string;
   /** Optional extra options/next-step lines (decode). */
   options?: string[];
   /** Prefill the deadline card (from the wizard's Step 2). */
@@ -51,7 +54,8 @@ export function ResultView({
   entry,
   category,
   answer,
-  about,
+  about = "",
+  body,
   options = [],
   decisionDate,
   isFallback = false,
@@ -105,8 +109,14 @@ export function ResultView({
             </div>
 
             <section className="card">
-              <h2 className="font-serif text-h3 font-bold text-ink">What this is about</h2>
-              <p className="mt-2.5 text-[15px] leading-relaxed text-ink-soft">{about}</p>
+              {body ? (
+                <Markdown>{body}</Markdown>
+              ) : (
+                <>
+                  <h2 className="font-serif text-h3 font-bold text-ink">What this is about</h2>
+                  {about && <p className="mt-2.5 text-[15px] leading-relaxed text-ink-soft">{about}</p>}
+                </>
+              )}
               {options.length > 0 && (
                 <ul className="mt-3 list-disc space-y-1 pl-5 text-[15px] text-ink-soft">
                   {options.map((o, i) => (
