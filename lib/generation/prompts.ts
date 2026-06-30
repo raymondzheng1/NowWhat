@@ -22,8 +22,8 @@ const ASK_SHAPE = `
 Return JSON:
 {
   "covered": boolean,            // false if the corpus context does not cover this
-  "restated": string,           // the question in plain words
-  "answer": string,             // grounded answer, short plain sentences
+  "restated": string,           // the question in plain words (one short line — this is the headline)
+  "answer": string,             // grounded answer in Markdown. Short plain sentences. Put each step or section on its OWN line as a short bold heading (e.g. **Step 1 — Internal review**) followed by a blank line and then a short paragraph. Use "- " bullets for any list. Separate every paragraph with a blank line. Do NOT use a top-level "# " heading.
   "nextStep": string,           // a neutral next step (information, never advice)
   "sources": string[]           // copy 1-3 source strings VERBATIM from the context's "source:" / SOURCES lines — do not shorten, merge, or reword them
 }
