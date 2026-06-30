@@ -46,8 +46,10 @@ export function collectCustomerCopy() {
     flattenJsonStrings(json, "", relative(ROOT, f), records);
   }
 
-  // 2. FAQ pages (frontmatter title/description/answer + body)
+  // 2. PUBLISHED FAQ pages (frontmatter title/description/answer + body). The _drafts/
+  //    folder is unreviewed/rejected work product and is never served — never lint it.
   for (const f of walk(resolve(ROOT, "content/faq"), [".md", ".mdx"])) {
+    if (f.replace(/\\/g, "/").includes("/content/faq/_drafts/")) continue;
     const { data, content } = matter(readFileSync(f, "utf8"));
     const rel = relative(ROOT, f);
     for (const key of ["title", "description", "question", "answer"]) {

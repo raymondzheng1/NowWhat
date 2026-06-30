@@ -57,7 +57,7 @@ HARD RULES (a vulnerable person relies on this being safe):
 1. Use ONLY facts in the CORPUS CONTEXT. Never add a law, section, body, deadline, figure, or link not in it.
 2. Information, NOT advice. Never "you should", never recommend a choice, never predict an outcome.
 3. Never state a time limit (a number of days/weeks/months) unless that exact figure is in the context.
-4. Plain language a 12-year-old can follow. Short sentences. No jargon. Never mention AI, a model, or technology.
+4. Plain language a 12-year-old can follow. Keep sentences short (aim under 15 words) and split long ones — the result must read at about Year 6, not above grade 11. After first introducing a long name like "Administrative Review Tribunal (ART)", use the short form ("the ART") afterwards. No jargon. Never mention AI, a model, or technology.
 5. The body is Markdown with 2-4 "## " sections and MUST include at least one Markdown link to /start. Do NOT add a disclaimer or a sources list — the page template adds those.
 Output ONLY one JSON object: {"question": string, "answer": string (2-4 plain sentences), "description": string (<=160 chars), "body": string (Markdown)}.`;
 

@@ -6,7 +6,9 @@
       "question": "Can I challenge a rent increase in Victoria?",
       "entryId": "vic-renting",
       "category": "Renting",
-      "related": ["challenge-a-notice-to-vacate-in-victoria"],
+      "related": [
+        "challenge-a-notice-to-vacate-in-victoria"
+      ],
       "status": "published"
     },
     {
@@ -14,7 +16,9 @@
       "question": "How do I get more time to pay a fine in Victoria?",
       "entryId": "vic-fines",
       "category": "Fines",
-      "related": ["dispute-a-fine-in-victoria"],
+      "related": [
+        "dispute-a-fine-in-victoria"
+      ],
       "status": "published"
     },
     {
@@ -22,113 +26,147 @@
       "question": "What is a statement of reasons, and how do I ask for one?",
       "entryId": "vic-generic",
       "category": "Government decisions",
-      "related": ["can-i-ask-for-a-government-decision-to-be-reviewed", "how-to-appeal-a-victorian-government-decision"],
-      "status": "pending"
+      "related": [
+        "can-i-ask-for-a-government-decision-to-be-reviewed",
+        "how-to-appeal-a-victorian-government-decision"
+      ],
+      "status": "published"
     },
     {
       "slug": "what-happens-at-a-vcat-hearing",
       "question": "What happens at a VCAT hearing?",
       "entryId": "vic-renting",
       "category": "Renting",
-      "related": ["challenge-a-notice-to-vacate-in-victoria"],
-      "status": "pending"
+      "related": [
+        "challenge-a-notice-to-vacate-in-victoria"
+      ],
+      "status": "published"
     },
     {
       "slug": "i-did-not-know-about-my-fine-what-can-i-do",
       "question": "I didn't know about my fine until now — what can I do?",
       "entryId": "vic-fines",
       "category": "Fines",
-      "related": ["dispute-a-fine-in-victoria"],
-      "status": "pending"
+      "related": [
+        "dispute-a-fine-in-victoria"
+      ],
+      "status": "published"
     },
-
     {
       "slug": "how-much-notice-to-move-out-of-a-rental-in-victoria",
       "question": "How much notice does my rental provider have to give me to move out in Victoria?",
       "entryId": "vic-renting",
       "category": "Renting",
-      "related": ["challenge-a-notice-to-vacate-in-victoria", "what-happens-at-a-vcat-hearing"],
-      "status": "pending"
+      "related": [
+        "challenge-a-notice-to-vacate-in-victoria",
+        "what-happens-at-a-vcat-hearing"
+      ],
+      "status": "published"
     },
     {
       "slug": "what-can-i-do-if-my-rental-provider-wont-do-repairs-in-victoria",
       "question": "What can I do if my rental provider won't do repairs in Victoria?",
       "entryId": "vic-renting",
       "category": "Renting",
-      "related": ["what-happens-at-a-vcat-hearing"],
-      "status": "pending"
+      "related": [
+        "what-happens-at-a-vcat-hearing"
+      ],
+      "status": "published"
     },
     {
       "slug": "how-do-i-nominate-another-driver-for-a-fine-in-victoria",
       "question": "How do I nominate someone else as the driver for a fine in Victoria?",
       "entryId": "vic-fines",
       "category": "Fines",
-      "related": ["dispute-a-fine-in-victoria", "i-did-not-know-about-my-fine-what-can-i-do"],
-      "status": "pending"
+      "related": [
+        "dispute-a-fine-in-victoria",
+        "i-did-not-know-about-my-fine-what-can-i-do"
+      ],
+      "status": "published"
     },
     {
       "slug": "can-i-get-a-fine-reviewed-for-special-circumstances-in-victoria",
       "question": "Can I get a fine reviewed for special circumstances in Victoria?",
       "entryId": "vic-fines",
       "category": "Fines",
-      "related": ["i-did-not-know-about-my-fine-what-can-i-do"],
-      "status": "pending"
+      "related": [
+        "i-did-not-know-about-my-fine-what-can-i-do"
+      ],
+      "status": "published"
     },
     {
       "slug": "what-can-i-do-if-my-public-housing-application-was-refused-in-victoria",
       "question": "What can I do if my public housing application was refused in Victoria?",
       "entryId": "vic-public-housing",
       "category": "Housing",
-      "related": ["appeal-a-public-housing-decision-in-victoria"],
-      "status": "pending"
+      "related": [
+        "appeal-a-public-housing-decision-in-victoria"
+      ],
+      "status": "rejected"
     },
     {
       "slug": "how-do-i-ask-for-a-public-housing-transfer-in-victoria",
       "question": "How do I ask for a public housing transfer in Victoria?",
       "entryId": "vic-public-housing",
       "category": "Housing",
-      "related": ["appeal-a-public-housing-decision-in-victoria"],
-      "status": "pending"
+      "related": [
+        "appeal-a-public-housing-decision-in-victoria"
+      ],
+      "status": "published"
     },
     {
       "slug": "how-to-appeal-a-victorian-government-decision",
       "question": "How do I appeal a Victorian government decision?",
       "entryId": "vic-generic",
       "category": "Government decisions",
-      "related": ["can-i-ask-for-a-government-decision-to-be-reviewed", "what-is-a-statement-of-reasons-and-how-do-i-ask-for-one"],
-      "status": "pending"
+      "related": [
+        "can-i-ask-for-a-government-decision-to-be-reviewed",
+        "what-is-a-statement-of-reasons-and-how-do-i-ask-for-one"
+      ],
+      "status": "rejected"
     },
     {
       "slug": "how-do-i-dispute-a-centrelink-debt",
       "question": "How do I dispute a Centrelink debt?",
       "entryId": "cth-centrelink",
       "category": "Centrelink",
-      "related": ["ask-centrelink-to-review-a-decision", "appeal-a-centrelink-decision-to-the-art"],
-      "status": "pending"
+      "related": [
+        "ask-centrelink-to-review-a-decision",
+        "appeal-a-centrelink-decision-to-the-art"
+      ],
+      "status": "published"
     },
     {
       "slug": "ask-centrelink-to-review-a-decision",
       "question": "Can I ask Centrelink to review a decision?",
       "entryId": "cth-centrelink",
       "category": "Centrelink",
-      "related": ["how-do-i-dispute-a-centrelink-debt", "appeal-a-centrelink-decision-to-the-art"],
-      "status": "pending"
+      "related": [
+        "how-do-i-dispute-a-centrelink-debt",
+        "appeal-a-centrelink-decision-to-the-art"
+      ],
+      "status": "published"
     },
     {
       "slug": "appeal-a-centrelink-decision-to-the-art",
       "question": "How do I appeal a Centrelink decision to the ART?",
       "entryId": "cth-centrelink",
       "category": "Centrelink",
-      "related": ["ask-centrelink-to-review-a-decision", "how-do-i-dispute-a-centrelink-debt"],
-      "status": "pending"
+      "related": [
+        "ask-centrelink-to-review-a-decision",
+        "how-do-i-dispute-a-centrelink-debt"
+      ],
+      "status": "published"
     },
     {
       "slug": "centrelink-cancelled-my-payment-what-can-i-do",
       "question": "Centrelink cancelled my payment — what can I do?",
       "entryId": "cth-centrelink",
       "category": "Centrelink",
-      "related": ["ask-centrelink-to-review-a-decision"],
-      "status": "pending"
+      "related": [
+        "ask-centrelink-to-review-a-decision"
+      ],
+      "status": "published"
     }
   ]
 }

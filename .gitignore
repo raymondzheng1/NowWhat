@@ -36,3 +36,6 @@ pnpm-debug.log*
 
 # typescript
 *.tsbuildinfo
+
+# Transient FAQ drafts (review locally, then move to content/faq/*.md)
+content/faq/_drafts/
