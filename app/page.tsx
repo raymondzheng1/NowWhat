@@ -38,11 +38,24 @@ export default function HomePage() {
   const merits = processes.find((p) => p.id === "merits-review");
   const judicial = processes.find((p) => p.id === "judicial-review");
   const learnLinks = [
-    { href: "/learn/merits-review", title: t("linkMeritsTitle"), desc: merits?.oneLine ?? "" },
-    { href: "/learn/judicial-review", title: t("linkJudicialTitle"), desc: judicial?.oneLine ?? "" },
-    { href: "/learn/grounds", title: t("linkGroundsTitle"), desc: t("linkGroundsDesc", { count: grounds.length }) },
-    { href: "/learn/compare", title: t("linkCompareTitle"), desc: t("linkCompareDesc") },
+    { href: "/learn/merits-review", kind: t("learnKindProcess"), title: t("linkMeritsTitle"), desc: merits?.oneLine ?? "" },
+    { href: "/learn/judicial-review", kind: t("learnKindProcess"), title: t("linkJudicialTitle"), desc: judicial?.oneLine ?? "" },
+    { href: "/learn/grounds", kind: t("learnKindGrounds"), title: t("linkGroundsTitle"), desc: t("linkGroundsDesc", { count: grounds.length }) },
+    { href: "/learn/compare", kind: t("learnKindCompare"), title: t("linkCompareTitle"), desc: t("linkCompareDesc") },
   ];
+
+  // Hairline borders for the bordered index grid (a tight 2×2 "library index", not floating
+  // cards): stacked dividers on mobile, a + of dividers on desktop. Outer frame on the wrapper.
+  const cellBorder = (i: number) =>
+    [
+      "border-line",
+      i !== 0 ? "border-t" : "",
+      "sm:border-t-0",
+      i % 2 === 0 ? "sm:border-r" : "",
+      i < learnLinks.length - 2 ? "sm:border-b" : "",
+    ]
+      .filter(Boolean)
+      .join(" ");
 
   const learnLd = itemListLd({
     name: "How review works — understand your options",
@@ -104,29 +117,56 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ===== Learn band (educational entry point — SEO: keyword copy + internal links) ===== */}
-      <section aria-labelledby="learn-band-title" className="container-wide py-12">
-        <p className="text-[11px] uppercase tracking-[0.28em] text-accent">{t("learnKicker")}</p>
-        <h2
-          id="learn-band-title"
-          className="mt-3 max-w-[680px] font-display text-[28px] font-semibold leading-[1.1] text-ink sm:text-[34px]"
-        >
-          {t("learnTitle")}
-        </h2>
-        <p className="mt-4 max-w-[60ch] text-[15px] leading-[1.65] text-ink-soft">{t("learnLead")}</p>
-        <div className="mt-7 grid gap-4 sm:grid-cols-2">
-          {learnLinks.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className="group rounded-card border border-line bg-paper p-5 transition-colors hover:border-rail-accent"
+      {/* ===== Learn band — the plain-English guide library (editorial index, SEO entry point) ===== */}
+      <section aria-labelledby="learn-band-title" className="border-y border-line bg-sand-surface">
+        <div className="container-wide grid gap-10 py-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:py-20">
+          {/* Editorial intro */}
+          <div className="lg:pr-4">
+            <p className="text-[11px] uppercase tracking-[0.28em] text-accent">{t("learnKicker")}</p>
+            <h2
+              id="learn-band-title"
+              className="mt-4 font-display text-[34px] font-semibold leading-[1.06] text-ink sm:text-[44px]"
             >
-              <h3 className="font-display text-[20px] font-semibold text-ink group-hover:text-accent">{l.title}</h3>
-              {l.desc ? <p className="mt-1.5 text-[14.5px] leading-[1.55] text-ink-soft">{l.desc}</p> : null}
+              {t("learnTitle")}{" "}
+              <span className="font-normal italic text-accent">{t("learnTitleAccent")}</span>
+            </h2>
+            <p className="mt-6 max-w-[46ch] text-[15.5px] leading-[1.68] text-ink-soft">{t("learnLead")}</p>
+            <Link href="/learn" className="btn-primary mt-8 px-6">
+              {t("learnCta")}
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
             </Link>
-          ))}
+          </div>
+
+          {/* Bordered index grid */}
+          <div className="border border-line-strong bg-paper">
+            <ul className="grid sm:grid-cols-2">
+              {learnLinks.map((l, i) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className={`group flex h-full flex-col p-6 transition-colors hover:bg-sand-surface ${cellBorder(i)}`}
+                  >
+                    <span className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-accent">{l.kind}</span>
+                    <h3 className="mt-2.5 font-display text-[21px] font-semibold leading-snug text-ink group-hover:text-accent">
+                      {l.title}
+                    </h3>
+                    {l.desc ? (
+                      <p className="mt-1.5 text-[13.5px] leading-[1.5] text-ink-soft">{l.desc}</p>
+                    ) : null}
+                    <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-faint transition-colors group-hover:text-accent">
+                      Read
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
+                        <path d="M5 12h14M13 6l6 6-6 6" />
+                      </svg>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
-        <Link href="/learn" className="link-text mt-6 inline-block">{t("learnCta")}</Link>
       </section>
 
       {/* ===== Get-help band (full-bleed teal) ===== */}
