@@ -1,5 +1,5 @@
 {
-  "builtAt": "2749cd70454c99d0",
+  "builtAt": "c2c0bd896e646f0e",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -174,7 +174,7 @@
           "forum": "SCV-O56",
           "source": "VERIFY (Supreme Court Order 56)"
         },
-        "noReviewEndpoint": "If review options have closed, a payment plan or financial-hardship option may still be available — VERIFY via Fines Victoria, and a free service can help."
+        "noReviewEndpoint": "If review options have closed, a payment plan or financial-hardship option may still be available through Fines Victoria, and a free service can help."
       },
       "deadlineRule": "A request for an internal review, or an election to go to court, is generally due within 28 days of the notice (an extension may be possible). If you did not know about the fine, apply within 14 days of finding out. Many options are only available before the fine is registered — that is, before a Notice of Final Demand.",
       "verifiedAsAt": "2026-06-30",

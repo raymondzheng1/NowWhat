@@ -29,8 +29,7 @@ avenue:
     source: VERIFY (Supreme Court Order 56)
   noReviewEndpoint: >-
     If review options have closed, a payment plan or financial-hardship option
-    may still be available — VERIFY via Fines Victoria, and a free service can
-    help.
+    may still be available through Fines Victoria, and a free service can help.
 deadlineRule: >-
   A request for an internal review, or an election to go to court, is generally
   due within 28 days of the notice (an extension may be possible). If you did

@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { triage } from "@/lib/triage";
+import { triage, avenueView } from "@/lib/triage";
+import { listDataEntries } from "@/lib/data";
 import { deadlineRuleView } from "@/lib/deadline/rule";
 import { reasonsView, reasonsRequestTemplate, REASONS_CLOCK_WARNING } from "@/lib/reasons";
 import { checkTripwire } from "@/lib/tripwire";
@@ -27,6 +28,15 @@ describe("M-Lean triage (deterministic Rights Saver)", () => {
     const r = triage({ jurisdiction: "Vic", decisionType: "fine" });
     expect(/verify/i.test(r.avenue.mrBody)).toBe(false);
     expect(r.avenue.mrBody).not.toContain("(");
+  });
+
+  it("never leaks a VERIFY marker into any displayed avenue field (incl. noReviewEndpoint)", () => {
+    for (const e of listDataEntries()) {
+      const a = avenueView(e);
+      expect(/verify/i.test(a.mrBody)).toBe(false);
+      expect(/verify/i.test(a.jrForum)).toBe(false);
+      expect(/verify/i.test(a.noReviewEndpoint ?? "")).toBe(false);
+    }
   });
 });
 

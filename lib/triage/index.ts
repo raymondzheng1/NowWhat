@@ -1,5 +1,5 @@
 import { classifyData, getDataEntry, fallbackId, fallbackEntry } from "@/lib/data";
-import type { DataPathway, Jurisdiction } from "@/lib/schemas/data";
+import { isVerifyMarker, type DataPathway, type Jurisdiction } from "@/lib/schemas/data";
 
 /**
  * Triage (PRD §3 step 1) — DETERMINISTIC, no model spend. Branches on WHO made the
@@ -39,6 +39,12 @@ function cleanForDisplay(s: string): string {
   return (s.split("(")[0] ?? s).replace(/\s*—\s*VERIFY.*$/i, "").trim();
 }
 
+/** Never show an endpoint that still contains a VERIFY placeholder (it's a full sentence,
+ *  so we hide it rather than truncate — like the deadline/reasons views). */
+function cleanEndpoint(s: string | null): string | null {
+  return s && !isVerifyMarker(s) ? s : null;
+}
+
 /** The avenue family for a chosen entry (when the person picks an area explicitly). */
 export function avenueView(entry: DataPathway): AvenueView {
   return {
@@ -46,7 +52,7 @@ export function avenueView(entry: DataPathway): AvenueView {
     mrBody: cleanForDisplay(entry.avenue.mr.body),
     jrAvailable: entry.avenue.jr.available,
     jrForum: cleanForDisplay(entry.avenue.jr.forum),
-    noReviewEndpoint: entry.avenue.noReviewEndpoint,
+    noReviewEndpoint: cleanEndpoint(entry.avenue.noReviewEndpoint),
   };
 }
 
@@ -71,7 +77,7 @@ export function triage(input: TriageInput): TriageResult {
       mrBody: cleanForDisplay(entry.avenue.mr.body),
       jrAvailable: entry.avenue.jr.available,
       jrForum: cleanForDisplay(entry.avenue.jr.forum),
-      noReviewEndpoint: entry.avenue.noReviewEndpoint,
+      noReviewEndpoint: cleanEndpoint(entry.avenue.noReviewEndpoint),
     },
   };
 }
