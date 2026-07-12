@@ -1,5 +1,5 @@
 {
-  "builtAt": "30600f26b9be16e8",
+  "builtAt": "f4c37defdf3eaccb",
   "processes": [
     {
       "id": "judicial-review",
@@ -203,7 +203,13 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
-      "leadingCases": []
+      "leadingCases": [
+        {
+          "name": "SBBS v Minister for Immigration and Multicultural and Indigenous Affairs (2002) 194 ALR 749",
+          "pinpoint": "at [43]-[48]",
+          "explains": "What bad faith requires — a serious allegation of dishonesty that is rarely made out."
+        }
+      ]
     },
     {
       "id": "error-of-law",
@@ -238,7 +244,18 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
-      "leadingCases": []
+      "leadingCases": [
+        {
+          "name": "Craig v South Australia (1995) 184 CLR 163",
+          "pinpoint": "at 175-180",
+          "explains": "Distinguishes errors of law within power from errors that take a decision-maker outside it."
+        },
+        {
+          "name": "Collector of Customs v Agfa-Gevaert Ltd (1996) 186 CLR 389",
+          "pinpoint": "at 394-397",
+          "explains": "Where the line runs between a question of fact and a question of law."
+        }
+      ]
     },
     {
       "id": "improper-purpose",
@@ -267,7 +284,18 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
-      "leadingCases": []
+      "leadingCases": [
+        {
+          "name": "Municipal Council of Sydney v Campbell [1925] AC 338",
+          "pinpoint": "at 343",
+          "explains": "A power given for one purpose cannot be used for a different one."
+        },
+        {
+          "name": "Thompson v Randwick Municipal Council (1950) 81 CLR 87",
+          "pinpoint": "at 106",
+          "explains": "A decision fails if an improper purpose was a substantial reason — if the power would not have been used without it."
+        }
+      ]
     },
     {
       "id": "inflexible-policy",
@@ -302,7 +330,23 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
-      "leadingCases": []
+      "leadingCases": [
+        {
+          "name": "Green v Daniels (1977) 13 ALR 1",
+          "pinpoint": "Stephen J at 9-10",
+          "explains": "A policy cannot override what the Act itself requires — decided on unemployment-benefit rules."
+        },
+        {
+          "name": "British Oxygen Co Ltd v Board of Trade [1971] AC 610",
+          "pinpoint": "at 625",
+          "explains": "Having a policy is fine — refusing to listen to someone with something new to say is not."
+        },
+        {
+          "name": "R v Anderson; Ex parte Ipec-Air Pty Ltd (1965) 113 CLR 177",
+          "pinpoint": "at 189, 192-193",
+          "explains": "The person given the power must decide for themselves, not simply follow someone else's instruction."
+        }
+      ]
     },
     {
       "id": "jurisdictional-error",
@@ -337,7 +381,23 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
-      "leadingCases": []
+      "leadingCases": [
+        {
+          "name": "Craig v South Australia (1995) 184 CLR 163",
+          "pinpoint": "at 179",
+          "explains": "The classic list: identifying the wrong issue, ignoring relevant material, or misunderstanding the power."
+        },
+        {
+          "name": "Kirk v Industrial Court (NSW) (2010) 239 CLR 531",
+          "pinpoint": "at [96]-[100]",
+          "explains": "State Supreme Courts can always review for jurisdictional error — Parliament cannot take that away."
+        },
+        {
+          "name": "Plaintiff S157/2002 v Commonwealth (2003) 211 CLR 476",
+          "pinpoint": "at [76]",
+          "explains": "Even a law saying a decision is final cannot protect a decision affected by jurisdictional error."
+        }
+      ]
     },
     {
       "id": "no-evidence",
@@ -372,7 +432,18 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
-      "leadingCases": []
+      "leadingCases": [
+        {
+          "name": "Australian Broadcasting Tribunal v Bond (1990) 170 CLR 321",
+          "pinpoint": "Mason CJ at 355-356",
+          "explains": "Findings have to rest on evidence that actually proves something, not on nothing."
+        },
+        {
+          "name": "Corporation of the City of Enfield v Development Assessment Commission (2000) 199 CLR 135",
+          "pinpoint": "at [28]",
+          "explains": "Some facts must actually exist before a power can be used — and a court can check for itself."
+        }
+      ]
     },
     {
       "id": "procedural-fairness",
@@ -408,7 +479,23 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
-      "leadingCases": []
+      "leadingCases": [
+        {
+          "name": "Kioa v West (1985) 159 CLR 550",
+          "pinpoint": "Brennan J at 629",
+          "explains": "If information that is credible, relevant and significant could count against you, it usually has to be put to you first."
+        },
+        {
+          "name": "Ebner v Official Trustee in Bankruptcy (2000) 205 CLR 337",
+          "pinpoint": "at [6]",
+          "explains": "The bias test: would a fair-minded observer reasonably think the decision-maker might not be impartial?"
+        },
+        {
+          "name": "SZBEL v Minister for Immigration and Multicultural and Indigenous Affairs (2006) 228 CLR 152",
+          "pinpoint": "at [26]-[29]",
+          "explains": "You are entitled to know the issues the decision may turn on, so you can respond to them."
+        }
+      ]
     },
     {
       "id": "relevant-considerations",
@@ -443,7 +530,13 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
-      "leadingCases": []
+      "leadingCases": [
+        {
+          "name": "Minister for Aboriginal Affairs v Peko-Wallsend Ltd (1986) 162 CLR 24",
+          "pinpoint": "Mason J at 39-41",
+          "explains": "The Act decides what must be considered. How much weight each factor gets is generally for the decision-maker."
+        }
+      ]
     },
     {
       "id": "unreasonableness",
@@ -478,7 +571,18 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
-      "leadingCases": []
+      "leadingCases": [
+        {
+          "name": "Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1 KB 223",
+          "pinpoint": "at 230",
+          "explains": "The origin of the ground: a decision so unreasonable that no reasonable authority could have made it."
+        },
+        {
+          "name": "Minister for Immigration and Citizenship v Li (2013) 249 CLR 332",
+          "pinpoint": "at [76]",
+          "explains": "The modern Australian test: a decision needs an evident and intelligible justification."
+        }
+      ]
     }
   ],
   "triage": {

@@ -41,6 +41,12 @@ elements:
 sources:
   - Victoria Legal Aid — legalaid.vic.gov.au
 status: verified
+leadingCases:
+  - name: Minister for Aboriginal Affairs v Peko-Wallsend Ltd (1986) 162 CLR 24
+    pinpoint: Mason J at 39-41
+    explains: >-
+      The Act decides what must be considered. How much weight each factor gets
+      is generally for the decision-maker.
 ---
 
-Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (with pinpoints) are still to be added from our materials before any v2 elements/cases feature relies on them.
+Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (citations + judgment pinpoints) added and approved by the owner on 2026-07-12. They are not yet rendered in the UI; the v2 elements/cases feature may rely on them.

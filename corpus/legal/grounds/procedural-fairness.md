@@ -38,6 +38,24 @@ elements:
 sources:
   - Victoria Legal Aid — legalaid.vic.gov.au
 status: verified
+leadingCases:
+  - name: Kioa v West (1985) 159 CLR 550
+    pinpoint: Brennan J at 629
+    explains: >-
+      If information that is credible, relevant and significant could count
+      against you, it usually has to be put to you first.
+  - name: Ebner v Official Trustee in Bankruptcy (2000) 205 CLR 337
+    pinpoint: 'at [6]'
+    explains: >-
+      The bias test: would a fair-minded observer reasonably think the
+      decision-maker might not be impartial?
+  - name: >-
+      SZBEL v Minister for Immigration and Multicultural and Indigenous Affairs
+      (2006) 228 CLR 152
+    pinpoint: 'at [26]-[29]'
+    explains: >-
+      You are entitled to know the issues the decision may turn on, so you can
+      respond to them.
 ---
 
-Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (with pinpoints) are still to be added from our materials before any v2 elements/cases feature relies on them.
+Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (citations + judgment pinpoints) added and approved by the owner on 2026-07-12. They are not yet rendered in the UI; the v2 elements/cases feature may rely on them.

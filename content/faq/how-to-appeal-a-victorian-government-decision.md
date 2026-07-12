@@ -1,0 +1,49 @@
+---
+title: "How do I appeal a Victorian government decision?"
+description: "Many Victorian government decisions can be reviewed at VCAT, but not all. Your decision letter is the best guide. Here are the steps, in plain English."
+question: "How do I appeal a Victorian government decision?"
+answer: "It depends on the law your decision was made under. Many Victorian government decisions can be reviewed at VCAT, but not all. Your decision letter should say if you can apply, and by when. You can also ask for written reasons within 28 days, and the Victorian Ombudsman takes free complaints. Free legal help can confirm what applies to you."
+entryId: vic-generic
+category: "Government decisions"
+sources:
+  - "Victorian Civil and Administrative Tribunal Act 1998 (Vic) — legislation.vic.gov.au"
+  - "VCAT — Application for review of a decision — vcat.vic.gov.au"
+  - "Victorian Ombudsman — ombudsman.vic.gov.au"
+related:
+  - can-i-ask-for-a-government-decision-to-be-reviewed
+  - what-is-a-statement-of-reasons-and-how-do-i-ask-for-one
+updated: "2026-07-12"
+---
+
+There is no single appeal path for every Victorian government decision. The path
+depends on the Act the decision was made under. That is why the decision letter itself
+matters so much.
+
+## Check your decision letter first
+
+The letter is the best guide. It should name the Act the decision was made under. It
+should also say whether you can apply to VCAT, and by when. Not every decision can go
+to VCAT — the Act has to allow it.
+
+## Ask for the reasons in writing
+
+You can ask the decision-maker for a written statement of reasons. Ask within 28 days
+of the decision. The decision-maker then usually has 28 days to reply. This is free.
+Written reasons explain what was decided and why, which makes the next step clearer.
+
+## Apply to VCAT, if the law allows it
+
+Where VCAT can review a decision, it takes a fresh look. It can make its own decision
+in place of the original one. The time limit is often 28 days, counted from the
+decision or from when you get the reasons. But the Act that applies can set a
+different, sometimes shorter, limit — the letter is the place to check. A fee usually
+applies, and fee waivers and concessions are available.
+
+## Other options, and free help
+
+If review is not available, you can complain to the Victorian Ombudsman for free.
+Complain to the organisation first. The Ombudsman looks at how a decision was made, but
+cannot overturn it, and may not look at complaints older than 12 months. Victoria Legal
+Aid's Legal Help line is 1300 792 387, and community legal centres give free local
+help. Not sure which path fits your decision? [Work out what you can do](/start) —
+free, no login, nothing stored.

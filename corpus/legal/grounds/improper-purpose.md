@@ -32,6 +32,15 @@ elements:
 sources:
   - Victoria Legal Aid — legalaid.vic.gov.au
 status: verified
+leadingCases:
+  - name: 'Municipal Council of Sydney v Campbell [1925] AC 338'
+    pinpoint: at 343
+    explains: A power given for one purpose cannot be used for a different one.
+  - name: Thompson v Randwick Municipal Council (1950) 81 CLR 87
+    pinpoint: at 106
+    explains: >-
+      A decision fails if an improper purpose was a substantial reason — if the
+      power would not have been used without it.
 ---
 
-Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (with pinpoints) are still to be added from our materials before any v2 elements/cases feature relies on them.
+Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (citations + judgment pinpoints) added and approved by the owner on 2026-07-12. They are not yet rendered in the UI; the v2 elements/cases feature may rely on them.

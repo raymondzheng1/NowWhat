@@ -26,6 +26,14 @@ elements:
 sources:
   - Victoria Legal Aid — legalaid.vic.gov.au
 status: verified
+leadingCases:
+  - name: >-
+      SBBS v Minister for Immigration and Multicultural and Indigenous Affairs
+      (2002) 194 ALR 749
+    pinpoint: 'at [43]-[48]'
+    explains: >-
+      What bad faith requires — a serious allegation of dishonesty that is
+      rarely made out.
 ---
 
-Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (with pinpoints) are still to be added from our materials before any v2 elements/cases feature relies on them.
+Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (citations + judgment pinpoints) added and approved by the owner on 2026-07-12. They are not yet rendered in the UI; the v2 elements/cases feature may rely on them.

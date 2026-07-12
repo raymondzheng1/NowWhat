@@ -59,8 +59,11 @@ describe("legal-substance corpus (Learn concept layer)", () => {
     }
   });
 
-  it("seed grounds are not yet citable (v2 gated — generator degrades to help)", () => {
-    expect(groundHasCitableAuthority("procedural-fairness")).toBe(false);
+  it("every ground is citable for v2: verified + owner-approved leading cases (2026-07-12)", () => {
+    for (const g of LegalIndexSchema.parse(raw).grounds) {
+      expect(groundHasCitableAuthority(g.id), `${g.id} should be citable`).toBe(true);
+      expect(g.leadingCases.length).toBeGreaterThan(0);
+    }
   });
 
   it("getGround returns undefined for an unknown id", () => {

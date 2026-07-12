@@ -33,6 +33,22 @@ elements:
 sources:
   - Victoria Legal Aid — legalaid.vic.gov.au
 status: verified
+leadingCases:
+  - name: Craig v South Australia (1995) 184 CLR 163
+    pinpoint: at 179
+    explains: >-
+      The classic list: identifying the wrong issue, ignoring relevant material,
+      or misunderstanding the power.
+  - name: Kirk v Industrial Court (NSW) (2010) 239 CLR 531
+    pinpoint: 'at [96]-[100]'
+    explains: >-
+      State Supreme Courts can always review for jurisdictional error —
+      Parliament cannot take that away.
+  - name: Plaintiff S157/2002 v Commonwealth (2003) 211 CLR 476
+    pinpoint: 'at [76]'
+    explains: >-
+      Even a law saying a decision is final cannot protect a decision affected
+      by jurisdictional error.
 ---
 
-Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (with pinpoints) are still to be added from our materials before any v2 elements/cases feature relies on them.
+Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (citations + judgment pinpoints) added and approved by the owner on 2026-07-12. They are not yet rendered in the UI; the v2 elements/cases feature may rely on them.
