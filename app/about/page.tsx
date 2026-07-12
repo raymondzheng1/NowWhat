@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
-import { Eyebrow } from "@/components/ui/Eyebrow";
+import { PageHeader } from "@/components/ui/PageHeader";
 import { Disclaimer } from "@/components/ui/Disclaimer";
 
 export const metadata: Metadata = {
@@ -12,15 +12,13 @@ export const metadata: Metadata = {
 export default function AboutPage() {
   const t = useTranslations("about");
   return (
-    <div className="container-prose py-10">
-      <Eyebrow>About</Eyebrow>
-      <h1 className="mt-3 font-serif text-h1 font-bold text-navy-ink">{t("title")}</h1>
-      <p className="mt-3 text-lead text-ink-soft">{t("intro")}</p>
+    <div className="container-prose py-12 sm:py-16">
+      <PageHeader kicker={t("kicker")} title={t("title")} lead={t("intro")} />
 
-      <h2 className="mt-8 font-serif text-h3 font-bold text-ink">{t("groundedTitle")}</h2>
+      <h2 className="mt-10 font-display text-[22px] font-bold text-ink">{t("groundedTitle")}</h2>
       <p className="mt-2 leading-relaxed text-ink-soft">{t("groundedBody")}</p>
 
-      <h2 className="mt-8 font-serif text-h3 font-bold text-ink">{t("currencyTitle")}</h2>
+      <h2 className="mt-8 font-display text-[22px] font-bold text-ink">{t("currencyTitle")}</h2>
       <p className="mt-2 leading-relaxed text-ink-soft">{t("currencyBody")}</p>
 
       <Disclaimer className="mt-8" />

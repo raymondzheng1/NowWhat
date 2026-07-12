@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
 import { ContactForm } from "@/components/feature/ContactForm";
+import { PageHeader } from "@/components/ui/PageHeader";
 
 export const metadata: Metadata = {
   title: "Contact us",
@@ -11,10 +12,11 @@ export const metadata: Metadata = {
 export default function ContactPage() {
   const t = useTranslations("contact");
   return (
-    <div className="container-prose py-10">
-      <h1 className="font-serif text-h1 font-bold text-navy-ink">{t("title")}</h1>
-      <p className="mt-2 mb-6 text-ink-soft">{t("intro")}</p>
-      <ContactForm />
+    <div className="container-prose py-12 sm:py-16">
+      <PageHeader kicker={t("kicker")} title={t("title")} lead={t("intro")} />
+      <div className="mt-8">
+        <ContactForm />
+      </div>
     </div>
   );
 }

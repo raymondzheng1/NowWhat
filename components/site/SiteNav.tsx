@@ -19,7 +19,7 @@ export function SiteNav() {
   const name = PRODUCT_NAME.replace(/\?$/, "");
 
   const links = [
-    { href: "/learn", label: t("howItWorks") },
+    { href: "/learn", label: t("guides") },
     { href: "/faq", label: t("faq") },
     { href: "/help", label: t("help") },
   ];
@@ -29,7 +29,7 @@ export function SiteNav() {
       {/* Desktop top nav */}
       <nav
         aria-label="Main"
-        className="hidden items-center justify-end gap-8 border-b border-line px-12 py-6 text-[11px] uppercase tracking-[0.2em] text-ink-soft md:flex"
+        className="hidden items-center justify-end gap-8 border-b border-line px-12 py-4 text-[11px] uppercase tracking-[0.2em] text-ink-soft md:flex"
       >
         {links.map((l) => (
           <Link key={l.href} href={l.href} className="hover:text-ink">
@@ -38,6 +38,12 @@ export function SiteNav() {
         ))}
         <Link href="/ask" className="text-accent hover:text-ink">
           {t("ask")}
+        </Link>
+        <Link
+          href="/start"
+          className="rounded-button bg-rail px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-rail-fg transition-colors hover:bg-rail-dark"
+        >
+          {t("start")}
         </Link>
       </nav>
 
@@ -78,9 +84,14 @@ export function SiteNav() {
                 </Link>
               </li>
             ))}
-            <li className="py-3.5">
+            <li className="border-b border-line py-3.5">
               <Link href="/ask" className="font-semibold text-accent" onClick={() => setOpen(false)}>
                 {t("ask")}
+              </Link>
+            </li>
+            <li className="py-4">
+              <Link href="/start" className="btn-primary w-full" onClick={() => setOpen(false)}>
+                {t("start")}
               </Link>
             </li>
           </ul>

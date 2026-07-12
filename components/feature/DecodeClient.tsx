@@ -51,6 +51,12 @@ export function DecodeClient() {
         about={result.decode.whatItMeans}
         options={result.decode.options}
         isFallback={result.isFallback}
+        backLabel={t("another")}
+        onBack={() => {
+          setResult(null);
+          setText("");
+          setFile(null);
+        }}
       />
     );
   }

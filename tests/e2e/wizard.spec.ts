@@ -8,7 +8,7 @@ import { test, expect } from "@playwright/test";
  */
 test("landing CTA leads to the Rights Saver flow", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Got a government");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Knocked back by government");
   await page.getByRole("link", { name: /find out what you can do/i }).first().click();
   await expect(page).toHaveURL(/\/start/, { timeout: 15_000 });
   await expect(page.getByRole("heading", { name: /who made the decision/i })).toBeVisible({ timeout: 15_000 });

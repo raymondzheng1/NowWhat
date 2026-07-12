@@ -41,6 +41,10 @@ export interface ResultViewProps {
   /** Prefill the deadline card (from the wizard's Step 2). */
   decisionDate?: string;
   isFallback?: boolean;
+  /** Header back control: label + handler for returning to the flow that made this result
+   *  (e.g. "Ask another question" resets the ask form). Falls back to a /start link. */
+  backLabel?: string;
+  onBack?: () => void;
 }
 
 /**
@@ -59,6 +63,8 @@ export function ResultView({
   options = [],
   decisionDate,
   isFallback = false,
+  backLabel,
+  onBack,
 }: ResultViewProps) {
   const [kind, setKind] = useState<DraftKind>("reasons-request");
   const [draft, setDraft] = useState<Draft | null>(null);
@@ -81,9 +87,19 @@ export function ResultView({
     <div>
       {/* Focused result header */}
       <div className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b-2 border-navy bg-paper px-[18px] sm:h-16 sm:px-9">
-        <Link href="/start" className="inline-flex items-center gap-2 text-sm font-semibold text-navy hover:underline">
-          ← Start over
-        </Link>
+        {onBack ? (
+          <button
+            type="button"
+            onClick={onBack}
+            className="inline-flex items-center gap-2 text-sm font-semibold text-navy hover:underline"
+          >
+            ← {backLabel ?? "Start over"}
+          </button>
+        ) : (
+          <Link href="/start" className="inline-flex items-center gap-2 text-sm font-semibold text-navy hover:underline">
+            ← {backLabel ?? "Start over"}
+          </Link>
+        )}
         <span className="hidden sm:inline">
           <Crest size={28} />
         </span>

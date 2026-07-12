@@ -47,6 +47,11 @@ export function AskClient() {
         answer={result.answer.restated || result.entry.title}
         body={result.answer.answer}
         options={result.answer.nextStep ? [result.answer.nextStep] : []}
+        backLabel={t("another")}
+        onBack={() => {
+          setResult(null);
+          setQuestion("");
+        }}
       />
     );
   }

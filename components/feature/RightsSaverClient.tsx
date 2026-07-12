@@ -550,9 +550,14 @@ function ResultStep({
       <section className="rounded-card border border-line bg-paper p-5 sm:p-6">
         <h2 className="font-display text-[20px] font-bold text-ink">{t("handoffTitle")}</h2>
         <p className="mt-2 text-[14.5px] text-ink-soft">{t("handoffLead")}</p>
-        <button type="button" onClick={downloadHandoff} className="btn-help mt-3">
-          {t("handoffDownload")}
-        </button>
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <button type="button" onClick={downloadHandoff} className="btn-help">
+            {t("handoffDownload")}
+          </button>
+          <button type="button" onClick={() => window.print()} className="btn-secondary">
+            {t("handoffPrint")}
+          </button>
+        </div>
       </section>
 
       <HelpList t={t} entry={entry} />

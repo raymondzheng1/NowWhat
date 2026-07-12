@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Eyebrow } from "@/components/ui/Eyebrow";
 
 export const metadata: Metadata = {
   title: "Your privacy",
@@ -19,9 +18,9 @@ function H2({ children }: { children: React.ReactNode }) {
 export default function PrivacyPage() {
   return (
     <div className="container-prose py-10">
-      <Eyebrow>Privacy</Eyebrow>
-      <h1 className="mt-3 font-serif text-h1 font-bold text-navy-ink">Your privacy</h1>
-      <p className="mt-3 text-lead text-ink-soft">
+      <p className="text-[11px] uppercase tracking-[0.28em] text-accent">Privacy</p>
+      <h1 className="mt-4 font-display text-[34px] font-semibold leading-[1.06] text-ink sm:text-[44px]">Your privacy</h1>
+      <p className="mt-5 max-w-[56ch] text-[15.5px] leading-[1.68] text-ink-soft">
         The short version: we don&rsquo;t keep your letter, your questions, or your answers. There
         are no accounts, and there is nothing about you for us to store.
       </p>

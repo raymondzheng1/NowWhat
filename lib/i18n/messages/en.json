@@ -18,7 +18,8 @@
     "scan": "Scan a letter",
     "faq": "Common questions",
     "help": "Get help",
-    "howItWorks": "How it works"
+    "howItWorks": "How it works",
+    "guides": "Guides"
   },
   "home": {
     "heroEyebrow": "Understand · Know your options · Get help",
@@ -116,6 +117,7 @@
     "handoffTitle": "Take this to a free service",
     "handoffLead": "We can make a short summary of your situation to bring to a community legal centre or lawyer. It is made on your device and is not stored.",
     "handoffDownload": "Download the summary",
+    "handoffPrint": "Print this page",
     "helpTitle": "Free help",
     "helpMore": "See all free help",
     "privacy": "Nothing you enter here is stored."
@@ -146,6 +148,7 @@
   },
   "ask": {
     "title": "Ask a question",
+    "another": "Ask another question",
     "intro": "Ask about a government decision in your own words. We answer in plain language and show where the answer comes from.",
     "placeholder": "For example: Centrelink says I owe a debt — can I ask them to look at it again?",
     "submit": "Get a plain-language answer",
@@ -158,6 +161,7 @@
   },
   "decode": {
     "title": "Scan or paste a letter",
+    "another": "Check another letter",
     "intro": "Take a photo of the letter, upload it, or paste the text. We read it on the spot to explain it — and then we discard it. We never store your letter.",
     "uploadLabel": "Photo or PDF of the letter",
     "pasteLabel": "Or paste the text of the letter",
@@ -196,6 +200,7 @@
     "editNote": "You can edit this text before you save or print it."
   },
   "help": {
+    "kicker": "Free and independent",
     "title": "Get free help",
     "intro": "These services are free and independent. Talking to a person is often a good next step, especially for advice about your own situation.",
     "forThis": "Help for this kind of decision",
@@ -209,6 +214,7 @@
     "searchLabel": "Search online for a lawyer who handles this"
   },
   "faq": {
+    "kicker": "The answer library",
     "title": "Common questions",
     "intro": "Plain-language answers, grounded in the rules and checked by a person before we publish them.",
     "question": "The question",
@@ -227,6 +233,7 @@
     "point4": "When you connect with a free legal service, you deal with them directly under their own privacy rules."
   },
   "about": {
+    "kicker": "About",
     "title": "About this service",
     "intro": "This is a free service that helps people understand and respond to government decisions.",
     "infoNotAdvice": "This service gives general information, not legal advice, and cannot tell you what will happen in your case. For advice about your own situation, talk to a free legal service.",
@@ -252,6 +259,7 @@
     "contactFailed": "We couldn't send your message right now. Please try again in a moment."
   },
   "contact": {
+    "kicker": "We read every message",
     "title": "Contact us",
     "intro": "Send us a message about the service and we'll read it. For help with your own situation, the free services on the Get help page are the fastest route.",
     "name": "Your name",
@@ -268,6 +276,22 @@
     "errMessage": "Please enter a message (at least 10 characters).",
     "fixErrors": "Please check the highlighted fields and try again.",
     "seeHelp": "See free help"
+  },
+  "notFound": {
+    "kicker": "Page not found",
+    "title": "We can’t find that page.",
+    "lead": "The link may be old, or the address may have a typo. What you were looking for is probably one of these.",
+    "ctaStart": "Work out what you can do",
+    "linkLearn": "How review works — the guide library",
+    "linkFaq": "Common questions, answered in plain English",
+    "linkHelp": "Free services that can help"
+  },
+  "errorPage": {
+    "kicker": "Something went wrong",
+    "title": "That didn’t work — but nothing is lost.",
+    "lead": "Something went wrong on our side. Nothing you entered was stored. You can try again, or start fresh.",
+    "retry": "Try again",
+    "home": "Back to the home page"
   },
   "footer": {
     "infoNotAdvice": "General information, not legal advice. We can't tell you what will happen in your case.",
