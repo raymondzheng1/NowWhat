@@ -26,7 +26,7 @@
 ## P0 · Suite 1 — Safety promises (~25 min) — every step must pass
 
 ### 1.1 Consent gate
-1. Go to `/start` → "A Victorian government body" → "Fine or infringement notice".
+1. Go to `/start` → "A Victorian state body" → "Fine or infringement notice".
 2. Leave the consent box **unticked** and try to continue.
    **Expect:** you cannot get your next steps until "I understand this is general information, not legal advice." is ticked.
 
@@ -41,24 +41,24 @@
 8. On any result or Learn page, find **"Where this comes from"**. **Expect:** each source shows its website as a real link (e.g. `art.gov.au ↗`) that opens the publisher in a new tab — not just plain text.
 
 ### 1.4 Tripwires route to a person
-8. Start over → Victorian → Renting → tick **"It is about child protection, family, guardianship, or mental health"** → consent → continue.
+9. Start over → Victorian → Renting → tick **"It is about child protection, family, guardianship, or mental health"** → consent → continue.
    **Expect:** "Talk to a free legal service" — and **no** "Who can review this" builder output.
-9. Repeat with **"There is a criminal matter involved"** (any area). Same expectation.
-10. Repeat with **"The time limit is very soon, or has already passed"**. Same expectation.
+10. Repeat with **"There is a criminal matter involved"** (any area). Same expectation.
+11. Repeat with **"The time limit is very soon, or has already passed"**. Same expectation.
 
 ### 1.5 Grounded-or-silent — never invents an answer
-11. Go to `/ask` and ask: *"How do I appeal a NSW parking fine?"*
+12. Go to `/ask` and ask: *"How do I appeal a NSW parking fine?"*
     **Expect:** "We're not sure about this one" + free-help routing. Not an invented answer (NSW is out of scope).
-12. Ask: *"Will I win my VCAT case?"*
+13. Ask: *"Will I win my VCAT case?"*
     **Expect:** no prediction — either not-covered, or an answer that explicitly does not predict, with the disclaimer.
 
 ### 1.6 Nothing you enter is stored
-13. Go to `/decode`, paste any letter text, get a result (or the fallback). **Reload the page.**
+14. Go to `/decode`, paste any letter text, get a result (or the fallback). **Reload the page.**
     **Expect:** everything is gone; you are back at the empty form.
-14. **Expect** the standing notes: "We never store your letter" (`/decode`), "Nothing you enter here is stored" (`/start`), and the footer's "We never keep your details."
+15. **Expect** the standing notes: "We never store your letter" (`/decode`), "Nothing you enter here is stored" (`/start`), and the footer's "We never keep your details."
 
 ### 1.7 No internal placeholders or tech-speak
-15. Across every result you see today: **no** "VERIFY" text anywhere, and no mention of AI/model/chatbot in any customer copy.
+16. Across every result you see today: **no** "VERIFY" text anywhere, and no mention of AI/model/chatbot in any customer copy.
 
 ---
 
@@ -66,7 +66,7 @@
 
 ### 2.1 Full walkthrough — Victorian fine
 1. Homepage → **"Find out what you can do"**.
-2. Step 1: "A Victorian government body".
+2. Step 1: "A Victorian state body".
 3. Step 2: "Fine or infringement notice"; set the date to ~2 weeks ago; consent; continue.
 4. Check every result block:
    - **Who can review this:** Tribunal (merits) review *through internal review then Magistrates' Court*; Court (judicial) review *through SCV-O56*; a note that a payment-plan / financial-hardship option may be available through Fines Victoria.
