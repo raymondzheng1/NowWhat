@@ -5,7 +5,10 @@
 
 **Logging an issue:** note the suite + step number, the URL, what you saw vs what you expected, and a screenshot.
 
+**New since the last build (2026-07-13) — worth a look as you go:** a sturdier, larger typeface throughout; a **first-run guided walkthrough** that dims the screen and spotlights one control at a time on `/start` (each step), `/ask` and `/decode` — never on the homepage; **"Where this comes from"** now links to each source's website; and review bodies are framed **Commonwealth-first** with the Victorian one shown as "the state equivalent".
+
 **Known quirks (not bugs):**
+- The guided walkthrough shows **once per screen**. To see it again, use "Show me how" (top-right of a tool screen) or "Replay the guides" in the footer.
 - `/ask` and `/decode` take 10–25 seconds (a real model call runs).
 - A covered question can occasionally return "We're not sure" — that is the safety-first default. Retry once; log it only if it happens repeatedly for Victorian/Centrelink topics.
 - If **every** realistic letter on `/decode` returns "We don't have a guide for this yet", log that as one finding (classifier too strict) rather than per-letter.
@@ -35,6 +38,7 @@
 5. On the same result. **Expect:** time limits appear **only** as a small "Time limits:" line inside "Who can review this", naming the **Fines Reform Act 2014 (Vic)** with an "official source" link.
 6. **Expect:** no "X days left", no countdown number, no prominent amber deadline panel anywhere.
 7. Click "official source". **Expect:** fines.vic.gov.au opens in a new tab.
+8. On any result or Learn page, find **"Where this comes from"**. **Expect:** each source shows its website as a real link (e.g. `art.gov.au ↗`) that opens the publisher in a new tab — not just plain text.
 
 ### 1.4 Tripwires route to a person
 8. Start over → Victorian → Renting → tick **"It is about child protection, family, guardianship, or mental health"** → consent → continue.
@@ -91,6 +95,21 @@ Open `/start?jur=Vic&area=vic-fines&date=2026-06-10`. **Expect:** lands on step 
 
 ---
 
+## P1 · Suite 2b — The guided walkthrough (~10 min)
+
+Use a **fresh incognito window** for this suite (the guides remember they've been shown).
+
+1. Open `/start`. After about a second, the screen dims and a card points at the two options.
+   **Expect:** "Start with who decided" — readable, in the site's own styling, with Next and a ✕.
+2. Click **Next**. **Expect:** it moves to the privacy note, then **Got it** closes it.
+3. Pick a jurisdiction. **Expect:** step 2's own guide starts by itself — "Pick the closest match" — and walks the area cards → date → the "does any of these apply" checkboxes → consent (4 steps).
+4. Dismiss it with ✕ mid-way, then **reload**. **Expect:** it does **not** come back (a dismissed guide stays dismissed).
+5. Click **"Show me how"** (top-right). **Expect:** that screen's guide replays on demand.
+6. Complete the flow to the result. **Expect:** the result has its own guide — review options → reasons letter → grounds → the summary download.
+7. Visit `/ask` and `/decode` in the same window. **Expect:** each has its own short guide the first time.
+8. Go to any content page, scroll to the footer, click **"Replay the guides"**. **Expect:** confirmation, and the guides show again next time you open those screens.
+9. **Homepage check:** open `/`. **Expect: no guide at all** — deliberate; training belongs where the work happens.
+
 ## P1 · Suite 3 — Ask a question (~10 min)
 
 1. Nav → "Ask a question". Ask: *"Centrelink says I owe a debt. Can I ask them to review the decision, and what are my options to appeal?"*
@@ -139,7 +158,7 @@ Sample letters to paste (also try a real one of your own):
 ## P1 · Suite 6 — Learn library (~10 min)
 
 1. Nav → "Guides" (`/learn`). **Expect:** the two processes, the grounds set, the comparison, and the guided tour.
-2. `/learn/merits-review` and `/learn/judicial-review`: who hears it (Vic + Cth), can-you-apply points, what happens, outcomes, limits, sources. The judicial-review page must include the "cannot substitute the decision" style limit.
+2. `/learn/merits-review` and `/learn/judicial-review`: **"Who hears it"** leads with the Australian body (ART / Federal Court), then a **"The state equivalent"** block for VCAT / the Supreme Court, plus a note that every state has one, can-you-apply points, what happens, outcomes, limits, sources. The judicial-review page must include the "cannot substitute the decision" style limit.
 3. `/learn/compare`: side-by-side table + the "which fits" chooser — answer the prompts; destinations make sense (merits / judicial / help).
 4. `/learn/grounds`: all 9 grounds. Open "You weren't given a fair chance": what it means / example / what might relate / what it is **not** / element prompts. **Expect no case citations on the page** (that is a later feature).
 5. `/learn/tour`: step through it; navigation works.
