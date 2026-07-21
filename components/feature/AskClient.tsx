@@ -8,11 +8,14 @@ import { NotCovered } from "@/components/feature/NotCovered";
 import { ToolTopBar } from "@/components/site/ToolTopBar";
 import { PrivacyNote } from "@/components/ui/PrivacyNote";
 import { CATEGORY } from "@/components/feature/categories";
+import { useTour } from "@/components/feature/tour/useTour";
+import { TOUR_ASK } from "@/lib/tour/steps";
 
 export function AskClient() {
   const t = useTranslations("ask");
   const tc = useTranslations("common");
   const te = useTranslations("errors");
+  const tt = useTranslations("tour");
 
   const [question, setQuestion] = useState("");
   const [loading, setLoading] = useState(false);
@@ -20,6 +23,9 @@ export function AskClient() {
   const [error, setError] = useState<string | null>(null);
 
   const msg = (m: string) => (m.startsWith("errors.") ? te(m.slice(7)) : m);
+
+  // Guide fires at the threshold of the work — only while the form is on screen.
+  const replayGuide = useTour("ask", TOUR_ASK, !result);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -61,7 +67,16 @@ export function AskClient() {
       <ToolTopBar />
       <div className="min-h-[60vh] bg-paper-warm">
         <div className="container-prose py-10">
-          <h1 className="font-serif text-h1 font-bold text-navy-ink">{t("title")}</h1>
+          <div className="flex items-start justify-between gap-4">
+            <h1 className="font-display text-h1 font-bold text-navy-ink">{t("title")}</h1>
+            <button
+              type="button"
+              onClick={replayGuide}
+              className="mt-2 shrink-0 text-[14px] font-semibold text-ink-soft hover:text-ink"
+            >
+              {tt("showMe")}
+            </button>
+          </div>
           <p className="mt-2 text-ink-soft">{t("intro")}</p>
 
           <form onSubmit={submit} className="card mt-6">
@@ -70,13 +85,14 @@ export function AskClient() {
             </label>
             <textarea
               id="q"
+              data-tour="ask-input"
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
               placeholder={t("placeholder")}
               rows={4}
               className="input leading-relaxed"
             />
-            <button type="submit" className="btn-primary btn-lg mt-4 w-full sm:w-auto" disabled={loading || question.trim().length < 3}>
+            <button type="submit" data-tour="ask-submit" className="btn-primary btn-lg mt-4 w-full sm:w-auto" disabled={loading || question.trim().length < 3}>
               {loading ? tc("loading") : t("submit")}
             </button>
           </form>

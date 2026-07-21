@@ -15,7 +15,7 @@ export function Markdown({ children }: { children: string }) {
             <h2 className="mt-6 font-display text-xl font-bold text-ink">{children}</h2>
           ),
           h3: ({ children }) => (
-            <h3 className="mt-4 font-display text-lg font-semibold text-ink">{children}</h3>
+            <h3 className="mt-4 font-display text-lg font-bold text-ink">{children}</h3>
           ),
           p: ({ children }) => <p className="leading-relaxed">{children}</p>,
           ul: ({ children }) => <ul className="list-disc space-y-1 pl-6">{children}</ul>,

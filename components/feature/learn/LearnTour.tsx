@@ -29,7 +29,7 @@ export function LearnTour({
       label: "Start",
       node: (
         <div className="max-w-[60ch]">
-          <h2 className="font-display text-[30px] font-semibold text-ink">Two ways to challenge a decision</h2>
+          <h2 className="font-display text-[30px] font-bold text-ink">Two ways to challenge a decision</h2>
           <p className="mt-4 text-[17px] leading-[1.7] text-ink-soft">
             When a government decision goes against you, there are usually two paths. They ask different
             questions and lead to different places. This quick tour walks through each one — take it at
@@ -45,7 +45,7 @@ export function LearnTour({
       label: "Grounds",
       node: (
         <div>
-          <h2 className="font-display text-[28px] font-semibold text-ink">The grounds people raise</h2>
+          <h2 className="font-display text-[28px] font-bold text-ink">The grounds people raise</h2>
           <p className="mt-3 max-w-[60ch] text-[16px] leading-[1.65] text-ink-soft">
             For judicial review you need a “ground” — a specific problem with how the decision was made.
             Here are the common ones; open any to read more.
@@ -60,7 +60,7 @@ export function LearnTour({
       label: "Next",
       node: (
         <div className="max-w-[60ch]">
-          <h2 className="font-display text-[30px] font-semibold text-ink">That’s the map</h2>
+          <h2 className="font-display text-[30px] font-bold text-ink">That’s the map</h2>
           <p className="mt-4 text-[17px] leading-[1.7] text-ink-soft">
             You now know the two paths and the grounds people raise. The next step is to find the body and
             the time limit for <em>your</em> decision — and a draft you can send.
@@ -95,7 +95,7 @@ export function LearnTour({
           />
         ))}
       </div>
-      <p className="mt-2 text-[11px] uppercase tracking-[0.16em] text-ink-faint">
+      <p className="mt-2 text-[12px] uppercase tracking-[0.16em] text-ink-faint">
         Step {i + 1} of {steps.length} · {cur.label}
       </p>
 
@@ -106,7 +106,7 @@ export function LearnTour({
           type="button"
           onClick={() => setI((v) => Math.max(0, v - 1))}
           disabled={atStart}
-          className="text-[14px] font-semibold text-ink-soft disabled:opacity-40"
+          className="text-[15px] font-semibold text-ink-soft disabled:opacity-40"
         >
           ← Back
         </button>
@@ -118,7 +118,7 @@ export function LearnTour({
             </svg>
           </button>
         ) : (
-          <Link href="/learn" className="text-[14px] font-semibold text-accent">All topics →</Link>
+          <Link href="/learn" className="text-[15px] font-semibold text-accent">All topics →</Link>
         )}
       </div>
     </div>

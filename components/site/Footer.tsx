@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
+import { ReplayGuides } from "@/components/site/ReplayGuides";
 
 /**
  * Footer (Direction K2) — quiet, on the sand page: the standing disclaimer with a bold
@@ -17,7 +18,7 @@ export function Footer() {
         </p>
         <nav
           aria-label="Footer"
-          className="flex flex-wrap gap-5 text-[12px] uppercase tracking-[0.12em] text-ink-soft"
+          className="flex flex-wrap gap-5 text-[13px] uppercase tracking-[0.12em] text-ink-soft"
         >
           {(
             [
@@ -34,6 +35,7 @@ export function Footer() {
               {label}
             </Link>
           ))}
+          <ReplayGuides className="uppercase tracking-[0.12em] text-ink-soft hover:text-ink" />
         </nav>
       </div>
     </footer>

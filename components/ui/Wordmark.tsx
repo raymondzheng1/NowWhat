@@ -44,13 +44,13 @@ export function Wordmark({
       <Crest size={size} />
       <span className="flex flex-col leading-none">
         <span
-          className={`font-display font-semibold tracking-[0.01em] ${textClassName} ${light ? "text-rail-fg" : "text-ink"}`}
+          className={`font-display font-bold tracking-[0.01em] ${textClassName} ${light ? "text-rail-fg" : "text-ink"}`}
         >
           {PRODUCT_NAME.replace(/\?$/, "")}
           <span className={light ? "text-rail-accent" : "text-accent"}>?</span>
         </span>
         {tagline && (
-          <span className="mt-1.5 text-[10px] font-bold uppercase tracking-[0.18em] text-ink-faint">
+          <span className="mt-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-ink-faint">
             Know your next step
           </span>
         )}

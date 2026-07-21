@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Libre_Baskerville } from "next/font/google";
+import { Source_Serif_4, Libre_Baskerville } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { Analytics } from "@vercel/analytics/next";
@@ -7,10 +7,15 @@ import "./globals.css";
 
 // K2 "Deep teal & sand". Self-hosted at build by next/font — no runtime Google
 // request, so the CSP needs no font-origin allowance.
-// Cormorant Garamond (--font-display): H1, section/step titles, deadline date, wordmark.
-const cormorant = Cormorant_Garamond({
+//
+// --font-display: Source Serif 4 — H1, section/step titles, wordmark. Replaced Cormorant
+// Garamond (2026-07-13): Cormorant is a high-contrast display face whose hairline strokes
+// read as thin and are genuinely hard to read at body-adjacent sizes — the wrong trade for
+// an audience in distress, on a phone, possibly with low vision. Source Serif 4 keeps the
+// editorial voice with far lower stroke contrast and a real weight range.
+const displaySerif = Source_Serif_4({
   subsets: ["latin"],
-  weight: ["500", "600", "700"],
+  weight: ["600", "700"],
   style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap",
@@ -84,7 +89,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   };
 
   return (
-    <html lang={locale} className={`${cormorant.variable} ${baskerville.variable}`}>
+    <html lang={locale} className={`${displaySerif.variable} ${baskerville.variable}`}>
       <body className="flex min-h-screen flex-col">
         <JsonLd data={websiteLd} />
         <NextIntlClientProvider locale={locale} messages={messages}>

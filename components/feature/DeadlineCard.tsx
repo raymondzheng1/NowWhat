@@ -41,7 +41,7 @@ function Shell({ children }: { children: React.ReactNode }) {
 
 function Eyebrow({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-2 text-[11.5px] font-semibold uppercase tracking-[0.12em] text-ink-soft">
+    <div className="flex items-center gap-2 text-[12.5px] font-semibold uppercase tracking-[0.12em] text-ink-soft">
       {icon}
       {children}
     </div>
@@ -88,7 +88,7 @@ export function DeadlineCard({
     return (
       <Shell>
         <Eyebrow icon={clock}>Time limits</Eyebrow>
-        <p className="mt-2 text-[14.5px] leading-relaxed text-ink-soft">
+        <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
           A time limit applies to this kind of decision, and it can be short. We can&rsquo;t
           confirm the exact date here — check it with a free service, and don&rsquo;t wait.
         </p>
@@ -112,14 +112,14 @@ export function DeadlineCard({
               ? `This date has passed (${formatLong(confirmed.deadlineDate)}).`
               : `Apply by ${formatLong(confirmed.deadlineDate)}.`}
           </p>
-          <p className="mt-1 text-[14px] leading-relaxed text-ink-soft">
+          <p className="mt-1 text-[15px] leading-relaxed text-ink-soft">
             {confirmed.passed
               ? "A free service can tell you if anything can still be done."
               : `For ${primary.name.toLowerCase()}. A free service can confirm the exact date for your situation.`}
           </p>
 
           {confirmed.howCounted && (
-            <p className="mt-3 text-[13.5px] leading-relaxed text-ink-faint">
+            <p className="mt-3 text-[14.5px] leading-relaxed text-ink-faint">
               How it&rsquo;s counted: {confirmed.howCounted}.
             </p>
           )}
@@ -140,7 +140,7 @@ export function DeadlineCard({
             </button>
           </div>
           {showHow && (
-            <p className="mt-3 rounded-input border border-line bg-sand-surface p-3 text-[13.5px] leading-relaxed text-ink-soft">
+            <p className="mt-3 rounded-input border border-line bg-sand-surface p-3 text-[14.5px] leading-relaxed text-ink-soft">
               We count every day from the date on your notice or decision. If the last day falls
               on a weekend or public holiday it may move to the next business day — a free service
               can confirm the exact date for you.
@@ -150,13 +150,13 @@ export function DeadlineCard({
       ) : (
         // --- State: we can compute a date, but need the decision date first. ---
         <>
-          <p className="mt-2 text-[14.5px] leading-relaxed text-ink-soft">
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
             There is a time limit for this step. If it helps, enter the date on your notice or
             decision and we&rsquo;ll work out the date — you can add a reminder.
           </p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
             <label className="flex-1">
-              <span className="mb-1.5 block text-[13px] font-semibold text-ink">
+              <span className="mb-1.5 block text-[14px] font-semibold text-ink">
                 Date on your notice / decision
               </span>
               <input

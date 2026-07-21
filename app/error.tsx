@@ -17,11 +17,11 @@ export default function GlobalError({
   const t = useTranslations("errorPage");
   return (
     <div className="container-wide py-16 sm:py-24">
-      <p className="text-[11px] uppercase tracking-[0.28em] text-accent">{t("kicker")}</p>
-      <h1 className="mt-4 max-w-[640px] font-display text-[36px] font-semibold leading-[1.06] text-ink sm:text-[48px]">
+      <p className="text-[12px] uppercase tracking-[0.28em] text-accent">{t("kicker")}</p>
+      <h1 className="mt-4 max-w-[640px] font-display text-[36px] font-bold leading-[1.06] text-ink sm:text-[48px]">
         {t("title")}
       </h1>
-      <p className="mt-5 max-w-[52ch] text-[15.5px] leading-[1.68] text-ink-soft">{t("lead")}</p>
+      <p className="mt-5 max-w-[52ch] text-[16.5px] leading-[1.68] text-ink-soft">{t("lead")}</p>
       <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
         <button type="button" onClick={reset} className="btn-primary px-6">
           {t("retry")}

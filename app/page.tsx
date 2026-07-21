@@ -60,7 +60,7 @@ export default function HomePage() {
   const learnLd = itemListLd({
     name: "How review works — understand your options",
     description:
-      "Plain-English guides to challenging a government decision in Victoria or the Commonwealth: merits review, judicial review, and the grounds of review.",
+      "Plain-English guides to challenging an Australian government decision: merits review, judicial review, and the grounds of review.",
     items: learnLinks.map((l) => ({ name: l.title, path: l.href })),
   });
 
@@ -69,8 +69,8 @@ export default function HomePage() {
       <JsonLd data={learnLd} />
       {/* ===== Hero ===== */}
       <header className="container-wide pb-9 pt-8 sm:pt-16">
-        <p className="text-[11px] uppercase tracking-[0.28em] text-accent">{t("heroEyebrow")}</p>
-        <h1 className="mt-5 max-w-[760px] font-display text-[40px] font-semibold leading-[1.06] sm:text-display">
+        <p className="text-[12px] uppercase tracking-[0.28em] text-accent">{t("heroEyebrow")}</p>
+        <h1 className="mt-5 max-w-[860px] font-display text-[36px] font-bold leading-[1.08] sm:text-display">
           {t("heroTitle")}
         </h1>
         <p className="mt-6 max-w-[560px] font-display text-[16px] leading-[1.7] text-ink-soft sm:text-lede">
@@ -98,9 +98,9 @@ export default function HomePage() {
               i === 0 ? "border-t border-line-strong" : "border-t border-line"
             } ${i === steps.length - 1 ? "border-b border-line" : ""}`}
           >
-            <span className="w-[42px] flex-none font-display text-[22px] font-semibold text-accent">{s.n}</span>
-            <h2 className="flex-none font-display text-[22px] font-bold text-ink sm:w-[240px]">{s.title}</h2>
-            <p className="hidden flex-1 text-[14.5px] leading-[1.6] text-ink-soft sm:block">{s.body}</p>
+            <span className="w-[42px] flex-none font-display text-[22px] font-bold text-accent">{s.n}</span>
+            <h2 className="flex-none font-display text-[22px] font-bold text-ink sm:w-[300px]">{s.title}</h2>
+            <p className="hidden flex-1 text-[15.5px] leading-[1.6] text-ink-soft sm:block">{s.body}</p>
           </div>
         ))}
       </section>
@@ -122,15 +122,15 @@ export default function HomePage() {
         <div className="container-wide grid gap-10 py-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:py-20">
           {/* Editorial intro */}
           <div className="lg:pr-4">
-            <p className="text-[11px] uppercase tracking-[0.28em] text-accent">{t("learnKicker")}</p>
+            <p className="text-[12px] uppercase tracking-[0.28em] text-accent">{t("learnKicker")}</p>
             <h2
               id="learn-band-title"
-              className="mt-4 font-display text-[34px] font-semibold leading-[1.06] text-ink sm:text-[44px]"
+              className="mt-4 font-display text-[34px] font-bold leading-[1.06] text-ink sm:text-[44px]"
             >
               {t("learnTitle")}{" "}
               <span className="font-normal italic text-accent">{t("learnTitleAccent")}</span>
             </h2>
-            <p className="mt-6 max-w-[46ch] text-[15.5px] leading-[1.68] text-ink-soft">{t("learnLead")}</p>
+            <p className="mt-6 max-w-[46ch] text-[16.5px] leading-[1.68] text-ink-soft">{t("learnLead")}</p>
             <Link href="/learn" className="btn-primary mt-8 px-6">
               {t("learnCta")}
               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
@@ -148,14 +148,14 @@ export default function HomePage() {
                     href={l.href}
                     className={`group flex h-full flex-col p-6 transition-colors hover:bg-sand-surface ${cellBorder(i)}`}
                   >
-                    <span className="text-[10.5px] font-semibold uppercase tracking-[0.18em] text-accent">{l.kind}</span>
-                    <h3 className="mt-2.5 font-display text-[21px] font-semibold leading-snug text-ink group-hover:text-accent">
+                    <span className="text-[11.5px] font-semibold uppercase tracking-[0.18em] text-accent">{l.kind}</span>
+                    <h3 className="mt-2.5 font-display text-[21px] font-bold leading-snug text-ink group-hover:text-accent">
                       {l.title}
                     </h3>
                     {l.desc ? (
-                      <p className="mt-1.5 text-[13.5px] leading-[1.5] text-ink-soft">{l.desc}</p>
+                      <p className="mt-1.5 text-[14.5px] leading-[1.5] text-ink-soft">{l.desc}</p>
                     ) : null}
-                    <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-faint transition-colors group-hover:text-accent">
+                    <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-[12px] font-semibold uppercase tracking-[0.12em] text-ink-faint transition-colors group-hover:text-accent">
                       Read
                       <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
                         <path d="M5 12h14M13 6l6 6-6 6" />
@@ -173,16 +173,16 @@ export default function HomePage() {
       <section aria-label={t("helpTitle")} className="mt-12 bg-rail text-rail-fg">
         <div className="container-wide flex flex-col gap-6 py-11 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h2 className="font-display text-h2 font-semibold text-rail-fg">{t("helpTitle")}</h2>
-            <p className="mt-1.5 max-w-[460px] text-[15px] text-rail-fg/80">{t("helpBody")}</p>
+            <h2 className="font-display text-h2 font-bold text-rail-fg">{t("helpTitle")}</h2>
+            <p className="mt-1.5 max-w-[460px] text-[16px] text-rail-fg/80">{t("helpBody")}</p>
             <div className="mt-3.5 flex flex-wrap gap-2">
-              <span className="rounded-pill bg-help px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-white">
+              <span className="rounded-pill bg-help px-3 py-1.5 text-[12px] uppercase tracking-[0.08em] text-white">
                 {t("tier1")}
               </span>
-              <span className="rounded-pill bg-rail-fg/10 px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-rail-fg">
+              <span className="rounded-pill bg-rail-fg/10 px-3 py-1.5 text-[12px] uppercase tracking-[0.08em] text-rail-fg">
                 {t("tier2")}
               </span>
-              <span className="rounded-pill bg-rail-fg/10 px-3 py-1.5 text-[11px] uppercase tracking-[0.08em] text-rail-fg">
+              <span className="rounded-pill bg-rail-fg/10 px-3 py-1.5 text-[12px] uppercase tracking-[0.08em] text-rail-fg">
                 {t("tier3")}
               </span>
             </div>

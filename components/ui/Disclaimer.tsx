@@ -10,7 +10,7 @@ export function Disclaimer({ className = "" }: { className?: string }) {
   return (
     <p
       role="note"
-      className={`flex gap-2.5 rounded-r-input border-l-[3px] border-brass bg-paper-warm px-3.5 py-3 text-[13px] leading-relaxed text-ink-soft ${className}`}
+      className={`flex gap-2.5 rounded-r-input border-l-[3px] border-brass bg-paper-warm px-3.5 py-3 text-[14px] leading-relaxed text-ink-soft ${className}`}
     >
       <Icon.Info className="mt-0.5 h-4 w-4 shrink-0 text-ink-faint" strokeWidth={1.8} />
       <span>{DISCLAIMER}</span>

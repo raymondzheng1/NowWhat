@@ -19,13 +19,13 @@ export function Rail() {
         aria-label={`${PRODUCT_NAME} home`}
         className="flex h-[30px] w-[30px] items-center justify-center border border-rail-accent"
       >
-        <span className="font-display text-[13px] font-bold text-rail-fg">W</span>
+        <span className="font-display text-[14px] font-bold text-rail-fg">W</span>
       </Link>
 
       <Link
         href="/"
         aria-label={`${PRODUCT_NAME} home`}
-        className="font-display text-[21px] font-semibold tracking-[0.12em] text-rail-fg [writing-mode:vertical-rl] rotate-180"
+        className="font-display text-[21px] font-bold tracking-[0.12em] text-rail-fg [writing-mode:vertical-rl] rotate-180"
       >
         {name}
         <b className="font-semibold text-rail-accent">?</b>

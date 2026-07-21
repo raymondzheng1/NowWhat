@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* Direction K2 "Deep teal & sand" — CSS custom properties mirror the Tailwind tokens.
-   --font-display (Cormorant Garamond) + --font-serif (Libre Baskerville) come from
+   --font-display (Source Serif 4) + --font-serif (Libre Baskerville) come from
    next/font in the root layout; --font-sans is the system stack. */
 :root {
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -22,14 +22,20 @@
   body {
     @apply bg-sand text-ink antialiased;
     font-family: var(--font-sans);
+    /* 17px base: our readers are often on a phone, under stress, sometimes with low
+       vision. Legibility outranks density here. */
+    font-size: 17px;
+    line-height: 1.62;
   }
-  /* Cormorant Garamond for headings + the wordmark — the K2 editorial voice. */
+  /* Source Serif 4 for headings + the wordmark — the K2 editorial voice, but sturdy.
+     700 (not 600): at display sizes a semibold serif still reads thin on sand. */
   h1,
   h2,
   h3 {
     font-family: var(--font-display);
     @apply text-ink;
-    font-weight: 600;
+    font-weight: 700;
+    letter-spacing: -0.011em;
   }
   /* Visible, high-contrast focus for keyboard users (WCAG AA, non-negotiable). */
   :focus-visible {
@@ -54,12 +60,12 @@
 
   /* Eyebrow / kicker — uppercase, tracked, gold-on-sand accent (AA). */
   .eyebrow {
-    @apply text-[11px] font-semibold uppercase tracking-[0.18em] text-accent;
+    @apply text-[12px] font-semibold uppercase tracking-[0.18em] text-accent;
   }
 
   /* Buttons — Libre Baskerville, ≥48px floor (K2 spec). */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-button px-6 font-serif text-[14px] font-bold tracking-[0.04em] transition-colors;
+    @apply inline-flex items-center justify-center gap-2 rounded-button px-6 font-serif text-[15px] font-bold tracking-[0.04em] transition-colors;
     min-height: 48px;
   }
   .btn-lg {
@@ -91,7 +97,7 @@
 
   /* Text link — uppercase tracked accent with an accent underline (secondary action). */
   .link-text {
-    @apply inline-flex items-center text-[13px] font-semibold uppercase tracking-[0.12em] text-accent;
+    @apply inline-flex items-center text-[14px] font-semibold uppercase tracking-[0.12em] text-accent;
     border-bottom: 1px solid currentColor;
     padding-bottom: 3px;
   }
@@ -148,4 +154,75 @@
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* --- Guided walkthrough (driver.js) --------------------------------------------------
+   Doubled specificity (.wn-tour.wn-tour): driver.js ships its own CSS which can load AFTER
+   ours, and an equal-specificity override silently loses (harness §14.11). */
+.driver-popover.wn-tour.wn-tour {
+  background: #fdfbf7;
+  border: 1px solid #c8bda2;
+  border-radius: 6px;
+  box-shadow: 0 12px 32px rgba(16, 54, 61, 0.18);
+  max-width: 340px;
+  padding: 18px 20px 16px;
+}
+.driver-popover.wn-tour.wn-tour .driver-popover-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 1.25;
+  color: #1d2b2e;
+  letter-spacing: -0.011em;
+}
+.driver-popover.wn-tour.wn-tour .driver-popover-description {
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: #3c4a4d;
+  margin-top: 6px;
+}
+.driver-popover.wn-tour.wn-tour .driver-popover-progress-text {
+  font-size: 13px;
+  color: #6b7678;
+  font-variant-numeric: tabular-nums;
+}
+.driver-popover.wn-tour.wn-tour .driver-popover-navigation-btns button {
+  font-family: var(--font-serif);
+  font-size: 14px;
+  font-weight: 700;
+  background: #10363d;
+  color: #eef0e8;
+  border: none;
+  border-radius: 4px;
+  padding: 9px 16px;
+  text-shadow: none;
+  min-height: 40px;
+}
+.driver-popover.wn-tour.wn-tour .driver-popover-navigation-btns button:hover {
+  background: #0c2a30;
+}
+/* Must match the button rule above on element+class count, or it silently loses the
+   cascade to `… .driver-popover-navigation-btns button` and Back renders as a primary. */
+.driver-popover.wn-tour.wn-tour .driver-popover-navigation-btns button.driver-popover-prev-btn {
+  background: transparent;
+  color: #3c4a4d;
+  border: 1px solid #c8bda2;
+}
+.driver-popover.wn-tour.wn-tour .driver-popover-navigation-btns button.driver-popover-prev-btn:hover {
+  background: #efe7d2;
+  color: #1d2b2e;
+}
+/* Disabled (Back on the first step): present but clearly inert. */
+.driver-popover.wn-tour.wn-tour .driver-popover-navigation-btns button:disabled,
+.driver-popover.wn-tour.wn-tour .driver-popover-navigation-btns button.driver-popover-btn-disabled {
+  opacity: 0.35;
+  pointer-events: none;
+}
+.driver-popover.wn-tour.wn-tour .driver-popover-close-btn {
+  color: #6b7678;
+  font-size: 22px;
+}
+.driver-popover.wn-tour.wn-tour .driver-popover-arrow {
+  border-color: #fdfbf7;
 }

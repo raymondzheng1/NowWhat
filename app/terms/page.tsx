@@ -19,9 +19,9 @@ function H2({ children }: { children: React.ReactNode }) {
 export default function TermsPage() {
   return (
     <div className="container-prose py-10">
-      <p className="text-[11px] uppercase tracking-[0.28em] text-accent">Terms</p>
-      <h1 className="mt-4 font-display text-[34px] font-semibold leading-[1.06] text-ink sm:text-[44px]">Terms of use</h1>
-      <p className="mt-5 max-w-[56ch] text-[15.5px] leading-[1.68] text-ink-soft">
+      <p className="text-[12px] uppercase tracking-[0.28em] text-accent">Terms</p>
+      <h1 className="mt-4 font-display text-[34px] font-bold leading-[1.06] text-ink sm:text-[44px]">Terms of use</h1>
+      <p className="mt-5 max-w-[56ch] text-[16.5px] leading-[1.68] text-ink-soft">
         What Now? is a free service that gives general information to help you understand a Victorian
         government decision. Using it means you agree to these terms.
       </p>

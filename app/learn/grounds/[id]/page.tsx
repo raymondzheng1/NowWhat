@@ -47,7 +47,7 @@ export default async function GroundPage({ params }: { params: Promise<{ id: str
       />
       <GroundExplainer ground={g} level="h1" />
       <div className="mt-8 rounded-card border border-line bg-sand-surface p-5">
-        <p className="text-[14.5px] leading-[1.6] text-ink-soft">
+        <p className="text-[15.5px] leading-[1.6] text-ink-soft">
           Grounds like this are used in{" "}
           <Link href="/learn/judicial-review" className="link">judicial review</Link>. If you want the
           decision changed rather than checked for legality, see{" "}

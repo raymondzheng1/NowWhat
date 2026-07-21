@@ -14,17 +14,19 @@ whatItIs: >-
   decision aside. But the court cannot make a new decision for you. It usually
   sends the matter back to be decided again, properly.
 bodies:
-  - jurisdiction: Vic
-    name: Supreme Court of Victoria (Order 56)
-    note: Judicial review of Victorian government decisions.
   - jurisdiction: Cth
-    name: Federal Court / Federal Circuit and Family Court
+    name: The Federal Court / Federal Circuit and Family Court
     note: >-
-      Judicial review of Australian Government decisions (ADJR Act; s 39B
+      judicial review of Australian Government decisions (ADJR Act; s 39B
       Judiciary Act).
   - jurisdiction: Cth
-    name: High Court (s 75(v) Constitution)
-    note: Constitutional judicial review of Commonwealth officers.
+    name: The High Court
+    note: >-
+      constitutional judicial review of Commonwealth officers (s 75(v)
+      Constitution).
+  - jurisdiction: Vic
+    name: The Supreme Court of Victoria (Order 56)
+    note: 'the Victorian equivalent, for state government decisions.'
 canApply:
   - >-
     You need a 'ground of review' — a specific legal error in how the decision

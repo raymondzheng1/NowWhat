@@ -1,5 +1,12 @@
 import { test, expect } from "@playwright/test";
 
+// The first-run guided walkthrough dims the screen and would intercept every click here.
+// Turn it off for automated runs via its documented kill-switch (harness §14.11 / §14.5).
+test.beforeEach(async ({ context }) => {
+  await context.addInitScript(() => window.localStorage.setItem("wn:tour:off", "1"));
+});
+
+
 /**
  * The core, keyless M-Lean "Rights Saver" flow: landing → who → what → result.
  * Fully deterministic (no model/keys, nothing sent to the server) and exercises the
@@ -18,7 +25,7 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
   await page.goto("/start");
 
   // Step 1 — who made the decision. Retry to ride out hydration.
-  const vic = page.getByRole("button", { name: /victorian government body/i });
+  const vic = page.getByRole("button", { name: /victorian state body/i });
   await expect(async () => {
     await vic.click();
     await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });
@@ -46,7 +53,7 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
 
 test("tripwire: a sensitive matter routes straight to a person (no builder output)", async ({ page }) => {
   await page.goto("/start");
-  const vic = page.getByRole("button", { name: /victorian government body/i });
+  const vic = page.getByRole("button", { name: /victorian state body/i });
   await expect(async () => {
     await vic.click();
     await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });

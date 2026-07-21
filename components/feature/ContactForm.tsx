@@ -62,7 +62,7 @@ export function ContactForm() {
   if (status === "sent") {
     return (
       <div className="card border-l-[3px] border-help bg-help-soft">
-        <div className="flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-[0.12em] text-help">
+        <div className="flex items-center gap-2 text-[12.5px] font-bold uppercase tracking-[0.12em] text-help">
           <Icon.CheckSquare className="h-[17px] w-[17px]" strokeWidth={2} /> {t("sentEyebrow")}
         </div>
         <h2 className="mt-2 font-serif text-[22px] font-bold text-help-ink">{t("sentTitle")}</h2>

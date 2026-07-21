@@ -1,6 +1,13 @@
 import { test, expect } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 
+// The first-run guided walkthrough dims the screen and would intercept every click here.
+// Turn it off for automated runs via its documented kill-switch (harness §14.11 / §14.5).
+test.beforeEach(async ({ context }) => {
+  await context.addInitScript(() => window.localStorage.setItem("wn:tour:off", "1"));
+});
+
+
 /** WCAG 2 A/AA automated scan of the key surfaces (no serious/critical violations). */
 const PAGES = [
   "/", "/start", "/faq", "/help", "/contact", "/privacy", "/terms",

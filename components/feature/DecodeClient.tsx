@@ -8,11 +8,14 @@ import { NotCovered } from "@/components/feature/NotCovered";
 import { ToolTopBar } from "@/components/site/ToolTopBar";
 import { PrivacyNote } from "@/components/ui/PrivacyNote";
 import { CATEGORY } from "@/components/feature/categories";
+import { useTour } from "@/components/feature/tour/useTour";
+import { TOUR_DECODE } from "@/lib/tour/steps";
 
 export function DecodeClient() {
   const t = useTranslations("decode");
   const tc = useTranslations("common");
   const te = useTranslations("errors");
+  const tt = useTranslations("tour");
 
   const [file, setFile] = useState<File | null>(null);
   const [text, setText] = useState("");
@@ -21,6 +24,9 @@ export function DecodeClient() {
   const [error, setError] = useState<string | null>(null);
 
   const msg = (m: string) => (m.startsWith("errors.") ? te(m.slice(7)) : m);
+
+  // Guide fires at the threshold of the work — only while the form is on screen.
+  const replayGuide = useTour("decode", TOUR_DECODE, !result);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -66,20 +72,26 @@ export function DecodeClient() {
       <ToolTopBar />
       <div className="min-h-[60vh] bg-paper-warm">
         <div className="container-prose py-10">
-          <h1 className="font-serif text-h1 font-bold text-navy-ink">{t("title")}</h1>
+          <div className="flex items-start justify-between gap-4">
+            <h1 className="font-display text-h1 font-bold text-navy-ink">{t("title")}</h1>
+            <button type="button" onClick={replayGuide} className="mt-2 shrink-0 text-[14px] font-semibold text-ink-soft hover:text-ink">
+              {tt("showMe")}
+            </button>
+          </div>
           <p className="mt-2 text-ink-soft">{t("intro")}</p>
 
           <form onSubmit={submit} className="card mt-6">
             <label htmlFor="file" className="mb-1.5 block font-semibold text-ink">
               {t("uploadLabel")}
             </label>
-            <input id="file" type="file" accept="image/*,application/pdf" onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="block w-full text-sm" />
+            <input id="file" data-tour="decode-upload" type="file" accept="image/*,application/pdf" onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="block w-full text-sm" />
 
             <label htmlFor="text" className="mb-1.5 mt-5 block font-semibold text-ink">
               {t("pasteLabel")}
             </label>
             <textarea
               id="text"
+              data-tour="decode-paste"
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder={t("pastePlaceholder")}
@@ -90,7 +102,9 @@ export function DecodeClient() {
             <button type="submit" className="btn-primary btn-lg mt-4 w-full sm:w-auto" disabled={loading || (!file && text.trim().length < 10)}>
               {loading ? tc("loading") : t("submit")}
             </button>
-            <PrivacyNote className="mt-4">{t("intro")}</PrivacyNote>
+            <span data-tour="decode-privacy" className="block">
+              <PrivacyNote className="mt-4">{t("intro")}</PrivacyNote>
+            </span>
           </form>
 
           {error && (

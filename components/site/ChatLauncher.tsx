@@ -66,7 +66,7 @@ export function ChatLauncher() {
             >
               <path d="M4 5h16v11H9l-4 4z" />
             </svg>
-            <span className="text-[13px] font-semibold tracking-[0.04em]">Work it out with us</span>
+            <span className="text-[14px] font-semibold tracking-[0.04em]">Work it out with us</span>
           </button>
           <button
             type="button"

@@ -36,8 +36,8 @@ export default function ComparePage() {
       )}
 
       <header className="max-w-[720px]">
-        <p className="text-[11px] uppercase tracking-[0.22em] text-accent">Two paths</p>
-        <h1 className="mt-3 font-display text-[34px] font-semibold leading-[1.06] text-ink sm:text-[44px]">
+        <p className="text-[12px] uppercase tracking-[0.22em] text-accent">Two paths</p>
+        <h1 className="mt-3 font-display text-[34px] font-bold leading-[1.06] text-ink sm:text-[44px]">
           Merits review vs judicial review
         </h1>
       </header>
@@ -47,12 +47,12 @@ export default function ComparePage() {
 
       {comparison.faq.length > 0 && (
         <section aria-labelledby="compare-faq" className="mt-12">
-          <h2 id="compare-faq" className="font-display text-[26px] font-semibold text-ink">Common questions</h2>
+          <h2 id="compare-faq" className="font-display text-[26px] font-bold text-ink">Common questions</h2>
           <dl className="mt-5 divide-y divide-line border-y border-line">
             {comparison.faq.map((f) => (
               <div key={f.q} className="py-4">
-                <dt className="font-display text-[18px] font-semibold text-ink">{f.q}</dt>
-                <dd className="mt-1.5 text-[15px] leading-[1.6] text-ink-soft">{f.a}</dd>
+                <dt className="font-display text-[18px] font-bold text-ink">{f.q}</dt>
+                <dd className="mt-1.5 text-[16px] leading-[1.6] text-ink-soft">{f.a}</dd>
               </div>
             ))}
           </dl>

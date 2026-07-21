@@ -22,7 +22,7 @@ export function LearnContainer({
           <JsonLd data={breadcrumbLd(trail.map((b) => ({ name: b.name, path: b.href })))} />
           <nav
             aria-label="Breadcrumb"
-            className="flex flex-wrap items-center gap-1.5 text-[12px] uppercase tracking-[0.1em] text-ink-faint"
+            className="flex flex-wrap items-center gap-1.5 text-[13px] uppercase tracking-[0.1em] text-ink-faint"
           >
             {trail.map((b, i) => {
               const last = i === trail.length - 1;

@@ -25,7 +25,7 @@ export function NotCovered({
   return (
     <div className="space-y-4">
       <div className="rounded-panel border border-gold-line bg-gold-soft p-5 sm:p-6">
-        <div className="flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-[0.12em] text-brass-text">
+        <div className="flex items-center gap-2 text-[12.5px] font-bold uppercase tracking-[0.12em] text-brass-text">
           <Icon.Info className="h-[17px] w-[17px] text-gold" strokeWidth={2} />
           We&rsquo;re not sure
         </div>

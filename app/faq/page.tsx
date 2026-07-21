@@ -27,17 +27,17 @@ export default function FaqIndexPage() {
       <div className="mt-10 grid gap-x-14 gap-y-10 lg:grid-cols-2">
         {categories.map((cat) => (
           <section key={cat} aria-label={cat}>
-            <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-accent">{cat}</h2>
+            <h2 className="text-[12px] font-semibold uppercase tracking-[0.2em] text-accent">{cat}</h2>
             <ul className="mt-3 border-t border-line-strong">
               {faqs
                 .filter((f) => (f.category ?? "General") === cat)
                 .map((f) => (
                   <li key={f.slug} className="border-b border-line">
                     <Link href={`/faq/${f.slug}`} className="group block py-4">
-                      <span className="font-display text-[19px] font-semibold leading-snug text-ink group-hover:text-accent">
+                      <span className="font-display text-[19px] font-bold leading-snug text-ink group-hover:text-accent">
                         {f.question}
                       </span>
-                      <p className="mt-1 text-[13.5px] leading-[1.55] text-ink-soft">{f.description}</p>
+                      <p className="mt-1 text-[14.5px] leading-[1.55] text-ink-soft">{f.description}</p>
                     </Link>
                   </li>
                 ))}
@@ -49,8 +49,8 @@ export default function FaqIndexPage() {
       {/* Onward CTA — bordered panel in the K2 language */}
       <div className="mt-14 flex flex-col gap-5 border border-line-strong bg-paper p-7 sm:flex-row sm:items-center sm:justify-between sm:p-8">
         <div>
-          <h2 className="font-display text-[22px] font-semibold text-ink">{t("ctaTitle")}</h2>
-          <p className="mt-1 text-[14.5px] text-ink-soft">{t("ctaBody")}</p>
+          <h2 className="font-display text-[22px] font-bold text-ink">{t("ctaTitle")}</h2>
+          <p className="mt-1 text-[15.5px] text-ink-soft">{t("ctaBody")}</p>
         </div>
         <Link href="/start" className="btn-primary whitespace-nowrap px-6 sm:flex-none">
           {t("ctaButton")}

@@ -71,8 +71,8 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
         {/* Header */}
         <header className="flex items-center justify-between gap-3 bg-rail px-4 py-3 text-rail-fg">
           <div>
-            <p id="chat-panel-title" className="font-display text-[18px] font-semibold">Work it out with us</p>
-            <p className="text-[11px] tracking-[0.02em] text-rail-fg/70">Calm help · not stored</p>
+            <p id="chat-panel-title" className="font-display text-[18px] font-bold">Work it out with us</p>
+            <p className="text-[12px] tracking-[0.02em] text-rail-fg/70">Calm help · not stored</p>
           </div>
           <button
             type="button"
@@ -91,8 +91,8 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
               <div
                 className={
                   m.role === "user"
-                    ? "max-w-[88%] rounded-card rounded-br-sm bg-rail px-3.5 py-2.5 text-[14.5px] leading-relaxed text-rail-fg"
-                    : "max-w-[88%] rounded-card rounded-bl-sm border border-line bg-paper px-3.5 py-2.5 text-[14.5px] leading-relaxed text-ink"
+                    ? "max-w-[88%] rounded-card rounded-br-sm bg-rail px-3.5 py-2.5 text-[15.5px] leading-relaxed text-rail-fg"
+                    : "max-w-[88%] rounded-card rounded-bl-sm border border-line bg-paper px-3.5 py-2.5 text-[15.5px] leading-relaxed text-ink"
                 }
               >
                 {m.content}
@@ -113,7 +113,7 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
           )}
 
           {unavailable && (
-            <div className="rounded-card border-l-[3px] border-help bg-help-soft px-3.5 py-3 text-[13.5px] text-help-ink">
+            <div className="rounded-card border-l-[3px] border-help bg-help-soft px-3.5 py-3 text-[14.5px] text-help-ink">
               The chat isn’t available right now.{" "}
               <Link href="/start" className="font-semibold underline">use the step-by-step guide</Link>{" "}
               or{" "}
@@ -156,7 +156,7 @@ export function ChatPanel({ onClose }: { onClose: () => void }) {
               Send
             </button>
           </div>
-          <p className="mt-2 text-[11px] text-ink-faint">This conversation isn’t stored. Close it and it’s gone.</p>
+          <p className="mt-2 text-[12px] text-ink-faint">This conversation isn’t stored. Close it and it’s gone.</p>
         </form>
       </div>
     </div>

@@ -15,11 +15,11 @@ export default function NotFound() {
   ];
   return (
     <div className="container-wide py-16 sm:py-24">
-      <p className="text-[11px] uppercase tracking-[0.28em] text-accent">{t("kicker")}</p>
-      <h1 className="mt-4 max-w-[640px] font-display text-[36px] font-semibold leading-[1.06] text-ink sm:text-[48px]">
+      <p className="text-[12px] uppercase tracking-[0.28em] text-accent">{t("kicker")}</p>
+      <h1 className="mt-4 max-w-[640px] font-display text-[36px] font-bold leading-[1.06] text-ink sm:text-[48px]">
         {t("title")}
       </h1>
-      <p className="mt-5 max-w-[52ch] text-[15.5px] leading-[1.68] text-ink-soft">{t("lead")}</p>
+      <p className="mt-5 max-w-[52ch] text-[16.5px] leading-[1.68] text-ink-soft">{t("lead")}</p>
       <div className="mt-9">
         <Link href="/start" className="btn-primary px-6">
           {t("ctaStart")}
@@ -33,7 +33,7 @@ export default function NotFound() {
           <li key={l.href} className="border-b border-line">
             <Link
               href={l.href}
-              className="group flex items-center justify-between gap-4 py-4 text-[15px] font-medium text-ink hover:text-accent"
+              className="group flex items-center justify-between gap-4 py-4 text-[16px] font-medium text-ink hover:text-accent"
             >
               {l.label}
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true" className="shrink-0 text-ink-faint transition-transform group-hover:translate-x-0.5 group-hover:text-accent">

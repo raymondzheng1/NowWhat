@@ -130,11 +130,11 @@ export function ResultView({
               ) : (
                 <>
                   <h2 className="font-serif text-h3 font-bold text-ink">What this is about</h2>
-                  {about && <p className="mt-2.5 text-[15px] leading-relaxed text-ink-soft">{about}</p>}
+                  {about && <p className="mt-2.5 text-[16px] leading-relaxed text-ink-soft">{about}</p>}
                 </>
               )}
               {options.length > 0 && (
-                <ul className="mt-3 list-disc space-y-1 pl-5 text-[15px] text-ink-soft">
+                <ul className="mt-3 list-disc space-y-1 pl-5 text-[16px] text-ink-soft">
                   {options.map((o, i) => (
                     <li key={i}>{o}</li>
                   ))}
@@ -159,7 +159,7 @@ export function ResultView({
                   {entry.evidenceChecklist.map((item, i) => (
                     <li key={i} className="flex items-start gap-2.5">
                       <Icon.CheckSquare className="mt-0.5 h-5 w-5 shrink-0 text-help" strokeWidth={2} />
-                      <span className="text-[15px] leading-snug text-ink-soft">{item}</span>
+                      <span className="text-[16px] leading-snug text-ink-soft">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -189,7 +189,7 @@ export function ResultView({
                   </button>
                 </div>
               </div>
-              <div className="mt-3 flex gap-2 text-[13px]">
+              <div className="mt-3 flex gap-2 text-[14px]">
                 <button
                   type="button"
                   onClick={() => setKind("reasons-request")}

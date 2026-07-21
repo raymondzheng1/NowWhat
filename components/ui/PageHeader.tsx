@@ -14,12 +14,12 @@ export function PageHeader({
 }) {
   return (
     <header>
-      <p className="text-[11px] uppercase tracking-[0.28em] text-accent">{kicker}</p>
-      <h1 className="mt-4 max-w-[720px] font-display text-[34px] font-semibold leading-[1.06] text-ink sm:text-[44px]">
+      <p className="text-[12px] uppercase tracking-[0.28em] text-accent">{kicker}</p>
+      <h1 className="mt-4 max-w-[720px] font-display text-[34px] font-bold leading-[1.06] text-ink sm:text-[44px]">
         {title}
       </h1>
       {lead ? (
-        <p className="mt-5 max-w-[56ch] text-[15.5px] leading-[1.68] text-ink-soft">{lead}</p>
+        <p className="mt-5 max-w-[56ch] text-[16.5px] leading-[1.68] text-ink-soft">{lead}</p>
       ) : null}
     </header>
   );

@@ -35,15 +35,15 @@ export function ProcessRoute({ id }: { id: ReviewKind }) {
       <div className="mt-10 grid gap-4 sm:grid-cols-2">
         {other && (
           <Link href={`/learn/${other.id}`} className="rounded-card border border-line bg-paper p-5 hover:border-rail-accent">
-            <p className="text-[11px] uppercase tracking-[0.16em] text-accent">The other path</p>
-            <p className="mt-1 font-display text-[20px] font-semibold text-ink">{other.name}</p>
-            <p className="mt-1 text-[14px] text-ink-soft">{other.oneLine}</p>
+            <p className="text-[12px] uppercase tracking-[0.16em] text-accent">The other path</p>
+            <p className="mt-1 font-display text-[20px] font-bold text-ink">{other.name}</p>
+            <p className="mt-1 text-[15px] text-ink-soft">{other.oneLine}</p>
           </Link>
         )}
         <Link href="/learn/compare" className="rounded-card border border-line bg-sand-surface p-5 hover:border-rail-accent">
-          <p className="text-[11px] uppercase tracking-[0.16em] text-accent">Compare</p>
-          <p className="mt-1 font-display text-[20px] font-semibold text-ink">Merits vs judicial review</p>
-          <p className="mt-1 text-[14px] text-ink-soft">See them side by side and a quick guide to which fits.</p>
+          <p className="text-[12px] uppercase tracking-[0.16em] text-accent">Compare</p>
+          <p className="mt-1 font-display text-[20px] font-bold text-ink">Merits vs judicial review</p>
+          <p className="mt-1 text-[15px] text-ink-soft">See them side by side and a quick guide to which fits.</p>
         </Link>
       </div>
 

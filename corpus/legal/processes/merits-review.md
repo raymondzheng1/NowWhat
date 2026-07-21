@@ -11,12 +11,14 @@ whatItIs: >-
   agree with the decision, change part of it, or replace it with a different
   one. It is usually cheaper, faster, and less formal than going to court.
 bodies:
-  - jurisdiction: Vic
-    name: VCAT (Victorian Civil and Administrative Tribunal)
-    note: Hears many Victorian decisions where an Act gives a right of review.
   - jurisdiction: Cth
-    name: ART (Administrative Review Tribunal)
-    note: 'Hears many Australian Government decisions, such as Centrelink.'
+    name: The Administrative Review Tribunal (ART)
+    note: 'hears many Australian Government decisions, such as Centrelink.'
+  - jurisdiction: Vic
+    name: VCAT (the Victorian Civil and Administrative Tribunal)
+    note: >-
+      the Victorian equivalent, for state decisions where an Act gives a right
+      of review.
 canApply:
   - There must be a law that gives a right of review for this kind of decision.
   - >-

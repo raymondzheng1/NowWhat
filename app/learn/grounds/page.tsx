@@ -37,8 +37,8 @@ export default function GroundsPage() {
         })}
       />
       <header className="max-w-[720px]">
-        <p className="text-[11px] uppercase tracking-[0.22em] text-accent">Grounds of review</p>
-        <h1 className="mt-3 font-display text-[34px] font-semibold leading-[1.06] text-ink sm:text-[44px]">
+        <p className="text-[12px] uppercase tracking-[0.22em] text-accent">Grounds of review</p>
+        <h1 className="mt-3 font-display text-[34px] font-bold leading-[1.06] text-ink sm:text-[44px]">
           The grounds people raise
         </h1>
         <p className="mt-4 max-w-[60ch] text-[16px] leading-[1.7] text-ink-soft">

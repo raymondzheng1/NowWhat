@@ -29,7 +29,7 @@ export function SiteNav() {
       {/* Desktop top nav */}
       <nav
         aria-label="Main"
-        className="hidden items-center justify-end gap-8 border-b border-line px-12 py-4 text-[11px] uppercase tracking-[0.2em] text-ink-soft md:flex"
+        className="hidden items-center justify-end gap-8 border-b border-line px-12 py-4 text-[12px] uppercase tracking-[0.2em] text-ink-soft md:flex"
       >
         {links.map((l) => (
           <Link key={l.href} href={l.href} className="hover:text-ink">
@@ -41,7 +41,7 @@ export function SiteNav() {
         </Link>
         <Link
           href="/start"
-          className="rounded-button bg-rail px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-rail-fg transition-colors hover:bg-rail-dark"
+          className="rounded-button bg-rail px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[0.14em] text-rail-fg transition-colors hover:bg-rail-dark"
         >
           {t("start")}
         </Link>
@@ -52,7 +52,7 @@ export function SiteNav() {
         <Link
           href="/"
           aria-label={`${PRODUCT_NAME} home`}
-          className="font-display text-[18px] font-semibold tracking-[0.04em] text-rail-fg"
+          className="font-display text-[18px] font-bold tracking-[0.04em] text-rail-fg"
         >
           {name}
           <b className="font-semibold text-rail-accent">?</b>
@@ -77,7 +77,7 @@ export function SiteNav() {
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className="block border-b border-line py-3.5 text-[15px] font-medium text-ink"
+                  className="block border-b border-line py-3.5 text-[16px] font-medium text-ink"
                   onClick={() => setOpen(false)}
                 >
                   {l.label}

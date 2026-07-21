@@ -50,24 +50,26 @@ const config: Config = {
         brass: { DEFAULT: "#c79a52", text: "#8a6526", q: "#c79a52" },
       },
       fontFamily: {
-        // Cormorant Garamond (next/font → --font-display) — H1, section/step titles,
-        // deadline date, wordmark. Libre Baskerville (--font-serif) — buttons.
+        // Source Serif 4 (next/font → --font-display) — H1, section/step titles, wordmark.
+        // Libre Baskerville (--font-serif) — buttons.
         display: ["var(--font-display)", "Georgia", "Times New Roman", "serif"],
         serif: ["var(--font-serif)", "Georgia", "serif"],
         sans: ["var(--font-sans)", "system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"],
       },
       fontSize: {
-        // K2 scale
-        display: ["58px", { lineHeight: "1.04" }], // H1 (desktop)
-        h1: ["40px", { lineHeight: "1.08" }], // H1 (mobile) / smaller heads
-        h2: ["30px", { lineHeight: "1.05" }], // get-help H2, deadline date
-        title: ["22px", { lineHeight: "1.0" }], // step & trust titles
+        // K2 scale. Trimmed ~10% when the display face moved from Cormorant Garamond to
+        // Source Serif 4 (2026-07-13): Source Serif is a much wider face, so the old sizes
+        // over-wrapped headlines. Smaller numbers, same optical weight on the page.
+        display: ["52px", { lineHeight: "1.06" }], // H1 (desktop)
+        h1: ["36px", { lineHeight: "1.1" }], // H1 (mobile) / smaller heads
+        h2: ["28px", { lineHeight: "1.12" }], // get-help H2
+        title: ["22px", { lineHeight: "1.15" }], // step & trust titles
         lede: ["19px", { lineHeight: "1.7" }], // hero lede (serif)
         lead: ["19px", { lineHeight: "1.55" }], // (legacy alias)
-        body: ["16px", { lineHeight: "1.6" }],
-        ui: ["15px", { lineHeight: "1.4" }], // (legacy)
-        sm: ["14.5px", { lineHeight: "1.6" }],
-        meta: ["13px", { lineHeight: "1.6" }],
+        body: ["17px", { lineHeight: "1.62" }],
+        ui: ["15.5px", { lineHeight: "1.45" }], // (legacy)
+        sm: ["15px", { lineHeight: "1.6" }],
+        meta: ["14px", { lineHeight: "1.6" }],
         micro: ["11px", { lineHeight: "1", letterSpacing: "0.18em" }],
         kicker: ["11px", { lineHeight: "1", letterSpacing: "0.28em" }],
         h3: ["19px", { lineHeight: "1.3" }], // (legacy)

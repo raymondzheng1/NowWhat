@@ -31,8 +31,8 @@ export function ChatClient() {
                 <div
                   className={
                     m.role === "user"
-                      ? "max-w-[86%] rounded-card rounded-br-sm bg-rail px-4 py-2.5 text-[15px] leading-relaxed text-rail-fg"
-                      : "max-w-[86%] rounded-card rounded-bl-sm border border-line bg-paper px-4 py-2.5 text-[15px] leading-relaxed text-ink shadow-card"
+                      ? "max-w-[86%] rounded-card rounded-br-sm bg-rail px-4 py-2.5 text-[16px] leading-relaxed text-rail-fg"
+                      : "max-w-[86%] rounded-card rounded-bl-sm border border-line bg-paper px-4 py-2.5 text-[16px] leading-relaxed text-ink shadow-card"
                   }
                 >
                   {m.content}
@@ -51,7 +51,7 @@ export function ChatClient() {
               </div>
             )}
             {unavailable && (
-              <div className="rounded-card border-l-[3px] border-help bg-help-soft px-4 py-3 text-[14px] text-help-ink">
+              <div className="rounded-card border-l-[3px] border-help bg-help-soft px-4 py-3 text-[15px] text-help-ink">
                 The chat isn’t available right now.{" "}
                 <Link href="/start" className="font-semibold underline">Use the step-by-step guide</Link>{" "}
                 or <Link href="/help" className="font-semibold underline">see free help</Link>.

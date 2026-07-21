@@ -48,29 +48,29 @@ export function GroundsExplorer({
               <div className="min-w-0 flex-1">
                 <div className="flex flex-wrap items-baseline justify-between gap-x-3">
                   {linkBase ? (
-                    <Link href={`${linkBase}/${g.id}`} className="font-display text-[19px] font-semibold text-ink hover:text-accent">
+                    <Link href={`${linkBase}/${g.id}`} className="font-display text-[19px] font-bold text-ink hover:text-accent">
                       {g.plainName}
                     </Link>
                   ) : (
-                    <h3 className="font-display text-[19px] font-semibold text-ink">{g.plainName}</h3>
+                    <h3 className="font-display text-[19px] font-bold text-ink">{g.plainName}</h3>
                   )}
                   <button
                     type="button"
                     onClick={() => setOpenId(isOpen ? null : g.id)}
                     aria-expanded={isOpen}
-                    className="text-[12px] font-semibold uppercase tracking-[0.1em] text-accent"
+                    className="text-[13px] font-semibold uppercase tracking-[0.1em] text-accent"
                   >
                     {isOpen ? "Less" : "More"}
                   </button>
                 </div>
-                <p className="mt-1 text-[14.5px] leading-[1.55] text-ink-soft">{g.oneLine}</p>
+                <p className="mt-1 text-[15.5px] leading-[1.55] text-ink-soft">{g.oneLine}</p>
 
                 {isOpen && (
                   <div className="mt-3 space-y-3 border-l-2 border-line pl-4">
-                    <p className="text-[15px] leading-[1.6] text-ink">{g.whatItMeans}</p>
+                    <p className="text-[16px] leading-[1.6] text-ink">{g.whatItMeans}</p>
                     <div>
-                      <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-accent">What might relate to this</p>
-                      <ul className="mt-1.5 space-y-1.5 text-[14.5px] leading-[1.55] text-ink-soft">
+                      <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-accent">What might relate to this</p>
+                      <ul className="mt-1.5 space-y-1.5 text-[15.5px] leading-[1.55] text-ink-soft">
                         {g.whatRelates.map((s, i) => (
                           <li key={i} className="flex gap-2">
                             <span aria-hidden className="mt-2 h-1 w-1 flex-none rounded-full bg-accent" />

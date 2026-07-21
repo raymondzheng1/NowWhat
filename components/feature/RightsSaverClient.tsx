@@ -13,6 +13,8 @@ import { checkTripwire, TRIPWIRE_MESSAGES, type TripwireFlags } from "@/lib/trip
 import { buildHandoff } from "@/lib/handoff";
 import { Disclaimer } from "@/components/ui/Disclaimer";
 import { PrivacyNote } from "@/components/ui/PrivacyNote";
+import { useTour } from "@/components/feature/tour/useTour";
+import { TOUR_START_WHO, TOUR_START_WHAT, TOUR_START_RESULT } from "@/lib/tour/steps";
 import { Crest } from "@/components/ui/Wordmark";
 import { Icon, type IconName } from "@/components/ui/icons";
 import { ProcessExplainer } from "@/components/feature/learn/ProcessExplainer";
@@ -100,9 +102,21 @@ export function RightsSaverClient({
 
   const stepNo = step === "who" ? 1 : step === "what" ? 2 : 3;
 
+  // One guide per wizard step, gated on that step being visible: advancing tears the old
+  // tour down and auto-starts the next, with no manual driver navigation (harness §14.11).
+  const replayWho = useTour("start-who", TOUR_START_WHO, step === "who");
+  const replayWhat = useTour("start-what", TOUR_START_WHAT, step === "what");
+  const replayResult = useTour("start-result", TOUR_START_RESULT, step === "result");
+  const replay = step === "who" ? replayWho : step === "what" ? replayWhat : replayResult;
+
   return (
     <div className="min-h-screen">
-      <FocusedHeader stepNo={stepNo} t={t} onReset={step === "result" ? reset : undefined} />
+      <FocusedHeader
+        stepNo={stepNo}
+        t={t}
+        onReset={step === "result" ? reset : undefined}
+        onReplayGuide={replay}
+      />
 
       <div className="bg-sand px-[22px] py-7 sm:px-10 sm:py-12">
         <div key={step} className="wn-step mx-auto max-w-[820px]">
@@ -152,7 +166,7 @@ export function RightsSaverClient({
             />
           )}
 
-          <div className="mt-6 flex justify-center">
+          <div data-tour="privacy-note" className="mt-6 flex justify-center">
             <PrivacyNote center>{t("privacy")}</PrivacyNote>
           </div>
         </div>
@@ -165,25 +179,36 @@ function FocusedHeader({
   stepNo,
   t,
   onReset,
+  onReplayGuide,
 }: {
   stepNo: number;
   t: ReturnType<typeof useTranslations>;
   onReset?: () => void;
+  onReplayGuide?: () => void;
 }) {
   return (
     <header className="flex items-center justify-between gap-4 border-b border-line bg-sand-surface px-[22px] py-3.5 sm:px-10 sm:py-4">
       <Link href="/" aria-label="Home" className="inline-flex items-center gap-2.5">
         <Crest size={30} />
-        <span className="hidden font-display text-[16px] font-semibold text-ink sm:inline">
+        <span className="hidden font-display text-[16px] font-bold text-ink sm:inline">
           What Now<span className="text-accent">?</span>
         </span>
       </Link>
-      <span className="text-[12px] font-semibold uppercase tracking-[0.12em] text-ink-soft">
+      <span className="text-[13px] font-semibold uppercase tracking-[0.12em] text-ink-soft">
         {t("stepOf", { n: stepNo })}
       </span>
       <div className="flex items-center gap-2">
+        {onReplayGuide && (
+          <button
+            type="button"
+            onClick={onReplayGuide}
+            className="hidden text-[14px] font-semibold text-ink-soft hover:text-ink sm:inline"
+          >
+            {t("showMeHow")}
+          </button>
+        )}
         {onReset && (
-          <button type="button" onClick={onReset} className="text-[13px] font-semibold text-accent hover:text-ink">
+          <button type="button" onClick={onReset} className="text-[14px] font-semibold text-accent hover:text-ink">
             {t("startOver")}
           </button>
         )}
@@ -207,14 +232,16 @@ function WhoStep({
   onPick: (j: Jurisdiction) => void;
 }) {
   const opts: { j: Jurisdiction; title: string; desc: string }[] = [
-    { j: "Vic", title: t("whoVic"), desc: t("whoVicDesc") },
+    // Commonwealth first: it is the national picture and the most common entry point
+    // (Centrelink). The state option follows as the equivalent, not a rival half.
     { j: "Cth", title: t("whoCth"), desc: t("whoCthDesc") },
+    { j: "Vic", title: t("whoVic"), desc: t("whoVicDesc") },
   ];
   return (
     <>
-      <h1 className="font-display text-[26px] font-semibold text-ink sm:text-[34px]">{t("whoTitle")}</h1>
-      <p className="mt-2 text-[15px] text-ink-soft">{t("whoHelp")}</p>
-      <div className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-4">
+      <h1 className="font-display text-[26px] font-bold text-ink sm:text-[34px]">{t("whoTitle")}</h1>
+      <p className="mt-2 text-[16px] text-ink-soft">{t("whoHelp")}</p>
+      <div data-tour="who-options" className="mt-6 grid gap-3 sm:grid-cols-2 sm:gap-4">
         {opts.map((o) => (
           <button
             key={o.j}
@@ -223,7 +250,7 @@ function WhoStep({
             className="rounded-card border-[1.5px] border-line bg-paper p-5 text-left transition-colors hover:border-rail sm:p-6"
           >
             <span className="block font-display text-[19px] font-bold text-ink">{o.title}</span>
-            <span className="mt-1 block text-[14px] leading-snug text-ink-soft">{o.desc}</span>
+            <span className="mt-1 block text-[15px] leading-snug text-ink-soft">{o.desc}</span>
           </button>
         ))}
       </div>
@@ -263,10 +290,10 @@ function WhatStep({
   const canContinue = !!areaId && consent;
   return (
     <>
-      <h1 className="font-display text-[26px] font-semibold text-ink sm:text-[34px]">{t("whatTitle")}</h1>
-      <p className="mt-2 text-[15px] text-ink-soft">{t("whatHelp")}</p>
+      <h1 className="font-display text-[26px] font-bold text-ink sm:text-[34px]">{t("whatTitle")}</h1>
+      <p className="mt-2 text-[16px] text-ink-soft">{t("whatHelp")}</p>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+      <div data-tour="area-cards" className="mt-6 grid gap-3 sm:grid-cols-2">
         {areas.map((e) => {
           const Glyph = Icon[AREA_ICON[e.id] ?? "Document"];
           const active = areaId === e.id;
@@ -290,7 +317,7 @@ function WhatStep({
       </div>
 
       <div className="mt-6 space-y-5">
-        <label className="block">
+        <label data-tour="decision-date" className="block">
           <span className="mb-1.5 block text-sm font-semibold text-ink">{t("dateLabel")}</span>
           <input
             type="date"
@@ -301,12 +328,12 @@ function WhatStep({
           />
         </label>
 
-        <fieldset className="rounded-card border border-line bg-paper p-4 sm:p-5">
+        <fieldset data-tour="tripwire" className="rounded-card border border-line bg-paper p-4 sm:p-5">
           <legend className="px-1 font-display text-[16px] font-bold text-ink">{t("checkTitle")}</legend>
-          <p className="mt-1 text-[13px] text-ink-soft">{t("checkHelp")}</p>
+          <p className="mt-1 text-[14px] text-ink-soft">{t("checkHelp")}</p>
           <div className="mt-3 space-y-2.5">
             {FLAG_KEYS.map(({ key, label }) => (
-              <label key={key} className="flex items-start gap-2.5 text-[14px] text-ink">
+              <label key={key} className="flex items-start gap-2.5 text-[15px] text-ink">
                 <input
                   type="checkbox"
                   checked={!!flags[key]}
@@ -319,7 +346,7 @@ function WhatStep({
           </div>
         </fieldset>
 
-        <label className="flex items-start gap-2.5 rounded-card border border-line bg-paper p-4 text-[14px] text-ink">
+        <label data-tour="consent" className="flex items-start gap-2.5 rounded-card border border-line bg-paper p-4 text-[15px] text-ink">
           <input
             type="checkbox"
             checked={consent}
@@ -331,7 +358,7 @@ function WhatStep({
       </div>
 
       <div className="mt-7 flex items-center justify-between gap-4">
-        <button type="button" onClick={onBack} className="inline-flex items-center gap-2 text-[15px] font-semibold text-ink-faint">
+        <button type="button" onClick={onBack} className="inline-flex items-center gap-2 text-[16px] font-semibold text-ink-faint">
           ← {t("back")}
         </button>
         <button type="button" onClick={onContinue} disabled={!canContinue} className="btn-primary btn-lg px-8 disabled:opacity-50">
@@ -377,9 +404,9 @@ function ResultStep({
       <div>
         <Disclaimer className="mb-6" />
         <div className="rounded-card border-l-[3px] border-help bg-help-soft p-5 sm:p-6">
-          <h1 className="font-display text-[24px] font-semibold text-help-ink">{t("routeTitle")}</h1>
-          <p className="mt-2 text-[15px] text-help-ink">{t("routeBody")}</p>
-          <ul className="mt-3 space-y-1.5 text-[14px] text-help-ink">
+          <h1 className="font-display text-[24px] font-bold text-help-ink">{t("routeTitle")}</h1>
+          <p className="mt-2 text-[16px] text-help-ink">{t("routeBody")}</p>
+          <ul className="mt-3 space-y-1.5 text-[15px] text-help-ink">
             {trip.reasons.map((r) => (
               <li key={r} className="flex gap-2">
                 <span aria-hidden="true">•</span>
@@ -432,16 +459,16 @@ function ResultStep({
   return (
     <div className="space-y-6">
       <div>
-        <p className="text-[11px] uppercase tracking-[0.2em] text-accent">{t("resultEyebrow")}</p>
-        <h1 className="mt-1 font-display text-[26px] font-semibold text-ink sm:text-[32px]">{entry.title}</h1>
+        <p className="text-[12px] uppercase tracking-[0.2em] text-accent">{t("resultEyebrow")}</p>
+        <h1 className="mt-1 font-display text-[26px] font-bold text-ink sm:text-[32px]">{entry.title}</h1>
       </div>
       <Disclaimer />
       {entry.isFallback && (
-        <p className="rounded-card border border-line bg-sand-surface px-4 py-3 text-[13px] text-ink-soft">{t("fallbackNote")}</p>
+        <p className="rounded-card border border-line bg-sand-surface px-4 py-3 text-[14px] text-ink-soft">{t("fallbackNote")}</p>
       )}
 
       {/* Who can review this */}
-      <section className="rounded-card border border-line bg-paper p-5 sm:p-6">
+      <section data-tour="avenue" className="rounded-card border border-line bg-paper p-5 sm:p-6">
         <h2 className="font-display text-[20px] font-bold text-ink">{t("avenueTitle")}</h2>
         <ul className="mt-3 space-y-3">
           {av.mrAvailable && (
@@ -449,7 +476,7 @@ function ResultStep({
               <p className="font-semibold text-ink">
                 {t("avenueMR")} <span className="font-normal text-ink-soft">{t("via", { body: av.mrBody })}</span>
               </p>
-              <p className="text-[14px] text-ink-soft">{t("avenueMRWhat")}</p>
+              <p className="text-[15px] text-ink-soft">{t("avenueMRWhat")}</p>
             </li>
           )}
           {av.jrAvailable && (
@@ -457,14 +484,14 @@ function ResultStep({
               <p className="font-semibold text-ink">
                 {t("avenueJR")} <span className="font-normal text-ink-soft">{t("via", { body: av.jrForum })}</span>
               </p>
-              <p className="text-[14px] text-ink-soft">{t("avenueJRWhat")}</p>
+              <p className="text-[15px] text-ink-soft">{t("avenueJRWhat")}</p>
             </li>
           )}
-          {!av.mrAvailable && !av.jrAvailable && <li className="text-[14px] text-ink-soft">{t("noReview")}</li>}
-          {av.noReviewEndpoint && <li className="text-[14px] text-ink-soft">{av.noReviewEndpoint}</li>}
+          {!av.mrAvailable && !av.jrAvailable && <li className="text-[15px] text-ink-soft">{t("noReview")}</li>}
+          {av.noReviewEndpoint && <li className="text-[15px] text-ink-soft">{av.noReviewEndpoint}</li>}
         </ul>
         {/* Time limits — brief + generic, part of the analysis (not a headline). No countdown. */}
-        <p className="mt-4 flex items-start gap-2 border-t border-line/70 pt-3 text-[13px] leading-relaxed text-ink-soft">
+        <p className="mt-4 flex items-start gap-2 border-t border-line/70 pt-3 text-[14px] leading-relaxed text-ink-soft">
           <Icon.Clock className="mt-[2px] h-4 w-4 shrink-0 text-ink-faint" strokeWidth={2} aria-hidden />
           <span>
             <span className="font-semibold text-ink">{t("deadlineTitle")}:</span> {dl.rule}{" "}
@@ -481,11 +508,11 @@ function ResultStep({
       {(av.mrAvailable || av.jrAvailable) && (
         <section className="rounded-card border border-line bg-paper p-5 sm:p-6">
           <h2 className="font-display text-[20px] font-bold text-ink">{t("learnTitle")}</h2>
-          <p className="mt-2 text-[14.5px] text-ink-soft">{t("learnLead")}</p>
+          <p className="mt-2 text-[15.5px] text-ink-soft">{t("learnLead")}</p>
           <div className="mt-4 space-y-3">
             {av.mrAvailable && (
               <details className="rounded-card border border-line bg-sand-surface px-4 py-3">
-                <summary className="cursor-pointer font-display text-[17px] font-semibold text-ink">
+                <summary className="cursor-pointer font-display text-[17px] font-bold text-ink">
                   {meritsReview.name} — {meritsReview.plainName}
                 </summary>
                 <div className="mt-4">
@@ -495,7 +522,7 @@ function ResultStep({
             )}
             {av.jrAvailable && (
               <details className="rounded-card border border-line bg-sand-surface px-4 py-3">
-                <summary className="cursor-pointer font-display text-[17px] font-semibold text-ink">
+                <summary className="cursor-pointer font-display text-[17px] font-bold text-ink">
                   {judicialReview.name} — {judicialReview.plainName}
                 </summary>
                 <div className="mt-4">
@@ -509,18 +536,18 @@ function ResultStep({
       )}
 
       {/* Ask for the reasons */}
-      <section className="rounded-card border border-line bg-paper p-5 sm:p-6">
+      <section data-tour="reasons" className="rounded-card border border-line bg-paper p-5 sm:p-6">
         <h2 className="font-display text-[20px] font-bold text-ink">{t("reasonsTitle")}</h2>
-        <p className="mt-2 text-[14.5px] text-ink-soft">{t("reasonsLead")}</p>
+        <p className="mt-2 text-[15.5px] text-ink-soft">{t("reasonsLead")}</p>
         <div className="mt-3 rounded-card border-l-[3px] border-gold bg-gold-soft px-4 py-3">
-          <p className="text-[12px] font-semibold uppercase tracking-[0.1em] text-gold">{t("reasonsClockTitle")}</p>
-          <p className="mt-1 text-[13.5px] leading-relaxed text-ink-soft">{REASONS_CLOCK_WARNING}</p>
+          <p className="text-[13px] font-semibold uppercase tracking-[0.1em] text-gold">{t("reasonsClockTitle")}</p>
+          <p className="mt-1 text-[14.5px] leading-relaxed text-ink-soft">{REASONS_CLOCK_WARNING}</p>
         </div>
         <textarea
           readOnly
           value={template}
           rows={12}
-          className="input mt-4 font-mono text-[13px] leading-relaxed"
+          className="input mt-4 font-mono text-[14px] leading-relaxed"
           aria-label={t("reasonsTitle")}
         />
         <button type="button" onClick={copyTemplate} className="btn-secondary mt-3">
@@ -530,9 +557,9 @@ function ResultStep({
 
       {/* Grounds people raise — in-flow, neutral; selection flows into the hand-off */}
       {av.jrAvailable && jrGrounds.length > 0 && (
-        <section className="rounded-card border border-line bg-paper p-5 sm:p-6">
+        <section data-tour="grounds" className="rounded-card border border-line bg-paper p-5 sm:p-6">
           <h2 className="font-display text-[20px] font-bold text-ink">{t("groundsTitle")}</h2>
-          <p className="mt-2 text-[14.5px] leading-relaxed text-ink-soft">{t("groundsLead")}</p>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("groundsLead")}</p>
           <div className="mt-4">
             <GroundsExplorer
               grounds={jrGrounds}
@@ -547,9 +574,9 @@ function ResultStep({
       )}
 
       {/* Hand-off + help */}
-      <section className="rounded-card border border-line bg-paper p-5 sm:p-6">
+      <section data-tour="handoff" className="rounded-card border border-line bg-paper p-5 sm:p-6">
         <h2 className="font-display text-[20px] font-bold text-ink">{t("handoffTitle")}</h2>
-        <p className="mt-2 text-[14.5px] text-ink-soft">{t("handoffLead")}</p>
+        <p className="mt-2 text-[15.5px] text-ink-soft">{t("handoffLead")}</p>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <button type="button" onClick={downloadHandoff} className="btn-help">
             {t("handoffDownload")}
@@ -578,7 +605,7 @@ function HelpList({ t, entry }: { t: ReturnType<typeof useTranslations>; entry: 
           </li>
         ))}
       </ul>
-      <Link href="/help" className="mt-3 inline-block text-[13px] font-semibold uppercase tracking-[0.1em] text-help-ink">
+      <Link href="/help" className="mt-3 inline-block text-[14px] font-semibold uppercase tracking-[0.1em] text-help-ink">
         {t("helpMore")} →
       </Link>
     </section>

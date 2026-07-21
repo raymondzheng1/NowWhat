@@ -1,5 +1,5 @@
 {
-  "builtAt": "f4c37defdf3eaccb",
+  "builtAt": "f1cb27e0ef87b178",
   "processes": [
     {
       "id": "judicial-review",
@@ -10,19 +10,19 @@
       "whatItIs": "Judicial review is different from merits review. A court does not ask whether the decision was right or fair — it asks whether it was made lawfully: did the decision-maker have the power, follow a fair process, and stay within the law? If the court finds a legal error — a 'ground of review' — it can set the decision aside. But the court cannot make a new decision for you. It usually sends the matter back to be decided again, properly.",
       "bodies": [
         {
+          "jurisdiction": "Cth",
+          "name": "The Federal Court / Federal Circuit and Family Court",
+          "note": "judicial review of Australian Government decisions (ADJR Act; s 39B Judiciary Act)."
+        },
+        {
+          "jurisdiction": "Cth",
+          "name": "The High Court",
+          "note": "constitutional judicial review of Commonwealth officers (s 75(v) Constitution)."
+        },
+        {
           "jurisdiction": "Vic",
-          "name": "Supreme Court of Victoria (Order 56)",
-          "note": "Judicial review of Victorian government decisions."
-        },
-        {
-          "jurisdiction": "Cth",
-          "name": "Federal Court / Federal Circuit and Family Court",
-          "note": "Judicial review of Australian Government decisions (ADJR Act; s 39B Judiciary Act)."
-        },
-        {
-          "jurisdiction": "Cth",
-          "name": "High Court (s 75(v) Constitution)",
-          "note": "Constitutional judicial review of Commonwealth officers."
+          "name": "The Supreme Court of Victoria (Order 56)",
+          "note": "the Victorian equivalent, for state government decisions."
         }
       ],
       "canApply": [
@@ -63,14 +63,14 @@
       "whatItIs": "Merits review means an independent tribunal looks at the decision again — on the facts and the law — as if it were being made fresh. The tribunal stands in the shoes of the original decision-maker and applies the same rules. It can agree with the decision, change part of it, or replace it with a different one. It is usually cheaper, faster, and less formal than going to court.",
       "bodies": [
         {
-          "jurisdiction": "Vic",
-          "name": "VCAT (Victorian Civil and Administrative Tribunal)",
-          "note": "Hears many Victorian decisions where an Act gives a right of review."
+          "jurisdiction": "Cth",
+          "name": "The Administrative Review Tribunal (ART)",
+          "note": "hears many Australian Government decisions, such as Centrelink."
         },
         {
-          "jurisdiction": "Cth",
-          "name": "ART (Administrative Review Tribunal)",
-          "note": "Hears many Australian Government decisions, such as Centrelink."
+          "jurisdiction": "Vic",
+          "name": "VCAT (the Victorian Civil and Administrative Tribunal)",
+          "note": "the Victorian equivalent, for state decisions where an Act gives a right of review."
         }
       ],
       "canApply": [

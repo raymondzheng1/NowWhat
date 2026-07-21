@@ -25,7 +25,7 @@ function ServiceLine({ s }: { s: HelpService }) {
       ) : (
         <span className="font-semibold text-ink">{s.service}</span>
       )}
-      <p className="mt-0.5 text-[12.5px] leading-snug text-ink-soft">{s.who}</p>
+      <p className="mt-0.5 text-[13.5px] leading-snug text-ink-soft">{s.who}</p>
     </div>
   );
 }
@@ -56,7 +56,7 @@ export function TieredHelp({
 
       {/* Tier 1 — free government / tribunal */}
       <div className="mt-3.5 space-y-2.5 rounded-icon border-l-[3px] border-help bg-help-soft p-3.5">
-        <div className="text-[10.5px] font-bold uppercase tracking-[0.09em] text-help">
+        <div className="text-[11.5px] font-bold uppercase tracking-[0.09em] text-help">
           Tier 1 · Free government
         </div>
         {tier1.map((s) => (
@@ -66,7 +66,7 @@ export function TieredHelp({
 
       {/* Tier 2 — free legal help */}
       <div className="mt-2.5 space-y-2.5 rounded-icon border-l-[3px] border-navy bg-navy-soft p-3.5">
-        <div className="text-[10.5px] font-bold uppercase tracking-[0.09em] text-navy">
+        <div className="text-[11.5px] font-bold uppercase tracking-[0.09em] text-navy">
           Tier 2 · Free legal help
         </div>
         {tier2.map((s) => (
@@ -76,12 +76,12 @@ export function TieredHelp({
 
       {/* Tier 3 — a private lawyer (paid, clearly secondary) */}
       <div className="mt-2.5 rounded-icon border border-line-card border-l-[3px] border-l-[#cdd3da] p-3.5">
-        <div className="text-[10.5px] font-bold uppercase tracking-[0.09em] text-ink-faint">
+        <div className="text-[11.5px] font-bold uppercase tracking-[0.09em] text-ink-faint">
           Tier 3 · Paid
         </div>
-        <p className="mt-1.5 text-[14px] font-semibold text-ink-soft">Find a private lawyer</p>
-        <p className="mt-0.5 text-[12.5px] text-ink-faint">Fees apply.</p>
-        <div className="mt-2 flex flex-col gap-1 text-[13px]">
+        <p className="mt-1.5 text-[15px] font-semibold text-ink-soft">Find a private lawyer</p>
+        <p className="mt-0.5 text-[13.5px] text-ink-faint">Fees apply.</p>
+        <div className="mt-2 flex flex-col gap-1 text-[14px]">
           <a href={LIV_URL} target="_blank" rel="noopener noreferrer" className="text-navy underline-offset-2 hover:underline">
             Law Institute of Victoria — referral service →
           </a>
