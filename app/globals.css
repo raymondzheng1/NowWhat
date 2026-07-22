@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 /* Direction K2 "Deep teal & sand" — CSS custom properties mirror the Tailwind tokens.
-   --font-display (Source Serif 4) + --font-serif (Libre Baskerville) come from
+   --font-display (Newsreader) + --font-serif (Libre Baskerville) come from
    next/font in the root layout; --font-sans is the system stack. */
 :root {
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -27,15 +27,16 @@
     font-size: 17px;
     line-height: 1.62;
   }
-  /* Source Serif 4 for headings + the wordmark — the K2 editorial voice, but sturdy.
-     700 (not 600): at display sizes a semibold serif still reads thin on sand. */
+  /* Newsreader for headings + the wordmark — the K2 editorial voice: warm, screen-first,
+     with real authority. Its natural spacing is comfortable, so only a whisper of negative
+     tracking to keep large sizes tight. */
   h1,
   h2,
   h3 {
     font-family: var(--font-display);
     @apply text-ink;
     font-weight: 700;
-    letter-spacing: -0.011em;
+    letter-spacing: -0.006em;
   }
   /* Visible, high-contrast focus for keyboard users (WCAG AA, non-negotiable). */
   :focus-visible {

@@ -329,8 +329,12 @@ function WhatStep({
         </label>
 
         <fieldset data-tour="tripwire" className="rounded-card border border-line bg-paper p-4 sm:p-5">
-          <legend className="px-1 font-display text-[16px] font-bold text-ink">{t("checkTitle")}</legend>
-          <p className="mt-1 text-[14px] text-ink-soft">{t("checkHelp")}</p>
+          {/* float-left + w-full takes the legend OFF the fieldset's top border (its default
+              rendering) and lays it out as a normal block heading; the help text clears it. */}
+          <legend className="float-left mb-1 w-full font-display text-[17px] font-bold text-ink">
+            {t("checkTitle")}
+          </legend>
+          <p className="clear-both text-[15px] text-ink-soft">{t("checkHelp")}</p>
           <div className="mt-3 space-y-2.5">
             {FLAG_KEYS.map(({ key, label }) => (
               <label key={key} className="flex items-start gap-2.5 text-[15px] text-ink">

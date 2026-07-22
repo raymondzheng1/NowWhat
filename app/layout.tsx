@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Source_Serif_4, Libre_Baskerville } from "next/font/google";
+import { Newsreader, Libre_Baskerville } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import { Analytics } from "@vercel/analytics/next";
@@ -8,14 +8,15 @@ import "./globals.css";
 // K2 "Deep teal & sand". Self-hosted at build by next/font — no runtime Google
 // request, so the CSP needs no font-origin allowance.
 //
-// --font-display: Source Serif 4 — H1, section/step titles, wordmark. Replaced Cormorant
-// Garamond (2026-07-13): Cormorant is a high-contrast display face whose hairline strokes
-// read as thin and are genuinely hard to read at body-adjacent sizes — the wrong trade for
-// an audience in distress, on a phone, possibly with low vision. Source Serif 4 keeps the
-// editorial voice with far lower stroke contrast and a real weight range.
-const displaySerif = Source_Serif_4({
+// --font-display: Newsreader — H1, section/step titles, wordmark. Third pass (2026-07-14):
+// Cormorant Garamond read as thin/hard to read; Source Serif 4 fixed legibility but read as
+// generic/"cheap" and, being a wide face, over-filled a layout tuned for a narrower serif.
+// Newsreader is an editorial, screen-first serif (Production Type) with genuine warmth and
+// authority, moderate stroke contrast (legible), and a width close to the original — so it
+// carries the "considered legal-help" voice without feeling flimsy or template-generic.
+const displaySerif = Newsreader({
   subsets: ["latin"],
-  weight: ["600", "700"],
+  weight: ["500", "600", "700"],
   style: ["normal", "italic"],
   variable: "--font-display",
   display: "swap",

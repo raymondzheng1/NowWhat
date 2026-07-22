@@ -50,7 +50,7 @@ const config: Config = {
         brass: { DEFAULT: "#c79a52", text: "#8a6526", q: "#c79a52" },
       },
       fontFamily: {
-        // Source Serif 4 (next/font → --font-display) — H1, section/step titles, wordmark.
+        // Newsreader (next/font → --font-display) — H1, section/step titles, wordmark.
         // Libre Baskerville (--font-serif) — buttons.
         display: ["var(--font-display)", "Georgia", "Times New Roman", "serif"],
         serif: ["var(--font-serif)", "Georgia", "serif"],
