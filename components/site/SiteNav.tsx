@@ -7,11 +7,12 @@ import { PRODUCT_NAME } from "@/lib/config";
 import { Icon } from "@/components/ui/icons";
 
 /**
- * Site navigation (Direction K2):
- *  - desktop: a quiet, right-aligned top nav inside the main column, with a bottom
- *    hairline. "Ask a question" is set in the gold accent.
- *  - mobile: a teal top bar (horizontal wordmark + hamburger). The menu is a sheet that
- *    closes by button (never backdrop-only), reusing the codebase's mobile-nav pattern.
+ * Site header (sticker album). A 2px ink rule under a row of: the logo sticker (white,
+ * rotated -1.2deg, hard shadow) on the left, and the nav on the right, ending in the red
+ * "A person, any time" pill — the always-visible route to a human (product constraint #2).
+ *
+ * Mobile: the same logo sticker plus a hamburger that opens a sheet; the human-help pill
+ * stays visible at all widths, because it must never be behind a menu.
  */
 export function SiteNav() {
   const t = useTranslations("nav");
@@ -19,84 +20,89 @@ export function SiteNav() {
   const name = PRODUCT_NAME.replace(/\?$/, "");
 
   const links = [
+    { href: "/start", label: t("start") },
+    { href: "/decode", label: t("scan") },
+    { href: "/ask", label: t("ask") },
     { href: "/learn", label: t("guides") },
     { href: "/faq", label: t("faq") },
-    { href: "/help", label: t("help") },
   ];
 
   return (
-    <>
-      {/* Desktop top nav */}
-      <nav
-        aria-label="Main"
-        className="hidden items-center justify-end gap-8 border-b border-line px-12 py-4 text-[12px] uppercase tracking-[0.2em] text-ink-soft md:flex"
-      >
-        {links.map((l) => (
-          <Link key={l.href} href={l.href} className="hover:text-ink">
-            {l.label}
-          </Link>
-        ))}
-        <Link href="/ask" className="text-accent hover:text-ink">
-          {t("ask")}
-        </Link>
-        <Link
-          href="/start"
-          className="rounded-button bg-rail px-4 py-2.5 text-[12px] font-semibold uppercase tracking-[0.14em] text-rail-fg transition-colors hover:bg-rail-dark"
-        >
-          {t("start")}
-        </Link>
-      </nav>
-
-      {/* Mobile top bar */}
-      <div className="flex items-center justify-between bg-rail px-[22px] py-4 md:hidden">
+    <header className="border-b-2 border-ink">
+      <div className="container-wide flex flex-wrap items-center justify-between gap-4 py-5">
         <Link
           href="/"
           aria-label={`${PRODUCT_NAME} home`}
-          className="font-display text-[18px] font-bold tracking-[0.04em] text-rail-fg"
+          className="sticker inline-flex rounded-sticker bg-paper px-4 py-2 font-display text-[19px] font-black text-ink"
+          style={{ "--rot": "-1.2deg" } as React.CSSProperties}
         >
           {name}
-          <b className="font-semibold text-rail-accent">?</b>
+          <span className="text-red">?</span>
         </Link>
-        <button
-          type="button"
-          className="flex h-11 w-11 items-center justify-center rounded-button border border-rail-accent text-rail-fg"
-          aria-expanded={open}
-          aria-controls="mobile-menu"
-          aria-label={open ? "Close menu" : "Open menu"}
-          onClick={() => setOpen((v) => !v)}
+
+        {/* Desktop nav */}
+        <nav
+          aria-label="Main"
+          className="hidden items-center gap-6 font-display text-[13px] font-extrabold uppercase tracking-[0.06em] md:flex"
         >
-          {open ? <Icon.Close className="h-5 w-5" strokeWidth={2} /> : <Icon.Menu className="h-5 w-5" strokeWidth={2} />}
-        </button>
+          {links.map((l) => (
+            <Link key={l.href} href={l.href} className="text-ink-soft hover:text-ink">
+              {l.label}
+            </Link>
+          ))}
+          <Link
+            href="/help"
+            className="sticker inline-flex min-h-[44px] items-center rounded-pill px-5 py-3 text-cream-onRed"
+            style={{ "--rot": "0.8deg", background: "var(--red-cta)" } as React.CSSProperties}
+          >
+            {t("person")}
+          </Link>
+        </nav>
+
+        {/* Mobile: human help stays visible; everything else goes in the sheet. */}
+        <div className="flex items-center gap-3 md:hidden">
+          <Link
+            href="/help"
+            className="sticker inline-flex min-h-[44px] items-center rounded-pill px-4 py-3 font-display text-[12px] font-extrabold uppercase tracking-[0.06em] text-cream-onRed"
+            style={{ "--rot": "0.8deg", background: "var(--red-cta)" } as React.CSSProperties}
+          >
+            {t("person")}
+          </Link>
+          <button
+            type="button"
+            className="flex h-11 w-11 items-center justify-center rounded-sticker border-2 border-ink bg-paper text-ink"
+            aria-expanded={open}
+            aria-controls="mobile-menu"
+            aria-label={open ? "Close menu" : "Open menu"}
+            onClick={() => setOpen((v) => !v)}
+          >
+            {open ? <Icon.Close className="h-5 w-5" strokeWidth={2.4} /> : <Icon.Menu className="h-5 w-5" strokeWidth={2.4} />}
+          </button>
+        </div>
       </div>
 
-      {/* Mobile menu sheet */}
       {open && (
-        <nav id="mobile-menu" aria-label="Main" className="border-b border-line bg-sand-surface px-[22px] py-2 md:hidden">
-          <ul className="flex flex-col">
+        <nav id="mobile-menu" aria-label="Main" className="border-t-2 border-ink bg-paper md:hidden">
+          <ul className="container-wide flex flex-col py-2">
             {links.map((l) => (
               <li key={l.href}>
                 <Link
                   href={l.href}
-                  className="block border-b border-line py-3.5 text-[16px] font-medium text-ink"
+                  className="block border-b border-line py-4 font-display text-[15px] font-extrabold uppercase tracking-[0.06em] text-ink"
                   onClick={() => setOpen(false)}
                 >
                   {l.label}
                 </Link>
               </li>
             ))}
-            <li className="border-b border-line py-3.5">
-              <Link href="/ask" className="font-semibold text-accent" onClick={() => setOpen(false)}>
-                {t("ask")}
-              </Link>
-            </li>
             <li className="py-4">
-              <Link href="/start" className="btn-primary w-full" onClick={() => setOpen(false)}>
-                {t("start")}
+              <Link href="/help" className="btn btn-primary w-full" onClick={() => setOpen(false)}>
+                {t("help")}
               </Link>
             </li>
           </ul>
         </nav>
       )}
-    </>
+    </header>
   );
 }

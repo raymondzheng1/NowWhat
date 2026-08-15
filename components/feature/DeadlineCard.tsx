@@ -30,21 +30,44 @@ function formatLong(iso: string): string {
 
 /**
  * Time-limit note for the legacy decode flow. Product decision (2026-06-30): time limits
- * are NOT headlined for our users, so this is a CALM card — no amber "signature panel" and
- * no "days left" countdown. It keeps the optional, opt-in calendar reminder (some people
+ * are NOT headlined for our users, so this is a CALM card — amber, never red, and no
+ * "days left" countdown. It keeps the optional, opt-in calendar reminder (some people
  * find a date useful), shown modestly. The verified-only guarantee is still enforced
  * upstream (deadlineIsRenderable + the verifier) — this only renders what it's given.
+ *
+ * Amber is reserved for exactly this surface. The "we can't confirm it" state stays in
+ * the same calm amber card — it is never the dashed empty slot, because a time limit is
+ * not a gap in the album, and never red, because red is not used for time pressure.
  */
 function Shell({ children }: { children: React.ReactNode }) {
-  return <div className="rounded-card border border-line bg-paper p-5 sm:p-6">{children}</div>;
+  return (
+    <div
+      className="sticker rounded-card border-2 border-amber-border bg-amber-bg p-5 shadow-deadline sm:p-6"
+      style={{ "--rot": "-0.6deg" } as React.CSSProperties}
+    >
+      {children}
+    </div>
+  );
 }
 
 function Eyebrow({ icon, children }: { icon: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="flex items-center gap-2 text-[12.5px] font-semibold uppercase tracking-[0.12em] text-ink-soft">
+    <div className="flex items-center gap-2 font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-amber-ink">
       {icon}
       {children}
     </div>
+  );
+}
+
+/** The receipt line under a time limit — every figure carries its source. */
+function SourceLine({ source }: { source: string }) {
+  return (
+    <p className="mono mt-3.5 leading-snug text-amber-ink">
+      {/* Only the label is uppercased — the citation keeps its own case, because these
+          are statute names and section numbers ("Residential Tenancies Act 1997 (Vic)
+          s 91ZZS"), which all-caps makes materially harder to read. */}
+      <span className="tracking-[0.08em]">SOURCE:</span> {source}
+    </p>
   );
 }
 
@@ -81,18 +104,18 @@ export function DeadlineCard({
     if (decisionDate && primary) void compute(decisionDate);
   }, [decisionDate, primary, compute]);
 
-  const clock = <Icon.Clock className="h-[15px] w-[15px] text-ink-faint" strokeWidth={2} />;
+  const clock = <Icon.Clock className="h-[15px] w-[15px] shrink-0" strokeWidth={2.2} />;
 
   // --- State: no verified deadline for this matter → honest, calm "can't confirm". ---
   if (!primary) {
     return (
       <Shell>
         <Eyebrow icon={clock}>Time limits</Eyebrow>
-        <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
+        <p className="mt-2.5 text-[15.5px] leading-relaxed text-ink-soft">
           A time limit applies to this kind of decision, and it can be short. We can&rsquo;t
           confirm the exact date here — check it with a free service, and don&rsquo;t wait.
         </p>
-        <Link href="/help" className="link-text mt-3 inline-block">
+        <Link href="/help" className="link-text mt-2 inline-flex min-h-[44px] items-center">
           Who can confirm my date →
         </Link>
       </Shell>
@@ -107,19 +130,19 @@ export function DeadlineCard({
 
       {confirmed ? (
         <>
-          <p className="mt-2 text-[16px] font-semibold text-ink">
+          <p className="mt-2.5 font-display text-[19px] font-extrabold leading-snug text-ink">
             {confirmed.passed
               ? `This date has passed (${formatLong(confirmed.deadlineDate)}).`
               : `Apply by ${formatLong(confirmed.deadlineDate)}.`}
           </p>
-          <p className="mt-1 text-[15px] leading-relaxed text-ink-soft">
+          <p className="mt-1.5 text-[15px] leading-relaxed text-ink-soft">
             {confirmed.passed
               ? "A free service can tell you if anything can still be done."
               : `For ${primary.name.toLowerCase()}. A free service can confirm the exact date for your situation.`}
           </p>
 
           {confirmed.howCounted && (
-            <p className="mt-3 text-[14.5px] leading-relaxed text-ink-faint">
+            <p className="mt-3 text-[14.5px] leading-relaxed text-ink-soft">
               How it&rsquo;s counted: {confirmed.howCounted}.
             </p>
           )}
@@ -128,35 +151,40 @@ export function DeadlineCard({
             {ics && (
               <button
                 type="button"
-                className="btn-secondary inline-flex w-full items-center justify-center gap-2 sm:w-auto"
+                className="btn btn-secondary w-full sm:w-auto"
                 onClick={() => downloadIcs(ics)}
               >
                 <Icon.CalendarPlus className="h-[18px] w-[18px]" strokeWidth={1.9} />
                 Add a reminder to my calendar
               </button>
             )}
-            <button type="button" className="link-text" onClick={() => setShowHow((v) => !v)}>
+            <button
+              type="button"
+              className="link-text min-h-[44px]"
+              onClick={() => setShowHow((v) => !v)}
+            >
               How this date works
             </button>
           </div>
           {showHow && (
-            <p className="mt-3 rounded-input border border-line bg-sand-surface p-3 text-[14.5px] leading-relaxed text-ink-soft">
+            <p className="mt-3 rounded-input border border-amber-border bg-paper p-3.5 text-[14.5px] leading-relaxed text-ink-soft">
               We count every day from the date on your notice or decision. If the last day falls
               on a weekend or public holiday it may move to the next business day — a free service
               can confirm the exact date for you.
             </p>
           )}
+          <SourceLine source={confirmed.source} />
         </>
       ) : (
         // --- State: we can compute a date, but need the decision date first. ---
         <>
-          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
+          <p className="mt-2.5 text-[15.5px] leading-relaxed text-ink-soft">
             There is a time limit for this step. If it helps, enter the date on your notice or
             decision and we&rsquo;ll work out the date — you can add a reminder.
           </p>
           <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
             <label className="flex-1">
-              <span className="mb-1.5 block text-[14px] font-semibold text-ink">
+              <span className="mb-1.5 block text-[14.5px] font-semibold text-ink">
                 Date on your notice / decision
               </span>
               <input
@@ -169,13 +197,14 @@ export function DeadlineCard({
             </label>
             <button
               type="button"
-              className="btn-secondary w-full sm:w-auto"
+              className="btn btn-secondary w-full sm:w-auto"
               disabled={!date || busy}
               onClick={() => void compute(date)}
             >
               {busy ? "Working it out…" : "Work out my date"}
             </button>
           </div>
+          <SourceLine source={primary.source} />
         </>
       )}
     </Shell>

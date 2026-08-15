@@ -19,14 +19,15 @@
     "faq": "Common questions",
     "help": "Get help",
     "howItWorks": "How it works",
-    "guides": "Guides"
+    "guides": "Guides",
+    "person": "A person, any time"
   },
   "home": {
     "heroEyebrow": "Understand · Know your options · Get help",
-    "heroTitle": "Knocked back by government? Know your options.",
-    "heroLead": "We explain the letter in plain English, find the review options open to you, draft your first letter, and route you to free help — grounded in sourced rules.",
-    "ctaStart": "Find out what you can do",
-    "ctaScan": "Scan a letter",
+    "heroTitle": "They said no.",
+    "heroLead": "Most government decisions can be reviewed. What Now? turns your letter into plain English, your options into a numbered list, and your next step into a letter — free, no account, nothing stored.",
+    "ctaStart": "Start now",
+    "ctaScan": "Scan or paste the letter",
     "ctaAsk": "Ask a question",
     "howEyebrow": "How it works",
     "howTitle": "How it works",
@@ -63,7 +64,39 @@
     "linkGroundsTitle": "The grounds of review",
     "linkGroundsDesc": "{count} common grounds people raise, in plain English.",
     "linkCompareTitle": "Merits vs judicial review",
-    "linkCompareDesc": "Which one fits — side by side, with a quick guide."
+    "linkCompareDesc": "Which one fits — side by side, with a quick guide.",
+    "heroNote": "the day the letter arrived — start here",
+    "heroTitle2a": "You may say:",
+    "heroTitle2b": "look again.",
+    "lockLine": "FREE / NO ACCOUNT / NOTHING STORED",
+    "foilLabel": "Recommended · start here",
+    "foilNote": "the one thing to do first",
+    "foilTitle": "Find out what you can do",
+    "foilBody": "Three questions, then your review options in order — with every time limit named early and calmly.",
+    "waysNote": "three ways to start →",
+    "way1Title": "Work it out",
+    "way1Body": "Three questions. Then every pathway, numbered, with time limits.",
+    "way1Cta": "Begin",
+    "way2Title": "Scan the letter",
+    "way2Body": "Explained clause by clause, in the moment. Never kept.",
+    "way2Cta": "Read it",
+    "way3Title": "Ask a question",
+    "way3Body": "Plain answers, the official source cited beside every one.",
+    "way3Cta": "Ask",
+    "limitLabel": "Time limit — noted early, kept calm",
+    "limitTitle": "We name the time limit early, and calmly.",
+    "limitBody": "Most reviews have a time limit set by the law for your decision. We show it with the official source — never as a countdown, never in red. There is still time to get help.",
+    "limitSource": "SOURCE: THE ACT FOR YOUR DECISION — NAMED IN YOUR RESULT",
+    "slotLabel": "Empty slot — your first letter",
+    "slotTitle": "This slot is empty until we draft it together.",
+    "slotBody": "Answer the three questions and the ready-to-send letter goes here — yours to keep, or to hand to a free service.",
+    "slotNote": "goes here ↑ when you're ready",
+    "humansTitle": "Humans: available. Free.",
+    "humansBody": "Talk to a person whenever you like — they can take it from here.",
+    "humansPill1": "Legal Aid",
+    "humansPill2": "Community legal centres",
+    "humansPill3": "Tribunal registries",
+    "humansCta": "Find free help near you"
   },
   "rights": {
     "stepOf": "Step {n} of 3",
@@ -223,7 +256,8 @@
     "ctaTitle": "Have a letter or a question of your own?",
     "ctaBody": "Scan a letter or ask a question — free, in plain English.",
     "ctaButton": "Start now",
-    "relatedTitle": "Related questions"
+    "relatedTitle": "Related questions",
+    "indexNote": "the questions people ask most →"
   },
   "privacy": {
     "title": "Your privacy",
@@ -323,7 +357,8 @@
     "ctaStart": "Work out what you can do",
     "linkLearn": "How review works — the guide library",
     "linkFaq": "Common questions, answered in plain English",
-    "linkHelp": "Free services that can help"
+    "linkHelp": "Free services that can help",
+    "slotNote": "an empty slot — try one of these ↓"
   },
   "errorPage": {
     "kicker": "Something went wrong",
@@ -333,7 +368,7 @@
     "home": "Back to the home page"
   },
   "footer": {
-    "infoNotAdvice": "General information, not legal advice. We can't tell you what will happen in your case.",
+    "infoNotAdvice": "What Now? gives general information, not legal advice.",
     "neverStored": "We never keep your details.",
     "learn": "How review works",
     "contact": "Contact us",
@@ -341,6 +376,8 @@
     "privacy": "Privacy",
     "about": "About",
     "help": "Get help",
-    "faq": "Common questions"
+    "faq": "Common questions",
+    "adviceTail": "We can't tell you what will happen in your case. For advice about your own situation, talk to a free legal service — we'll help you find one.",
+    "lockLine": "NOTHING STORED · VIC & CTH · EN-AU"
   }
 }

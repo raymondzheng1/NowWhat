@@ -1,7 +1,11 @@
 /**
- * Editorial page header (K2) — the same voice as the homepage bands: small tracked
- * kicker in the copper accent, a large Cormorant display headline, and an optional
- * measured lead. Use on every content page so the site reads as one piece.
+ * Editorial page header (sticker album) — the tone-setter for every content page:
+ * a small tracked Archivo kicker, a big Archivo 900 headline on the paper, and an
+ * optional measured lead. No sticker, no rotation: the header IS the page, not an
+ * object laid on it, so it stays square and the stickers below do the tilting.
+ *
+ * The kicker uses red-ink (not the tan .eyebrow default) because 13px bold tan is
+ * 3.6:1 on cream — below AA for small text.
  */
 export function PageHeader({
   kicker,
@@ -14,12 +18,10 @@ export function PageHeader({
 }) {
   return (
     <header>
-      <p className="text-[12px] uppercase tracking-[0.28em] text-accent">{kicker}</p>
-      <h1 className="mt-4 max-w-[720px] font-display text-[34px] font-bold leading-[1.06] text-ink sm:text-[44px]">
-        {title}
-      </h1>
+      <p className="eyebrow text-red-ink">{kicker}</p>
+      <h1 className="mt-3.5 max-w-[720px] text-h1">{title}</h1>
       {lead ? (
-        <p className="mt-5 max-w-[56ch] text-[16.5px] leading-[1.68] text-ink-soft">{lead}</p>
+        <p className="mt-5 max-w-[58ch] text-lede text-ink-soft [text-wrap:pretty]">{lead}</p>
       ) : null}
     </header>
   );

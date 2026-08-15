@@ -2,16 +2,30 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Direction K2 "Deep teal & sand" — CSS custom properties mirror the Tailwind tokens.
-   --font-display (Newsreader) + --font-serif (Libre Baskerville) come from
-   next/font in the root layout; --font-sans is the system stack. */
+/* "Sticker album" (design20260816) — physical stickers on cream paper.
+   --font-display (Archivo) + --font-note (Caveat) + --font-mono (Spline Sans Mono) come
+   from next/font in the root layout; --font-sans is the system stack for body copy.
+   Light-only by design: paper is paper, so there is no dark mode. */
 :root {
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 
-  --rail-bg: #10363d;
-  --rail-accent: #c79a52;
-  /* visible keyboard focus (teal, AA on sand) */
-  --wn-focus-ring: 0 0 0 3px rgba(16, 54, 61, 0.4);
+  --paper: #f6edd9;
+  --ink: #2b2417;
+  --body: #5c5138;
+  --tan: #8a7a55;
+  --tan-ink: #786a4a;
+  --red: #e0452c;
+  --red-cta: #cd3f28;
+  --red-ink: #c33c26;
+  --cream-on-red: #fff6ec;
+
+  --amber-bg: #fbf3d9;
+  --amber-border: #e0a52c;
+  --amber-ink: #8a6a14;
+
+  --shadow-color: rgba(43, 36, 23, 0.28);
+  --shadow-strong: rgba(43, 36, 23, 0.3);
+  --shadow-soft: rgba(43, 36, 23, 0.25);
 }
 
 @layer base {
@@ -20,133 +34,234 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-sand text-ink antialiased;
+    /* Paper: cream with a fine dot grain. */
+    background-color: var(--paper);
+    background-image: radial-gradient(rgba(43, 36, 23, 0.07) 1px, transparent 1px);
+    background-size: 13px 13px;
+    @apply text-ink-soft antialiased;
     font-family: var(--font-sans);
-    /* 17px base: our readers are often on a phone, under stress, sometimes with low
-       vision. Legibility outranks density here. */
     font-size: 17px;
-    line-height: 1.62;
+    line-height: 1.6;
+    /* Every numeral on this product is tabular — dates, amounts, day counts. */
+    font-variant-numeric: tabular-nums;
   }
-  /* Newsreader for headings + the wordmark — the K2 editorial voice: warm, screen-first,
-     with real authority. Its natural spacing is comfortable, so only a whisper of negative
-     tracking to keep large sizes tight. */
   h1,
   h2,
   h3 {
     font-family: var(--font-display);
     @apply text-ink;
-    font-weight: 700;
-    letter-spacing: -0.006em;
+    font-weight: 900;
+    letter-spacing: -0.02em;
   }
-  /* Visible, high-contrast focus for keyboard users (WCAG AA, non-negotiable). */
-  :focus-visible {
-    outline: 3px solid var(--rail-bg);
-    outline-offset: 2px;
-    border-radius: 4px;
-  }
+  /* Focus is handled OUTSIDE the layers (see the end of this file) — a box-shadow ring
+     here loses the cascade to .sticker/.card/.btn, which set their own box-shadow at the
+     same specificity later in the sheet, and the ring silently disappears. */
 }
 
 @layer components {
   .container-prose {
-    @apply mx-auto w-full max-w-prose px-[22px] sm:px-12;
+    @apply mx-auto w-full max-w-prose px-6;
   }
   .container-wide {
-    @apply mx-auto w-full max-w-content px-[22px] sm:px-12;
+    @apply mx-auto w-full max-w-content px-6;
   }
 
-  /* Card — single card pattern (white paper, hairline, squarer K2 radius). */
+  /* Sticker physics. Deterministic rotation per item via --rot (never randomised).
+     Interactive stickers straighten and lift on hover, and stick down on press. */
+  .sticker {
+    transform: rotate(var(--rot, 0deg));
+    box-shadow: 0 3px 0 var(--shadow-color);
+    transition: transform 150ms ease, box-shadow 150ms ease;
+  }
+  a.sticker:hover,
+  button.sticker:hover,
+  label.sticker:hover {
+    transform: rotate(0deg) translateY(-2px);
+  }
+  a.sticker:active,
+  button.sticker:active,
+  label.sticker:active {
+    transform: rotate(0deg) translateY(1px);
+    box-shadow: 0 1px 0 var(--shadow-color);
+  }
+
+  /* Card — a white sticker on the paper. */
   .card {
-    @apply rounded-card border border-line bg-paper p-5 shadow-card sm:p-6;
+    @apply rounded-card bg-paper p-5 sm:p-6;
+    box-shadow: 0 3px 0 var(--shadow-color);
   }
 
-  /* Eyebrow / kicker — uppercase, tracked, gold-on-sand accent (AA). */
+  /* Foil — the ONLY iridescent element allowed on a screen, reserved for the single
+     recommended action. Gradient wrapper + white inner card. */
+  .foil {
+    background: linear-gradient(115deg, #e9d8ff, #ffe9c7, #d2f4e0, #cfe6ff);
+    @apply rounded-card p-1.5;
+    box-shadow: 0 4px 0 var(--shadow-strong);
+  }
+  .foil-inner {
+    @apply bg-paper p-6;
+    border-radius: 9px;
+  }
+
+  /* Empty slot — the signature device for anything absent or pending. A gap in the
+     album, so it deliberately has NO shadow. Never used for deadlines. */
+  .slot-empty {
+    border: 3px dashed var(--red);
+    @apply rounded-card;
+    background: rgba(224, 69, 44, 0.06);
+  }
+
+  /* Numbered sticker chip (01/02/03). */
+  .chip {
+    @apply flex h-11 w-11 shrink-0 items-center justify-center rounded-sticker font-display text-[17px] font-black text-white;
+    box-shadow: 0 2px 0 var(--shadow-soft);
+  }
+
+  /* Pill — uppercase tag. */
+  .pill {
+    @apply inline-flex items-center rounded-pill px-3.5 py-2 font-display text-[12px] font-extrabold uppercase tracking-[0.06em];
+  }
+
+  /* Handwritten margin note. Uses --tan-ink (not the lighter --tan): Caveat 600 at 23px
+     is below the WCAG large-text threshold, so it needs the full 4.5:1. */
+  .note {
+    font-family: var(--font-note);
+    @apply font-semibold text-ink-faint;
+    font-size: 23px;
+    line-height: 1.25;
+  }
+
+  /* Receipt / meta line. */
+  .mono {
+    font-family: var(--font-mono);
+    @apply text-[12.5px] tracking-[0.04em];
+  }
+
+  /* The recurring privacy motif. */
+  .lock {
+    font-family: var(--font-mono);
+    @apply inline-flex items-center gap-2.5 text-[12.5px] text-ink-soft;
+  }
+
+  /* Section label — Archivo, uppercase, tracked. --tan-ink for AA at 13px (axe-verified;
+     the lighter --tan is 4.2:1 on white and is reserved for large display text only). */
   .eyebrow {
-    @apply text-[12px] font-semibold uppercase tracking-[0.18em] text-accent;
+    @apply font-display text-[13px] font-black uppercase tracking-[0.14em] text-ink-faint;
   }
 
-  /* Buttons — Libre Baskerville, ≥48px floor (K2 spec). */
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-button px-6 font-serif text-[15px] font-bold tracking-[0.04em] transition-colors;
-    min-height: 48px;
+    @apply inline-flex items-center justify-center gap-2.5 rounded-button font-display text-[17px] font-black;
+    min-height: 52px;
+    padding: 14px 28px;
+    border: none;
+    cursor: pointer;
+    transition: transform 150ms ease, box-shadow 150ms ease;
+  }
+  .btn:active {
+    transform: translateY(1px);
+    box-shadow: 0 1px 0 var(--shadow-strong);
   }
   .btn-lg {
-    min-height: 54px;
-    @apply text-[16px];
+    min-height: 56px;
+    @apply text-[18px];
   }
-  /* Primary CTA — deep teal rail fill, cream type. */
   .btn-primary {
-    @apply btn bg-rail text-rail-fg hover:bg-rail-dark;
+    background: var(--red-cta);
+    color: var(--cream-on-red);
+    box-shadow: 0 4px 0 var(--shadow-strong);
+  }
+  .btn-primary:hover {
+    color: var(--cream-on-red);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 var(--shadow-strong);
   }
   .btn-secondary {
-    @apply btn border-[1.5px] border-line bg-transparent text-rail hover:bg-sand-surface;
+    @apply bg-paper font-extrabold text-ink;
+    border: 2px solid var(--ink);
+    box-shadow: 0 3px 0 var(--shadow-soft);
+  }
+  .btn-secondary:hover {
+    @apply text-ink;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 0 var(--shadow-soft);
+  }
+  /* Free-help green and the deadline amber keep their own semantics. */
+  .btn-help {
+    @apply text-white;
+    background: #267b43;
+    box-shadow: 0 4px 0 var(--shadow-strong);
+  }
+  .btn-help:hover {
+    @apply text-white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 0 var(--shadow-strong);
   }
   .btn-deadline {
-    @apply btn bg-gold text-white hover:bg-gold-strong;
+    background: var(--amber-ink);
+    @apply text-white;
+    box-shadow: 0 4px 0 var(--shadow-strong);
   }
-  .btn-help {
-    @apply btn bg-help text-white hover:bg-help-ink;
-  }
-  /* Copper accent button — ONLY on the teal get-help band. */
   .btn-accent {
-    @apply btn bg-rail-accent text-rail hover:brightness-95;
+    background: var(--red-cta);
+    color: var(--cream-on-red);
+    box-shadow: 0 4px 0 var(--shadow-strong);
   }
 
-  /* In-content link — gold accent on sand, underlined. */
+  /* In-content link. */
   .link {
-    @apply text-accent underline underline-offset-2 hover:text-ink;
+    @apply text-red-ink underline underline-offset-2;
   }
-
-  /* Text link — uppercase tracked accent with an accent underline (secondary action). */
+  .link:hover {
+    @apply text-ink;
+  }
+  /* Action link — Archivo, uppercase, red (the "Begin" pattern). */
   .link-text {
-    @apply inline-flex items-center text-[14px] font-semibold uppercase tracking-[0.12em] text-accent;
-    border-bottom: 1px solid currentColor;
-    padding-bottom: 3px;
+    @apply inline-flex items-center gap-1.5 font-display text-[13px] font-extrabold uppercase tracking-[0.08em] text-red-ink;
+  }
+  .link-text:hover {
+    @apply text-ink;
   }
 
-  /* Form control */
+  /* Form control. */
   .input {
-    @apply w-full rounded-input border border-line bg-paper px-3.5 py-2.5 text-ink placeholder:text-ink-faint;
+    @apply w-full rounded-input border-2 border-line bg-paper px-4 py-3 text-ink placeholder:text-ink-faint;
     min-height: 48px;
   }
+  .input:focus {
+    border-color: var(--ink);
+  }
 
-  /* Skip link for screen-reader / keyboard users. */
+  /* Marker highlight — a felt-tip swipe under a phrase, not a border. */
+  .marker {
+    box-shadow: inset 0 -10px 0 rgba(224, 69, 44, 0.35);
+  }
+
   .skip-link {
     @apply sr-only;
   }
   .skip-link:focus {
-    @apply not-sr-only fixed left-4 top-4 z-50 rounded bg-rail px-4 py-2 text-rail-fg;
+    @apply not-sr-only fixed left-4 top-4 z-50 rounded-sticker px-4 py-2 font-display font-bold;
+    background: var(--red-cta);
+    color: var(--cream-on-red);
   }
 }
 
-/* Subtle step / panel transition (neutralised under reduced-motion below). */
-@keyframes wn-fade {
-  from {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-.wn-step {
-  animation: wn-fade 0.18s ease both;
-}
-
-/* Chat panel slide-in (disabled under reduced-motion). */
-@keyframes wn-slide-in {
-  from {
-    opacity: 0;
-    transform: translateX(16px);
-  }
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-
-/* Respect reduced-motion — neutralise non-essential animation. */
+/* Reduced motion — no transitions, and stickers keep their resting angle. */
 @media (prefers-reduced-motion: reduce) {
+  .sticker,
+  .btn {
+    transition: none;
+  }
+  a.sticker:hover,
+  button.sticker:hover,
+  label.sticker:hover {
+    transform: rotate(var(--rot, 0deg));
+  }
+  .btn-primary:hover,
+  .btn-secondary:hover,
+  .btn-help:hover {
+    transform: none;
+  }
   *,
   *::before,
   *::after {
@@ -157,73 +272,93 @@
   }
 }
 
-/* --- Guided walkthrough (driver.js) --------------------------------------------------
-   Doubled specificity (.wn-tour.wn-tour): driver.js ships its own CSS which can load AFTER
-   ours, and an equal-specificity override silently loses (harness §14.11). */
+@keyframes wn-fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+.wn-step { animation: wn-fade 0.18s ease both; }
+
+@keyframes wn-slide-in {
+  from { opacity: 0; transform: translateX(16px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Guided walkthrough (driver.js) — doubled specificity, because driver's own CSS can
+   load after ours and an equal-specificity override silently loses (harness 14.11). */
 .driver-popover.wn-tour.wn-tour {
-  background: #fdfbf7;
-  border: 1px solid #c8bda2;
-  border-radius: 6px;
-  box-shadow: 0 12px 32px rgba(16, 54, 61, 0.18);
+  background: #ffffff;
+  border: 2px solid #2b2417;
+  border-radius: 12px;
+  box-shadow: 0 4px 0 rgba(43, 36, 23, 0.3);
   max-width: 340px;
   padding: 18px 20px 16px;
 }
 .driver-popover.wn-tour.wn-tour .driver-popover-title {
   font-family: var(--font-display);
-  font-weight: 700;
+  font-weight: 900;
   font-size: 19px;
   line-height: 1.25;
-  color: #1d2b2e;
-  letter-spacing: -0.011em;
+  color: #2b2417;
+  letter-spacing: -0.015em;
 }
 .driver-popover.wn-tour.wn-tour .driver-popover-description {
   font-family: var(--font-sans);
-  font-size: 15.5px;
+  font-size: 15px;
   line-height: 1.55;
-  color: #3c4a4d;
+  color: #5c5138;
   margin-top: 6px;
 }
 .driver-popover.wn-tour.wn-tour .driver-popover-progress-text {
-  font-size: 13px;
-  color: #6b7678;
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: #786a4a;
   font-variant-numeric: tabular-nums;
 }
 .driver-popover.wn-tour.wn-tour .driver-popover-navigation-btns button {
-  font-family: var(--font-serif);
+  font-family: var(--font-display);
   font-size: 14px;
-  font-weight: 700;
-  background: #10363d;
-  color: #eef0e8;
+  font-weight: 800;
+  background: #cd3f28;
+  color: #fff6ec;
   border: none;
-  border-radius: 4px;
+  border-radius: 10px;
   padding: 9px 16px;
   text-shadow: none;
-  min-height: 40px;
+  min-height: 44px;
 }
 .driver-popover.wn-tour.wn-tour .driver-popover-navigation-btns button:hover {
-  background: #0c2a30;
+  background: #b8351f;
 }
-/* Must match the button rule above on element+class count, or it silently loses the
-   cascade to `… .driver-popover-navigation-btns button` and Back renders as a primary. */
 .driver-popover.wn-tour.wn-tour .driver-popover-navigation-btns button.driver-popover-prev-btn {
-  background: transparent;
-  color: #3c4a4d;
-  border: 1px solid #c8bda2;
+  background: #ffffff;
+  color: #2b2417;
+  border: 2px solid #2b2417;
 }
 .driver-popover.wn-tour.wn-tour .driver-popover-navigation-btns button.driver-popover-prev-btn:hover {
-  background: #efe7d2;
-  color: #1d2b2e;
+  background: #f6edd9;
 }
-/* Disabled (Back on the first step): present but clearly inert. */
 .driver-popover.wn-tour.wn-tour .driver-popover-navigation-btns button:disabled,
 .driver-popover.wn-tour.wn-tour .driver-popover-navigation-btns button.driver-popover-btn-disabled {
   opacity: 0.35;
   pointer-events: none;
 }
 .driver-popover.wn-tour.wn-tour .driver-popover-close-btn {
-  color: #6b7678;
+  color: #786a4a;
   font-size: 22px;
 }
 .driver-popover.wn-tour.wn-tour .driver-popover-arrow {
-  border-color: #fdfbf7;
+  border-color: #ffffff;
+}
+
+/* ── Keyboard focus ────────────────────────────────────────────────────────────────
+   Deliberately UNLAYERED and at the end of the file, using `outline` rather than a
+   box-shadow ring. The sticker language gives almost every interactive element its own
+   hard-offset box-shadow (.sticker/.card/.btn-*), so a box-shadow focus ring at base
+   specificity is overwritten and the indicator vanishes for keyboard users. `outline`
+   cannot be clobbered that way, and `outline-offset` reproduces the design's white-gap +
+   ink-ring look on both paper and white surfaces. */
+:focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 4px;
 }

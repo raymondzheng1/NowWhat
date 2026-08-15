@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/learn" },
 };
 
+/** Deterministic tilts — chosen once, never randomised. */
+const PROCESS_ROT = ["-1.5deg", "0.9deg"];
+const GROUND_PILL_ROT = ["-0.8deg", "0.6deg", "-0.6deg"];
+
 export default function LearnHubPage() {
   // Merits review first — it's the path most people want (a different outcome).
   const processes = [...listProcesses()].sort((a) => (a.id === "merits-review" ? -1 : 1));
@@ -42,38 +46,51 @@ export default function LearnHubPage() {
         })}
       />
       <header className="max-w-[720px]">
-        <p className="text-[12px] uppercase tracking-[0.28em] text-accent">Understand your options</p>
-        <h1 className="mt-4 font-display text-[40px] font-bold leading-[1.06] text-ink sm:text-[52px]">
-          How review works
+        <p className="eyebrow text-ink-faint">Understand your options</p>
+        <h1 className="mt-4 font-display text-[40px] font-black leading-[1.02] text-ink sm:text-[52px]">
+          How review <span className="marker">works</span>
         </h1>
-        <p className="mt-5 max-w-[60ch] font-display text-[19px] leading-[1.6] text-ink-soft">
+        <p className="mt-5 max-w-[60ch] text-[19px] leading-[1.6] text-ink-soft">
           If a government decision has gone against you, there are usually two ways to challenge it.
           Here is each one in plain English — what it is, who hears it, and what it can do — plus the
-          grounds people raise. Read what you need; you don’t have to take it all in at once.
+          grounds people raise.
         </p>
-        <div className="mt-6 flex flex-wrap gap-x-6 gap-y-3">
-          <Link href="/learn/tour" className="btn-primary">
+        <p className="note mt-4" style={{ transform: "rotate(-1.2deg)" }}>
+          Read what you need; you don’t have to take it all in at once.
+        </p>
+        <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <Link
+            href="/learn/tour"
+            className="btn btn-primary sticker"
+            style={{ "--rot": "-0.7deg" } as React.CSSProperties}
+          >
             Take the 2-minute tour
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
               <path d="M5 12h14M13 6l6 6-6 6" />
             </svg>
           </Link>
-          <Link href="/start" className="link-text self-center">Work out my decision</Link>
+          <Link href="/start" className="link-text min-h-[44px] self-center">Work out my decision</Link>
         </div>
       </header>
 
       {/* The two processes */}
-      <div className="mt-12 grid gap-5 sm:grid-cols-2">
-        {processes.map((p) => (
+      <div className="mt-12 grid gap-6 sm:grid-cols-2">
+        {processes.map((p, i) => (
           <Link
             key={p.id}
             href={`/learn/${p.id}`}
-            className="group rounded-card border border-line bg-paper p-6 transition-colors hover:border-rail-accent"
+            className="card sticker flex flex-col gap-3 text-ink-soft"
+            style={{ "--rot": PROCESS_ROT[i % PROCESS_ROT.length] } as React.CSSProperties}
           >
-            <p className="text-[12px] uppercase tracking-[0.18em] text-accent">{p.plainName}</p>
-            <h2 className="mt-2 font-display text-[26px] font-bold text-ink">{p.name}</h2>
-            <p className="mt-2 text-[16px] leading-[1.6] text-ink-soft">{p.oneLine}</p>
-            <span className="link-text mt-4 inline-block group-hover:text-ink">Read more</span>
+            <span className="pill self-start bg-cream text-ink-soft">{p.plainName}</span>
+            <h2 className="font-display text-[26px] font-black leading-[1.15] text-ink">{p.name}</h2>
+            <p className="flex-1 text-[16px] leading-[1.6] text-ink-soft">{p.oneLine}</p>
+            <span className="link-text">
+              Read more
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden="true">
+                <path d="M5 12h14M13 6l6 6-6 6" />
+              </svg>
+            </span>
           </Link>
         ))}
       </div>
@@ -81,35 +98,47 @@ export default function LearnHubPage() {
       {/* Compare */}
       <Link
         href="/learn/compare"
-        className="mt-5 flex flex-col gap-2 rounded-card border border-line bg-sand-surface p-6 transition-colors hover:border-rail-accent sm:flex-row sm:items-center sm:justify-between"
+        className="card sticker mt-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-6"
+        style={{ "--rot": "0.6deg" } as React.CSSProperties}
       >
         <div>
-          <h2 className="font-display text-[22px] font-bold text-ink">Not sure which one?</h2>
-          <p className="mt-1 text-[16px] text-ink-soft">{comparison.chooser.question} — see them side by side and a quick guide.</p>
+          <h2 className="font-display text-[22px] font-black text-ink">Not sure which one?</h2>
+          <p className="mt-1 text-[16px] leading-[1.6] text-ink-soft">{comparison.chooser.question} — see them side by side and a quick guide.</p>
         </div>
-        <span className="link-text whitespace-nowrap">Compare them</span>
+        <span className="link-text whitespace-nowrap">
+          Compare them
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </span>
       </Link>
 
       {/* Grounds teaser */}
-      <section className="mt-12">
-        <h2 className="font-display text-[28px] font-bold text-ink">The grounds of review</h2>
+      <section className="mt-14">
+        <h2 className="font-display text-[28px] font-black text-ink">The grounds of review</h2>
         <p className="mt-2 max-w-[60ch] text-[16px] leading-[1.6] text-ink-soft">
           For judicial review you need a “ground” — a specific legal problem with how the decision was
           made. There are {grounds.length} common ones. Each is explained in plain English, with everyday
           examples and what might relate to your situation.
         </p>
-        <div className="mt-5 flex flex-wrap gap-2">
-          {grounds.map((g) => (
+        <div className="mt-6 flex flex-wrap gap-2.5">
+          {grounds.map((g, i) => (
             <Link
               key={g.id}
               href={`/learn/grounds/${g.id}`}
-              className="rounded-pill border border-line bg-paper px-3.5 py-1.5 text-[14px] text-ink hover:border-rail-accent"
+              className="sticker inline-flex min-h-[44px] items-center rounded-pill border-2 border-line bg-paper px-4 py-2 text-[14.5px] text-ink"
+              style={{ "--rot": GROUND_PILL_ROT[i % GROUND_PILL_ROT.length] } as React.CSSProperties}
             >
               {g.plainName}
             </Link>
           ))}
         </div>
-        <Link href="/learn/grounds" className="link-text mt-5 inline-block">Explore all grounds</Link>
+        <Link href="/learn/grounds" className="link-text mt-4 inline-flex min-h-[44px]">
+          Explore all grounds
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.6" aria-hidden="true">
+            <path d="M5 12h14M13 6l6 6-6 6" />
+          </svg>
+        </Link>
       </section>
 
       <LearnTrust />

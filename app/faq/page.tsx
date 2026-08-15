@@ -11,8 +11,9 @@ export const metadata: Metadata = {
 };
 
 /**
- * FAQ index (K2 editorial) — the answer library. Categories as sections, each question a
- * ruled row (hairline dividers, not floating cards), matching the homepage index language.
+ * FAQ index (sticker album) — the answer library. Categories are sections with a tracked
+ * label over a 2px ink rule; each question is a ruled row, deliberately UNROTATED so a
+ * dense list stays scannable. The only sticker on the page is the closing CTA card.
  * This page is a primary SEO surface; keep headings descriptive and links keyword-rich.
  */
 export default function FaqIndexPage() {
@@ -24,20 +25,22 @@ export default function FaqIndexPage() {
     <div className="container-wide py-12 sm:py-16">
       <PageHeader kicker={t("kicker")} title={t("title")} lead={t("intro")} />
 
-      <div className="mt-10 grid gap-x-14 gap-y-10 lg:grid-cols-2">
+      <p className="note mt-5 -rotate-0.8">{t("indexNote")}</p>
+
+      <div className="mt-10 grid gap-x-14 gap-y-12 lg:grid-cols-2">
         {categories.map((cat) => (
           <section key={cat} aria-label={cat}>
-            <h2 className="text-[12px] font-semibold uppercase tracking-[0.2em] text-accent">{cat}</h2>
-            <ul className="mt-3 border-t border-line-strong">
+            <h2 className="eyebrow text-ink-faint">{cat}</h2>
+            <ul className="mt-3 border-t-2 border-ink">
               {faqs
                 .filter((f) => (f.category ?? "General") === cat)
                 .map((f) => (
                   <li key={f.slug} className="border-b border-line">
                     <Link href={`/faq/${f.slug}`} className="group block py-4">
-                      <span className="font-display text-[19px] font-bold leading-snug text-ink group-hover:text-accent">
+                      <span className="font-display text-[19px] font-black leading-snug text-ink group-hover:text-red-ink">
                         {f.question}
                       </span>
-                      <p className="mt-1 text-[14.5px] leading-[1.55] text-ink-soft">{f.description}</p>
+                      <p className="mt-1 text-sm text-ink-soft">{f.description}</p>
                     </Link>
                   </li>
                 ))}
@@ -46,13 +49,17 @@ export default function FaqIndexPage() {
         ))}
       </div>
 
-      {/* Onward CTA — bordered panel in the K2 language */}
-      <div className="mt-14 flex flex-col gap-5 border border-line-strong bg-paper p-7 sm:flex-row sm:items-center sm:justify-between sm:p-8">
+      {/* Onward CTA — a white sticker card laid on the paper (no foil: the article pages
+          carry the one recommended action). */}
+      <div
+        className="card sticker mt-14 flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"
+        style={{ "--rot": "-0.7deg" } as React.CSSProperties}
+      >
         <div>
-          <h2 className="font-display text-[22px] font-bold text-ink">{t("ctaTitle")}</h2>
-          <p className="mt-1 text-[15.5px] text-ink-soft">{t("ctaBody")}</p>
+          <h2 className="text-h2">{t("ctaTitle")}</h2>
+          <p className="mt-1.5 text-sm text-ink-soft">{t("ctaBody")}</p>
         </div>
-        <Link href="/start" className="btn-primary whitespace-nowrap px-6 sm:flex-none">
+        <Link href="/start" className="btn btn-primary whitespace-nowrap sm:flex-none">
           {t("ctaButton")}
           <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
             <path d="M5 12h14M13 6l6 6-6 6" />

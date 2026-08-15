@@ -31,6 +31,12 @@ export async function generateMetadata({
   };
 }
 
+/**
+ * FAQ article (sticker album) — mono breadcrumb, the question as the headline, the short
+ * answer on a white sticker card, then the prose, the standing disclaimer, the sources
+ * panel, and the ONE foil element allowed on this screen: the "work out what you can do"
+ * CTA. Everything else stays square so the reading column is calm.
+ */
 export default async function FaqPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const faq = getFaq(slug);
@@ -66,18 +72,26 @@ export default async function FaqPage({ params }: { params: Promise<{ slug: stri
   };
 
   return (
-    <article className="container-prose py-10">
+    <article className="container-prose py-10 sm:py-14">
       <JsonLd data={faqLd} />
       <JsonLd data={breadcrumbLd} />
 
-      <nav aria-label="Breadcrumb" className="mb-4 text-sm text-ink-faint">
-        <Link href="/faq" className="link">{t("title")}</Link> <span aria-hidden>/</span>
+      <nav aria-label="Breadcrumb" className="mono mb-5 uppercase text-ink-faint">
+        <Link href="/faq" className="underline underline-offset-[3px] hover:text-ink">{t("title")}</Link> <span aria-hidden>/</span>
       </nav>
 
-      <h1 className="font-display text-3xl font-bold text-ink">{faq.question}</h1>
-      <p className="mt-4 text-lg text-ink-soft">{faq.answer}</p>
+      <h1 className="text-h1">{faq.question}</h1>
 
-      <div className="mt-6">
+      {/* The short answer — the one thing to read, on a sticker. */}
+      <div
+        className="card sticker mt-6"
+        style={{ "--rot": "-0.9deg" } as React.CSSProperties}
+      >
+        <p className="eyebrow text-ink-faint">{t("answer")}</p>
+        <p className="mt-2.5 text-lede text-ink-soft">{faq.answer}</p>
+      </div>
+
+      <div className="mt-8">
         <Markdown>{faq.body}</Markdown>
       </div>
 
@@ -87,13 +101,16 @@ export default async function FaqPage({ params }: { params: Promise<{ slug: stri
         <SourcesPanel sources={faq.sources} lastVerified={faq.updated} />
       </div>
 
-      {/* Conversion CTA into the tool (tracked) — harness §14.2 */}
-      <div className="card mt-6 bg-navy-soft">
-        <h2 className="font-serif text-lg font-bold text-navy-ink">{t("ctaTitle")}</h2>
-        <p className="mt-1 text-ink-soft">{t("ctaBody")}</p>
-        <Link href={`/decode?source=faq&topic=${slug}`} className="btn-primary mt-3">
-          {t("ctaButton")}
-        </Link>
+      {/* Conversion CTA into the tool (tracked) — harness §14.2. The single foil element
+          on this screen: the one recommended action. */}
+      <div className="foil sticker mt-8" style={{ "--rot": "1.1deg" } as React.CSSProperties}>
+        <div className="foil-inner">
+          <h2 className="text-h2">{t("ctaTitle")}</h2>
+          <p className="mt-1.5 text-sm text-ink-soft">{t("ctaBody")}</p>
+          <Link href={`/decode?source=faq&topic=${slug}`} className="btn btn-primary mt-5 w-full sm:w-auto">
+            {t("ctaButton")} <span aria-hidden="true">→</span>
+          </Link>
+        </div>
       </div>
 
       {help.length > 0 && (
@@ -103,12 +120,18 @@ export default async function FaqPage({ params }: { params: Promise<{ slug: stri
       )}
 
       {faq.related.length > 0 && (
-        <section className="mt-8">
-          <h2 className="font-display text-lg font-bold text-ink">{t("relatedTitle")}</h2>
-          <ul className="mt-2 space-y-1">
+        <section className="mt-10">
+          <h2 className="eyebrow text-ink-faint">{t("relatedTitle")}</h2>
+          <ul className="mt-3 border-t-2 border-ink">
             {faq.related.map((r) => (
-              <li key={r}>
-                <Link href={`/faq/${r}`} className="link">{r}</Link>
+              <li key={r} className="border-b border-line">
+                <Link
+                  href={`/faq/${r}`}
+                  className="group flex items-center justify-between gap-4 py-3.5 text-[16px] font-medium text-ink hover:text-red-ink"
+                >
+                  {r}
+                  <span aria-hidden="true" className="text-ink-faint group-hover:text-red-ink">→</span>
+                </Link>
               </li>
             ))}
           </ul>

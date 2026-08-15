@@ -36,8 +36,8 @@ export default function ComparePage() {
       )}
 
       <header className="max-w-[720px]">
-        <p className="text-[12px] uppercase tracking-[0.22em] text-accent">Two paths</p>
-        <h1 className="mt-3 font-display text-[34px] font-bold leading-[1.06] text-ink sm:text-[44px]">
+        <p className="eyebrow text-ink-faint">Two paths</p>
+        <h1 className="mt-3 font-display text-[34px] font-black leading-[1.03] tracking-[-0.025em] text-ink sm:text-[44px]">
           Merits review vs judicial review
         </h1>
       </header>
@@ -46,16 +46,19 @@ export default function ComparePage() {
       </div>
 
       {comparison.faq.length > 0 && (
-        <section aria-labelledby="compare-faq" className="mt-12">
-          <h2 id="compare-faq" className="font-display text-[26px] font-bold text-ink">Common questions</h2>
-          <dl className="mt-5 divide-y divide-line border-y border-line">
-            {comparison.faq.map((f) => (
-              <div key={f.q} className="py-4">
-                <dt className="font-display text-[18px] font-bold text-ink">{f.q}</dt>
-                <dd className="mt-1.5 text-[16px] leading-[1.6] text-ink-soft">{f.a}</dd>
-              </div>
-            ))}
-          </dl>
+        <section aria-labelledby="compare-faq" className="mt-14">
+          <h2 id="compare-faq" className="font-display text-[26px] font-black text-ink">Common questions</h2>
+          {/* Dense Q&A — one upright card, no tilt, so it stays easy to scan. */}
+          <div className="card mt-5 border-2 border-line">
+            <dl className="divide-y-2 divide-line">
+              {comparison.faq.map((f, i) => (
+                <div key={f.q} className={i === 0 ? "pb-4" : "py-4 last:pb-0"}>
+                  <dt className="font-display text-[18px] font-black leading-[1.25] text-ink">{f.q}</dt>
+                  <dd className="mt-1.5 text-[16px] leading-[1.6] text-ink-soft">{f.a}</dd>
+                </div>
+              ))}
+            </dl>
+          </div>
         </section>
       )}
 

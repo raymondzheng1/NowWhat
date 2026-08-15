@@ -46,7 +46,10 @@ export default async function GroundPage({ params }: { params: Promise<{ id: str
         })}
       />
       <GroundExplainer ground={g} level="h1" />
-      <div className="mt-8 rounded-card border border-line bg-sand-surface p-5">
+      <div
+        className="card sticker mt-10 border-2 border-line"
+        style={{ "--rot": "0.9deg" } as React.CSSProperties}
+      >
         <p className="text-[15.5px] leading-[1.6] text-ink-soft">
           Grounds like this are used in{" "}
           <Link href="/learn/judicial-review" className="link">judicial review</Link>. If you want the

@@ -3,59 +3,68 @@ import { useTranslations } from "next-intl";
 import { listProcesses, listGrounds } from "@/lib/legal";
 import { JsonLd } from "@/components/site/JsonLd";
 import { itemListLd } from "@/lib/seo/jsonld";
+import { PrivacyNote } from "@/components/ui/PrivacyNote";
 
 /**
- * Landing (Direction K2 "Deep teal & sand") — the trust funnel: hero → numbered
- * how-it-works index → trust band → Learn band → teal get-help band. One primary action:
- * "Find out what you can do" (/start). The brand rail, top nav, footer and the persistent
- * chat launcher are provided by SiteShell.
+ * Landing — "sticker album" (design20260816). Stickers laid on cream paper: hero note +
+ * two-line headline with a felt-tip marker on the turn, the single foil card (the ONLY
+ * iridescent element on the page, reserved for the recommended action), three numbered
+ * ways to start, the calm amber time-limit sticker paired with the dashed empty slot,
+ * and the human-help card. The header/footer come from SiteShell.
  *
- * Time limits are deliberately NOT headlined here (product decision, 2026-06-30): they are
- * not critical for our users, so they appear only as a brief, generic, Act-referencing note
- * inside the per-decision analysis on /start — never on the homepage, never a countdown.
+ * Rotations are deterministic per element (never randomised) and come from the handoff's
+ * rotation scale. Anything absent/pending uses the dashed .slot-empty device; the time
+ * limit is always amber and calm — never red, never a countdown.
  *
- * The Learn band is the educational entry point: keyword-rich copy + descriptive internal
- * links to the /learn library (the homepage is the highest-authority page, so this funnels
- * crawl + link equity to those pages) + ItemList structured data for richer results.
+ * NOTE ON THE TIME-LIMIT CARD: the design reference hard-codes "Usually 28 days". We show
+ * the same device with the posture instead of a figure — the data layer is lawyer-confirmed
+ * to state time limits generically, and this product never asserts a legal figure without
+ * a source attached to the specific decision.
  */
 export default function HomePage() {
   const t = useTranslations("home");
-
-  const steps = [
-    { n: "01", title: t("howStep1Title"), body: t("howStep1Body") },
-    { n: "02", title: t("howStep2Title"), body: t("howStep2Body") },
-    { n: "03", title: t("howStep3Title"), body: t("howStep3Body") },
-  ];
-  const trust = [
-    { title: t("trust1Title"), body: t("trust1Body") },
-    { title: t("trust2Title"), body: t("trust2Body") },
-    { title: t("trust3Title"), body: t("trust3Body") },
-    { title: t("trust4Title"), body: t("trust4Body") },
-  ];
 
   const processes = listProcesses();
   const grounds = listGrounds();
   const merits = processes.find((p) => p.id === "merits-review");
   const judicial = processes.find((p) => p.id === "judicial-review");
-  const learnLinks = [
-    { href: "/learn/merits-review", kind: t("learnKindProcess"), title: t("linkMeritsTitle"), desc: merits?.oneLine ?? "" },
-    { href: "/learn/judicial-review", kind: t("learnKindProcess"), title: t("linkJudicialTitle"), desc: judicial?.oneLine ?? "" },
-    { href: "/learn/grounds", kind: t("learnKindGrounds"), title: t("linkGroundsTitle"), desc: t("linkGroundsDesc", { count: grounds.length }) },
-    { href: "/learn/compare", kind: t("learnKindCompare"), title: t("linkCompareTitle"), desc: t("linkCompareDesc") },
+
+  const ways = [
+    {
+      href: "/start",
+      n: "01",
+      gradient: "linear-gradient(135deg,#2B8A4B,#308371)",
+      title: t("way1Title"),
+      body: t("way1Body"),
+      cta: t("way1Cta"),
+      rot: "-1.5deg",
+    },
+    {
+      href: "/decode",
+      n: "02",
+      gradient: "linear-gradient(135deg,#2F6FBF,#308371)",
+      title: t("way2Title"),
+      body: t("way2Body"),
+      cta: t("way2Cta"),
+      rot: "0.9deg",
+    },
+    {
+      href: "/ask",
+      n: "03",
+      gradient: "linear-gradient(135deg,#7A4FB3,#B75681)",
+      title: t("way3Title"),
+      body: t("way3Body"),
+      cta: t("way3Cta"),
+      rot: "2.2deg",
+    },
   ];
 
-  // Hairline borders for the bordered index grid (a tight 2×2 "library index", not floating
-  // cards): stacked dividers on mobile, a + of dividers on desktop. Outer frame on the wrapper.
-  const cellBorder = (i: number) =>
-    [
-      "border-line",
-      i !== 0 ? "border-t" : "",
-      "sm:border-t-0",
-      i % 2 === 0 ? "sm:border-r" : "",
-      i < learnLinks.length - 2 ? "sm:border-b" : "",
-    ]
-      .filter(Boolean)
-      .join(" ");
+  const learnLinks = [
+    { href: "/learn/merits-review", title: t("linkMeritsTitle"), desc: merits?.oneLine ?? "" },
+    { href: "/learn/judicial-review", title: t("linkJudicialTitle"), desc: judicial?.oneLine ?? "" },
+    { href: "/learn/grounds", title: t("linkGroundsTitle"), desc: t("linkGroundsDesc", { count: grounds.length }) },
+    { href: "/learn/compare", title: t("linkCompareTitle"), desc: t("linkCompareDesc") },
+  ];
 
   const learnLd = itemListLd({
     name: "How review works — understand your options",
@@ -67,130 +76,151 @@ export default function HomePage() {
   return (
     <div>
       <JsonLd data={learnLd} />
+
       {/* ===== Hero ===== */}
-      <header className="container-wide pb-9 pt-8 sm:pt-16">
-        <p className="text-[12px] uppercase tracking-[0.28em] text-accent">{t("heroEyebrow")}</p>
-        <h1 className="mt-5 max-w-[860px] font-display text-[36px] font-bold leading-[1.08] sm:text-display">
-          {t("heroTitle")}
-        </h1>
-        <p className="mt-6 max-w-[560px] font-display text-[16px] leading-[1.7] text-ink-soft sm:text-lede">
-          {t("heroLead")}
-        </p>
-        <div className="mt-9 flex flex-wrap items-center gap-x-7 gap-y-4">
-          <Link href="/start" className="btn-primary px-7">
-            {t("ctaStart")}
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
-              <path d="M5 12h14M13 6l6 6-6 6" />
-            </svg>
-          </Link>
-          <Link href="/decode" className="link-text">
-            {t("ctaScan")}
-          </Link>
+      <section className="container-wide grid items-start gap-10 pb-12 pt-12 lg:grid-cols-[1.25fr_1fr] lg:gap-[52px] lg:pt-16">
+        <div>
+          <p className="note mb-3.5 -rotate-1.4">{t("heroNote")}</p>
+          {/* One h1, two visual lines: the design sets these as separate lines, but a page
+              must have a single top-level heading for screen readers and search. */}
+          <h1 className="mb-7 text-display">
+            <span className="block">{t("heroTitle")}</span>
+            <span className="block">
+              {t("heroTitle2a")} <span className="marker">{t("heroTitle2b")}</span>
+            </span>
+          </h1>
+          <p className="mb-6 max-w-[560px] text-lede text-ink-soft [text-wrap:pretty]">{t("heroLead")}</p>
+          <PrivacyNote>{t("lockLine")}</PrivacyNote>
         </div>
-      </header>
 
-      {/* ===== Numbered "how it works" index ===== */}
-      <section id="how" aria-label={t("howTitle")} className="container-wide scroll-mt-6 py-2">
-        {steps.map((s, i) => (
-          <div
-            key={s.n}
-            className={`flex flex-wrap items-baseline gap-x-6 gap-y-1 py-[22px] ${
-              i === 0 ? "border-t border-line-strong" : "border-t border-line"
-            } ${i === steps.length - 1 ? "border-b border-line" : ""}`}
-          >
-            <span className="w-[42px] flex-none font-display text-[22px] font-bold text-accent">{s.n}</span>
-            <h2 className="flex-none font-display text-[22px] font-bold text-ink sm:w-[300px]">{s.title}</h2>
-            <p className="hidden flex-1 text-[15.5px] leading-[1.6] text-ink-soft sm:block">{s.body}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* ===== Trust band ===== */}
-      <section aria-label="What you can rely on" className="container-wide py-2">
-        <div className="grid grid-cols-2 divide-x divide-y divide-line border-y border-line md:grid-cols-4 md:divide-y-0">
-          {trust.map((c) => (
-            <div key={c.title} className="p-5 sm:p-6">
-              <h2 className="font-display text-[18px] font-bold text-ink">{c.title}</h2>
-              <p className="mt-1 hidden text-meta leading-[1.5] text-ink-faint sm:block">{c.body}</p>
+        {/* The foil card — the ONLY iridescent element on this page. */}
+        <div className="foil rotate-1.6">
+          <div className="foil-inner">
+            <div className="mb-2.5 flex flex-wrap items-center justify-between gap-2.5">
+              <span className="eyebrow">{t("foilLabel")}</span>
+              <span className="note text-[20px]">{t("foilNote")}</span>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* ===== Learn band — the plain-English guide library (editorial index, SEO entry point) ===== */}
-      <section aria-labelledby="learn-band-title" className="border-y border-line bg-sand-surface">
-        <div className="container-wide grid gap-10 py-14 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16 lg:py-20">
-          {/* Editorial intro */}
-          <div className="lg:pr-4">
-            <p className="text-[12px] uppercase tracking-[0.28em] text-accent">{t("learnKicker")}</p>
-            <h2
-              id="learn-band-title"
-              className="mt-4 font-display text-[34px] font-bold leading-[1.06] text-ink sm:text-[44px]"
-            >
-              {t("learnTitle")}{" "}
-              <span className="font-normal italic text-accent">{t("learnTitleAccent")}</span>
-            </h2>
-            <p className="mt-6 max-w-[46ch] text-[16.5px] leading-[1.68] text-ink-soft">{t("learnLead")}</p>
-            <Link href="/learn" className="btn-primary mt-8 px-6">
-              {t("learnCta")}
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" aria-hidden="true">
-                <path d="M5 12h14M13 6l6 6-6 6" />
-              </svg>
+            <h2 className="mb-2 text-h2">{t("foilTitle")}</h2>
+            <p className="mb-4.5 text-[15px] leading-relaxed text-ink-soft">{t("foilBody")}</p>
+            <Link href="/start" className="btn btn-primary mb-2.5 w-full">
+              {t("ctaStart")} <span aria-hidden="true">→</span>
+            </Link>
+            <Link href="/decode" className="btn btn-secondary w-full !min-h-[48px]">
+              {t("ctaScan")}
             </Link>
           </div>
-
-          {/* Bordered index grid */}
-          <div className="border border-line-strong bg-paper">
-            <ul className="grid sm:grid-cols-2">
-              {learnLinks.map((l, i) => (
-                <li key={l.href}>
-                  <Link
-                    href={l.href}
-                    className={`group flex h-full flex-col p-6 transition-colors hover:bg-sand-surface ${cellBorder(i)}`}
-                  >
-                    <span className="text-[11.5px] font-semibold uppercase tracking-[0.18em] text-accent">{l.kind}</span>
-                    <h3 className="mt-2.5 font-display text-[21px] font-bold leading-snug text-ink group-hover:text-accent">
-                      {l.title}
-                    </h3>
-                    {l.desc ? (
-                      <p className="mt-1.5 text-[14.5px] leading-[1.5] text-ink-soft">{l.desc}</p>
-                    ) : null}
-                    <span className="mt-auto inline-flex items-center gap-1.5 pt-4 text-[12px] font-semibold uppercase tracking-[0.12em] text-ink-faint transition-colors group-hover:text-accent">
-                      Read
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" aria-hidden="true" className="transition-transform group-hover:translate-x-0.5">
-                        <path d="M5 12h14M13 6l6 6-6 6" />
-                      </svg>
-                    </span>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
         </div>
       </section>
 
-      {/* ===== Get-help band (full-bleed teal) ===== */}
-      <section aria-label={t("helpTitle")} className="mt-12 bg-rail text-rail-fg">
-        <div className="container-wide flex flex-col gap-6 py-11 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h2 className="font-display text-h2 font-bold text-rail-fg">{t("helpTitle")}</h2>
-            <p className="mt-1.5 max-w-[460px] text-[16px] text-rail-fg/80">{t("helpBody")}</p>
-            <div className="mt-3.5 flex flex-wrap gap-2">
-              <span className="rounded-pill bg-help px-3 py-1.5 text-[12px] uppercase tracking-[0.08em] text-white">
-                {t("tier1")}
-              </span>
-              <span className="rounded-pill bg-rail-fg/10 px-3 py-1.5 text-[12px] uppercase tracking-[0.08em] text-rail-fg">
-                {t("tier2")}
-              </span>
-              <span className="rounded-pill bg-rail-fg/10 px-3 py-1.5 text-[12px] uppercase tracking-[0.08em] text-rail-fg">
-                {t("tier3")}
-              </span>
+      {/* ===== Three ways to start ===== */}
+      <section className="container-wide pb-14">
+        <p className="note mb-4 -rotate-0.8">{t("waysNote")}</p>
+        <ul className="grid gap-[26px] md:grid-cols-3">
+          {ways.map((w) => (
+            <li key={w.href}>
+              <Link
+                href={w.href}
+                className="card sticker flex h-full flex-col gap-3 !p-[22px] text-ink-soft"
+                style={{ "--rot": w.rot } as React.CSSProperties}
+              >
+                <span className="chip" style={{ background: w.gradient }} aria-hidden="true">
+                  {w.n}
+                </span>
+                <span className="font-display text-title font-black text-ink">{w.title}</span>
+                <span className="flex-1 text-sm">{w.body}</span>
+                <span className="link-text">
+                  {w.cta} <span aria-hidden="true">→</span>
+                </span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* ===== Time limit (always amber + calm) + the empty slot ===== */}
+      <section className="container-wide grid gap-[26px] pb-14 md:grid-cols-2">
+        <div
+          className="sticker rounded-card border-2 border-amber-border bg-amber-bg p-[22px]"
+          style={{ "--rot": "-0.6deg" } as React.CSSProperties}
+        >
+          <p className="mb-2 flex items-center gap-2 font-display text-label font-black uppercase text-amber-ink">
+            <span aria-hidden="true" className="text-[14px]">◔</span>
+            {t("limitLabel")}
+          </p>
+          <p className="mb-1.5 font-display text-[19px] font-extrabold text-ink">{t("limitTitle")}</p>
+          <p className="text-sm text-ink-soft">{t("limitBody")}</p>
+          <p className="mono mt-2.5 uppercase text-amber-ink">{t("limitSource")}</p>
+        </div>
+
+        <div
+          className="slot-empty flex flex-col justify-center p-[22px]"
+          style={{ transform: "rotate(1.1deg)" }}
+        >
+          <p className="mb-2 font-display text-label font-black uppercase text-red-deep">{t("slotLabel")}</p>
+          <p className="mb-1.5 font-display text-[19px] font-extrabold text-ink">{t("slotTitle")}</p>
+          <p className="text-sm text-ink-soft">{t("slotBody")}</p>
+          <p className="note mt-2 -rotate-1 text-[21px]">{t("slotNote")}</p>
+        </div>
+      </section>
+
+      {/* ===== Humans ===== */}
+      <section className="container-wide pb-14">
+        <div
+          className="card sticker flex flex-wrap items-center gap-6 !p-[26px] shadow-raised"
+          style={{ "--rot": "-0.7deg" } as React.CSSProperties}
+        >
+          <div className="min-w-[300px] flex-1">
+            <h2 className="mb-1 text-[24px]">{t("humansTitle")}</h2>
+            <p className="mb-2.5 text-sm text-ink-soft">{t("humansBody")}</p>
+            <div className="flex flex-wrap gap-2">
+              {[
+                { label: t("humansPill1"), rot: "-0.8deg" },
+                { label: t("humansPill2"), rot: "0.6deg" },
+                { label: t("humansPill3"), rot: "-0.6deg" },
+              ].map((p) => (
+                <span
+                  key={p.label}
+                  className="pill bg-cream text-ink-soft"
+                  style={{ transform: `rotate(${p.rot})` }}
+                >
+                  {p.label}
+                </span>
+              ))}
             </div>
           </div>
-          <Link href="/help" className="btn-accent whitespace-nowrap sm:flex-none">
-            {t("helpCta")}
+          <Link
+            href="/help"
+            className="btn btn-primary sticker !shadow-none"
+            style={{ "--rot": "1.2deg" } as React.CSSProperties}
+          >
+            {t("humansCta")} <span aria-hidden="true">→</span>
           </Link>
         </div>
+      </section>
+
+      {/* ===== Guide library (SEO entry point: descriptive internal links) ===== */}
+      <section aria-labelledby="learn-band-title" className="container-wide pb-16">
+        <p className="note mb-4 rotate-0.7">{t("learnKicker")}</p>
+        <h2 id="learn-band-title" className="mb-6 max-w-[720px] text-h2">
+          {t("learnTitle")} <span className="text-red-ink">{t("learnTitleAccent")}</span>
+        </h2>
+        <ul className="grid gap-[26px] sm:grid-cols-2">
+          {learnLinks.map((l, i) => (
+            <li key={l.href}>
+              <Link
+                href={l.href}
+                className="card sticker flex h-full flex-col gap-1.5 text-ink-soft"
+                style={{ "--rot": ["-0.9deg", "0.8deg", "1.1deg", "-1.2deg"][i] } as React.CSSProperties}
+              >
+                <span className="font-display text-[19px] font-black text-ink">{l.title}</span>
+                {l.desc ? <span className="text-sm">{l.desc}</span> : null}
+              </Link>
+            </li>
+          ))}
+        </ul>
+        <Link href="/learn" className="link-text mt-6 inline-flex">
+          {t("learnCta")} <span aria-hidden="true">→</span>
+        </Link>
       </section>
     </div>
   );

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What Now? — Landing (design reference)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:ital,wght@0,300..900;1,300..900&family=Caveat:wght@600;700&family=Spline+Sans+Mono:ital,wght@0,300..700&display=swap">
+<style>
+:root{
+  --paper:#F6EDD9; --ink:#2B2417; --body:#5C5138; --tan:#8A7A55;
+  --red:#E0452C; --red-deep:#C9553D; --cream-on-red:#FFF6EC;
+  --green:#2B8A4B; --blue:#2F6FBF; --yellow:#E0A52C; --purple:#7A4FB3; --teal:#3AA08A; --pink:#C95F8E;
+  --amber-bg:#FBF3D9; --amber-border:#E0A52C; --amber-ink:#8A6A14;
+  --shadow-color:rgba(43,36,23,.28); --shadow-strong:rgba(43,36,23,.3); --shadow-soft:rgba(43,36,23,.25);
+  --r-sticker:8px; --r-card:12px; --r-cta:14px; --r-pill:999px;
+}
+*{box-sizing:border-box}
+body{margin:0;background-color:var(--paper);background-image:radial-gradient(rgba(43,36,23,.07) 1px,transparent 1px);background-size:13px 13px;color:var(--body);font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:17px;line-height:1.6;font-variant-numeric:tabular-nums}
+a{color:var(--red-deep);text-decoration:none}
+a:hover{color:var(--ink)}
+h1,h2,h3,.display{font-family:'Archivo',system-ui,sans-serif;color:var(--ink)}
+.note{font-family:'Caveat',cursive;font-weight:600;color:var(--tan)}
+.mono{font-family:'Spline Sans Mono',monospace;letter-spacing:.04em}
+/* Sticker physics: deterministic rotation set per item via --rot; hover straightens + lifts; press sticks down */
+.sticker{transform:rotate(var(--rot,0deg));box-shadow:0 3px 0 var(--shadow-color);transition:transform 150ms ease,box-shadow 150ms ease}
+a.sticker:hover,button.sticker:hover{transform:rotate(0deg) translateY(-2px)}
+a.sticker:active,button.sticker:active{transform:rotate(0deg) translateY(1px);box-shadow:0 1px 0 var(--shadow-color)}
+@media (prefers-reduced-motion:reduce){.sticker{transition:none}a.sticker:hover,button.sticker:hover{transform:rotate(var(--rot,0deg))}}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;font-family:'Archivo',system-ui,sans-serif;font-weight:900;font-size:17px;border-radius:var(--r-cta);min-height:52px;padding:14px 28px;cursor:pointer;border:none}
+.btn-primary{background:var(--red);color:var(--cream-on-red);box-shadow:0 4px 0 var(--shadow-strong)}
+.btn-primary:hover{color:var(--cream-on-red)}
+.btn-secondary{background:#FFFFFF;border:2px solid var(--ink);color:var(--ink);font-weight:800;box-shadow:0 3px 0 var(--shadow-soft)}
+.btn-secondary:hover{color:var(--ink)}
+.btn:focus-visible,a:focus-visible{outline:none;box-shadow:0 0 0 2px #FFFFFF,0 0 0 4px var(--ink)}
+.pill{display:inline-flex;align-items:center;border-radius:var(--r-pill);padding:8px 14px;font-family:'Archivo',system-ui,sans-serif;font-weight:800;font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.card{background:#FFFFFF;border-radius:var(--r-card)}
+.foil{background:linear-gradient(115deg,#E9D8FF,#FFE9C7,#D2F4E0,#CFE6FF);border-radius:var(--r-card);padding:6px;box-shadow:0 4px 0 var(--shadow-strong)}
+.slot-empty{border:3px dashed var(--red);border-radius:var(--r-card);background:rgba(224,69,44,.06)}
+.chip{width:44px;height:44px;border-radius:var(--r-sticker);display:flex;align-items:center;justify-content:center;font-family:'Archivo',system-ui,sans-serif;font-weight:900;font-size:17px;color:#FFFFFF;box-shadow:0 2px 0 var(--shadow-soft)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+header.site{border-bottom:2px solid var(--ink)}
+.lock{display:inline-flex;align-items:center;gap:9px;font-family:'Spline Sans Mono',monospace;font-size:12.5px;color:var(--body)}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:26px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.hero-grid{display:grid;grid-template-columns:1.25fr 1fr;gap:52px;align-items:start}
+@media (max-width:900px){.hero-grid,.grid-3,.grid-2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header class="site">
+  <div class="wrap" style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;padding-top:20px;padding-bottom:20px">
+    <div class="sticker" style="--rot:-1.2deg;display:inline-flex;background:#FFFFFF;border-radius:var(--r-sticker);padding:8px 16px;font-family:'Archivo',system-ui,sans-serif;font-weight:900;font-size:19px;color:var(--ink)">WHAT NOW<span style="color:var(--red)">?</span></div>
+    <nav style="display:flex;align-items:center;gap:26px;font-family:'Archivo',system-ui,sans-serif;font-weight:800;font-size:13px;letter-spacing:.06em;text-transform:uppercase">
+      <a href="#start" style="color:var(--body)">Work it out</a>
+      <a href="#start" style="color:var(--body)">Scan a letter</a>
+      <a href="#start" style="color:var(--body)">Ask</a>
+      <a href="#help" class="sticker" style="--rot:.8deg;background:var(--red);color:var(--cream-on-red);border-radius:var(--r-pill);padding:12px 20px;min-height:44px">A person, any time</a>
+    </nav>
+  </div>
+</header>
+
+<section class="wrap hero-grid" style="padding-top:64px;padding-bottom:52px">
+  <div>
+    <div class="note" style="font-size:24px;transform:rotate(-1.4deg);margin-bottom:14px">the day the letter arrived — start here</div>
+    <h1 style="font-weight:900;font-size:clamp(42px,7.5vw,88px);line-height:.97;letter-spacing:-.03em;margin:0 0 8px">They said no.</h1>
+    <h1 style="font-weight:900;font-size:clamp(42px,7.5vw,88px);line-height:.97;letter-spacing:-.03em;margin:0 0 28px">You may say: <em style="font-style:normal;box-shadow:inset 0 -10px 0 rgba(224,69,44,.35)">look again.</em></h1>
+    <p style="font-size:19px;margin:0 0 26px;max-width:560px;text-wrap:pretty">Most government decisions can be reviewed. What Now? turns your letter into plain English, your options into a numbered list, and your next step into a letter — free, no account, nothing stored.</p>
+    <div class="lock"><svg width="12" height="13" viewBox="0 0 12 13" fill="none" stroke="#8A7A55" stroke-width="1.1"><rect x="1.5" y="5.5" width="9" height="6" rx="1"></rect><path d="M3.5 5.5 V4 A2.5 2.5 0 0 1 8.5 4 V5.5"></path></svg>FREE / NO ACCOUNT / NOTHING STORED</div>
+  </div>
+  <!-- Foil card: the ONLY iridescent element on the page -->
+  <div class="foil" style="transform:rotate(1.6deg)">
+    <div style="background:#FFFFFF;border-radius:9px;padding:26px 26px 24px">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+        <div class="display" style="font-weight:900;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--tan)">Recommended · start here</div>
+        <div class="note" style="font-size:20px">the one thing to do first</div>
+      </div>
+      <div class="display" style="font-weight:900;font-size:26px;line-height:1.15;margin-bottom:8px">Find out what you can do</div>
+      <div style="font-size:15px;margin-bottom:18px">Three questions, then your review options in order — with every time limit named early and calmly.</div>
+      <a href="#start" class="btn btn-primary sticker" style="--rot:0deg;width:100%;margin-bottom:10px">Start now →</a>
+      <a href="#scan" class="btn btn-secondary sticker" style="--rot:0deg;width:100%;min-height:48px">Scan or paste the letter</a>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-bottom:54px" id="start">
+  <div class="note" style="font-size:23px;transform:rotate(-.8deg);margin-bottom:16px">three ways to start →</div>
+  <div class="grid-3">
+    <a href="#start" class="card sticker" style="--rot:-1.5deg;display:flex;flex-direction:column;gap:11px;padding:22px 22px 20px;color:inherit">
+      <div class="chip" style="background:linear-gradient(135deg,var(--green),var(--teal))">01</div>
+      <div class="display" style="font-weight:900;font-size:21px">Work it out</div>
+      <div style="font-size:14.5px;flex:1">Three questions. Then every pathway, numbered, with time limits.</div>
+      <div class="display" style="font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--red)">Begin →</div>
+    </a>
+    <a href="#scan" class="card sticker" style="--rot:.9deg;display:flex;flex-direction:column;gap:11px;padding:22px 22px 20px;color:inherit">
+      <div class="chip" style="background:linear-gradient(135deg,var(--blue),var(--teal))">02</div>
+      <div class="display" style="font-weight:900;font-size:21px">Scan the letter</div>
+      <div style="font-size:14.5px;flex:1">Explained clause by clause, in the moment. Never kept.</div>
+      <div class="display" style="font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--red)">Read it →</div>
+    </a>
+    <a href="#ask" class="card sticker" style="--rot:2.2deg;display:flex;flex-direction:column;gap:11px;padding:22px 22px 20px;color:inherit">
+      <div class="chip" style="background:linear-gradient(135deg,var(--purple),var(--pink))">03</div>
+      <div class="display" style="font-weight:900;font-size:21px">Ask a question</div>
+      <div style="font-size:14.5px;flex:1">Plain answers, the official source cited beside every one.</div>
+      <div class="display" style="font-weight:800;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--red)">Ask →</div>
+    </a>
+  </div>
+</section>
+
+<section class="wrap grid-2" style="padding-bottom:54px">
+  <!-- Deadline: ALWAYS amber + calm. Never red, never a countdown. -->
+  <div class="sticker" style="--rot:-.6deg;background:var(--amber-bg);border:2px solid var(--amber-border);border-radius:var(--r-card);padding:20px 22px;box-shadow:0 3px 0 var(--shadow-soft)">
+    <div class="display" style="display:flex;align-items:center;gap:8px;font-weight:900;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber-ink);margin-bottom:8px"><span style="font-size:14px">◔</span> Time limit — noted early, kept calm</div>
+    <div class="display" style="font-weight:800;font-size:19px;margin-bottom:5px">Usually 28 days to ask for a review.</div>
+    <div style="font-size:14.5px">Counted from the date on the letter. Never a countdown, never red — there's still time to get help.</div>
+    <div class="mono" style="font-size:12px;color:var(--amber-ink);margin-top:10px">SOURCE: VCAT — APPLICATION TIME LIMITS</div>
+  </div>
+  <!-- Empty slot: the signature device for anything absent or pending -->
+  <div class="slot-empty" style="transform:rotate(1.1deg);padding:20px 22px;display:flex;flex-direction:column;justify-content:center">
+    <div class="display" style="font-weight:900;font-size:12.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--red-deep);margin-bottom:8px">Empty slot — your first letter</div>
+    <div class="display" style="font-weight:800;font-size:19px;margin-bottom:5px">This slot is empty until we draft it together.</div>
+    <div style="font-size:14.5px">Answer the three questions and the ready-to-send letter goes here — yours to keep or hand to a free service.</div>
+    <div class="note" style="font-size:21px;margin-top:8px;transform:rotate(-1deg)">goes here ↑ when you're ready</div>
+  </div>
+</section>
+
+<section class="wrap" style="padding-bottom:54px" id="help">
+  <div class="card sticker" style="--rot:-.7deg;display:flex;gap:22px;align-items:center;flex-wrap:wrap;padding:22px 26px;box-shadow:0 4px 0 var(--shadow-color)">
+    <div style="flex:1;min-width:300px">
+      <div class="display" style="font-weight:900;font-size:24px;margin-bottom:4px">Humans: available. Free.</div>
+      <div style="font-size:14.5px;margin-bottom:10px">Talk to a person whenever you like — they can take it from here.</div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <span class="pill" style="background:var(--paper);color:var(--body);transform:rotate(-.8deg)">Legal Aid</span>
+        <span class="pill" style="background:var(--paper);color:var(--body);transform:rotate(.6deg)">Community legal centres</span>
+        <span class="pill" style="background:var(--paper);color:var(--body);transform:rotate(-.6deg)">Tribunal registries</span>
+      </div>
+    </div>
+    <a href="#help" class="btn btn-primary sticker" style="--rot:1.2deg">Find free help near you →</a>
+  </div>
+</section>
+
+<footer class="wrap" style="padding-bottom:46px">
+  <div style="border-top:2px solid var(--ink);padding-top:20px">
+    <div style="font-size:14px;max-width:820px;margin-bottom:12px"><b style="color:var(--ink)">What Now? gives general information, not legal advice.</b> We can't tell you what will happen in your case. For advice about your own situation, talk to a free legal service — we'll help you find one.</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap" class="mono">
+      <div style="display:flex;gap:20px;font-size:12px"><a href="#" style="color:var(--tan);text-decoration:underline;text-underline-offset:3px">ABOUT</a><a href="#" style="color:var(--tan);text-decoration:underline;text-underline-offset:3px">PRIVACY</a><a href="#" style="color:var(--tan);text-decoration:underline;text-underline-offset:3px">TERMS</a></div>
+      <div class="lock" style="font-size:12px;color:var(--tan)"><svg width="11" height="12" viewBox="0 0 12 13" fill="none" stroke="#8A7A55" stroke-width="1.1"><rect x="1.5" y="5.5" width="9" height="6" rx="1"></rect><path d="M3.5 5.5 V4 A2.5 2.5 0 0 1 8.5 4 V5.5"></path></svg>NOTHING STORED · VIC &amp; CTH · EN-AU</div>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

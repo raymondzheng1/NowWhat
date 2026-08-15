@@ -15,8 +15,8 @@ test.beforeEach(async ({ context }) => {
  */
 test("landing CTA leads to the Rights Saver flow", async ({ page }) => {
   await page.goto("/");
-  await expect(page.getByRole("heading", { level: 1 })).toContainText("Knocked back by government");
-  await page.getByRole("link", { name: /find out what you can do/i }).first().click();
+  await expect(page.getByRole("heading", { level: 1 }).first()).toContainText("They said no.");
+  await page.getByRole("link", { name: /start now/i }).first().click();
   await expect(page).toHaveURL(/\/start/, { timeout: 15_000 });
   await expect(page.getByRole("heading", { name: /who made the decision/i })).toBeVisible({ timeout: 15_000 });
 });

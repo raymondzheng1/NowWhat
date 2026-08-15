@@ -1,42 +1,49 @@
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { ReplayGuides } from "@/components/site/ReplayGuides";
+import { Lock } from "@/components/ui/PrivacyNote";
 
 /**
- * Footer (Direction K2) — quiet, on the sand page: the standing disclaimer with a bold
- * "We never keep your details" privacy note, and an uppercase link row. Visibility is
- * handled by SiteShell (hidden on the focused tool surfaces).
+ * Footer (sticker album) — a 2px ink rule, then the standing disclaimer (product
+ * constraint #3, bold ink lead-in), a mono link row, and the lock line (constraint #4).
+ * Visibility is handled by SiteShell (hidden on the focused tool surfaces).
  */
 export function Footer() {
   const t = useTranslations("footer");
   return (
-    <footer className="border-t border-line">
-      <div className="mx-auto flex max-w-content flex-col gap-5 px-[22px] py-8 sm:flex-row sm:items-center sm:justify-between sm:px-12">
-        <p className="max-w-[520px] text-meta leading-relaxed text-ink-faint">
-          {t("infoNotAdvice")}{" "}
-          <strong className="font-semibold text-ink-soft">{t("neverStored")}</strong>
+    <footer className="container-wide pb-12 pt-4">
+      <div className="border-t-2 border-ink pt-5">
+        <p className="mb-3 max-w-[820px] text-[14.5px] leading-relaxed text-ink-soft">
+          <b className="font-semibold text-ink">{t("infoNotAdvice")}</b> {t("adviceTail")}
         </p>
-        <nav
-          aria-label="Footer"
-          className="flex flex-wrap gap-5 text-[13px] uppercase tracking-[0.12em] text-ink-soft"
-        >
-          {(
-            [
-              ["/learn", t("learn")],
-              ["/faq", t("faq")],
-              ["/help", t("help")],
-              ["/about", t("about")],
-              ["/contact", t("contact")],
-              ["/privacy", t("privacy")],
-              ["/terms", t("terms")],
-            ] as const
-          ).map(([href, label]) => (
-            <Link key={href} href={href} className="hover:text-ink">
-              {label}
-            </Link>
-          ))}
-          <ReplayGuides className="uppercase tracking-[0.12em] text-ink-soft hover:text-ink" />
-        </nav>
+        <div className="mono flex flex-wrap items-center justify-between gap-4">
+          <nav aria-label="Footer" className="flex flex-wrap gap-5 text-[12.5px] uppercase">
+            {(
+              [
+                ["/learn", t("learn")],
+                ["/faq", t("faq")],
+                ["/help", t("help")],
+                ["/about", t("about")],
+                ["/contact", t("contact")],
+                ["/privacy", t("privacy")],
+                ["/terms", t("terms")],
+              ] as const
+            ).map(([href, label]) => (
+              <Link
+                key={href}
+                href={href}
+                className="text-ink-faint underline underline-offset-[3px] hover:text-ink"
+              >
+                {label}
+              </Link>
+            ))}
+            <ReplayGuides className="uppercase text-ink-faint underline underline-offset-[3px] hover:text-ink" />
+          </nav>
+          <span className="lock text-ink-faint">
+            <Lock />
+            {t("lockLine")}
+          </span>
+        </div>
       </div>
     </footer>
   );

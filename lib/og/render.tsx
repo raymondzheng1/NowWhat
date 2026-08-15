@@ -1,23 +1,29 @@
 /**
- * Shared JSX for next/og ImageResponse renders (satori subset — flexbox only, no
- * absolute layout tricks). K2 monogram crest: deep-teal field, copper inset frame,
- * serif "WN" in cream. Names kept (navy/brass/ivory) but pointed at K2 values.
+ * Shared JSX for next/og ImageResponse renders (satori subset — flexbox only, no absolute
+ * layout tricks). Sticker-album mark: a red rounded tile with a cream "W", matching the
+ * favicon. Legacy key names are kept so the image routes need no rewiring.
  */
 export const OG = {
-  navy: "#10363d",
-  brass: "#c79a52",
-  brassQ: "#c79a52",
-  brassText: "#8a6526",
-  ivory: "#e8ddc7",
-  ink: "#1c2a2b",
-  inkSoft: "#566163",
-  crestText: "#eef0e8",
-  serif: "Libre Baskerville",
+  paper: "#F6EDD9",
+  ink: "#2B2417",
+  inkSoft: "#5C5138",
+  tan: "#8A7A55",
+  red: "#CD3F28",
+  cream: "#FFF6EC",
+  amber: "#E0A52C",
+  display: "Archivo",
+  // legacy aliases used by the image routes
+  navy: "#2B2417",
+  brass: "#E0452C",
+  brassQ: "#E0452C",
+  brassText: "#8A7A55",
+  ivory: "#F6EDD9",
+  crestText: "#FFF6EC",
+  serif: "Archivo",
 };
 
+/** The brand tile — red sticker with a cream W (same mark as the favicon). */
 export function CrestEl({ size }: { size: number }) {
-  const inset = Math.round(size * 0.09);
-  const inner = size - inset * 2;
   return (
     <div
       style={{
@@ -26,32 +32,20 @@ export function CrestEl({ size }: { size: number }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: OG.navy,
-        borderRadius: Math.round(size * 0.16),
+        background: OG.red,
+        borderRadius: Math.round(size * 0.19),
       }}
     >
       <div
         style={{
-          width: inner,
-          height: inner,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          border: `${Math.max(1, Math.round(size * 0.012))}px solid ${OG.brass}`,
-          borderRadius: Math.round(size * 0.1),
+          fontFamily: OG.display,
+          fontWeight: 900,
+          fontSize: Math.round(size * 0.6),
+          color: OG.cream,
+          lineHeight: 1,
         }}
       >
-        <div
-          style={{
-            fontFamily: OG.serif,
-            fontWeight: 700,
-            fontSize: Math.round(size * 0.34),
-            color: OG.crestText,
-            lineHeight: 1,
-          }}
-        >
-          WN
-        </div>
+        W
       </div>
     </div>
   );

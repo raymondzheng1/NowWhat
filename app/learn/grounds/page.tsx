@@ -37,11 +37,11 @@ export default function GroundsPage() {
         })}
       />
       <header className="max-w-[720px]">
-        <p className="text-[12px] uppercase tracking-[0.22em] text-accent">Grounds of review</p>
-        <h1 className="mt-3 font-display text-[34px] font-bold leading-[1.06] text-ink sm:text-[44px]">
+        <p className="eyebrow text-ink-faint">Grounds of review</p>
+        <h1 className="mt-3 font-display text-[34px] font-black leading-[1.03] tracking-[-0.025em] text-ink sm:text-[44px]">
           The grounds people raise
         </h1>
-        <p className="mt-4 max-w-[60ch] text-[16px] leading-[1.7] text-ink-soft">
+        <p className="mt-4 max-w-[60ch] text-[16.5px] leading-[1.7] text-ink-soft">
           For judicial review you need a “ground” — a specific problem with how the decision was made,
           not just that you disagree with it. Here are the common ones in plain English. They are listed
           in no particular order; one being relevant doesn’t mean a decision was unlawful — a free service

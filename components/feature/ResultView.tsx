@@ -48,11 +48,15 @@ export interface ResultViewProps {
 }
 
 /**
- * The Result experience (Direction C) — shared by the wizard, /ask and /decode. Focused
- * header, two-column main + sticky rail on desktop, stacked on mobile. The deadline,
- * sources, disclaimer and get-help are always rendered (load-bearing trust surfaces).
- * "Two flavours, one page": the header `answer`/`about` may be written (ask/decode) or
- * the corpus explainer (wizard) — the lower blocks are identical.
+ * The Result experience — shared by the wizard, /ask and /decode. A focused header bar,
+ * then the answer laid out as a few stickers on paper: the answer card, the calm amber
+ * time limit, what can help, and the draft letter; with a sticky rail of sources, the
+ * foil "get free help" card, and the privacy line. The deadline, sources, disclaimer and
+ * get-help are always rendered (load-bearing trust surfaces).
+ *
+ * Sticker budget for this screen: exactly one foil (the free-help card in the rail), one
+ * handwritten note ("Gather what you can:"), and the dashed empty slot only when we had
+ * to fall back to a general guide — i.e. when the exact pathway is missing from the album.
  */
 export function ResultView({
   entry,
@@ -83,21 +87,24 @@ export function ResultView({
     };
   }, [entry.id, kind]);
 
+  const backClass =
+    "inline-flex min-h-[44px] min-w-0 items-center gap-2 font-display text-[13px] font-extrabold uppercase tracking-[0.06em] text-ink hover:text-red-ink";
+  const toggleClass = (on: boolean) =>
+    `inline-flex min-h-[44px] items-center rounded-pill px-4 font-display text-[13px] font-extrabold uppercase tracking-[0.06em] ${
+      on ? "bg-ink text-cream" : "border border-line text-ink-faint hover:text-ink"
+    }`;
+
   return (
     <div>
       {/* Focused result header */}
-      <div className="sticky top-0 z-30 flex h-[52px] items-center justify-between border-b-2 border-navy bg-paper px-[18px] sm:h-16 sm:px-9">
+      <div className="sticky top-0 z-30 flex h-[52px] items-center justify-between gap-3 border-b-2 border-ink bg-paper px-[18px] sm:h-16 sm:px-9">
         {onBack ? (
-          <button
-            type="button"
-            onClick={onBack}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-navy hover:underline"
-          >
-            ← {backLabel ?? "Start over"}
+          <button type="button" onClick={onBack} className={backClass}>
+            ← <span className="truncate">{backLabel ?? "Start over"}</span>
           </button>
         ) : (
-          <Link href="/start" className="inline-flex items-center gap-2 text-sm font-semibold text-navy hover:underline">
-            ← {backLabel ?? "Start over"}
+          <Link href="/start" className={backClass}>
+            ← <span className="truncate">{backLabel ?? "Start over"}</span>
           </Link>
         )}
         <span className="hidden sm:inline">
@@ -106,20 +113,20 @@ export function ResultView({
         <button
           type="button"
           onClick={() => window.print()}
-          className="inline-flex items-center gap-2 rounded-button border border-line px-3.5 text-sm font-medium text-ink-soft hover:bg-paper-sunk"
-          style={{ minHeight: 40 }}
+          className="inline-flex shrink-0 items-center gap-2 rounded-button border-2 border-ink bg-paper px-3.5 font-display text-[13px] font-extrabold uppercase tracking-[0.06em] text-ink hover:bg-cream"
+          style={{ minHeight: 44 }}
         >
-          <Icon.Printer className="h-4 w-4" strokeWidth={1.8} /> Print
+          <Icon.Printer className="h-4 w-4" strokeWidth={2} /> Print
         </button>
       </div>
 
-      <div className="bg-paper-warm">
-        <div className="mx-auto grid max-w-6xl gap-6 px-[18px] py-6 sm:px-9 sm:py-9 lg:grid-cols-[1.7fr_1fr] lg:gap-9">
+      <div>
+        <div className="mx-auto grid max-w-6xl gap-6 px-[18px] py-7 sm:px-9 sm:py-9 lg:grid-cols-[1.7fr_1fr] lg:gap-9">
           {/* MAIN */}
-          <div className="min-w-0 space-y-5">
+          <div className="min-w-0 space-y-6">
             <div>
-              <span className="eyebrow text-brass-text">{category}</span>
-              <h1 className="mt-2.5 font-serif text-[22px] font-bold leading-tight text-navy-ink sm:text-h2">
+              <span className="eyebrow text-ink-faint">{category}</span>
+              <h1 className="mt-2.5 font-display text-[24px] font-black leading-[1.1] text-ink sm:text-h2">
                 {answer}
               </h1>
             </div>
@@ -129,37 +136,52 @@ export function ResultView({
                 <Markdown>{body}</Markdown>
               ) : (
                 <>
-                  <h2 className="font-serif text-h3 font-bold text-ink">What this is about</h2>
-                  {about && <p className="mt-2.5 text-[16px] leading-relaxed text-ink-soft">{about}</p>}
+                  <h2 className="font-display text-[21px] font-black leading-tight text-ink">
+                    What this is about
+                  </h2>
+                  {about && (
+                    <p className="mt-3 text-[17px] leading-relaxed text-ink-soft">{about}</p>
+                  )}
                 </>
               )}
               {options.length > 0 && (
-                <ul className="mt-3 list-disc space-y-1 pl-5 text-[16px] text-ink-soft">
+                <ul className="mt-3.5 list-disc space-y-1.5 pl-5 text-[17px] leading-relaxed text-ink-soft marker:text-red">
                   {options.map((o, i) => (
                     <li key={i}>{o}</li>
                   ))}
                 </ul>
               )}
               {isFallback && (
-                <p className="mt-3 rounded-input bg-paper-sunk p-3 text-sm text-ink-soft">
+                /* Empty slot: the exact pathway isn't in the album yet. */
+                <p className="slot-empty mt-4 p-3.5 text-[14.5px] leading-relaxed text-ink-soft">
                   We matched this to a general guide. A free service can confirm the exact steps
                   for your situation.
                 </p>
               )}
-              <Disclaimer className="mt-3.5" />
+              <Disclaimer className="mt-4" />
             </section>
 
             <DeadlineCard entry={entry} decisionDate={decisionDate} />
 
             {entry.evidenceChecklist.length > 0 && (
-              <section className="card">
-                <h2 className="font-serif text-h3 font-bold text-ink">What can help your case</h2>
-                <p className="mt-2 text-sm text-ink-soft">Gather what you can:</p>
+              <section
+                className="card sticker"
+                style={{ "--rot": "-0.7deg" } as React.CSSProperties}
+              >
+                <h2 className="font-display text-[21px] font-black leading-tight text-ink">
+                  What can help your case
+                </h2>
+                {/* Handwritten aside — but this line is the checklist's only instruction,
+                    so it takes ink-soft (7.8:1) rather than `.note`'s tan (4.2:1), and no
+                    rotation of its own: the card it sits in is already tilted. */}
+                <p className="mt-1.5 font-note text-[23px] font-semibold leading-tight text-ink-soft">
+                  Gather what you can:
+                </p>
                 <ul className="mt-2.5 space-y-2.5">
                   {entry.evidenceChecklist.map((item, i) => (
                     <li key={i} className="flex items-start gap-2.5">
                       <Icon.CheckSquare className="mt-0.5 h-5 w-5 shrink-0 text-help" strokeWidth={2} />
-                      <span className="text-[16px] leading-snug text-ink-soft">{item}</span>
+                      <span className="text-[17px] leading-snug text-ink-soft">{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -167,40 +189,44 @@ export function ResultView({
             )}
 
             {/* Draft */}
-            <section className="card">
+            <section className="card sticker" style={{ "--rot": "0.6deg" } as React.CSSProperties}>
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <h2 className="font-serif text-h3 font-bold text-ink">A draft letter to start with</h2>
+                <h2 className="font-display text-[21px] font-black leading-tight text-ink">
+                  A draft letter to start with
+                </h2>
                 <div className="flex gap-2">
                   <button
                     type="button"
                     onClick={() => setEditing((v) => !v)}
-                    className="inline-flex items-center rounded-button border-[1.5px] border-[#c3cad3] px-3.5 text-sm font-semibold text-navy"
-                    style={{ minHeight: 40 }}
+                    className="inline-flex items-center rounded-button border-2 border-ink bg-paper px-4 font-display text-[13px] font-extrabold uppercase tracking-[0.06em] text-ink hover:bg-cream"
+                    style={{ minHeight: 44 }}
                   >
                     {editing ? "Done" : "Edit"}
                   </button>
                   <button
                     type="button"
                     onClick={() => draft && downloadText(draft.filename, draft.body)}
-                    className="inline-flex items-center rounded-button bg-navy px-3.5 text-sm font-semibold text-white hover:bg-navy-dark"
-                    style={{ minHeight: 40 }}
+                    className="inline-flex items-center rounded-button px-4 font-display text-[13px] font-extrabold uppercase tracking-[0.06em] text-cream-onRed shadow-chip transition-shadow hover:shadow-sticker"
+                    style={{ minHeight: 44, background: "var(--red-cta)" }}
                   >
                     Download
                   </button>
                 </div>
               </div>
-              <div className="mt-3 flex gap-2 text-[14px]">
+              <div className="mt-3.5 flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => setKind("reasons-request")}
-                  className={`rounded-pill px-3 py-1 font-medium ${kind === "reasons-request" ? "bg-navy-soft text-navy" : "text-ink-faint hover:text-navy"}`}
+                  aria-pressed={kind === "reasons-request"}
+                  className={toggleClass(kind === "reasons-request")}
                 >
                   Ask for reasons
                 </button>
                 <button
                   type="button"
                   onClick={() => setKind("review-application")}
-                  className={`rounded-pill px-3 py-1 font-medium ${kind === "review-application" ? "bg-navy-soft text-navy" : "text-ink-faint hover:text-navy"}`}
+                  aria-pressed={kind === "review-application"}
+                  className={toggleClass(kind === "review-application")}
                 >
                   Apply for review
                 </button>
@@ -211,10 +237,10 @@ export function ResultView({
                     value={draft.body}
                     onChange={(e) => setDraft({ ...draft, body: e.target.value })}
                     rows={14}
-                    className="mt-3 w-full rounded-input border border-line bg-paper-warm p-4 font-serif text-sm leading-relaxed text-ink-soft"
+                    className="mt-3.5 w-full rounded-input border-2 border-line bg-cream p-4 font-mono text-[14.5px] leading-relaxed text-ink"
                   />
                 ) : (
-                  <div className="mt-3 whitespace-pre-wrap rounded-input border border-line bg-paper-warm p-4 font-serif text-sm leading-relaxed text-ink-soft">
+                  <div className="mt-3.5 whitespace-pre-wrap rounded-input border-2 border-line bg-cream p-4 font-mono text-[14.5px] leading-relaxed text-ink">
                     {draft.body}
                   </div>
                 )
@@ -223,14 +249,14 @@ export function ResultView({
           </div>
 
           {/* RAIL */}
-          <div className="flex min-w-0 flex-col gap-4 lg:sticky lg:top-[84px] lg:self-start">
+          <div className="flex min-w-0 flex-col gap-5 lg:sticky lg:top-[84px] lg:self-start">
             <div className="order-1 lg:order-2">
               <TieredHelp entryId={entry.id} entryTitle={entry.title} services={entry.getHelp} />
             </div>
             <div className="order-2 lg:order-1">
               <SourcesPanel sources={entry.sources} lastVerified={entry.lastVerified} />
             </div>
-            <div className="order-3 rounded-icon border border-line bg-paper-warm p-3.5">
+            <div className="order-3 rounded-card border border-line bg-cream px-4 py-3.5">
               <PrivacyNote>Nothing on this page was saved. Close the tab and it&rsquo;s gone.</PrivacyNote>
             </div>
           </div>

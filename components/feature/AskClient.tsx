@@ -65,22 +65,30 @@ export function AskClient() {
   return (
     <>
       <ToolTopBar />
-      <div className="min-h-[60vh] bg-paper-warm">
+      <div className="min-h-[60vh]">
         <div className="container-prose py-10">
           <div className="flex items-start justify-between gap-4">
-            <h1 className="font-display text-h1 font-bold text-navy-ink">{t("title")}</h1>
+            <h1 className="text-h1">{t("title")}</h1>
             <button
               type="button"
               onClick={replayGuide}
-              className="mt-2 shrink-0 text-[14px] font-semibold text-ink-soft hover:text-ink"
+              className="link-text mt-2 min-h-[44px] shrink-0"
             >
               {tt("showMe")}
             </button>
           </div>
           <p className="mt-2 text-ink-soft">{t("intro")}</p>
 
-          <form onSubmit={submit} className="card mt-6">
-            <label htmlFor="q" className="mb-1.5 block font-semibold text-ink">
+          {/* The question card is a white sticker laid on the paper. */}
+          <form
+            onSubmit={submit}
+            className="card sticker mt-7"
+            style={{ "--rot": "-0.7deg" } as React.CSSProperties}
+          >
+            <label
+              htmlFor="q"
+              className="mb-2 block font-display text-[13px] font-black uppercase tracking-[0.1em] text-ink"
+            >
               {t("yourQuestion")}
             </label>
             <textarea
@@ -92,24 +100,29 @@ export function AskClient() {
               rows={4}
               className="input leading-relaxed"
             />
-            <button type="submit" data-tour="ask-submit" className="btn-primary btn-lg mt-4 w-full sm:w-auto" disabled={loading || question.trim().length < 3}>
+            <button
+              type="submit"
+              data-tour="ask-submit"
+              className="btn btn-primary btn-lg mt-5 w-full sm:w-auto"
+              disabled={loading || question.trim().length < 3}
+            >
               {loading ? tc("loading") : t("submit")}
             </button>
           </form>
 
           {error && (
-            <div role="alert" className="card mt-4 border-l-[3px] border-gold bg-gold-soft text-gold-strong">
+            <div role="alert" className="card mt-5 border-2 border-red text-ink">
               {error}
             </div>
           )}
 
           {result?.ok && result.status === "not-covered" && (
-            <div className="mt-6">
+            <div className="mt-7">
               <NotCovered title={t("notCoveredTitle")} body={t("notCoveredBody")} services={result.getHelp} />
             </div>
           )}
 
-          <PrivacyNote className="mt-6">We read your question on the spot and never store it.</PrivacyNote>
+          <PrivacyNote className="mt-7">We read your question on the spot and never store it.</PrivacyNote>
         </div>
       </div>
     </>

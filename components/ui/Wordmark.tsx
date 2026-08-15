@@ -1,25 +1,22 @@
 import { PRODUCT_NAME } from "@/lib/config";
 
 /**
- * Monogram crest + "What Now?" wordmark (Direction K2). Deep-teal rounded square with a
- * thin copper inset frame and a cream serif "W"; the wordmark sets the "?" in gold.
- * Tone "light" is for teal surfaces (footer / get-help strip).
+ * The brand mark (sticker album). The tile is a red rounded square with a cream "W" —
+ * the same mark as the favicon and the share image. The wordmark sets the "?" in red.
+ * Tone "light" is for placement on an ink/red surface.
  */
-const SERIF = "var(--font-display), Georgia, serif";
-
 export function Crest({ size = 44 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 44 44" aria-hidden="true" focusable="false">
-      <rect width="44" height="44" rx="7" fill="#10363d" />
-      <rect x="3.5" y="3.5" width="37" height="37" rx="4.5" fill="none" stroke="#c79a52" strokeWidth="1" />
+      <rect width="44" height="44" rx="8" fill="#CD3F28" />
       <text
         x="22"
-        y="29"
+        y="31"
         textAnchor="middle"
-        fontSize="18"
-        fontWeight="700"
-        fill="#eef0e8"
-        style={{ fontFamily: SERIF }}
+        fontSize="26"
+        fontWeight="900"
+        fill="#FFF6EC"
+        style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
       >
         W
       </text>
@@ -44,13 +41,15 @@ export function Wordmark({
       <Crest size={size} />
       <span className="flex flex-col leading-none">
         <span
-          className={`font-display font-bold tracking-[0.01em] ${textClassName} ${light ? "text-rail-fg" : "text-ink"}`}
+          className={`font-display font-black tracking-[-0.02em] ${textClassName} ${
+            light ? "text-cream" : "text-ink"
+          }`}
         >
           {PRODUCT_NAME.replace(/\?$/, "")}
-          <span className={light ? "text-rail-accent" : "text-accent"}>?</span>
+          <span className={light ? "text-cream-onRed" : "text-red"}>?</span>
         </span>
         {tagline && (
-          <span className="mt-1.5 text-[11px] font-bold uppercase tracking-[0.18em] text-ink-faint">
+          <span className="mt-1.5 font-display text-[11px] font-extrabold uppercase tracking-[0.18em] text-ink-faint">
             Know your next step
           </span>
         )}

@@ -70,23 +70,41 @@ export function DecodeClient() {
   return (
     <>
       <ToolTopBar />
-      <div className="min-h-[60vh] bg-paper-warm">
+      <div className="min-h-[60vh]">
         <div className="container-prose py-10">
           <div className="flex items-start justify-between gap-4">
-            <h1 className="font-display text-h1 font-bold text-navy-ink">{t("title")}</h1>
-            <button type="button" onClick={replayGuide} className="mt-2 shrink-0 text-[14px] font-semibold text-ink-soft hover:text-ink">
+            <h1 className="text-h1">{t("title")}</h1>
+            <button type="button" onClick={replayGuide} className="link-text mt-2 min-h-[44px] shrink-0">
               {tt("showMe")}
             </button>
           </div>
           <p className="mt-2 text-ink-soft">{t("intro")}</p>
 
-          <form onSubmit={submit} className="card mt-6">
-            <label htmlFor="file" className="mb-1.5 block font-semibold text-ink">
+          {/* The letter card is a white sticker: upload, or paste. Nothing is kept. */}
+          <form
+            onSubmit={submit}
+            className="card sticker mt-7"
+            style={{ "--rot": "0.6deg" } as React.CSSProperties}
+          >
+            <label
+              htmlFor="file"
+              className="mb-2 block font-display text-[13px] font-black uppercase tracking-[0.1em] text-ink"
+            >
               {t("uploadLabel")}
             </label>
-            <input id="file" data-tour="decode-upload" type="file" accept="image/*,application/pdf" onChange={(e) => setFile(e.target.files?.[0] ?? null)} className="block w-full text-sm" />
+            <input
+              id="file"
+              data-tour="decode-upload"
+              type="file"
+              accept="image/*,application/pdf"
+              onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+              className="block w-full text-[14.5px] text-ink-soft file:mr-3.5 file:min-h-[44px] file:cursor-pointer file:rounded-button file:border-0 file:bg-ink file:px-4 file:py-3.5 file:font-display file:text-[13px] file:font-extrabold file:uppercase file:tracking-[0.06em] file:text-cream"
+            />
 
-            <label htmlFor="text" className="mb-1.5 mt-5 block font-semibold text-ink">
+            <label
+              htmlFor="text"
+              className="mb-2 mt-6 block font-display text-[13px] font-black uppercase tracking-[0.1em] text-ink"
+            >
               {t("pasteLabel")}
             </label>
             <textarea
@@ -99,29 +117,36 @@ export function DecodeClient() {
               className="input leading-relaxed"
             />
 
-            <button type="submit" className="btn-primary btn-lg mt-4 w-full sm:w-auto" disabled={loading || (!file && text.trim().length < 10)}>
+            <button
+              type="submit"
+              className="btn btn-primary btn-lg mt-5 w-full sm:w-auto"
+              disabled={loading || (!file && text.trim().length < 10)}
+            >
               {loading ? tc("loading") : t("submit")}
             </button>
             <span data-tour="decode-privacy" className="block">
-              <PrivacyNote className="mt-4">{t("intro")}</PrivacyNote>
+              <PrivacyNote className="mt-5">{t("intro")}</PrivacyNote>
             </span>
           </form>
 
           {error && (
-            <div role="alert" className="card mt-4 border-l-[3px] border-gold bg-gold-soft text-gold-strong">
+            <div role="alert" className="card mt-5 border-2 border-red text-ink">
               {error}
             </div>
           )}
 
           {result?.ok && result.status === "ocr-unavailable" && (
-            <div className="card mt-4">
-              <h2 className="font-serif text-h3 font-bold text-ink">{t("ocrUnavailableTitle")}</h2>
+            <div
+              className="card sticker mt-5"
+              style={{ "--rot": "-0.8deg" } as React.CSSProperties}
+            >
+              <h2 className="text-h3 text-ink">{t("ocrUnavailableTitle")}</h2>
               <p className="mt-2 text-ink-soft">{t("ocrUnavailableBody")}</p>
             </div>
           )}
 
           {result?.ok && result.status === "not-covered" && (
-            <div className="mt-6">
+            <div className="mt-7">
               <NotCovered title={t("notCoveredTitle")} body={t("notCoveredBody")} services={result.getHelp} />
             </div>
           )}

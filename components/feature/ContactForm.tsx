@@ -7,6 +7,13 @@ import { Icon } from "@/components/ui/icons";
 
 type FieldErrors = { name?: string; email?: string; message?: string };
 
+/**
+ * Contact form (sticker album) — one white sticker card with a gentle tilt, Archivo
+ * field labels, .input controls and the red primary submit. Validation, the honeypot
+ * and every handler are unchanged; this is a skin only.
+ *
+ * The error alert is RED, never amber: amber is reserved for time limits.
+ */
 export function ContactForm() {
   const t = useTranslations("contact");
   const te = useTranslations("errors");
@@ -59,13 +66,18 @@ export function ContactForm() {
     }
   }
 
+  const labelClass = "mb-2 block font-display text-[15px] font-extrabold text-ink";
+
   if (status === "sent") {
     return (
-      <div className="card border-l-[3px] border-help bg-help-soft">
-        <div className="flex items-center gap-2 text-[12.5px] font-bold uppercase tracking-[0.12em] text-help">
+      <div
+        className="card sticker border-2 border-help bg-help-soft"
+        style={{ "--rot": "0.9deg" } as React.CSSProperties}
+      >
+        <div className="flex items-center gap-2 font-display text-label font-black uppercase text-help-ink">
           <Icon.CheckSquare className="h-[17px] w-[17px]" strokeWidth={2} /> {t("sentEyebrow")}
         </div>
-        <h2 className="mt-2 font-serif text-[22px] font-bold text-help-ink">{t("sentTitle")}</h2>
+        <h2 className="mt-2.5 text-h2 text-help-ink">{t("sentTitle")}</h2>
         <p className="mt-2 text-ink-soft">{t("sentBody")}</p>
       </div>
     );
@@ -74,8 +86,13 @@ export function ContactForm() {
   const errId = (f: keyof FieldErrors) => (errors[f] ? `c-${f}-err` : undefined);
 
   return (
-    <form onSubmit={submit} noValidate className="card">
-      <label htmlFor="c-name" className="mb-1.5 block font-semibold text-ink">{t("name")}</label>
+    <form
+      onSubmit={submit}
+      noValidate
+      className="card sticker"
+      style={{ "--rot": "-0.6deg" } as React.CSSProperties}
+    >
+      <label htmlFor="c-name" className={labelClass}>{t("name")}</label>
       <input
         id="c-name"
         value={name}
@@ -88,9 +105,9 @@ export function ContactForm() {
         aria-invalid={!!errors.name}
         aria-describedby={errId("name")}
       />
-      {errors.name && <p id="c-name-err" className="mt-1.5 text-sm text-danger">{errors.name}</p>}
+      {errors.name && <p id="c-name-err" className="mt-2 text-sm font-semibold text-danger">{errors.name}</p>}
 
-      <label htmlFor="c-email" className="mb-1.5 mt-4 block font-semibold text-ink">{t("email")}</label>
+      <label htmlFor="c-email" className={`mt-5 ${labelClass}`}>{t("email")}</label>
       <input
         id="c-email"
         type="email"
@@ -104,9 +121,9 @@ export function ContactForm() {
         aria-invalid={!!errors.email}
         aria-describedby={errId("email")}
       />
-      {errors.email && <p id="c-email-err" className="mt-1.5 text-sm text-danger">{errors.email}</p>}
+      {errors.email && <p id="c-email-err" className="mt-2 text-sm font-semibold text-danger">{errors.email}</p>}
 
-      <label htmlFor="c-message" className="mb-1.5 mt-4 block font-semibold text-ink">{t("message")}</label>
+      <label htmlFor="c-message" className={`mt-5 ${labelClass}`}>{t("message")}</label>
       <textarea
         id="c-message"
         rows={6}
@@ -119,7 +136,7 @@ export function ContactForm() {
         aria-invalid={!!errors.message}
         aria-describedby={errId("message")}
       />
-      {errors.message && <p id="c-message-err" className="mt-1.5 text-sm text-danger">{errors.message}</p>}
+      {errors.message && <p id="c-message-err" className="mt-2 text-sm font-semibold text-danger">{errors.message}</p>}
 
       {/* Honeypot — visually hidden, off-screen; real users never fill it. */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
@@ -127,19 +144,19 @@ export function ContactForm() {
         <input id="c-company" tabIndex={-1} autoComplete="off" value={company} onChange={(e) => setCompany(e.target.value)} />
       </div>
 
-      <button type="submit" className="btn-primary btn-lg mt-5 w-full sm:w-auto" disabled={status === "sending"}>
+      <button type="submit" className="btn btn-primary btn-lg mt-6 w-full sm:w-auto" disabled={status === "sending"}>
         {status === "sending" ? t("sending") : t("submit")}
       </button>
 
       {error && (
-        <div role="alert" className="mt-3 rounded-input border-l-[3px] border-gold bg-gold-soft px-3.5 py-3 text-sm text-gold-strong">
+        <div role="alert" className="mt-4 rounded-input border-2 border-red bg-cream px-4 py-3 text-sm text-ink">
           <p>{error}</p>
-          <Link href="/help" className="mt-1.5 inline-block font-semibold underline underline-offset-2">
+          <Link href="/help" className="link mt-1.5 inline-block font-semibold">
             {t("seeHelp")} →
           </Link>
         </div>
       )}
-      <p className="mt-4 text-meta text-ink-faint">{t("privacyNote")}</p>
+      <p className="mt-5 text-sm text-ink-faint">{t("privacyNote")}</p>
     </form>
   );
 }

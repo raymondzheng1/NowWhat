@@ -14,7 +14,7 @@ export default function ContactPage() {
   return (
     <div className="container-prose py-12 sm:py-16">
       <PageHeader kicker={t("kicker")} title={t("title")} lead={t("intro")} />
-      <div className="mt-8">
+      <div className="mt-9">
         <ContactForm />
       </div>
     </div>

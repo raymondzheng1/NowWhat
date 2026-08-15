@@ -6,6 +6,9 @@ import { breadcrumbLd } from "@/lib/seo/jsonld";
  * Shared shell for Learn pages — the content column + a visible breadcrumb trail that
  * matches the emitted BreadcrumbList structured data (SEO best practice: the visible
  * breadcrumb and the markup agree). The last crumb is the current page (not linked).
+ *
+ * Sticker album: the trail is set as a receipt/meta line (Spline Sans Mono) so it reads as
+ * a small filing label above the page rather than competing with the display headings.
  */
 export function LearnContainer({
   children,
@@ -22,7 +25,7 @@ export function LearnContainer({
           <JsonLd data={breadcrumbLd(trail.map((b) => ({ name: b.name, path: b.href })))} />
           <nav
             aria-label="Breadcrumb"
-            className="flex flex-wrap items-center gap-1.5 text-[13px] uppercase tracking-[0.1em] text-ink-faint"
+            className="flex flex-wrap items-center gap-1.5 font-mono text-[12.5px] uppercase tracking-[0.06em] text-ink-faint"
           >
             {trail.map((b, i) => {
               const last = i === trail.length - 1;
@@ -31,7 +34,9 @@ export function LearnContainer({
                   {last ? (
                     <span className="text-ink-soft">{b.name}</span>
                   ) : (
-                    <Link href={b.href} className="text-accent hover:text-ink">{b.name}</Link>
+                    <Link href={b.href} className="text-red-ink underline underline-offset-[3px] hover:text-ink">
+                      {b.name}
+                    </Link>
                   )}
                   {!last && <span aria-hidden="true">/</span>}
                 </span>

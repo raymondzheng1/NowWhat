@@ -19,11 +19,11 @@ function PointList({
   const List = ordered ? "ol" : "ul";
   return (
     <div>
-      <h3 className="text-[12px] font-semibold uppercase tracking-[0.16em] text-accent">{title}</h3>
-      <List className={`mt-2 space-y-1.5 text-[16px] leading-[1.6] text-ink-soft ${ordered ? "list-decimal pl-5" : ""}`}>
+      <h3 className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-red-ink">{title}</h3>
+      <List className={`mt-2.5 space-y-2 text-[16px] leading-[1.6] text-ink-soft ${ordered ? "list-decimal pl-5 marker:font-display marker:font-black marker:text-ink-faint" : ""}`}>
         {items.map((s, i) => (
           <li key={i} className={ordered ? "" : "flex gap-2.5"}>
-            {!ordered && <span aria-hidden className="mt-2 h-1 w-1 flex-none rounded-full bg-accent" />}
+            {!ordered && <span aria-hidden className="mt-[9px] h-1.5 w-1.5 flex-none rounded-[2px] bg-red" />}
             <span>{s}</span>
           </li>
         ))}
@@ -43,26 +43,30 @@ export function ProcessExplainer({
 }) {
   const Heading = level;
   return (
-    <article className="space-y-5">
+    <article className="space-y-6">
       <div>
-        <p className="text-[12px] uppercase tracking-[0.22em] text-accent">{p.plainName}</p>
-        <Heading className={`mt-2 font-display font-bold text-ink ${level === "h1" ? "text-[34px] sm:text-[44px] leading-[1.05]" : "text-[26px]"}`}>
+        {/* .eyebrow's own tan is 3.61:1 on paper — AA-safe ink-faint, per components/ui/Eyebrow. */}
+        <p className="eyebrow text-ink-faint">{p.plainName}</p>
+        <Heading className={`mt-2.5 font-display font-black text-ink ${level === "h1" ? "text-[34px] sm:text-[44px] leading-[1.03] tracking-[-0.025em]" : "text-[26px] leading-[1.12]"}`}>
           {p.name}
         </Heading>
-        <p className="mt-2 font-display text-[19px] italic leading-snug text-ink-soft">“{p.question}”</p>
+        <p className="mt-2.5 font-display text-[19px] italic leading-snug text-ink-soft">“{p.question}”</p>
       </div>
 
-      <p className="max-w-[60ch] text-[16px] leading-[1.7] text-ink">{p.whatItIs}</p>
+      <p className="max-w-[60ch] text-[16.5px] leading-[1.7] text-ink">{p.whatItIs}</p>
 
       {/* Who hears it. Framed nationally first: the Commonwealth body is the main picture,
           and the Victorian one is presented as the STATE EQUIVALENT rather than a second,
           parallel jurisdiction. Two equal "Cth / Vic" pills made the reader do the work of
           figuring out which half applied to them. */}
-      <div className="rounded-card border border-line bg-sand-surface p-4">
-        <h3 className="flex items-center gap-2 text-[12px] font-semibold uppercase tracking-[0.16em] text-accent">
-          <Icon.People className="h-4 w-4 text-accent" strokeWidth={1.8} /> Who hears it
+      <div
+        className="card sticker border-2 border-line"
+        style={{ "--rot": "-0.6deg" } as React.CSSProperties}
+      >
+        <h3 className="flex items-center gap-2 font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-red-ink">
+          <Icon.People className="h-4 w-4 text-red-ink" strokeWidth={1.8} /> Who hears it
         </h3>
-        <ul className="mt-2 space-y-2">
+        <ul className="mt-2.5 space-y-2">
           {p.bodies
             .filter((b) => b.jurisdiction === "Cth")
             .map((b, i) => (
@@ -73,11 +77,11 @@ export function ProcessExplainer({
             ))}
         </ul>
         {p.bodies.some((b) => b.jurisdiction === "Vic") && (
-          <div className="mt-3 border-t border-line pt-3">
-            <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-ink-faint">
+          <div className="mt-4 border-t-2 border-line pt-3.5">
+            <p className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-ink-faint">
               The state equivalent
             </p>
-            <ul className="mt-1.5 space-y-2">
+            <ul className="mt-2 space-y-2">
               {p.bodies
                 .filter((b) => b.jurisdiction === "Vic")
                 .map((b, i) => (
@@ -87,7 +91,7 @@ export function ProcessExplainer({
                   </li>
                 ))}
             </ul>
-            <p className="mt-2 text-[14px] leading-snug text-ink-faint">
+            <p className="mt-2.5 text-[14.5px] leading-snug text-ink-faint">
               We cover Victoria in detail. Every state has its own equivalent, and it works the
               same way.
             </p>
@@ -95,15 +99,25 @@ export function ProcessExplainer({
         )}
       </div>
 
-      <div className={`grid gap-6 ${compact ? "" : "sm:grid-cols-2"}`}>
+      <div className={`grid gap-7 ${compact ? "" : "sm:grid-cols-2"}`}>
         <PointList title="Can you apply?" items={p.canApply} />
         <PointList title="What happens" items={p.whatHappens} ordered />
         <PointList title="What they can do" items={p.remedies} />
-        {p.limits.length > 0 && <PointList title="What it can’t do" items={p.limits} />}
       </div>
 
+      {/* What it can't do — a limit, not a deadline and not an empty slot: a calm sunk
+          panel with a structural ink rule, so it reads as boundary rather than alarm. */}
+      {p.limits.length > 0 && (
+        <div className="rounded-card border-l-[6px] border-ink bg-paper px-5 py-4 shadow-card">
+          <PointList title="What it can’t do" items={p.limits} />
+        </div>
+      )}
+
       {!compact && p.goodToKnow.length > 0 && (
-        <div className="rounded-card border-l-[3px] border-gold bg-gold-soft px-4 py-3">
+        <div
+          className="card sticker border-2 border-line"
+          style={{ "--rot": "0.8deg" } as React.CSSProperties}
+        >
           <PointList title="Good to know" items={p.goodToKnow} />
         </div>
       )}
