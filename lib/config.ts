@@ -22,7 +22,7 @@ export const MODELS = {
   // The grounded-answer model. Overridable via env so the primary model can be tuned
   // (e.g. Sonnet vs Opus vs Haiku) without a code change — handy while A/B testing the
   // LLM answers against the keyless wizard.
-  primary: process.env.ANTHROPIC_MODEL?.trim() || "claude-sonnet-4-6",
+  primary: process.env.ANTHROPIC_MODEL?.trim() || "claude-sonnet-5",
   // Small model for structural envelope repair only (never substance, harness §11).
   small: "claude-haiku-4-5-20251001",
 };
@@ -32,8 +32,8 @@ export const MODEL_PRICES_USD_PER_MTOK: Record<
   string,
   { input: number; output: number }
 > = {
-  "claude-opus-4-8": { input: 15, output: 75 },
-  "claude-sonnet-4-6": { input: 3, output: 15 },
+  "claude-opus-5": { input: 15, output: 75 },
+  "claude-sonnet-5": { input: 3, output: 15 },
   "claude-haiku-4-5-20251001": { input: 1, output: 5 },
 };
 

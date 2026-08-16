@@ -20,7 +20,7 @@ const FAQ_DIR = resolve(ROOT, "content/faq");
 const DRAFTS = resolve(FAQ_DIR, "_drafts");
 const REJECTED = resolve(DRAFTS, "REJECTED");
 const QUEUE = resolve(FAQ_DIR, "queue.json");
-const MODEL = process.env.ANTHROPIC_MODEL?.trim() || "claude-sonnet-4-6";
+const MODEL = process.env.ANTHROPIC_MODEL?.trim() || "claude-sonnet-5";
 const ALL = process.argv.includes("--all");
 
 function die(msg) {

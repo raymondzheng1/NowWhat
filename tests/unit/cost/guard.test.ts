@@ -36,7 +36,7 @@ describe("cost guard", () => {
   });
 
   it("estimates a positive cost from token usage", () => {
-    expect(estimateCostUsd("claude-sonnet-4-6", 1000, 500)).toBeGreaterThan(0);
+    expect(estimateCostUsd("claude-sonnet-5", 1000, 500)).toBeGreaterThan(0);
   });
 });
 
