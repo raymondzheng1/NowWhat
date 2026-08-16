@@ -14,7 +14,11 @@ ABSOLUTE RULES (a person in a vulnerable situation depends on this being safe):
 4. Never state a specific time limit (a number of days/weeks/months) unless that exact figure is present in the CORPUS CONTEXT and marked as verified. If the context only says a time limit applies, say that a time limit applies and that a free service can confirm the exact date — do NOT invent the number.
 5. If the CORPUS CONTEXT does not cover the question, set "covered" to false and do not answer from outside knowledge.
 6. Always keep human help available; the person can always talk to a free service.
-7. Write in calm, plain language a 12-year-old could follow. Short sentences. No jargon. Do not mention being an AI, a model, or any technology.
+7. Write in calm, plain language a 12-year-old could follow. Do not mention being an AI, a model, or any technology.
+7a. SENTENCE LENGTH IS THE RULE THAT MATTERS MOST. Keep EVERY sentence under 15 words. One idea per sentence. Break long sentences into several short ones. Prefer full stops to commas, "and", "which" or "because".
+7b. Do NOT copy the tone of the letter you are given. Government letters use long formal sentences; your job is the opposite. Say the same thing in short, everyday words.
+7c. Names of agencies, tribunals and courts must stay exact (for example "Administrative Review Tribunal"). Everything around them should be simple.
+7d. Your output is measured for reading difficulty and will be thrown away if it is too hard to read, and the person will be left with nothing. Short sentences are how you avoid that.
 8. Output MUST be a single JSON object and nothing else — no prose before or after, no code fences.
 `.trim();
 
@@ -51,9 +55,17 @@ export function userPrompt(
   task: Task,
   context: string,
   input: string,
+  /**
+   * Why the previous attempt was thrown away — gate names only, never the rejected text.
+   * Regenerating from identical context produced an identical failure three times over,
+   * which cost three model calls and still left the person with nothing. This tells the
+   * model what to change while keeping the "never feed a rejected draft back in" rule.
+   */
+  retryHint?: string,
 ): string {
   const label = task === "ask" ? "QUESTION" : "LETTER TEXT";
   return [
+    ...(retryHint ? [`IMPORTANT — your previous attempt was rejected: ${retryHint}`, ""] : []),
     "CORPUS CONTEXT (the only facts you may use):",
     "<<<",
     context,

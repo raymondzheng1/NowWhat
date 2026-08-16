@@ -72,6 +72,9 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
   const sys = systemPrompt(opts.task);
   let attempts = 0;
   let lastFailures: VerifyFailure[] | undefined;
+  // The best answer we produced that cleared every SAFETY gate. See the fallback below.
+  let readableEnough: { data: T; failures: VerifyFailure[] } | null = null;
+  let retryHint: string | undefined;
 
   while (attempts < MAX_GENERATION_ATTEMPTS) {
     attempts++;
@@ -79,7 +82,7 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
     // Always regenerate from CLEAN context — never feed a rejected draft back in.
     const res = await callModel({
       system: sys,
-      user: userPrompt(opts.task, opts.context, opts.userInput),
+      user: userPrompt(opts.task, opts.context, opts.userInput, retryHint),
       model: MODELS.primary,
       maxTokens: 1200,
       byoKeyValue: opts.byoKeyValue,
@@ -112,6 +115,30 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
     const verdict = verifyOutput({ text, declaredSources, entry: opts.entry });
     if (verdict.ok) return { status: "answered", data, attempts };
     lastFailures = verdict.failures; // diagnostic only — never contains PII
+
+    // Reading level is a QUALITY gate, not a safety gate: it measures how hard the text is
+    // to read, not whether it could harm anyone. Its failure mode was inverted — we threw
+    // away a grounded, non-advisory, correctly-sourced answer and showed the person nothing
+    // at all, which is the least accessible outcome available. Hold on to an answer that
+    // cleared every safety gate, and use it only if we run out of attempts.
+    if (verdict.failures.every((f) => f.gate === "reading-level")) {
+      readableEnough = { data, failures: verdict.failures };
+    }
+
+    // Tell the next attempt what to change, without ever feeding back the rejected draft.
+    retryHint = verdict.failures.map((f) => `${f.gate} — ${f.detail}`).join("; ");
+  }
+
+  // Every safety gate passed; only readability fell short. An answer the person can read
+  // with some effort beats no answer at all.
+  if (readableEnough) {
+    return {
+      status: "answered",
+      data: readableEnough.data,
+      attempts,
+      reason: "gates-rejected",
+      rejectedGates: [...new Set(readableEnough.failures.map((f) => f.gate))],
+    };
   }
 
   return {
