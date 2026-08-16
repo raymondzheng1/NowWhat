@@ -54,7 +54,7 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
   await expect(page.getByRole("heading", { name: /grounds people raise/i })).toBeVisible();
 });
 
-test("tripwire: a sensitive matter routes straight to a person (no builder output)", async ({ page }) => {
+test("tripwire: a sensitive matter leads with a person, and still shows the options", async ({ page }) => {
   await page.goto("/start");
   const vic = page.getByRole("button", { name: /victorian state body/i });
   await expect(async () => {
@@ -68,8 +68,10 @@ test("tripwire: a sensitive matter routes straight to a person (no builder outpu
   await page.getByRole("button", { name: /see my next steps/i }).click();
 
   await expect(page.getByRole("heading", { name: /talk to a free legal service/i })).toBeVisible({ timeout: 15_000 });
-  // The builder output (avenue / time limit) must NOT appear on a route-out.
-  await expect(page.getByRole("heading", { name: /what this means for you/i })).toHaveCount(0);
+  // The hand-over LEADS, but it no longer replaces the analysis: the person picked a
+  // decision type, and their circumstances are extra context rather than a reason to
+  // withhold everything we know about that decision.
+  await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
 });
 
 test("urgent timing does NOT dead-end: the person still gets their options", async ({ page }) => {
@@ -106,4 +108,45 @@ test("a deep link cannot skip the tripwire or the consent gate", async ({ page }
   ).not.toBeChecked();
   // …and the result is definitely not on screen.
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toHaveCount(0);
+});
+
+test("the browser Back button walks back through the steps", async ({ page }) => {
+  // Regression: the flow mirrored its state with history.replaceState, which overwrites the
+  // current entry instead of adding one — so Back never saw the steps and dropped the person
+  // straight out of the flow.
+  await page.goto("/start");
+  const vic = page.getByRole("button", { name: /victorian state body/i });
+  await expect(async () => {
+    await vic.click();
+    await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });
+  }).toPass({ timeout: 15_000 });
+
+  await page.goBack();
+  await expect(page.getByRole("heading", { name: /who made the decision/i })).toBeVisible({ timeout: 10_000 });
+
+  // Forward is not asserted here: Playwright's history driver does not reliably re-fire
+  // popstate for a pushState entry, and Back is the behaviour that was broken and reported.
+});
+
+test("a ticked tripwire flag no longer withholds the analysis", async ({ page }) => {
+  // The tripwire used to REPLACE the result with "talk to a free legal service". The person
+  // chose a decision type; the analysis is about that decision type, and their circumstances
+  // are extra context, not a reason to withhold everything.
+  await page.goto("/start");
+  const vic = page.getByRole("button", { name: /victorian state body/i });
+  await expect(async () => {
+    await vic.click();
+    await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });
+  }).toPass({ timeout: 15_000 });
+
+  await page.getByRole("button", { name: /fine or infringement/i }).first().click();
+  await page.getByRole("checkbox", { name: /criminal case, a police matter/i }).check();
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+
+  // The hand-over leads…
+  await expect(page.getByRole("heading", { name: /talk to a free legal service/i })).toBeVisible({ timeout: 15_000 });
+  // …and the analysis and pathway still follow it.
+  await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /putting it together/i })).toBeVisible();
 });

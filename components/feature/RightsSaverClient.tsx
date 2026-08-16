@@ -105,6 +105,7 @@ export function RightsSaverClient({
   const [flags, setFlags] = useState<TripwireFlags>({});
   const [consent, setConsent] = useState(false);
   const [copied, setCopied] = useState(false);
+  const lastStepRef = useRef<Step | null>(null);
   // Grounds the person marked as possibly relating to their situation (neutral; →handoff).
   const [relatedGrounds, setRelatedGrounds] = useState<string[]>([]);
 
@@ -131,22 +132,69 @@ export function RightsSaverClient({
     if (area && getDataEntry(area)) setStep("what");
   }, []);
 
-  // Mirror the answers into the URL as the person moves.
+  // Mirror the answers into the URL, and give the browser real history to walk.
   //
-  // The result links out to guides, FAQ articles and the help directory, all in this tab.
-  // Without this, Back re-mounted the flow at step 1 and silently threw away everything —
-  // including the decision date they had to dig out of the letter, and every ground they
-  // ticked. Nothing is stored server-side and nothing sensitive goes in the URL: it is the
-  // same three answers the deep link already accepted.
+  // This used `replaceState`, which overwrites the current entry instead of adding one — so
+  // the Back button never saw the steps and dropped the person straight out of the flow.
+  // Now each forward move PUSHES an entry and `popstate` restores the step, so Back and
+  // Forward behave the way every other website has taught people to expect.
+  //
+  // The consent gate still holds: `step=result` is only ever restored when consent was
+  // given IN THIS SESSION. A fresh load, a bookmark or a shared link starts at the
+  // questions, because `consent` is false until the person ticks the box.
+  const poppingRef = useRef(false);
   useEffect(() => {
-    if (step === "who") return;
+    // Runs for EVERY step including "who". Skipping it left lastStepRef null on the first
+    // move, so who -> what replaced the entry instead of pushing one, and there was no step 1
+    // to go back to.
     const p = new URLSearchParams();
     if (jurisdiction) p.set("jur", jurisdiction);
     if (areaId) p.set("area", areaId);
     if (decisionDate) p.set("date", decisionDate);
-    if (step === "result") p.set("step", "result");
-    window.history.replaceState(null, "", `${window.location.pathname}?${p.toString()}`);
+    p.set("step", step);
+    const qs = p.toString();
+    const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
+    // A step reached by pressing Back must NOT push a new entry — that re-pushes the entry
+    // the browser just left and pins the person on one step however often they press Back.
+    if (poppingRef.current) {
+      poppingRef.current = false;
+      lastStepRef.current = step;
+      return;
+    }
+    // Push once per step change; refine the same entry when only the answers change.
+    if (lastStepRef.current !== null && lastStepRef.current !== step) {
+      window.history.pushState({ step }, "", url);
+    } else {
+      window.history.replaceState({ step }, "", url);
+    }
+    lastStepRef.current = step;
   }, [step, jurisdiction, areaId, decisionDate]);
+
+  useEffect(() => {
+    function onPop() {
+      poppingRef.current = true;
+      // Restore from the URL, not from React state: the handler's closure can hold a stale
+      // value, and the URL is the thing the browser actually navigated to.
+      const p = new URLSearchParams(window.location.search);
+      const jur = p.get("jur");
+      const area = p.get("area");
+      const date = p.get("date");
+      const want = p.get("step");
+      if (jur === "Vic" || jur === "Cth") setJurisdiction(jur);
+      if (area && getDataEntry(area)) setAreaId(area);
+      if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) setDecisionDate(date);
+      if (want === "result") {
+        // Never let Back or Forward walk INTO a result that was never consented to.
+        setStep(consent && area ? "result" : "what");
+      } else if (want === "what" && (jur || jurisdiction)) {
+        setStep("what");
+      } else {
+        setStep("who");
+      }
+    }
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, [consent, areaId, jurisdiction]);
 
   const today = new Date().toISOString().slice(0, 10);
   const areas = jurisdiction
@@ -629,105 +677,14 @@ function ResultStep({
   }
 
   // --- Tripwire: stop and route to a person (no builder output) ---
-  if (trip.stop) {
-    return (
-      <div className="space-y-6">
-        <Disclaimer />
-        {/* A warm hand-over, never an error: green help tones, a friendly glyph, no alarm. */}
-        <div
-          className="sticker rounded-card border-2 border-help bg-help-soft p-5 sm:p-6"
-          style={{ "--rot": "-0.9deg" } as React.CSSProperties}
-        >
-          <div className="flex items-start gap-4">
-            <span className="chip" style={{ background: "linear-gradient(135deg,#2B8A4B,#308371)" }}>
-              <Icon.People className="h-6 w-6 text-white" strokeWidth={1.9} />
-            </span>
-            <div className="min-w-0 flex-1">
-              <h1 className="font-display text-[24px] font-black leading-tight text-help-ink sm:text-[28px]">
-                {t("routeTitle")}
-              </h1>
-              <p className="mt-2 text-[16px] leading-relaxed text-help-ink">{t("routeBody")}</p>
-              {/* The number, first. This is the highest-stakes screen in the product: the
-                  route to a human must be the first thing a thumb can reach, not two
-                  screens down. */}
-              {stopServices[0]?.phone && (
-                <div className="mt-4">
-                  <CallButton phone={stopServices[0].phone} label={stopServices[0].service} />
-                  <p className="mt-1.5 text-[14px] leading-snug text-help-ink">
-                    {stopServices[0].service}
-                  </p>
-                </div>
-              )}
-              {caps.urgentPerson && (
-                <p className="mt-3 text-[15.5px] font-medium leading-snug text-help-ink">
-                  {t("stopCallNowNote")}
-                </p>
-              )}
-            </div>
-          </div>
-          <ul className="mt-4 space-y-2 text-[15.5px] leading-snug text-help-ink">
-            {/* The reasons we STOPPED. Mapping every reason put "your options below will
-                help you explain the matter quickly" on a screen that has no options. */}
-            {trip.stopReasons.map((r) => (
-              <li key={r} className="flex gap-2.5">
-                <span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 flex-none rounded-[2px] bg-help" />
-                <span>{t(TRIPWIRE_MESSAGE_KEYS[r])}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        {/* Route to the services that match WHY we stopped — a criminal element needs a
-            criminal duty lawyer, not the fines office. The decision-area services stay
-            below as a secondary list, never the primary answer. */}
-        <GetHelp services={stopServices} title={t("routeHelpTitle")} />
-        {/* The value we CAN add when we cannot analyse the matter.
-            None of this asserts a legal proposition, names a forum, or states a time limit
-            — it is about making the appointment count. That is why it is safe for every
-            stop reason, including the most serious. */}
-        <section className="card">
-          <p className="text-[16px] font-medium leading-relaxed text-ink">{t("stopStillHelpful")}</p>
-
-          <h2 className="mt-5 font-display text-[21px] font-black text-ink">{t("stopPrepTitle")}</h2>
-          <p className="mt-1.5 text-[15.5px] leading-relaxed text-ink-soft">{t("stopPrepLead")}</p>
-          <ul className="mt-3.5 space-y-2.5">
-            {[1, 2, 3, 4, 5, 6].map((n) => (
-              <li key={n} className="flex gap-2.5 text-[15.5px] leading-snug text-ink">
-                <span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 flex-none rounded-[2px] bg-ink" />
-                <span>{t(`stopPrep${n}`)}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{t("stopPrepNote")}</p>
-
-          <h2 className="mt-7 font-display text-[21px] font-black text-ink">{t("stopAskTitle")}</h2>
-          <p className="mt-1.5 text-[15.5px] leading-relaxed text-ink-soft">{t("stopAskLead")}</p>
-          <ul className="mt-3.5 space-y-2.5">
-            {[1, 2, 3, 4, 5].map((n) => (
-              <li key={n} className="flex gap-2.5 text-[15.5px] leading-snug text-ink">
-                <span aria-hidden="true" className="mt-[3px] flex-none font-display font-black text-red-ink">?</span>
-                <span>{t(`stopAsk${n}`)}</span>
-              </li>
-            ))}
-          </ul>
-
-          <h2 className="mt-7 font-display text-[21px] font-black text-ink">{t("stopNotesTitle")}</h2>
-          <p className="mt-1.5 text-[15.5px] leading-relaxed text-ink-soft">{t("stopNotesLead")}</p>
-          <button type="button" onClick={downloadStopNotes} className="btn btn-secondary mt-4">
-            {t("stopNotesDownload")}
-          </button>
-        </section>
-
-        <details className="card">
-          <summary className="cursor-pointer py-2 font-display text-[16px] font-extrabold text-ink">
-            {t("routeAlsoTitle")}
-          </summary>
-          <div className="mt-4">
-            <HelpList t={t} entry={entry} />
-          </div>
-        </details>
-      </div>
-    );
-  }
+  // The tripwire no longer STOPS the flow.
+  //
+  // It used to return a hand-over screen instead of the result, so ticking any box under
+  // "Does any of these apply?" replaced the whole analysis with "talk to a free legal
+  // service". That is backwards: the person chose a decision type, and the analysis is about
+  // THAT decision type — their circumstances are extra context, not a reason to withhold
+  // everything. So the hand-over now leads, prominently and with a phone number, and the
+  // full analysis and pathway follow it. Nothing is hidden.
 
   const av = avenueView(entry);
   const plan = planFor({ avenue: av, meritsReview, judicialReview, jurisdiction });
@@ -805,6 +762,106 @@ function ResultStep({
         <h1 className="mt-2 font-display text-[30px] font-black leading-[1.05] text-ink sm:text-[38px]">{entry.title}</h1>
       </div>
       <Disclaimer />
+
+      {/* Leads when a flag was ticked; the analysis below is unchanged. */}
+      {trip.stop && (
+        <div className="space-y-6">
+
+          {/* A warm hand-over, never an error: green help tones, a friendly glyph, no alarm. */}
+          <div
+            className="sticker rounded-card border-2 border-help bg-help-soft p-5 sm:p-6"
+            style={{ "--rot": "-0.9deg" } as React.CSSProperties}
+          >
+            <div className="flex items-start gap-4">
+              <span className="chip" style={{ background: "linear-gradient(135deg,#2B8A4B,#308371)" }}>
+                <Icon.People className="h-6 w-6 text-white" strokeWidth={1.9} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <h1 className="font-display text-[24px] font-black leading-tight text-help-ink sm:text-[28px]">
+                  {t("routeTitle")}
+                </h1>
+                <p className="mt-2 text-[16px] leading-relaxed text-help-ink">{t("routeBody")}</p>
+                {/* The number, first. This is the highest-stakes screen in the product: the
+                    route to a human must be the first thing a thumb can reach, not two
+                    screens down. */}
+                {stopServices[0]?.phone && (
+                  <div className="mt-4">
+                    <CallButton phone={stopServices[0].phone} label={stopServices[0].service} />
+                    <p className="mt-1.5 text-[14px] leading-snug text-help-ink">
+                      {stopServices[0].service}
+                    </p>
+                  </div>
+                )}
+                {caps.urgentPerson && (
+                  <p className="mt-3 text-[15.5px] font-medium leading-snug text-help-ink">
+                    {t("stopCallNowNote")}
+                  </p>
+                )}
+              </div>
+            </div>
+            <ul className="mt-4 space-y-2 text-[15.5px] leading-snug text-help-ink">
+              {/* The reasons we STOPPED. Mapping every reason put "your options below will
+                  help you explain the matter quickly" on a screen that has no options. */}
+              {trip.stopReasons.map((r) => (
+                <li key={r} className="flex gap-2.5">
+                  <span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 flex-none rounded-[2px] bg-help" />
+                  <span>{t(TRIPWIRE_MESSAGE_KEYS[r])}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+          {/* Route to the services that match WHY we stopped — a criminal element needs a
+              criminal duty lawyer, not the fines office. The decision-area services stay
+              below as a secondary list, never the primary answer. */}
+          <GetHelp services={stopServices} title={t("routeHelpTitle")} />
+          {/* The value we CAN add when we cannot analyse the matter.
+              None of this asserts a legal proposition, names a forum, or states a time limit
+              — it is about making the appointment count. That is why it is safe for every
+              stop reason, including the most serious. */}
+          <section className="card">
+            <p className="text-[16px] font-medium leading-relaxed text-ink">{t("stopStillHelpful")}</p>
+
+            <h2 className="mt-5 font-display text-[21px] font-black text-ink">{t("stopPrepTitle")}</h2>
+            <p className="mt-1.5 text-[15.5px] leading-relaxed text-ink-soft">{t("stopPrepLead")}</p>
+            <ul className="mt-3.5 space-y-2.5">
+              {[1, 2, 3, 4, 5, 6].map((n) => (
+                <li key={n} className="flex gap-2.5 text-[15.5px] leading-snug text-ink">
+                  <span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 flex-none rounded-[2px] bg-ink" />
+                  <span>{t(`stopPrep${n}`)}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{t("stopPrepNote")}</p>
+
+            <h2 className="mt-7 font-display text-[21px] font-black text-ink">{t("stopAskTitle")}</h2>
+            <p className="mt-1.5 text-[15.5px] leading-relaxed text-ink-soft">{t("stopAskLead")}</p>
+            <ul className="mt-3.5 space-y-2.5">
+              {[1, 2, 3, 4, 5].map((n) => (
+                <li key={n} className="flex gap-2.5 text-[15.5px] leading-snug text-ink">
+                  <span aria-hidden="true" className="mt-[3px] flex-none font-display font-black text-red-ink">?</span>
+                  <span>{t(`stopAsk${n}`)}</span>
+                </li>
+              ))}
+            </ul>
+
+            <h2 className="mt-7 font-display text-[21px] font-black text-ink">{t("stopNotesTitle")}</h2>
+            <p className="mt-1.5 text-[15.5px] leading-relaxed text-ink-soft">{t("stopNotesLead")}</p>
+            <button type="button" onClick={downloadStopNotes} className="btn btn-secondary mt-4">
+              {t("stopNotesDownload")}
+            </button>
+          </section>
+
+          <details className="card">
+            <summary className="cursor-pointer py-2 font-display text-[16px] font-extrabold text-ink">
+              {t("routeAlsoTitle")}
+            </summary>
+            <div className="mt-4">
+              <HelpList t={t} entry={entry} />
+            </div>
+          </details>
+
+        </div>
+      )}
 
       {/* The result runs long — deliberately, because it is the whole picture. A stressed
           reader on a phone should not have to scroll to find out what is here, so name the
