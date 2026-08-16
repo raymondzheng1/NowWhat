@@ -115,7 +115,13 @@ export function RightsSaverClient({
     }
     if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) setDecisionDate(date);
     // Restore to the result when the URL says we were there, otherwise to the area step.
-    if (area && getDataEntry(area)) setStep(p.get("step") === "result" ? "result" : "what");
+    // Land on the QUESTIONS, never straight on the result — even when the URL says
+    // "step=result". At this point `flags` is empty and `consent` is false, so restoring
+    // to the result rendered the whole builder with the tripwire never asked and the
+    // "not legal advice" consent box never ticked. A bookmark, a shared link, a chat
+    // hand-off or the Back button was enough to bypass both. We still WRITE step=result
+    // so Back works inside a session; we just never trust it on the way in.
+    if (area && getDataEntry(area)) setStep("what");
   }, []);
 
   // Mirror the answers into the URL as the person moves.
@@ -588,7 +594,9 @@ function ResultStep({
             </div>
           </div>
           <ul className="mt-4 space-y-2 text-[15.5px] leading-snug text-help-ink">
-            {trip.reasons.map((r) => (
+            {/* The reasons we STOPPED. Mapping every reason put "your options below will
+                help you explain the matter quickly" on a screen that has no options. */}
+            {trip.stopReasons.map((r) => (
               <li key={r} className="flex gap-2.5">
                 <span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 flex-none rounded-[2px] bg-help" />
                 <span>{TRIPWIRE_MESSAGES[r]}</span>

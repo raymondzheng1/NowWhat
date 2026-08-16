@@ -71,6 +71,13 @@ export const PathwayEntrySchema = z.object({
   groundsOrCriteria: z.array(NonEmpty).default([]),
   evidenceChecklist: z.array(NonEmpty).default([]),
   getHelp: z.array(HelpServiceSchema).min(1),
+  /**
+   * True for the catch-all "a government decision I disagree with" entries. A fallback is
+   * chosen deliberately when nothing else matches — it must never COMPETE for a match, or
+   * its deliberately broad words ("decision", "government agency", "review") outscore the
+   * specific entry the letter actually belongs to.
+   */
+  isFallback: z.boolean().default(false),
   plainLanguageExplainer: NonEmpty,
   sources: z.array(NonEmpty).min(1),
   /** ISO date (YYYY-MM-DD) or null until a human verifies the entry. */

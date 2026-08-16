@@ -70,6 +70,11 @@ function normaliseEntry(file, raw, body) {
   return e;
 }
 
+function normalise(e) {
+  e.isFallback = e.isFallback ?? false;
+  return e;
+}
+
 function buildClassification(entries) {
   const tokens = [];
   const push = (token, entryId, kind) => {
@@ -77,6 +82,7 @@ function buildClassification(entries) {
     if (t) tokens.push({ token: t, entryId, kind });
   };
   for (const e of entries) {
+    if (e.isFallback) continue; // fallbacks are chosen explicitly, not by token match
     for (const d of e.decisionTypes) push(d, e.id, "decisionType");
     for (const is of e.issuers) push(is, e.id, "issuer");
     for (const k of e.keywords) push(k, e.id, "keyword");
@@ -113,6 +119,7 @@ function main() {
   }
 
   entries.sort((a, b) => a.id.localeCompare(b.id));
+  entries.forEach(normalise);
   const classification = buildClassification(entries);
   const sources = [...new Set(entries.flatMap((e) => e.sources))].sort();
 

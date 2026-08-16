@@ -1,5 +1,5 @@
 {
-  "builtAt": "040992031a8597c0",
+  "builtAt": "55717d2a7385acee",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -108,7 +108,8 @@
         "Economic Justice Australia — ejaustralia.org.au"
       ],
       "lastVerified": "2026-06-30",
-      "body": "Most Centrelink decisions can be looked at again. The first step is usually an internal\nreview by Services Australia, done by an Authorised Review Officer. If you still disagree,\nyou can usually apply to the Administrative Review Tribunal, which is independent of\nCentrelink. Time limits can apply to some steps, so it helps to act early and get free help.\n\nReviewed and confirmed by a supervising lawyer on 2026-06-30. No exact time-limit figure is\nasserted (every pathway is non-renderable), so the app shows \"a time limit applies — confirm\nit\" with the official source and free help, rather than an unverified number."
+      "body": "Most Centrelink decisions can be looked at again. The first step is usually an internal\nreview by Services Australia, done by an Authorised Review Officer. If you still disagree,\nyou can usually apply to the Administrative Review Tribunal, which is independent of\nCentrelink. Time limits can apply to some steps, so it helps to act early and get free help.\n\nReviewed and confirmed by a supervising lawyer on 2026-06-30. No exact time-limit figure is\nasserted (every pathway is non-renderable), so the app shows \"a time limit applies — confirm\nit\" with the official source and free help, rather than an unverified number.",
+      "isFallback": false
     },
     {
       "id": "vic-fines",
@@ -245,13 +246,15 @@
         "Victoria Legal Aid — Fines and infringements — legalaid.vic.gov.au"
       ],
       "lastVerified": "2026-06-16",
-      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nVictorian fines move through stages: an Infringement Notice, then a Penalty Reminder\nNotice, then a Notice of Final Demand, then enforcement. Some options — like going to\ncourt or nominating another driver — are only available before the fine is registered\n(before the Notice of Final Demand). The exact date to pay is the due date printed on\nyour own notice, so check the notice itself."
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nVictorian fines move through stages: an Infringement Notice, then a Penalty Reminder\nNotice, then a Notice of Final Demand, then enforcement. Some options — like going to\ncourt or nominating another driver — are only available before the fine is registered\n(before the Notice of Final Demand). The exact date to pay is the due date printed on\nyour own notice, so check the notice itself.",
+      "isFallback": false
     },
     {
       "id": "vic-generic",
       "title": "A Victorian government decision I disagree with",
       "jurisdiction": "Victoria",
       "status": "verified",
+      "isFallback": true,
       "decisionTypes": [
         "decision",
         "notice of decision",
@@ -364,7 +367,7 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "lastVerified": "2026-06-16",
-      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nThis is the general guide for a Victorian state-government decision when there isn't a\nmore specific one. The most important point is honest uncertainty: VCAT can only review\na decision if the Act it was made under gives VCAT that power, so the decision letter\nitself is the best guide to whether review is available and by when. The 28-day VCAT\nreview limit is a common default but can be shorter under a particular Act — so the safe\nstep is to check the letter and get free legal help quickly. The Victorian Ombudsman can\nlook into unfair treatment but cannot overturn or change a decision."
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\r\nVictorian legal professional should confirm them before public launch.\r\n\r\nThis is the general guide for a Victorian state-government decision when there isn't a\r\nmore specific one. The most important point is honest uncertainty: VCAT can only review\r\na decision if the Act it was made under gives VCAT that power, so the decision letter\r\nitself is the best guide to whether review is available and by when. The 28-day VCAT\r\nreview limit is a common default but can be shorter under a particular Act — so the safe\r\nstep is to check the letter and get free legal help quickly. The Victorian Ombudsman can\r\nlook into unfair treatment but cannot overturn or change a decision."
     },
     {
       "id": "vic-public-housing",
@@ -491,7 +494,8 @@
         "Tenants Victoria — tenantsvic.org.au"
       ],
       "lastVerified": "2026-06-16",
-      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nSocial-housing problems split into two separate paths, and getting into the right one\nmatters. Decisions about a housing *application* — eligibility, priority, a transfer, or\na rebate — are reviewed by the **Housing Appeals Office** and have no strict deadline.\nAn *eviction* (a notice to vacate) is a tenancy matter under the Residential Tenancies\nAct, goes to **VCAT**, and has a 30-day window to challenge it early. The 30-day window\nis the time to challenge *early* — a renter can still argue the notice is invalid at the\npossession hearing."
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nSocial-housing problems split into two separate paths, and getting into the right one\nmatters. Decisions about a housing *application* — eligibility, priority, a transfer, or\na rebate — are reviewed by the **Housing Appeals Office** and have no strict deadline.\nAn *eviction* (a notice to vacate) is a tenancy matter under the Residential Tenancies\nAct, goes to **VCAT**, and has a 30-day window to challenge it early. The 30-day window\nis the time to challenge *early* — a renter can still argue the notice is invalid at the\npossession hearing.",
+      "isFallback": false
     },
     {
       "id": "vic-renting",
@@ -623,7 +627,8 @@
         "Tenants Victoria — tenantsvic.org.au"
       ],
       "lastVerified": "2026-06-16",
-      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nTwo recent changes matter when reading a renter's letter: since June 2025, bond,\nrent-increase, repairs and compensation disputes start at **Rental Dispute Resolution\nVictoria** (which can refer them to VCAT), while evictions and notices to vacate still\ngo to **VCAT**. From 25 November 2025 the minimum notice period for a rent increase\nchanged from 60 to 90 days, so an older letter may lawfully use the shorter period.\n\nThe 30-day window to challenge a notice to vacate is the time to challenge it *early* —\nit is not the only chance. A renter can still argue a notice is invalid at the\npossession hearing, so missing 30 days does not end their options."
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nTwo recent changes matter when reading a renter's letter: since June 2025, bond,\nrent-increase, repairs and compensation disputes start at **Rental Dispute Resolution\nVictoria** (which can refer them to VCAT), while evictions and notices to vacate still\ngo to **VCAT**. From 25 November 2025 the minimum notice period for a rent increase\nchanged from 60 to 90 days, so an older letter may lawfully use the shorter period.\n\nThe 30-day window to challenge a notice to vacate is the time to challenge it *early* —\nit is not the only chance. A renter can still argue a notice is invalid at the\npossession hearing, so missing 30 days does not end their options.",
+      "isFallback": false
     }
   ],
   "classification": [
@@ -830,101 +835,6 @@
     {
       "token": "i got a fine or infringement notice in victoria",
       "entryId": "vic-fines",
-      "kind": "title"
-    },
-    {
-      "token": "decision",
-      "entryId": "vic-generic",
-      "kind": "decisionType"
-    },
-    {
-      "token": "notice of decision",
-      "entryId": "vic-generic",
-      "kind": "decisionType"
-    },
-    {
-      "token": "decision letter",
-      "entryId": "vic-generic",
-      "kind": "decisionType"
-    },
-    {
-      "token": "application refused",
-      "entryId": "vic-generic",
-      "kind": "decisionType"
-    },
-    {
-      "token": "application declined",
-      "entryId": "vic-generic",
-      "kind": "decisionType"
-    },
-    {
-      "token": "application rejected",
-      "entryId": "vic-generic",
-      "kind": "decisionType"
-    },
-    {
-      "token": "notice of refusal",
-      "entryId": "vic-generic",
-      "kind": "decisionType"
-    },
-    {
-      "token": "victorian government department",
-      "entryId": "vic-generic",
-      "kind": "issuer"
-    },
-    {
-      "token": "government agency",
-      "entryId": "vic-generic",
-      "kind": "issuer"
-    },
-    {
-      "token": "council",
-      "entryId": "vic-generic",
-      "kind": "issuer"
-    },
-    {
-      "token": "statutory authority",
-      "entryId": "vic-generic",
-      "kind": "issuer"
-    },
-    {
-      "token": "local government",
-      "entryId": "vic-generic",
-      "kind": "issuer"
-    },
-    {
-      "token": "vcat",
-      "entryId": "vic-generic",
-      "kind": "keyword"
-    },
-    {
-      "token": "review",
-      "entryId": "vic-generic",
-      "kind": "keyword"
-    },
-    {
-      "token": "statement of reasons",
-      "entryId": "vic-generic",
-      "kind": "keyword"
-    },
-    {
-      "token": "merits review",
-      "entryId": "vic-generic",
-      "kind": "keyword"
-    },
-    {
-      "token": "ombudsman",
-      "entryId": "vic-generic",
-      "kind": "keyword"
-    },
-    {
-      "token": "administrative decision",
-      "entryId": "vic-generic",
-      "kind": "keyword"
-    },
-    {
-      "token": "a victorian government decision i disagree with",
-      "entryId": "vic-generic",
       "kind": "title"
     },
     {

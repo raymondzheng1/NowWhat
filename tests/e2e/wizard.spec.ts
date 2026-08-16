@@ -89,3 +89,18 @@ test("urgent timing does NOT dead-end: the person still gets their options", asy
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
   await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible();
 });
+
+test("a deep link cannot skip the tripwire or the consent gate", async ({ page }) => {
+  // Regression guard: mirroring the answers into the URL made /start?area=…&step=result
+  // restorable, and restoring it rendered the full builder with no tripwire flags asked and
+  // the "not legal advice" box unticked. A bookmark or the Back button was enough.
+  await page.goto("/start?jur=Vic&area=vic-renting&step=result");
+  await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({
+    timeout: 15_000,
+  });
+  await expect(
+    page.getByRole("checkbox", { name: /general information, not legal advice/i }),
+  ).not.toBeChecked();
+  // …and the result is definitely not on screen.
+  await expect(page.getByRole("heading", { name: /what this means for you/i })).toHaveCount(0);
+});

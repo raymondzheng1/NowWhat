@@ -6,6 +6,7 @@ export const verifiedEntry: PathwayEntry = {
   title: "Test verified decision",
   jurisdiction: "Commonwealth",
   status: "verified",
+  isFallback: false,
   decisionTypes: ["test decision"],
   issuers: ["Test Agency"],
   keywords: [],

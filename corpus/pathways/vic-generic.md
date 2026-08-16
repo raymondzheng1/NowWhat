@@ -3,6 +3,7 @@ id: vic-generic
 title: "A Victorian government decision I disagree with"
 jurisdiction: Victoria
 status: verified
+isFallback: true
 decisionTypes:
   - decision
   - notice of decision

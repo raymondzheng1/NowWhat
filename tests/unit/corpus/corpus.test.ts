@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import raw from "@/corpus/index.json";
 import { CorpusIndexSchema } from "@/lib/schemas/corpus";
-import { classify, classifyForDecode, getEntry, FALLBACK_ENTRY_ID } from "@/lib/corpus/index";
+import { classify, classifyForDecode, getEntry, getCorpus, FALLBACK_ENTRY_ID } from "@/lib/corpus/index";
 
 describe("corpus index", () => {
   it("validates against the Zod schema (authoritative gate, no drift)", () => {
@@ -55,5 +55,42 @@ describe("corpus index", () => {
 
   it("getEntry returns undefined for an unknown id", () => {
     expect(getEntry("does-not-exist")).toBeUndefined();
+  });
+});
+
+/**
+ * The catch-all entry must never COMPETE for a match.
+ *
+ * "A Victorian government decision I disagree with" is deliberately broad — its tokens
+ * include "decision", "notice of decision", "government agency" and "review", which appear
+ * in essentially every government letter, Commonwealth ones included. While it took part in
+ * classification it could outscore the specific entry a letter belonged to, and a
+ * Commonwealth letter would then be explained against Victorian law and pointed at VCAT.
+ * It stays reachable: classifyForDecode selects it explicitly when nothing else matches.
+ */
+describe("the fallback entry is chosen, never matched", () => {
+  it("contributes no classification tokens", () => {
+    const index = getCorpus();
+    const fallbacks = index.entries.filter((e) => e.isFallback).map((e) => e.id);
+    expect(fallbacks).toContain("vic-generic");
+    for (const id of fallbacks) {
+      expect(index.classification.filter((t) => t.entryId === id)).toEqual([]);
+    }
+  });
+
+  it("a Commonwealth letter reaches the Centrelink guide, not the Victorian catch-all", () => {
+    const letter =
+      "Services Australia. Notice of decision about your Centrelink payment. We have decided you were overpaid. This is a decision of a government agency. You can ask for a review.";
+    const match = classifyForDecode(letter);
+    expect(match?.entryId).toBe("cth-centrelink");
+    expect(match?.isFallback).toBe(false);
+  });
+
+  it("a letter matching nothing specific still reaches the fallback", () => {
+    const match = classifyForDecode(
+      "We write about the matter previously discussed. Please contact this office if you wish to discuss it further.",
+    );
+    expect(match?.entryId).toBe("vic-generic");
+    expect(match?.isFallback).toBe(true);
   });
 });
