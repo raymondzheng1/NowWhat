@@ -9,7 +9,6 @@ import { Icon } from "@/components/ui/icons";
 import { Disclaimer } from "@/components/ui/Disclaimer";
 import { SourcesPanel } from "@/components/ui/SourcesPanel";
 import { PrivacyNote } from "@/components/ui/PrivacyNote";
-import { DeadlineCard } from "@/components/feature/DeadlineCard";
 import { TieredHelp } from "@/components/feature/TieredHelp";
 import { Markdown } from "@/components/ui/Markdown";
 import { postDraft } from "@/components/feature/api";
@@ -24,7 +23,34 @@ function downloadText(filename: string, content: string) {
   URL.revokeObjectURL(url);
 }
 
-type DraftKind = "reasons-request" | "review-application";
+/**
+ * The three starting letters. Each is a different ask, so each gets its own label and a
+ * one-line note about what that forum is deciding — with a link to the full guide.
+ */
+const DRAFT_KINDS: { id: DraftKind; label: string; hint: string; href?: string }[] = [
+  {
+    id: "reasons-request",
+    label: "Ask for reasons",
+    hint: "Asks the decision-maker to explain, in writing, how the decision was made and what it was based on.",
+  },
+  {
+    id: "merits-review-application",
+    label: "Apply for merits review",
+    hint: "Asks a tribunal to look at the decision again on the facts and make the correct or preferable decision.",
+    href: "/learn/merits-review",
+  },
+  {
+    id: "judicial-review-application",
+    label: "Judicial review — starting point",
+    hint: "About how the decision was made, not the outcome. Judicial review is technical — this is a draft to take to a free legal service.",
+    href: "/learn/judicial-review",
+  },
+];
+
+type DraftKind =
+  | "reasons-request"
+  | "merits-review-application"
+  | "judicial-review-application";
 
 export interface ResultViewProps {
   entry: EntrySummary;
@@ -38,7 +64,8 @@ export interface ResultViewProps {
   body?: string;
   /** Optional extra options/next-step lines (decode). */
   options?: string[];
-  /** Prefill the deadline card (from the wizard's Step 2). */
+  /** Kept for callers that still pass it; no longer rendered (time limits vary by
+   *  decision type, so a computed "apply by" date belonged to no one). */
   decisionDate?: string;
   isFallback?: boolean;
   /** Header back control: label + handler for returning to the flow that made this result
@@ -49,10 +76,14 @@ export interface ResultViewProps {
 
 /**
  * The Result experience — shared by the wizard, /ask and /decode. A focused header bar,
- * then the answer laid out as a few stickers on paper: the answer card, the calm amber
- * time limit, what can help, and the draft letter; with a sticky rail of sources, the
- * foil "get free help" card, and the privacy line. The deadline, sources, disclaimer and
- * get-help are always rendered (load-bearing trust surfaces).
+ * then the answer laid out as a few stickers on paper: the answer card, what can help,
+ * the draft letters and further reading; with a sticky rail of sources, the foil "get free
+ * help" card, and the privacy line. Sources, the disclaimer and get-help are always
+ * rendered (load-bearing trust surfaces).
+ *
+ * NOTE: there is deliberately no "your time limit to apply" card here. Time limits differ
+ * by decision type, so a generic computed date was wrong more often than right; the
+ * decision-specific, sourced note lives in the /start result instead.
  *
  * Sticker budget for this screen: exactly one foil (the free-help card in the rail), one
  * handwritten note ("Gather what you can:"), and the dashed empty slot only when we had
@@ -65,7 +96,6 @@ export function ResultView({
   about = "",
   body,
   options = [],
-  decisionDate,
   isFallback = false,
   backLabel,
   onBack,
@@ -161,8 +191,6 @@ export function ResultView({
               <Disclaimer className="mt-4" />
             </section>
 
-            <DeadlineCard entry={entry} decisionDate={decisionDate} />
-
             {entry.evidenceChecklist.length > 0 && (
               <section
                 className="card sticker"
@@ -213,24 +241,31 @@ export function ResultView({
                   </button>
                 </div>
               </div>
+              {/* Three different letters, because they ask different things. Merits review
+                  asks a tribunal to remake the decision on the facts; judicial review asks a
+                  court to check how it was made. Naming them separately stops a person
+                  sending the wrong one. */}
               <div className="mt-3.5 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  onClick={() => setKind("reasons-request")}
-                  aria-pressed={kind === "reasons-request"}
-                  className={toggleClass(kind === "reasons-request")}
-                >
-                  Ask for reasons
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setKind("review-application")}
-                  aria-pressed={kind === "review-application"}
-                  className={toggleClass(kind === "review-application")}
-                >
-                  Apply for review
-                </button>
+                {DRAFT_KINDS.map((k) => (
+                  <button
+                    key={k.id}
+                    type="button"
+                    onClick={() => setKind(k.id)}
+                    aria-pressed={kind === k.id}
+                    className={toggleClass(kind === k.id)}
+                  >
+                    {k.label}
+                  </button>
+                ))}
               </div>
+              <p className="mt-2.5 text-[14.5px] leading-snug text-ink-soft">
+                {DRAFT_KINDS.find((k) => k.id === kind)?.hint}{" "}
+                {DRAFT_KINDS.find((k) => k.id === kind)?.href && (
+                  <Link href={DRAFT_KINDS.find((k) => k.id === kind)!.href!} className="link">
+                    Read the guide
+                  </Link>
+                )}
+              </p>
               {draft && (
                 editing ? (
                   <textarea
@@ -245,6 +280,54 @@ export function ResultView({
                   </div>
                 )
               )}
+            </section>
+
+            {/* Further reading — the guide library, so a person can go deeper on the two
+                paths and the grounds rather than taking a one-screen answer as the whole
+                picture. */}
+            <section className="card sticker" style={{ "--rot": "-0.6deg" } as React.CSSProperties}>
+              <h2 className="font-display text-[21px] font-black leading-tight text-ink">
+                Read more about your options
+              </h2>
+              <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
+                Plain-English guides to the two ways of challenging a government decision.
+              </p>
+              <ul className="mt-3.5 border-t border-line">
+                {[
+                  {
+                    href: "/learn/merits-review",
+                    title: "Merits review",
+                    desc: "A tribunal looks at the decision again and can make a different one.",
+                  },
+                  {
+                    href: "/learn/judicial-review",
+                    title: "Judicial review",
+                    desc: "A court checks whether the decision was made lawfully.",
+                  },
+                  {
+                    href: "/learn/grounds",
+                    title: "The grounds of judicial review",
+                    desc: "The problems people point to, such as bias or an unfair process.",
+                  },
+                  {
+                    href: "/learn/compare",
+                    title: "Merits vs judicial review",
+                    desc: "The two side by side, with a quick guide to which fits.",
+                  },
+                ].map((l) => (
+                  <li key={l.href} className="border-b border-line">
+                    <Link href={l.href} className="group flex min-h-[44px] items-center justify-between gap-4 py-3.5">
+                      <span className="min-w-0">
+                        <span className="block font-display text-[16px] font-extrabold text-ink group-hover:text-red-ink">
+                          {l.title}
+                        </span>
+                        <span className="mt-0.5 block text-[14.5px] leading-snug text-ink-soft">{l.desc}</span>
+                      </span>
+                      <span aria-hidden="true" className="shrink-0 font-display font-black text-red-ink">→</span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </section>
           </div>
 

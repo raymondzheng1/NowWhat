@@ -85,7 +85,7 @@ export async function postDeadline(
 
 export async function postDraft(
   entryId: string,
-  kind: "reasons-request" | "review-application",
+  kind: "reasons-request" | "review-application" | "merits-review-application" | "judicial-review-application",
   context?: string,
 ): Promise<DraftResponse> {
   const res = await fetch("/api/draft", {

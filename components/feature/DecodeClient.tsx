@@ -7,6 +7,7 @@ import { ResultView } from "@/components/feature/ResultView";
 import { NotCovered } from "@/components/feature/NotCovered";
 import { ToolTopBar } from "@/components/site/ToolTopBar";
 import { PrivacyNote } from "@/components/ui/PrivacyNote";
+import { Busy } from "@/components/ui/Busy";
 import { CATEGORY } from "@/components/feature/categories";
 import { useTour } from "@/components/feature/tour/useTour";
 import { TOUR_DECODE } from "@/lib/tour/steps";
@@ -69,6 +70,7 @@ export function DecodeClient() {
 
   return (
     <>
+      <Busy show={loading} title={tc("busyReading")} />
       <ToolTopBar />
       <div className="min-h-[60vh]">
         <div className="container-prose py-10">

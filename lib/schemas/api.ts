@@ -32,7 +32,12 @@ export type DeadlineRequest = z.infer<typeof DeadlineRequestSchema>;
 // --- /api/draft ---
 export const DraftRequestSchema = z.object({
   entryId: z.string().trim().min(1),
-  kind: z.enum(["reasons-request", "review-application"]),
+  kind: z.enum([
+    "reasons-request",
+    "review-application",
+    "merits-review-application",
+    "judicial-review-application",
+  ]),
   /** Optional non-identifying context the user chooses to include. Never stored. */
   context: z.string().trim().max(4000).optional(),
   locale: Locale,

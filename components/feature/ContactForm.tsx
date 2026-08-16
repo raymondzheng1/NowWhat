@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Busy } from "@/components/ui/Busy";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { Icon } from "@/components/ui/icons";
@@ -86,7 +87,9 @@ export function ContactForm() {
   const errId = (f: keyof FieldErrors) => (errors[f] ? `c-${f}-err` : undefined);
 
   return (
-    <form
+    <>
+      <Busy show={status === "sending"} title="Sending your message" />
+      <form
       onSubmit={submit}
       noValidate
       className="card sticker"
@@ -157,6 +160,7 @@ export function ContactForm() {
         </div>
       )}
       <p className="mt-5 text-sm text-ink-faint">{t("privacyNote")}</p>
-    </form>
+      </form>
+    </>
   );
 }

@@ -9,7 +9,11 @@
     "tryAgain": "Try again",
     "back": "Back",
     "print": "Print or save",
-    "download": "Download"
+    "download": "Download",
+    "busyDetail": "This takes a few seconds. Please stay on this page — we are reading the rules and checking the sources.",
+    "busyReading": "Reading your letter",
+    "busyAnswering": "Finding your answer",
+    "busySending": "Sending your message"
   },
   "nav": {
     "home": "Home",
