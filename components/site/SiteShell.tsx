@@ -5,6 +5,7 @@ import { isAppRoute } from "@/components/site/appRoutes";
 import { SiteNav } from "@/components/site/SiteNav";
 import { Footer } from "@/components/site/Footer";
 import { ChatLauncher } from "@/components/site/ChatLauncher";
+import { InstallPrompt } from "@/components/site/InstallPrompt";
 
 /**
  * Site shell (sticker album). Composes the persistent chrome around the page:
@@ -42,6 +43,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         <Footer />
       </div>
       <ChatLauncher />
+      <InstallPrompt />
     </>
   );
 }

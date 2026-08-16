@@ -91,7 +91,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#10363d",
+  themeColor: "#F6EDD9",
   width: "device-width",
   initialScale: 1,
 };
@@ -115,6 +115,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
 
   return (
     <html lang={locale} className={`${archivo.variable} ${caveat.variable} ${splineMono.variable}`}>
+      <head>
+        {/*
+          Chromium fires `beforeinstallprompt` early — often before React has hydrated — and
+          the event is useless once it has been allowed to proceed. Stash it here, then tell
+          the app. Inline because a deferred module would miss it.
+        */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "window.addEventListener('beforeinstallprompt',function(e){e.preventDefault();window.__wnInstallPrompt=e;window.dispatchEvent(new Event('wn:installable'));});",
+          }}
+        />
+      </head>
       <body className="flex min-h-screen flex-col">
         <JsonLd data={websiteLd} />
         <NextIntlClientProvider locale={locale} messages={messages}>

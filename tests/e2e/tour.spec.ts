@@ -47,7 +47,10 @@ test("advancing the wizard starts the next step's guide", async ({ page }) => {
 });
 
 test("‘Show me how’ replays the guide on demand", async ({ page }) => {
-  await page.addInitScript(() => window.localStorage.setItem("wn:tour:off", "1"));
+  await page.addInitScript(() => {
+    window.localStorage.setItem("wn:tour:off", "1");
+    window.localStorage.setItem("wn:install:off", "1");
+  });
   await page.goto("/start");
   await page.waitForTimeout(1800);
   await expect(page.locator(POPOVER)).toHaveCount(0); // kill-switch honoured

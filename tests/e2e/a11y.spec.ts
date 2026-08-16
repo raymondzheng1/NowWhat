@@ -4,7 +4,10 @@ import AxeBuilder from "@axe-core/playwright";
 // The first-run guided walkthrough dims the screen and would intercept every click here.
 // Turn it off for automated runs via its documented kill-switch (harness §14.11 / §14.5).
 test.beforeEach(async ({ context }) => {
-  await context.addInitScript(() => window.localStorage.setItem("wn:tour:off", "1"));
+  await context.addInitScript(() => {
+    window.localStorage.setItem("wn:tour:off", "1");
+    window.localStorage.setItem("wn:install:off", "1");
+  });
 });
 
 

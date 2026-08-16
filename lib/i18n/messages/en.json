@@ -486,5 +486,12 @@
     "faq": "Common questions",
     "adviceTail": "We can't tell you what will happen in your case. For advice about your own situation, talk to a free legal service — we'll help you find one.",
     "lockLine": "NOTHING STORED · VIC & CTH · EN-AU"
+  },
+  "install": {
+    "title": "Keep this on your phone",
+    "body": "Add What Now? to your home screen so you can find your way back without hunting for the link. It stays free, and it still keeps nothing.",
+    "bodyIos": "To keep this on your home screen: tap the Share button, then choose “Add to Home Screen”.",
+    "action": "Add to home screen",
+    "dismiss": "No thanks"
   }
 }
