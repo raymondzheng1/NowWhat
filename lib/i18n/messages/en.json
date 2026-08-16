@@ -13,7 +13,10 @@
     "busyDetail": "This takes a few seconds. Please stay on this page — we are reading the rules and checking the sources.",
     "busyReading": "Reading your letter",
     "busyAnswering": "Finding your answer",
-    "busySending": "Sending your message"
+    "busySending": "Sending your message",
+    "busySlow": "This is taking longer than usual. Your connection may be slow.",
+    "busyCancel": "Stop waiting",
+    "busyGetHelp": "Get free help instead"
   },
   "nav": {
     "home": "Home",
@@ -195,7 +198,23 @@
     "step3": "Lodge with {body}, within the time limit",
     "step3Body": "The time limit for your decision is named above, with its official source.",
     "step4": "Talk to a free service",
-    "step4Body": "They can check the path, confirm the date, and take it from here if you want them to."
+    "step4Body": "They can check the path, confirm the date, and take it from here if you want them to.",
+    "faqTitle": "Questions people ask about this",
+    "faqLead": "Plain-English answers written for this kind of decision.",
+    "faqMore": "See all common questions",
+    "applyTitle": "Apply for review",
+    "applyLead": "If you decide to go ahead, here is a draft you can edit and send yourself. Pick the path you mean — the two letters say different things.",
+    "applyMerits": "Merits review",
+    "applyJudicial": "Judicial review",
+    "applyMeritsHint": "This letter asks a tribunal to look at the decision again on the facts and make the correct or preferable decision.",
+    "applyJudicialHint": "This letter is about how the decision was made, not the outcome. Judicial review is a court process and it is technical, so this is a starting point to take to a free legal service.",
+    "applyReadMore": "Read more about this path",
+    "contentsTitle": "On this page",
+    "routeHelpTitle": "Who to talk to about this",
+    "routeAlsoTitle": "Other services for this kind of decision",
+    "headerHelp": "Free help",
+    "blockedArea": "Please choose what the decision is about, above.",
+    "blockedConsent": "Please tick the box above to continue."
   },
   "wizard": {
     "title": "Let's work out what you can do",
@@ -286,7 +305,10 @@
     "privateTitle": "If you want a private lawyer",
     "privateIntro": "These are paid services. The Law Institute of Victoria can refer you to a lawyer, and you can search online for lawyers who handle this kind of matter.",
     "livLabel": "Law Institute of Victoria — Find Your Lawyer Referral Service",
-    "searchLabel": "Search online for a lawyer who handles this"
+    "searchLabel": "Search online for a lawyer who handles this",
+    "cthLabel": "Australian Government",
+    "vicLabel": "Victoria",
+    "otherJur": "Free help with {jur} decisions"
   },
   "faq": {
     "kicker": "The answer library",
@@ -298,7 +320,10 @@
     "ctaBody": "Scan a letter or ask a question — free, in plain English.",
     "ctaButton": "Start now",
     "relatedTitle": "Related questions",
-    "indexNote": "the questions people ask most →"
+    "indexNote": "the questions people ask most →",
+    "ctaFlowTitle": "Work out your own next steps",
+    "ctaFlowBody": "Answer three questions about your decision and see the review paths open to you, with a draft letter.",
+    "ctaFlowButton": "Work out what you can do"
   },
   "privacy": {
     "title": "Your privacy",
@@ -332,7 +357,8 @@
     "generic": "Something went wrong. Please try again.",
     "contactUnavailable": "Messages aren't set up yet. In the meantime, the Get help page lists free services.",
     "contactRateLimited": "You've sent a few messages already. Please try again later.",
-    "contactFailed": "We couldn't send your message right now. Please try again in a moment."
+    "contactFailed": "We couldn't send your message right now. Please try again in a moment.",
+    "timeout": "That took too long to answer. Please check your connection and try again — or get free help now, which is always available."
   },
   "contact": {
     "kicker": "We read every message",

@@ -48,10 +48,13 @@ mrCriteria:
 getHelp:
   - service: Commonwealth Ombudsman
     link: 'https://www.ombudsman.gov.au'
-  - service: Victoria Legal Aid
-    link: 'https://www.legalaid.vic.gov.au'
+    who: 'free complaints about Australian Government bodies (cannot overturn a decision)'
+  - service: Community legal centres (Federation of CLCs)
+    link: 'https://fclc.org.au'
+    who: 'free local legal help — find your nearest centre'
   - service: Administrative Review Tribunal (ART)
     link: 'https://www.art.gov.au'
+    who: 'independent external review of Commonwealth decisions'
 status: seed
 isFallback: true
 ---

@@ -51,6 +51,9 @@ export const HelpServiceSchema = z.object({
   who: NonEmpty,
   /** A real URL or phone; "VERIFY" until confirmed. Never a fabricated link. */
   link: NonEmpty,
+  /** A dialable number, kept separate from the prose so it can be a tap-to-call button.
+   *  The audience is usually on a phone: calling is the fastest route to a person. */
+  phone: NonEmpty.optional(),
 });
 
 /** A single corpus pathway entry (one decision type). */

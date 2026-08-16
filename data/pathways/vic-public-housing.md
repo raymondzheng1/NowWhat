@@ -47,10 +47,16 @@ mrCriteria:
 getHelp:
   - service: Housing Appeals Office
     link: 'https://www.housing.vic.gov.au'
+    who: 'free, independent reviews of housing decisions'
+    phone: '1800 807 702'
   - service: Tenants Victoria
     link: 'https://tenantsvic.org.au'
+    who: 'free advice for Victorian renters — Rental Support Line'
+    phone: '(03) 9416 2577'
   - service: Victoria Legal Aid
     link: 'https://www.legalaid.vic.gov.au'
+    who: 'free legal information and advice — Legal Help line'
+    phone: '1300 792 387'
 status: verified
 isFallback: false
 ---

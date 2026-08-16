@@ -50,10 +50,14 @@ mrCriteria:
 getHelp:
   - service: Economic Justice Australia (welfare rights centres)
     link: 'https://www.ejaustralia.org.au'
-  - service: Victoria Legal Aid
-    link: 'https://www.legalaid.vic.gov.au'
+    who: 'free, independent help with Centrelink decisions and debts'
+  - service: National Debt Helpline
+    link: 'https://ndh.org.au'
+    who: 'free, independent financial counselling'
+    phone: '1800 007 007'
   - service: Administrative Review Tribunal (ART)
     link: 'https://www.art.gov.au'
+    who: 'independent external review of Commonwealth decisions'
 status: verified
 isFallback: false
 ---

@@ -19,6 +19,10 @@ export interface HandoffInput {
    *  neutral — points to discuss with a lawyer, NOT conclusions that a ground is made out). */
   relatedGrounds?: string[];
   note?: string;
+  /** Display names for the two forums, resolved from the legal corpus. The procedural data
+   *  layer stores internal codes ("ADJR/FederalCourt", "SCV-O56") which must never reach a
+   *  reader — including in the summary they hand to a legal service. */
+  forumNames?: { merits?: string; judicial?: string };
 }
 
 export function buildHandoff(input: HandoffInput): string {
@@ -39,10 +43,10 @@ export function buildHandoff(input: HandoffInput): string {
     // Each path carries the question that forum decides, so the person (and the service
     // they hand this to) can see at a glance what each one is actually for.
     triage.avenue.mrAvailable
-      ? `- Merits review: ${triage.avenue.mrBody} — asks "Is this the correct or preferable decision?" (a tribunal can substitute a new decision)`
+      ? `- Merits review: ${input.forumNames?.merits ?? triage.avenue.mrBody} — asks "Is this the correct or preferable decision?" (a tribunal can substitute a new decision)`
       : "- Merits review: may not be available",
     triage.avenue.jrAvailable
-      ? `- Judicial review: ${triage.avenue.jrForum} — asks "Was the decision made lawfully?" (a court cannot substitute its own decision)`
+      ? `- Judicial review: ${input.forumNames?.judicial ?? triage.avenue.jrForum} — asks "Was the decision made lawfully?" (a court cannot substitute its own decision)`
       : "- Judicial review: may not be available",
   ];
   if (triage.avenue.noReviewEndpoint) lines.push(`- Note: ${triage.avenue.noReviewEndpoint}`);

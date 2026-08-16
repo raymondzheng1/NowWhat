@@ -2,17 +2,25 @@
 
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-import { postDecodeText, postDecodeFile, type DecodeResponse } from "@/components/feature/api";
+import { postDecodeText, postDecodeFile, type DecodeResponse, TimeoutError } from "@/components/feature/api";
 import { ResultView } from "@/components/feature/ResultView";
 import { NotCovered } from "@/components/feature/NotCovered";
 import { ToolTopBar } from "@/components/site/ToolTopBar";
 import { PrivacyNote } from "@/components/ui/PrivacyNote";
 import { Busy } from "@/components/ui/Busy";
+import { ErrorPanel } from "@/components/ui/ErrorPanel";
 import { CATEGORY } from "@/components/feature/categories";
 import { useTour } from "@/components/feature/tour/useTour";
 import { TOUR_DECODE } from "@/lib/tour/steps";
 
-export function DecodeClient() {
+export interface DecodeClientProps {
+  /** Published answers per decision type, so the result can point at related reading. */
+  faqsByEntry?: Record<string, { slug: string; question: string }[]>;
+  /** Decision types that have a procedural pathway behind them. */
+  pathwayIds?: string[];
+}
+
+export function DecodeClient({ faqsByEntry = {}, pathwayIds = [] }: DecodeClientProps = {}) {
   const t = useTranslations("decode");
   const tc = useTranslations("common");
   const te = useTranslations("errors");
@@ -42,8 +50,9 @@ export function DecodeClient() {
           : await postDecodeFile(file as File);
       if (r.ok) setResult(r);
       else setError(msg(r.message));
-    } catch {
-      setError(te("generic"));
+    } catch (err) {
+      // A stalled connection is not the same as a broken app; say which one it was.
+      setError(err instanceof TimeoutError ? te("timeout") : te("generic"));
     } finally {
       setLoading(false);
     }
@@ -52,6 +61,8 @@ export function DecodeClient() {
   if (result?.ok && result.status === "answered") {
     return (
       <ResultView
+        faqs={faqsByEntry[result.entry.id] ?? []}
+        hasPathway={pathwayIds.includes(result.entry.id)}
         entry={result.entry}
         category={CATEGORY[result.entry.id] ?? result.entry.title}
         answer={result.decode.whatItIs}
@@ -132,9 +143,7 @@ export function DecodeClient() {
           </form>
 
           {error && (
-            <div role="alert" className="card mt-5 border-2 border-red text-ink">
-              {error}
-            </div>
+            <ErrorPanel message={error} />
           )}
 
           {result?.ok && result.status === "ocr-unavailable" && (

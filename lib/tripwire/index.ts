@@ -1,4 +1,5 @@
 import type { DataPathway, Jurisdiction } from "@/lib/schemas/data";
+import type { HelpService } from "@/lib/schemas/corpus";
 
 /**
  * Tripwire (PRD §3) — DETERMINISTIC stop-and-route. Flags are USER-DECLARED (checkboxes)
@@ -119,3 +120,118 @@ export const TRIPWIRE_MESSAGES: Record<TripwireReason, string> = {
   unclassifiable:
     "We couldn't confidently work out the right path for this decision, so we won't guess. A free legal service can point you the right way.",
 };
+
+/**
+ * Who to call, per STOP reason.
+ *
+ * The stop screen is the highest-stakes surface in the product: we have just told someone
+ * this tool cannot help them, so the next thing they read has to be the right person to
+ * ring. It used to show the services for the DECISION AREA — tick "there is a criminal
+ * matter" on a fine and you were handed Fines Victoria — which answers a question nobody
+ * asked. These are matched to the reason we stopped.
+ *
+ * Every entry is an existing free service with its published contact details; nothing here
+ * asserts anything about the law.
+ */
+export const TRIPWIRE_SERVICES: Record<TripwireReason, HelpService[]> = {
+  "family-guardianship-mental-health": [
+    {
+      service: "Victoria Legal Aid",
+      who: "free legal help with family, child protection and mental-health matters — Legal Help line",
+      phone: "1300 792 387",
+      link: "https://www.legalaid.vic.gov.au",
+    },
+    {
+      service: "Victorian Aboriginal Legal Service (VALS)",
+      who: "free legal help for Aboriginal and Torres Strait Islander people",
+      phone: "1800 064 865",
+      link: "https://www.vals.org.au",
+    },
+    {
+      service: "Community legal centres",
+      who: "free local legal help — find your nearest centre",
+      link: "https://www.fclc.org.au",
+    },
+  ],
+  criminal: [
+    {
+      service: "Victoria Legal Aid",
+      who: "free legal help and duty lawyers for criminal matters — Legal Help line",
+      phone: "1300 792 387",
+      link: "https://www.legalaid.vic.gov.au",
+    },
+    {
+      service: "Victorian Aboriginal Legal Service (VALS)",
+      who: "free legal help for Aboriginal and Torres Strait Islander people",
+      phone: "1800 064 865",
+      link: "https://www.vals.org.au",
+    },
+  ],
+  detention: [
+    {
+      service: "Victoria Legal Aid",
+      who: "free legal help — Legal Help line",
+      phone: "1300 792 387",
+      link: "https://www.legalaid.vic.gov.au",
+    },
+    {
+      service: "Victorian Aboriginal Legal Service (VALS)",
+      who: "free legal help for Aboriginal and Torres Strait Islander people, 24 hours",
+      phone: "1800 064 865",
+      link: "https://www.vals.org.au",
+    },
+  ],
+  migration: [
+    {
+      service: "Refugee Legal",
+      who: "free legal help with visa and migration matters",
+      link: "https://refugeelegal.org.au",
+    },
+    {
+      service: "Registered migration agents (OMARA register)",
+      who: "check that anyone advising you on a visa is registered",
+      link: "https://www.mara.gov.au",
+    },
+  ],
+  "privative-clause": [
+    {
+      service: "Victoria Legal Aid",
+      who: "free legal information and advice — Legal Help line",
+      phone: "1300 792 387",
+      link: "https://www.legalaid.vic.gov.au",
+    },
+    {
+      service: "Community legal centres",
+      who: "free local legal help — find your nearest centre",
+      link: "https://www.fclc.org.au",
+    },
+  ],
+  unclassifiable: [
+    {
+      service: "Victoria Legal Aid",
+      who: "free legal information and advice — Legal Help line",
+      phone: "1300 792 387",
+      link: "https://www.legalaid.vic.gov.au",
+    },
+    {
+      service: "Community legal centres",
+      who: "free local legal help — find your nearest centre",
+      link: "https://www.fclc.org.au",
+    },
+  ],
+  // Timing reasons never reach the stop screen (they are URGENT, not STOP), but the record
+  // has to be total; the urgent banner uses the decision's own services.
+  "hearing-on-foot": [],
+  "deadline-imminent-or-passed": [],
+};
+
+/** The services to show for a set of stop reasons, de-duplicated, most specific first. */
+export function servicesForStop(reasons: TripwireReason[]): HelpService[] {
+  const out: HelpService[] = [];
+  for (const r of reasons) {
+    for (const s of TRIPWIRE_SERVICES[r] ?? []) {
+      if (!out.some((x) => x.service === s.service)) out.push(s);
+    }
+  }
+  return out;
+}

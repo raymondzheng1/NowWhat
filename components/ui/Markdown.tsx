@@ -1,3 +1,4 @@
+import Link from "next/link";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -46,11 +47,21 @@ export function Markdown({ children }: { children: string }) {
               {children}
             </code>
           ),
-          a: ({ href, children }) => (
-            <a href={href} className="link" target="_blank" rel="noopener noreferrer">
-              {children}
-            </a>
-          ),
+          // Internal links stay in this tab. Sixteen of the twenty published articles link
+          // to /start; opening each in a new tab broke the Back button and left people with
+          // two identical-looking tabs (also WCAG 3.2.5). External links still open away.
+          a: ({ href, children }) => {
+            const internal = typeof href === "string" && href.startsWith("/");
+            return internal ? (
+              <Link href={href} className="link">
+                {children}
+              </Link>
+            ) : (
+              <a href={href} className="link" target="_blank" rel="noopener noreferrer">
+                {children}
+              </a>
+            );
+          },
         }}
       >
         {children}

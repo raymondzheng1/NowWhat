@@ -32,3 +32,17 @@ export function getPublishedFaqs(): FaqEntry[] {
 export function getFaq(slug: string): FaqEntry | undefined {
   return getPublishedFaqs().find((f) => f.slug === slug);
 }
+
+/**
+ * The published FAQ articles that belong to one decision type.
+ *
+ * Every article's frontmatter already carries the `entryId` of the pathway it was written
+ * for (cth-centrelink, vic-fines, vic-renting, vic-public-housing, vic-generic), so the
+ * answer library and the guided result are describing the same matter — they just were not
+ * linked to each other. This is the join.
+ */
+export function getFaqsForEntry(entryId: string, limit = 4): FaqEntry[] {
+  return getPublishedFaqs()
+    .filter((f) => f.entryId === entryId)
+    .slice(0, limit);
+}

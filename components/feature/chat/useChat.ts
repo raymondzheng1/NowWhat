@@ -36,6 +36,21 @@ export function useChat() {
         cache: "no-store",
       });
       const data = await res.json();
+      // A usage limit is recoverable and has a real answer — the step-by-step guide is
+      // deterministic and still works. It used to read as "Something went wrong", and
+      // because the status wasn't "unavailable" the panel's linked help card never showed.
+      if (data.ok === false) {
+        setMessages((m) => [
+          ...m,
+          {
+            role: "assistant",
+            content:
+              "I can't answer any more questions right now. The step-by-step guide still works, and free help is always available.",
+          },
+        ]);
+        setUnavailable(true);
+        return;
+      }
       const reply: string =
         data.reply ?? "Something went wrong. You can use the step-by-step guide, or see free help.";
       setMessages((m) => [...m, { role: "assistant", content: reply }]);

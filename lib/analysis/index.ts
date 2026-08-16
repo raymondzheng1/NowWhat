@@ -62,6 +62,15 @@ function forumName(p: Process, jurisdiction: Jurisdiction | undefined, fallback:
   return body?.name ?? fallback;
 }
 
+/**
+ * The corpus stores body names as they read at the start of a line ("The Administrative
+ * Review Tribunal (ART)"). Dropped into the middle of a sentence — "lodge with The
+ * Administrative Review Tribunal" — the capital reads like a typo, so lower the article.
+ */
+export function midSentence(name: string): string {
+  return name.replace(/^The /, "the ");
+}
+
 export function planFor({
   avenue,
   meritsReview,

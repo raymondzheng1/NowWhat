@@ -1,6 +1,7 @@
 import { useTranslations } from "next-intl";
 import type { HelpService } from "@/lib/schemas/corpus";
 import { Icon } from "@/components/ui/icons";
+import { CallButton } from "@/components/ui/CallButton";
 
 function isUrl(s: string): boolean {
   return /^https?:\/\//i.test(s);
@@ -40,6 +41,12 @@ export function GetHelp({
           <li key={i}>
             <p className="font-display text-[16px] font-extrabold text-ink">{s.service}</p>
             <p className="mt-0.5 text-[14.5px] leading-snug text-ink-soft">{s.who}</p>
+            {/* The number first: on a phone, calling beats reading a website. */}
+            {s.phone && (
+              <div className="mt-2">
+                <CallButton phone={s.phone} label={s.service} />
+              </div>
+            )}
             {isUrl(s.link) ? (
               <a
                 href={s.link}

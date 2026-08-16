@@ -1,5 +1,5 @@
 {
-  "builtAt": "e76345a1427459ad",
+  "builtAt": "040992031a8597c0",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -95,7 +95,8 @@
         },
         {
           "service": "National Debt Helpline",
-          "who": "free, independent financial counselling — 1800 007 007",
+          "who": "free, independent financial counselling",
+          "phone": "1800 007 007",
           "link": "https://ndh.org.au"
         }
       ],
@@ -214,22 +215,26 @@
       "getHelp": [
         {
           "service": "Fines Victoria",
-          "who": "manage, review or get help with a Victorian fine — (03) 9200 8111",
+          "who": "manage, review or get help with a Victorian fine",
+          "phone": "(03) 9200 8111",
           "link": "https://online.fines.vic.gov.au"
         },
         {
           "service": "Victoria Legal Aid",
-          "who": "free legal help with fines — Legal Help line 1300 792 387",
+          "who": "free legal help with fines — Legal Help line",
+          "phone": "1300 792 387",
           "link": "https://www.legalaid.vic.gov.au/fines-and-infringements"
         },
         {
           "service": "Victorian Aboriginal Legal Service (VALS)",
-          "who": "free legal help for Aboriginal and Torres Strait Islander people — 1800 064 865",
+          "who": "free legal help for Aboriginal and Torres Strait Islander people",
+          "phone": "1800 064 865",
           "link": "https://www.vals.org.au"
         },
         {
           "service": "National Debt Helpline",
-          "who": "free, independent financial counselling — 1800 007 007",
+          "who": "free, independent financial counselling",
+          "phone": "1800 007 007",
           "link": "https://ndh.org.au/debt-problems/fines/"
         }
       ],
@@ -331,7 +336,8 @@
       "getHelp": [
         {
           "service": "Victoria Legal Aid",
-          "who": "free legal information and advice — Legal Help line 1300 792 387",
+          "who": "free legal information and advice — Legal Help line",
+          "phone": "1300 792 387",
           "link": "https://www.legalaid.vic.gov.au/contact-us"
         },
         {
@@ -454,22 +460,26 @@
       "getHelp": [
         {
           "service": "Tenants Victoria — Social Housing line",
-          "who": "free advice for public, community and rooming-house renters — 1800 068 860",
+          "who": "free advice for public, community and rooming-house renters",
+          "phone": "1800 068 860",
           "link": "https://tenantsvic.org.au"
         },
         {
           "service": "Justice Connect — Homeless Law",
-          "who": "free legal help for people at risk of homelessness, including evictions — 1800 606 313",
+          "who": "free legal help for people at risk of homelessness, including evictions",
+          "phone": "1800 606 313",
           "link": "https://justiceconnect.org.au/our-services/homeless-law/"
         },
         {
           "service": "Victoria Legal Aid",
-          "who": "free legal help and duty lawyers — Legal Help line 1300 792 387",
+          "who": "free legal help and duty lawyers — Legal Help line",
+          "phone": "1300 792 387",
           "link": "https://www.legalaid.vic.gov.au/renting"
         },
         {
           "service": "Housing Appeals Office",
-          "who": "free, independent reviews of housing decisions — 1800 807 702",
+          "who": "free, independent reviews of housing decisions",
+          "phone": "1800 807 702",
           "link": "https://www.housing.vic.gov.au/appeal-decision"
         }
       ],
@@ -582,17 +592,20 @@
       "getHelp": [
         {
           "service": "Tenants Victoria",
-          "who": "free advice for Victorian renters — Rental Support Line (03) 9416 2577",
+          "who": "free advice for Victorian renters — Rental Support Line",
+          "phone": "(03) 9416 2577",
           "link": "https://tenantsvic.org.au"
         },
         {
           "service": "Rental Dispute Resolution Victoria (RDRV)",
-          "who": "free help to resolve bond, rent, repairs and compensation disputes — 1300 017 378",
+          "who": "free help to resolve bond, rent, repairs and compensation disputes",
+          "phone": "1300 017 378",
           "link": "https://www.rdrv.vic.gov.au"
         },
         {
           "service": "Victoria Legal Aid",
-          "who": "free legal help and duty lawyers — Legal Help line 1300 792 387",
+          "who": "free legal help and duty lawyers — Legal Help line",
+          "phone": "1300 792 387",
           "link": "https://www.legalaid.vic.gov.au/renting"
         },
         {

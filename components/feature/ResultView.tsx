@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { AutoTextarea } from "@/components/ui/AutoTextarea";
 import type { EntrySummary } from "@/lib/corpus/summary";
 import type { Draft } from "@/lib/draft/build";
 import { Crest } from "@/components/ui/Wordmark";
@@ -72,6 +73,10 @@ export interface ResultViewProps {
    *  (e.g. "Ask another question" resets the ask form). Falls back to a /start link. */
   backLabel?: string;
   onBack?: () => void;
+  /** Published answers written for this same decision type (server-supplied join). */
+  faqs?: { slug: string; question: string }[];
+  /** True when a procedural pathway exists for this entry, so we can offer the guided flow. */
+  hasPathway?: boolean;
 }
 
 /**
@@ -99,6 +104,8 @@ export function ResultView({
   isFallback = false,
   backLabel,
   onBack,
+  faqs = [],
+  hasPathway = false,
 }: ResultViewProps) {
   const [kind, setKind] = useState<DraftKind>("reasons-request");
   const [draft, setDraft] = useState<Draft | null>(null);
@@ -268,10 +275,10 @@ export function ResultView({
               </p>
               {draft && (
                 editing ? (
-                  <textarea
+                  <AutoTextarea
                     value={draft.body}
                     onChange={(e) => setDraft({ ...draft, body: e.target.value })}
-                    rows={14}
+                    minRows={14}
                     className="mt-3.5 w-full rounded-input border-2 border-line bg-cream p-4 font-mono text-[14.5px] leading-relaxed text-ink"
                   />
                 ) : (
@@ -285,6 +292,56 @@ export function ResultView({
             {/* Further reading — the guide library, so a person can go deeper on the two
                 paths and the grounds rather than taking a one-screen answer as the whole
                 picture. */}
+            {/* The answer explains the decision; this is how the person acts on it. Without
+                this the decode/ask result was a dead end — no route to the pathway analysis. */}
+            {hasPathway && (
+              <section
+                className="card sticker border-2 border-ink"
+                style={{ "--rot": "0.5deg" } as React.CSSProperties}
+              >
+                <span className="eyebrow text-ink-faint">Next</span>
+                <h2 className="mt-1.5 font-display text-[21px] font-black leading-tight text-ink">
+                  Work out your own next steps
+                </h2>
+                <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
+                  Answer three short questions about your decision and see which review paths are
+                  open to you, in order, with the official source for each.
+                </p>
+                <Link
+                  href={`/start?area=${encodeURIComponent(entry.id)}`}
+                  className="btn btn-primary mt-4 w-full sm:w-auto"
+                >
+                  See my review options <span aria-hidden="true">→</span>
+                </Link>
+              </section>
+            )}
+
+            {faqs.length > 0 && (
+              <section className="card sticker" style={{ "--rot": "0.7deg" } as React.CSSProperties}>
+                <h2 className="font-display text-[21px] font-black leading-tight text-ink">
+                  Questions people ask about this
+                </h2>
+                <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
+                  Plain-English answers written for this kind of decision.
+                </p>
+                <ul className="mt-3.5 border-t border-line">
+                  {faqs.map((f) => (
+                    <li key={f.slug} className="border-b border-line">
+                      <Link
+                        href={`/faq/${f.slug}`}
+                        className="group flex min-h-[44px] items-center justify-between gap-4 py-3.5"
+                      >
+                        <span className="min-w-0 font-display text-[16px] font-extrabold leading-snug text-ink group-hover:text-red-ink">
+                          {f.question}
+                        </span>
+                        <span aria-hidden="true" className="shrink-0 font-display font-black text-red-ink">→</span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </section>
+            )}
+
             <section className="card sticker" style={{ "--rot": "-0.6deg" } as React.CSSProperties}>
               <h2 className="font-display text-[21px] font-black leading-tight text-ink">
                 Read more about your options

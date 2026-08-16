@@ -379,3 +379,72 @@
   outline-offset: 2px;
   border-radius: 4px;
 }
+
+/* Jump targets in the /start result sit under a 52px (64px from sm) sticky header, so give
+   them room or the heading lands behind the bar. Unlayered: this must win. */
+[id^="r-"] {
+  scroll-margin-top: 68px;
+}
+@media (min-width: 640px) {
+  [id^="r-"] {
+    scroll-margin-top: 84px;
+  }
+}
+
+/* ---------------------------------------------------------------------------------------
+   Print. Nothing is stored, so print/save is the only way a person keeps any of this — and
+   a printed page is what they carry into a free legal service. Strip the chrome, drop the
+   sticker shadows and rotations, and let the draft letters print in full: a textarea prints
+   as its visible box, so we render its content instead.
+   --------------------------------------------------------------------------------------- */
+@media print {
+  :root {
+    --paper: #fff;
+    --cream: #fff;
+  }
+  body {
+    background: #fff;
+  }
+  /* Chrome that means nothing on paper. */
+  header[class*="sticky"],
+  nav[aria-label="On this page"],
+  .wn-no-print,
+  [data-tour="privacy-note"],
+  button,
+  [role="dialog"] {
+    display: none !important;
+  }
+  /* Flat, ink-on-white: shadows and rotations waste toner and hurt legibility. */
+  .sticker,
+  .card,
+  .foil,
+  .slot-empty {
+    transform: none !important;
+    box-shadow: none !important;
+    border: 1px solid #000 !important;
+    break-inside: avoid;
+  }
+  a {
+    text-decoration: underline;
+  }
+  /* Show a link's destination — a printed page has nothing to click. */
+  main a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 11px;
+    word-break: break-all;
+  }
+  /* The letter must print whole, not as a scrolled box. */
+  textarea {
+    height: auto !important;
+    min-height: 0 !important;
+    overflow: visible !important;
+    border: 1px solid #000 !important;
+    white-space: pre-wrap;
+    break-inside: auto;
+  }
+  h1,
+  h2,
+  h3 {
+    break-after: avoid;
+  }
+}

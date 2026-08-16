@@ -4,6 +4,7 @@
  * directly and does not need this map.
  */
 export const CATEGORY: Record<string, string> = {
+  "cth-centrelink": "Centrelink · Services Australia",
   "vic-renting": "Renting · Notice to vacate",
   "vic-fines": "Fines · Infringements",
   "vic-public-housing": "Public & community housing",

@@ -52,10 +52,15 @@ mrCriteria:
 getHelp:
   - service: VCAT — Residential Tenancies list
     link: 'https://www.vcat.vic.gov.au'
+    who: 'applies to renting disputes, including notices to vacate'
   - service: Tenants Victoria
     link: 'https://tenantsvic.org.au'
+    who: 'free advice for Victorian renters — Rental Support Line'
+    phone: '(03) 9416 2577'
   - service: Victoria Legal Aid
     link: 'https://www.legalaid.vic.gov.au'
+    who: 'free legal information and advice — Legal Help line'
+    phone: '1300 792 387'
 status: seed
 isFallback: false
 ---

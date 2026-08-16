@@ -40,7 +40,7 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
 
   // Step 3 — the result + load-bearing trust surfaces.
   await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
-  await expect(page.getByRole("heading", { name: /who can review this/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
   await expect(page.getByText(/time limits:/i)).toBeVisible(); // brief generic note, not a headline
   await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible();
   await expect(page.getByText(/not legal advice/i)).toBeVisible(); // disclaimer
@@ -66,7 +66,7 @@ test("tripwire: a sensitive matter routes straight to a person (no builder outpu
 
   await expect(page.getByRole("heading", { name: /talk to a free legal service/i })).toBeVisible({ timeout: 15_000 });
   // The builder output (avenue / time limit) must NOT appear on a route-out.
-  await expect(page.getByRole("heading", { name: /who can review this/i })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: /what this means for you/i })).toHaveCount(0);
 });
 
 test("urgent timing does NOT dead-end: the person still gets their options", async ({ page }) => {
@@ -86,6 +86,6 @@ test("urgent timing does NOT dead-end: the person still gets their options", asy
 
   // Urgent banner AND the full result.
   await expect(page.getByRole("heading", { name: /call a free service today/i })).toBeVisible({ timeout: 15_000 });
-  await expect(page.getByRole("heading", { name: /who can review this/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
   await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible();
 });

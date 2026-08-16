@@ -75,7 +75,7 @@ export async function precheck(ctx: GuardContext): Promise<GuardResult> {
       return {
         allowed: false,
         reason: "budget",
-        message: "We've reached today's free usage limit. Please try again tomorrow, or use your own key.",
+        message: "We've reached today's limit for free answers. Please try again tomorrow — or get free help now, which is always available.",
       };
     }
 
@@ -85,7 +85,7 @@ export async function precheck(ctx: GuardContext): Promise<GuardResult> {
       return {
         allowed: false,
         reason: "cap",
-        message: "You've reached this session's free usage limit. You can use your own key to continue.",
+        message: "You've reached this session's limit for free answers. Free help is always available — and the step-by-step guide still works.",
       };
     }
 

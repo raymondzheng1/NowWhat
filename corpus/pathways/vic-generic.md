@@ -72,7 +72,8 @@ evidenceChecklist:
   - "documents that support your side, such as records, reports or photos"
 getHelp:
   - service: "Victoria Legal Aid"
-    who: "free legal information and advice — Legal Help line 1300 792 387"
+    who: "free legal information and advice — Legal Help line"
+    phone: "1300 792 387"
     link: "https://www.legalaid.vic.gov.au/contact-us"
   - service: "Community legal centres"
     who: "free local legal help — find your nearest centre"

@@ -50,6 +50,10 @@ export const DataFormSchema = z.object({
 export const HelpRefSchema = z.object({
   service: z.string(),
   link: z.string(),
+  /** What this service does, in a few words — so the result names a service and says why. */
+  who: z.string().optional(),
+  /** A dialable number, rendered as a tap-to-call button. */
+  phone: z.string().optional(),
 });
 
 export const DataPathwaySchema = z.object({

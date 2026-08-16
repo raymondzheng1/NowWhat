@@ -73,7 +73,8 @@ getHelp:
     who: "independent external review of Centrelink decisions"
     link: "https://www.art.gov.au"
   - service: "National Debt Helpline"
-    who: "free, independent financial counselling — 1800 007 007"
+    who: "free, independent financial counselling"
+    phone: "1800 007 007"
     link: "https://ndh.org.au"
 plainLanguageExplainer: "If you got a Centrelink decision or debt and you disagree with it, you can usually ask Services Australia to look at it again — this is called an internal review, done by an Authorised Review Officer. If you still disagree after that, you can usually apply to the Administrative Review Tribunal (ART), which is independent of Centrelink. Time limits can apply to some steps, so it helps to act early and get free help. Free welfare-rights services can explain your options."
 sources:

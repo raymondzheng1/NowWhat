@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 
 /**
@@ -12,27 +13,45 @@ import { useTranslations } from "next-intl";
  * input, holds keyboard focus so Tab cannot reach the form underneath, and says plainly
  * what is happening and roughly how long it takes.
  *
- * Deliberately NOT dismissible: the request is already in flight, and a person who closes
- * the overlay would be interacting with a form that is about to be replaced. Esc does
- * nothing here for the same reason.
+ * Not dismissible while the request looks healthy: the call is in flight, and a person who
+ * closed the overlay would be interacting with a form about to be replaced. But a phone on
+ * a weak signal can stall, and trapping someone behind an opaque panel with no way out is
+ * the worst thing this product could do — so after SLOW_AFTER_MS we admit it is slow and
+ * offer two ways out: give up on the request, or go straight to a free service.
  *
  * Accessibility: role="dialog" + aria-modal so assistive tech treats the page beneath as
  * inert, aria-busy + a polite live region so a screen reader announces the wait once, and
  * the dots animation is CSS-only (globals disables it under prefers-reduced-motion).
  */
+const SLOW_AFTER_MS = 20_000;
+
 export function Busy({
   show,
   title,
   detail,
+  onCancel,
 }: {
   show: boolean;
   /** Short line: what is happening. Defaults to the shared "Working on it…". */
   title?: string;
   /** Optional second line: what to expect. */
   detail?: string;
+  /** Called if the person gives up on a stalled request; enables the Cancel button. */
+  onCancel?: () => void;
 }) {
   const t = useTranslations("common");
   const panelRef = useRef<HTMLDivElement>(null);
+  const [slow, setSlow] = useState(false);
+
+  // Own up to a slow request rather than leaving the person staring at three dots.
+  useEffect(() => {
+    if (!show) {
+      setSlow(false);
+      return;
+    }
+    const id = window.setTimeout(() => setSlow(true), SLOW_AFTER_MS);
+    return () => window.clearTimeout(id);
+  }, [show]);
 
   // Hold focus inside the overlay, and stop the page behind it from scrolling.
   useEffect(() => {
@@ -85,6 +104,22 @@ export function Busy({
         <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft" aria-live="polite">
           {detail ?? t("busyDetail")}
         </p>
+
+        {slow && (
+          <div className="mt-5 border-t-2 border-line pt-4" aria-live="polite">
+            <p className="text-[15px] leading-relaxed text-ink-soft">{t("busySlow")}</p>
+            <div className="mt-3.5 flex flex-col gap-2.5 sm:flex-row sm:justify-center">
+              {onCancel && (
+                <button type="button" onClick={onCancel} className="btn btn-secondary">
+                  {t("busyCancel")}
+                </button>
+              )}
+              <Link href="/help" className="btn btn-help">
+                {t("busyGetHelp")}
+              </Link>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

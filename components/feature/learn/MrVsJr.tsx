@@ -26,8 +26,29 @@ export function MrVsJr({ comparison, showChooser = true }: { comparison: Compari
     <div className="space-y-8">
       {comparison.intro ? <p className="max-w-[60ch] text-[16.5px] leading-[1.7] text-ink">{comparison.intro}</p> : null}
 
-      {/* Comparison — a plain table with ink rules. Deliberately upright and unrotated. */}
-      <div className="overflow-x-auto rounded-card border-2 border-ink bg-paper shadow-card">
+      {/* Comparison. This is the page people open to answer "which one is mine?", so it
+          must be readable on a phone: `table-fixed` squeezed three columns into ~84px of
+          text each at 375px. Below sm the same rows render stacked; the table returns at
+          sm and up. */}
+      <div className="space-y-4 sm:hidden">
+        {comparison.rows.map((r, i) => (
+          <div key={i} className="rounded-card border-2 border-ink bg-paper p-4 shadow-card">
+            <p className="font-display text-[12.5px] font-black uppercase tracking-[0.1em] text-ink-faint">
+              {r.aspect}
+            </p>
+            <p className="mt-2.5 font-display text-[13px] font-black uppercase tracking-[0.08em] text-ink">
+              Merits review
+            </p>
+            <p className="mt-0.5 text-[15.5px] leading-[1.5] text-ink">{r.mr}</p>
+            <p className="mt-3 font-display text-[13px] font-black uppercase tracking-[0.08em] text-ink">
+              Judicial review
+            </p>
+            <p className="mt-0.5 text-[15.5px] leading-[1.5] text-ink">{r.jr}</p>
+          </div>
+        ))}
+      </div>
+
+      <div className="hidden overflow-x-auto rounded-card border-2 border-ink bg-paper shadow-card sm:block">
         <table className="w-full table-fixed border-collapse text-left">
           <thead>
             <tr className="bg-ink text-cream">

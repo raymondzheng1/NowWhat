@@ -44,6 +44,12 @@ export default async function FaqPage({ params }: { params: Promise<{ slug: stri
 
   const t = await getTranslations("faq");
   const entry = getEntry(faq.entryId);
+  // Resolve related slugs to published articles so we can show their questions, and so a
+  // stale slug silently disappears instead of rendering a dead link.
+  const relatedFaqs = faq.related
+    .map((slug) => getPublishedFaqs().find((f) => f.slug === slug))
+    .filter((f): f is NonNullable<typeof f> => Boolean(f));
+
   const help = entry?.getHelp ?? [];
   const base = siteUrl();
 
@@ -119,18 +125,38 @@ export default async function FaqPage({ params }: { params: Promise<{ slug: stri
         </div>
       )}
 
-      {faq.related.length > 0 && (
+      {/* Take the person back into their own matter. The article already names the pathway
+          it was written for, so this deep-links straight to that decision type in the flow
+          instead of dropping them at a cold start screen. */}
+      <section
+        className="card sticker mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+        style={{ "--rot": "-0.7deg" } as React.CSSProperties}
+      >
+        <div className="min-w-0">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("ctaFlowTitle")}</h2>
+          <p className="mt-1.5 text-[15.5px] leading-snug text-ink-soft">{t("ctaFlowBody")}</p>
+        </div>
+        <Link
+          href={`/start?area=${encodeURIComponent(faq.entryId)}`}
+          className="btn btn-primary whitespace-nowrap sm:flex-none"
+        >
+          {t("ctaFlowButton")} <span aria-hidden="true">→</span>
+        </Link>
+      </section>
+
+      {relatedFaqs.length > 0 && (
         <section className="mt-10">
           <h2 className="eyebrow text-ink-faint">{t("relatedTitle")}</h2>
           <ul className="mt-3 border-t-2 border-ink">
-            {faq.related.map((r) => (
-              <li key={r} className="border-b border-line">
+            {relatedFaqs.map((r) => (
+              <li key={r.slug} className="border-b border-line">
                 <Link
-                  href={`/faq/${r}`}
-                  className="group flex items-center justify-between gap-4 py-3.5 text-[16px] font-medium text-ink hover:text-red-ink"
+                  href={`/faq/${r.slug}`}
+                  className="group flex min-h-[44px] items-center justify-between gap-4 py-3.5 text-[16px] font-medium text-ink hover:text-red-ink"
                 >
-                  {r}
-                  <span aria-hidden="true" className="text-ink-faint group-hover:text-red-ink">→</span>
+                  {/* The question, not the slug — the raw slug was unreadable. */}
+                  <span className="min-w-0">{r.question}</span>
+                  <span aria-hidden="true" className="shrink-0 text-ink-faint group-hover:text-red-ink">→</span>
                 </Link>
               </li>
             ))}

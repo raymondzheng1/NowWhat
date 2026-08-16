@@ -82,6 +82,11 @@ export const Icon = {
       <path d="M9 12l2 2 4-4" />
     </S>
   ),
+  Phone: (p: IconProps) => (
+    <S {...p}>
+      <path d="M6.5 3h3l1.5 4-2 1.5a12 12 0 006.5 6.5L17 13l4 1.5v3a2 2 0 01-2.2 2A17 17 0 014.5 5.2 2 2 0 016.5 3z" />
+    </S>
+  ),
   People: (p: IconProps) => (
     <S {...p}>
       <circle cx="9" cy="8" r="3" />

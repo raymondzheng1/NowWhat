@@ -1,18 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { listDataEntries, getDataEntry } from "@/lib/data";
 import type { DataPathway, Jurisdiction } from "@/lib/schemas/data";
 import type { Process, Ground } from "@/lib/schemas/legal";
 import { avenueView } from "@/lib/triage";
-import { planFor, type PathPlan } from "@/lib/analysis";
+import { planFor, midSentence, type PathPlan } from "@/lib/analysis";
 import { deadlineRuleView } from "@/lib/deadline/rule";
 import { reasonsRequestTemplate, REASONS_CLOCK_WARNING } from "@/lib/reasons";
-import { checkTripwire, TRIPWIRE_MESSAGES, type TripwireFlags } from "@/lib/tripwire";
+import { buildDraft, type DraftKind } from "@/lib/draft/build";
+import type { PathwayEntry } from "@/lib/schemas/corpus";
+import { checkTripwire, servicesForStop, TRIPWIRE_MESSAGES, type TripwireFlags } from "@/lib/tripwire";
 import { buildHandoff } from "@/lib/handoff";
 import { Disclaimer } from "@/components/ui/Disclaimer";
+import { AutoTextarea } from "@/components/ui/AutoTextarea";
+import { GetHelp } from "@/components/ui/GetHelp";
+import { CallButton } from "@/components/ui/CallButton";
 import { PrivacyNote } from "@/components/ui/PrivacyNote";
 import { useTour } from "@/components/feature/tour/useTour";
 import { TOUR_START_WHO, TOUR_START_WHAT, TOUR_START_RESULT } from "@/lib/tour/steps";
@@ -63,14 +68,25 @@ const FLAG_KEYS: { key: keyof TripwireFlags; label: string; hint?: string }[] = 
   { key: "deadlineImminentOrPassed", label: "flagDeadline" },
 ];
 
+export interface FaqLink {
+  slug: string;
+  question: string;
+}
+
 export function RightsSaverClient({
   meritsReview,
   judicialReview,
   jrGrounds,
+  faqsByEntry = {},
+  corpusByEntry = {},
 }: {
   meritsReview: Process;
   judicialReview: Process;
   jrGrounds: Ground[];
+  /** Published FAQ articles keyed by the decision type they were written for. */
+  faqsByEntry?: Record<string, FaqLink[]>;
+  /** Decode-corpus entries keyed by id, so application drafts can be built on-device. */
+  corpusByEntry?: Record<string, PathwayEntry>;
 }) {
   const t = useTranslations("rights");
   const allEntries = useMemo(() => listDataEntries(), []);
@@ -98,8 +114,26 @@ export function RightsSaverClient({
       if (e && (jur === "Vic" || jur === "Cth" || !jur)) setJurisdiction(e.jurisdiction);
     }
     if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) setDecisionDate(date);
-    if (area && getDataEntry(area)) setStep("what");
+    // Restore to the result when the URL says we were there, otherwise to the area step.
+    if (area && getDataEntry(area)) setStep(p.get("step") === "result" ? "result" : "what");
   }, []);
+
+  // Mirror the answers into the URL as the person moves.
+  //
+  // The result links out to guides, FAQ articles and the help directory, all in this tab.
+  // Without this, Back re-mounted the flow at step 1 and silently threw away everything —
+  // including the decision date they had to dig out of the letter, and every ground they
+  // ticked. Nothing is stored server-side and nothing sensitive goes in the URL: it is the
+  // same three answers the deep link already accepted.
+  useEffect(() => {
+    if (step === "who") return;
+    const p = new URLSearchParams();
+    if (jurisdiction) p.set("jur", jurisdiction);
+    if (areaId) p.set("area", areaId);
+    if (decisionDate) p.set("date", decisionDate);
+    if (step === "result") p.set("step", "result");
+    window.history.replaceState(null, "", `${window.location.pathname}?${p.toString()}`);
+  }, [step, jurisdiction, areaId, decisionDate]);
 
   const today = new Date().toISOString().slice(0, 10);
   const areas = jurisdiction
@@ -186,6 +220,8 @@ export function RightsSaverClient({
               jrGrounds={jrGrounds}
               relatedGrounds={relatedGrounds}
               onToggleGround={toggleGround}
+              faqs={faqsByEntry[entry.id] ?? []}
+              corpusEntry={corpusByEntry[entry.id]}
             />
           )}
 
@@ -244,6 +280,17 @@ function FocusedHeader({
             {t("startOver")}
           </button>
         )}
+        {/* Free help, on every step. The flow hides the site nav and footer, so steps 1
+            and 2 previously had no route to a person at all — and those are the screens
+            where a frightened reader is most likely to stop. */}
+        <Link
+          href="/help"
+          className="inline-flex min-h-[44px] items-center gap-1.5 rounded-button border-2 border-help bg-help-soft px-3 font-display text-[12.5px] font-extrabold uppercase tracking-[0.08em] text-help-ink hover:bg-help hover:text-paper"
+        >
+          <Icon.Phone className="h-4 w-4 shrink-0" strokeWidth={2.2} aria-hidden="true" />
+          <span className="hidden sm:inline">{t("headerHelp")}</span>
+          <span className="sr-only sm:hidden">{t("headerHelp")}</span>
+        </Link>
         <Link
           href="/"
           aria-label={t("close")}
@@ -326,12 +373,35 @@ function WhatStep({
   onContinue: () => void;
 }) {
   const canContinue = !!areaId && consent;
+  // The button used to be `disabled` with no explanation, while the thing blocking it (the
+  // consent tick) was ~800px back up a long phone page. Keep it live, and when it can't
+  // proceed say why and take the person to the control that needs them.
+  const [blocked, setBlocked] = useState<null | "area" | "consent">(null);
+  const consentRef = useRef<HTMLInputElement>(null);
+  const areaRef = useRef<HTMLDivElement>(null);
+
+  function attemptContinue() {
+    if (!areaId) {
+      setBlocked("area");
+      areaRef.current?.scrollIntoView({ block: "center" });
+      return;
+    }
+    if (!consent) {
+      setBlocked("consent");
+      consentRef.current?.scrollIntoView({ block: "center" });
+      consentRef.current?.focus();
+      return;
+    }
+    setBlocked(null);
+    onContinue();
+  }
+
   return (
     <>
       <h1 className="font-display text-[30px] font-black leading-[1.05] text-ink sm:text-[40px]">{t("whatTitle")}</h1>
       <p className="mt-3 max-w-[560px] text-[17px] text-ink-soft">{t("whatHelp")}</p>
 
-      <div data-tour="area-cards" className="mt-7 grid gap-5 sm:grid-cols-2">
+      <div ref={areaRef} data-tour="area-cards" className="mt-7 grid gap-5 sm:grid-cols-2">
         {areas.map((e, i) => {
           const Glyph = Icon[AREA_ICON[e.id] ?? "Document"];
           const active = areaId === e.id;
@@ -417,9 +487,13 @@ function WhatStep({
           className="card flex items-start gap-3 border-2 border-ink text-[15.5px] leading-snug text-ink"
         >
           <input
+            ref={consentRef}
             type="checkbox"
             checked={consent}
-            onChange={(e) => setConsent(e.target.checked)}
+            onChange={(e) => {
+              setConsent(e.target.checked);
+              if (e.target.checked) setBlocked(null);
+            }}
             className="mt-0.5 h-5 w-5 shrink-0 accent-ink"
           />
           <span>{t("consent")}</span>
@@ -436,14 +510,19 @@ function WhatStep({
         </button>
         <button
           type="button"
-          onClick={onContinue}
-          disabled={!canContinue}
-          className="btn btn-primary btn-lg sticker px-8 disabled:opacity-50"
+          onClick={attemptContinue}
+          aria-disabled={!canContinue}
+          className={`btn btn-primary btn-lg sticker px-8 ${canContinue ? "" : "opacity-60"}`}
           style={{ "--rot": "0.8deg" } as React.CSSProperties}
         >
           {t("see")} →
         </button>
       </div>
+      {blocked && (
+        <p role="status" className="mt-3 text-[15.5px] font-medium text-red-ink">
+          {blocked === "area" ? t("blockedArea") : t("blockedConsent")}
+        </p>
+      )}
     </>
   );
 }
@@ -461,6 +540,8 @@ function ResultStep({
   jrGrounds,
   relatedGrounds,
   onToggleGround,
+  faqs,
+  corpusEntry,
 }: {
   t: ReturnType<typeof useTranslations>;
   entry: DataPathway;
@@ -474,8 +555,16 @@ function ResultStep({
   jrGrounds: Ground[];
   relatedGrounds: string[];
   onToggleGround: (id: string) => void;
+  faqs: FaqLink[];
+  corpusEntry?: PathwayEntry;
 }) {
+  // Hooks first: the tripwire below can return early, and hook order must not change.
+  // `null` means "whichever path comes first for this decision" — resolved once we know it.
+  const [applyKind, setApplyKind] = useState<DraftKind | null>(null);
+  const [applyCopied, setApplyCopied] = useState(false);
+
   const trip = checkTripwire({ jurisdiction, flags, entry });
+  const stopServices = servicesForStop(trip.stopReasons);
 
   // --- Tripwire: stop and route to a person (no builder output) ---
   if (trip.stop) {
@@ -507,13 +596,52 @@ function ResultStep({
             ))}
           </ul>
         </div>
-        <HelpList t={t} entry={entry} />
+        {/* Route to the services that match WHY we stopped — a criminal element needs a
+            criminal duty lawyer, not the fines office. The decision-area services stay
+            below as a secondary list, never the primary answer. */}
+        <GetHelp services={stopServices} title={t("routeHelpTitle")} />
+        <details className="card">
+          <summary className="cursor-pointer py-2 font-display text-[16px] font-extrabold text-ink">
+            {t("routeAlsoTitle")}
+          </summary>
+          <div className="mt-4">
+            <HelpList t={t} entry={entry} />
+          </div>
+        </details>
       </div>
     );
   }
 
   const av = avenueView(entry);
   const plan = planFor({ avenue: av, meritsReview, judicialReview, jurisdiction });
+
+  // The application letters differ by path: merits review asks a tribunal for the correct
+  // or preferable decision on the facts; judicial review is a court process about how the
+  // decision was made, so its draft opens with a warning and is framed as something to take
+  // to a free service. The person picks which one they mean; nothing is chosen for them.
+  const applyKinds = plan.paths.map((pp) => ({
+    id: (pp.id === "merits-review"
+      ? "merits-review-application"
+      : "judicial-review-application") as DraftKind,
+    pathId: pp.id,
+    label: pp.id === "merits-review" ? t("applyMerits") : t("applyJudicial"),
+    hint: pp.id === "merits-review" ? t("applyMeritsHint") : t("applyJudicialHint"),
+    href: `/learn/${pp.id}`,
+  }));
+  const activeApply = applyKinds.find((k) => k.id === applyKind) ?? applyKinds[0];
+  const applyDraft =
+    corpusEntry && activeApply ? buildDraft(corpusEntry, activeApply.id) : null;
+
+  // What is actually on this page, in the order it appears.
+  const contents = [
+    { id: "r-analysis", label: t("analysisTitle") },
+    ...(av.mrAvailable || av.jrAvailable ? [{ id: "r-learn", label: t("learnTitle") }] : []),
+    { id: "r-reasons", label: t("reasonsTitle") },
+    ...(applyDraft ? [{ id: "r-apply", label: t("applyTitle") }] : []),
+    ...(av.jrAvailable && jrGrounds.length > 0 ? [{ id: "r-grounds", label: t("groundsTitle") }] : []),
+    ...(faqs.length > 0 ? [{ id: "r-faq", label: t("faqTitle") }] : []),
+    { id: "r-handoff", label: t("handoffTitle") },
+  ];
   const dl = deadlineRuleView(entry);
   const template = reasonsRequestTemplate(entry, {
     about: entry.title.toLowerCase(),
@@ -529,6 +657,10 @@ function ResultStep({
       decisionDate: decisionDate || undefined,
       reasonsRequested: false,
       relatedGrounds: relatedGrounds.map((id) => groundNameById.get(id) ?? id),
+      forumNames: {
+        merits: plan.paths.find((pp) => pp.id === "merits-review")?.body,
+        judicial: plan.paths.find((pp) => pp.id === "judicial-review")?.body,
+      },
     });
     const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
@@ -556,6 +688,31 @@ function ResultStep({
         <h1 className="mt-2 font-display text-[30px] font-black leading-[1.05] text-ink sm:text-[38px]">{entry.title}</h1>
       </div>
       <Disclaimer />
+
+      {/* The result runs long — deliberately, because it is the whole picture. A stressed
+          reader on a phone should not have to scroll to find out what is here, so name the
+          parts up front and let them jump. Built from what actually rendered, so it never
+          points at a section that isn't on the page. */}
+      {contents.length > 2 && (
+        <nav aria-label={t("contentsTitle")} className="card">
+          <h2 className="eyebrow text-ink-faint">{t("contentsTitle")}</h2>
+          <ol className="mt-3 grid gap-x-6 gap-y-0 sm:grid-cols-2">
+            {contents.map((c, i) => (
+              <li key={c.id} className="border-b border-line last:border-b-0 sm:[&:nth-last-child(-n+1)]:border-b-0">
+                <a
+                  href={`#${c.id}`}
+                  className="group flex min-h-[44px] items-center gap-3 py-2.5 text-[15.5px] font-medium text-ink hover:text-red-ink"
+                >
+                  <span aria-hidden="true" className="mono text-[12px] text-ink-faint">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="min-w-0">{c.label}</span>
+                </a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
 
       {/* Urgent, but NOT a dead end. Timing flags (deadline soon/passed, hearing booked)
           used to stop the flow entirely, which left the people in the biggest hurry with
@@ -605,9 +762,24 @@ function ResultStep({
            it can and cannot do). We order the paths — merits review first where it exists,
            because only a tribunal can substitute a different decision — and describe what
            each forum weighs. We never rate the person's prospects or tell them what to do. */}
-      <section data-tour="analysis" className="card sticker" style={{ "--rot": "-0.5deg" } as React.CSSProperties}>
+      <section id="r-analysis" data-tour="avenue" data-tour-alt="analysis" className="card sticker" style={{ "--rot": "-0.5deg" } as React.CSSProperties}>
         <h2 className="font-display text-[21px] font-black text-ink">{t("analysisTitle")}</h2>
         <p className="mt-2.5 text-[16px] leading-relaxed text-ink-soft">{t(plan.leadKey)}</p>
+
+        {/* No formal review path: say so plainly, and pass on whatever the pathway records
+            as the endpoint (e.g. an internal complaint or an ombudsman). */}
+        {plan.paths.length === 0 && (
+          <ul className="mt-4 space-y-3">
+            <li className="rounded-sticker bg-cream px-4 py-3 text-[15.5px] leading-snug text-ink-soft">
+              {t("noReview")}
+            </li>
+            {av.noReviewEndpoint && (
+              <li className="rounded-sticker bg-cream px-4 py-3 text-[15.5px] leading-snug text-ink-soft">
+                {av.noReviewEndpoint}
+              </li>
+            )}
+          </ul>
+        )}
 
         {plan.paths.length > 0 && (
           <ol className="mt-5 space-y-4">
@@ -617,7 +789,7 @@ function ResultStep({
                   <span className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-red-ink">
                     {p.order === 1 ? t("pathOrderFirst") : t("pathOrderNext")}
                   </span>
-                  <span className="mono text-ink-faint">{t("pathVia", { body: p.body })}</span>
+                  <span className="mono text-ink-faint">{t("pathVia", { body: midSentence(p.body) })}</span>
                 </div>
                 <h3 className="mt-1.5 font-display text-[19px] font-black text-ink">
                   {p.id === "merits-review" ? meritsReview.name : judicialReview.name}
@@ -672,6 +844,29 @@ function ResultStep({
           </ol>
         )}
 
+        {/* Time limits — amber and calm, a quiet line inside the analysis. Never red, never a
+            countdown, never a headline: the rule plus its source, nothing that ticks. It sits
+            HERE, above the sequence, because step 3 tells the reader it is named above. */}
+        <p className="mt-5 flex items-start gap-2.5 rounded-sticker border-2 border-amber-border bg-amber-bg px-4 py-3 text-[14.5px] leading-relaxed text-ink-soft">
+          <Icon.Clock className="mt-[3px] h-4 w-4 shrink-0 text-amber-ink" strokeWidth={2} aria-hidden />
+          <span>
+            <span className="font-display text-[13px] font-black uppercase tracking-[0.1em] text-amber-ink">
+              {t("deadlineTitle")}:
+            </span>{" "}
+            {dl.rule}{" "}
+            {dl.sourceUrl && (
+              <a
+                href={dl.sourceUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mono uppercase text-amber-ink underline underline-offset-[3px] hover:text-ink"
+              >
+                {t("deadlineSource")}
+              </a>
+            )}
+          </span>
+        </p>
+
         {/* The sequence — what people usually do, in order. */}
         <div className="mt-6 border-t-2 border-line pt-5">
           <h3 className="font-display text-[19px] font-black text-ink">{t("stepsTitle")}</h3>
@@ -682,7 +877,7 @@ function ResultStep({
               { n: "02", title: t("step2"), body: t("step2Body") },
               {
                 n: "03",
-                title: t("step3", { body: plan.primary?.body ?? t("helpTitle") }),
+                title: t("step3", { body: midSentence(plan.primary?.body ?? t("helpTitle")) }),
                 body: t("step3Body"),
               },
               { n: "04", title: t("step4"), body: t("step4Body") },
@@ -705,65 +900,9 @@ function ResultStep({
         </div>
       </section>
 
-      {/* Who can review this */}
-      <section data-tour="avenue" className="card">
-        <h2 className="font-display text-[21px] font-black text-ink">{t("avenueTitle")}</h2>
-        <ul className="mt-4 space-y-3">
-          {av.mrAvailable && (
-            <li className="rounded-sticker bg-cream px-4 py-3">
-              <p className="font-display text-[17px] font-extrabold text-ink">
-                {t("avenueMR")}{" "}
-                <span className="font-sans text-[15.5px] font-normal text-ink-soft">
-                  {t("via", { body: av.mrBody })}
-                </span>
-              </p>
-              <p className="mt-1 text-[15.5px] leading-snug text-ink-soft">{t("avenueMRWhat")}</p>
-            </li>
-          )}
-          {av.jrAvailable && (
-            <li className="rounded-sticker bg-cream px-4 py-3">
-              <p className="font-display text-[17px] font-extrabold text-ink">
-                {t("avenueJR")}{" "}
-                <span className="font-sans text-[15.5px] font-normal text-ink-soft">
-                  {t("via", { body: av.jrForum })}
-                </span>
-              </p>
-              <p className="mt-1 text-[15.5px] leading-snug text-ink-soft">{t("avenueJRWhat")}</p>
-            </li>
-          )}
-          {!av.mrAvailable && !av.jrAvailable && (
-            <li className="rounded-sticker bg-cream px-4 py-3 text-[15.5px] text-ink-soft">{t("noReview")}</li>
-          )}
-          {av.noReviewEndpoint && (
-            <li className="rounded-sticker bg-cream px-4 py-3 text-[15.5px] text-ink-soft">{av.noReviewEndpoint}</li>
-          )}
-        </ul>
-        {/* Time limits — amber and calm, a quiet line inside the analysis. Never red, never a
-            countdown, never a headline: the rule plus its source, nothing that ticks. */}
-        <p className="mt-5 flex items-start gap-2.5 rounded-sticker border-2 border-amber-border bg-amber-bg px-4 py-3 text-[14.5px] leading-relaxed text-ink-soft">
-          <Icon.Clock className="mt-[3px] h-4 w-4 shrink-0 text-amber-ink" strokeWidth={2} aria-hidden />
-          <span>
-            <span className="font-display text-[13px] font-black uppercase tracking-[0.1em] text-amber-ink">
-              {t("deadlineTitle")}:
-            </span>{" "}
-            {dl.rule}{" "}
-            {dl.sourceUrl && (
-              <a
-                href={dl.sourceUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mono uppercase text-amber-ink underline underline-offset-[3px] hover:text-ink"
-              >
-                {t("deadlineSource")}
-              </a>
-            )}
-          </span>
-        </p>
-      </section>
-
       {/* Understand these options — in-flow Learn (progressive disclosure) */}
       {(av.mrAvailable || av.jrAvailable) && (
-        <section className="card">
+        <section id="r-learn" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("learnTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("learnLead")}</p>
           <div className="mt-4 space-y-3">
@@ -795,7 +934,7 @@ function ResultStep({
       )}
 
       {/* Ask for the reasons */}
-      <section data-tour="reasons" className="card">
+      <section id="r-reasons" data-tour="reasons" className="card">
         <h2 className="font-display text-[21px] font-black text-ink">{t("reasonsTitle")}</h2>
         <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("reasonsLead")}</p>
         {/* Anything about the clock is amber and calm — same rule as the time-limit line. */}
@@ -805,10 +944,10 @@ function ResultStep({
           </p>
           <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-soft">{REASONS_CLOCK_WARNING}</p>
         </div>
-        <textarea
+        <AutoTextarea
           readOnly
           value={template}
-          rows={12}
+          minRows={12}
           className="input mt-4 font-mono text-[14.5px] leading-relaxed"
           aria-label={t("reasonsTitle")}
         />
@@ -817,9 +956,69 @@ function ResultStep({
         </button>
       </section>
 
+      {/* Apply for review — one draft per path, chosen by the person. Built on-device from
+          the corpus entry (pure function, no request), so the no-network promise holds. */}
+      {applyDraft && activeApply && (
+        <section id="r-apply" data-tour="apply" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("applyTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("applyLead")}</p>
+
+          {applyKinds.length > 1 && (
+            <div role="group" aria-label={t("applyTitle")} className="mt-4 flex flex-wrap gap-2.5">
+              {applyKinds.map((k) => {
+                const on = k.id === applyKind;
+                return (
+                  <button
+                    key={k.id}
+                    type="button"
+                    aria-pressed={on}
+                    onClick={() => {
+                      setApplyKind(k.id);
+                      setApplyCopied(false);
+                    }}
+                    className={`inline-flex min-h-[44px] items-center rounded-pill px-4 font-display text-[13px] font-extrabold uppercase tracking-[0.06em] ${
+                      on ? "bg-ink text-cream" : "border-2 border-line text-ink-faint hover:text-ink"
+                    }`}
+                  >
+                    {k.label}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          <p className="mt-3.5 text-[15px] leading-relaxed text-ink-soft">
+            {activeApply.hint}{" "}
+            <Link href={activeApply.href} className="link">
+              {t("applyReadMore")}
+            </Link>
+          </p>
+
+          <AutoTextarea
+            readOnly
+            value={applyDraft.body}
+            minRows={12}
+            className="input mt-4 font-mono text-[14.5px] leading-relaxed"
+            aria-label={activeApply.label}
+          />
+          <button
+            type="button"
+            onClick={() => {
+              void navigator.clipboard.writeText(applyDraft.body).then(() => {
+                setApplyCopied(true);
+                window.setTimeout(() => setApplyCopied(false), 2000);
+              });
+            }}
+            className="btn btn-secondary mt-4"
+          >
+            {applyCopied ? t("reasonsCopied") : t("reasonsCopy")}
+          </button>
+        </section>
+      )}
+
       {/* Grounds people raise — in-flow, neutral; selection flows into the hand-off */}
       {av.jrAvailable && jrGrounds.length > 0 && (
-        <section data-tour="grounds" className="card">
+        <section id="r-grounds" data-tour="grounds" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("groundsTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("groundsLead")}</p>
           <div className="mt-5">
@@ -837,10 +1036,39 @@ function ResultStep({
         </section>
       )}
 
+      {/* Questions other people asked about THIS decision. Every FAQ article names the
+          pathway it was written for, so this is a real join rather than a generic list —
+          the guided flow and the answer library finally point at each other. */}
+      {faqs.length > 0 && (
+        <section id="r-faq" className="card sticker" style={{ "--rot": "0.6deg" } as React.CSSProperties}>
+          <h2 className="font-display text-[21px] font-black text-ink">{t("faqTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("faqLead")}</p>
+          <ul className="mt-3.5 border-t border-line">
+            {faqs.map((f) => (
+              <li key={f.slug} className="border-b border-line">
+                <Link
+                  href={`/faq/${f.slug}`}
+                  className="group flex min-h-[44px] items-center justify-between gap-4 py-3.5"
+                >
+                  <span className="font-display text-[16px] font-extrabold leading-snug text-ink group-hover:text-red-ink">
+                    {f.question}
+                  </span>
+                  <span aria-hidden="true" className="shrink-0 font-display font-black text-red-ink">→</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+          <Link href="/faq" className="link-text mt-4 inline-flex">
+            {t("faqMore")} <span aria-hidden="true">→</span>
+          </Link>
+        </section>
+      )}
+
       {/* Hand-off + help */}
       {/* The one foil on this screen (max one per page): the recommended next action is to
           take the summary to a free service. */}
       <section
+        id="r-handoff"
         data-tour="handoff"
         className="foil sticker"
         style={{ "--rot": "0.8deg" } as React.CSSProperties}
@@ -882,11 +1110,19 @@ function HelpList({ t, entry }: { t: ReturnType<typeof useTranslations>; entry: 
             >
               {h.service}
             </a>
+            {/* Say what the service is for, and make the number dialable — a bare list of
+                organisation names asked the reader to do the research themselves. */}
+            {h.who && <p className="text-[14.5px] leading-snug text-help-ink">{h.who}</p>}
+            {h.phone && (
+              <div className="mt-1.5">
+                <CallButton phone={h.phone} label={h.service} />
+              </div>
+            )}
           </li>
         ))}
       </ul>
       <Link
-        href="/help"
+        href={`/help?jur=${entry.jurisdiction}`}
         className="mt-4 inline-flex min-h-[44px] items-center gap-1.5 font-display text-[13px] font-extrabold uppercase tracking-[0.08em] text-help-ink hover:text-ink"
       >
         {t("helpMore")} →

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { GetHelp } from "@/components/ui/GetHelp";
 import { Icon } from "@/components/ui/icons";
 import type { HelpService } from "@/lib/schemas/corpus";
@@ -38,6 +39,29 @@ export function NotCovered({
         <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{body}</p>
       </div>
       <GetHelp services={fallback} />
+
+      {/* "Not sure" must not mean "nothing to do". Free help comes first, but the two
+          things we can always offer — the step-by-step tool and the plain-English guides —
+          belong here too, so this state is honest without being a dead end. */}
+      <div className="rounded-card border-2 border-line bg-cream px-5 py-4">
+        <p className="font-display text-[13px] font-black uppercase tracking-[0.1em] text-ink">
+          Other things you can try
+        </p>
+        <ul className="mt-2.5 space-y-2 text-[15.5px] leading-snug text-ink-soft">
+          <li>
+            <Link href="/start" className="link">
+              Work out your options step by step
+            </Link>{" "}
+            — a few plain questions about your decision.
+          </li>
+          <li>
+            <Link href="/learn" className="link">
+              Read how review works
+            </Link>{" "}
+            — the two ways of challenging a government decision, explained.
+          </li>
+        </ul>
+      </div>
     </div>
   );
 }

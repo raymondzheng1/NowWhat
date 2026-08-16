@@ -47,10 +47,14 @@ mrCriteria:
 getHelp:
   - service: Victorian Ombudsman
     link: 'https://www.ombudsman.vic.gov.au'
+    who: 'free complaints about Victorian government bodies (cannot overturn a decision)'
   - service: Victoria Legal Aid
     link: 'https://www.legalaid.vic.gov.au'
+    who: 'free legal information and advice — Legal Help line'
+    phone: '1300 792 387'
   - service: Community legal centres (Federation of CLCs)
     link: 'https://fclc.org.au'
+    who: 'free local legal help — find your nearest centre'
 status: seed
 isFallback: true
 ---

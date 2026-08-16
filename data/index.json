@@ -1,5 +1,5 @@
 {
-  "builtAt": "b8e956ab9addf92c",
+  "builtAt": "bf5e8b031846e50a",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -56,15 +56,19 @@
       "getHelp": [
         {
           "service": "Economic Justice Australia (welfare rights centres)",
-          "link": "https://www.ejaustralia.org.au"
+          "link": "https://www.ejaustralia.org.au",
+          "who": "free, independent help with Centrelink decisions and debts"
         },
         {
-          "service": "Victoria Legal Aid",
-          "link": "https://www.legalaid.vic.gov.au"
+          "service": "National Debt Helpline",
+          "link": "https://ndh.org.au",
+          "who": "free, independent financial counselling",
+          "phone": "1800 007 007"
         },
         {
           "service": "Administrative Review Tribunal (ART)",
-          "link": "https://www.art.gov.au"
+          "link": "https://www.art.gov.au",
+          "who": "independent external review of Commonwealth decisions"
         }
       ],
       "status": "verified",
@@ -125,15 +129,18 @@
       "getHelp": [
         {
           "service": "Commonwealth Ombudsman",
-          "link": "https://www.ombudsman.gov.au"
+          "link": "https://www.ombudsman.gov.au",
+          "who": "free complaints about Australian Government bodies (cannot overturn a decision)"
         },
         {
-          "service": "Victoria Legal Aid",
-          "link": "https://www.legalaid.vic.gov.au"
+          "service": "Community legal centres (Federation of CLCs)",
+          "link": "https://fclc.org.au",
+          "who": "free local legal help — find your nearest centre"
         },
         {
           "service": "Administrative Review Tribunal (ART)",
-          "link": "https://www.art.gov.au"
+          "link": "https://www.art.gov.au",
+          "who": "independent external review of Commonwealth decisions"
         }
       ],
       "status": "seed",
@@ -194,15 +201,20 @@
       "getHelp": [
         {
           "service": "Fines Victoria",
-          "link": "https://www.fines.vic.gov.au"
+          "link": "https://www.fines.vic.gov.au",
+          "who": "manage, review or get help with a Victorian fine",
+          "phone": "(03) 9200 8111"
         },
         {
           "service": "Victoria Legal Aid",
-          "link": "https://www.legalaid.vic.gov.au"
+          "link": "https://www.legalaid.vic.gov.au",
+          "who": "free legal information and advice — Legal Help line",
+          "phone": "1300 792 387"
         },
         {
           "service": "Community legal centres (Federation of CLCs)",
-          "link": "https://fclc.org.au"
+          "link": "https://fclc.org.au",
+          "who": "free local legal help — find your nearest centre"
         }
       ],
       "status": "verified",
@@ -262,15 +274,19 @@
       "getHelp": [
         {
           "service": "Victorian Ombudsman",
-          "link": "https://www.ombudsman.vic.gov.au"
+          "link": "https://www.ombudsman.vic.gov.au",
+          "who": "free complaints about Victorian government bodies (cannot overturn a decision)"
         },
         {
           "service": "Victoria Legal Aid",
-          "link": "https://www.legalaid.vic.gov.au"
+          "link": "https://www.legalaid.vic.gov.au",
+          "who": "free legal information and advice — Legal Help line",
+          "phone": "1300 792 387"
         },
         {
           "service": "Community legal centres (Federation of CLCs)",
-          "link": "https://fclc.org.au"
+          "link": "https://fclc.org.au",
+          "who": "free local legal help — find your nearest centre"
         }
       ],
       "status": "seed",
@@ -330,15 +346,21 @@
       "getHelp": [
         {
           "service": "Housing Appeals Office",
-          "link": "https://www.housing.vic.gov.au"
+          "link": "https://www.housing.vic.gov.au",
+          "who": "free, independent reviews of housing decisions",
+          "phone": "1800 807 702"
         },
         {
           "service": "Tenants Victoria",
-          "link": "https://tenantsvic.org.au"
+          "link": "https://tenantsvic.org.au",
+          "who": "free advice for Victorian renters — Rental Support Line",
+          "phone": "(03) 9416 2577"
         },
         {
           "service": "Victoria Legal Aid",
-          "link": "https://www.legalaid.vic.gov.au"
+          "link": "https://www.legalaid.vic.gov.au",
+          "who": "free legal information and advice — Legal Help line",
+          "phone": "1300 792 387"
         }
       ],
       "status": "verified",
@@ -402,15 +424,20 @@
       "getHelp": [
         {
           "service": "VCAT — Residential Tenancies list",
-          "link": "https://www.vcat.vic.gov.au"
+          "link": "https://www.vcat.vic.gov.au",
+          "who": "applies to renting disputes, including notices to vacate"
         },
         {
           "service": "Tenants Victoria",
-          "link": "https://tenantsvic.org.au"
+          "link": "https://tenantsvic.org.au",
+          "who": "free advice for Victorian renters — Rental Support Line",
+          "phone": "(03) 9416 2577"
         },
         {
           "service": "Victoria Legal Aid",
-          "link": "https://www.legalaid.vic.gov.au"
+          "link": "https://www.legalaid.vic.gov.au",
+          "who": "free legal information and advice — Legal Help line",
+          "phone": "1300 792 387"
         }
       ],
       "status": "seed",

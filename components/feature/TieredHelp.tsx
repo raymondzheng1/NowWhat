@@ -36,6 +36,8 @@ function TierLabel({
   );
 }
 
+import { CallButton } from "@/components/ui/CallButton";
+
 function ServiceLine({ s }: { s: HelpService }) {
   const isUrl = /^https?:\/\//.test(s.link);
   return (
@@ -53,6 +55,11 @@ function ServiceLine({ s }: { s: HelpService }) {
         <span className="font-display text-[15px] font-extrabold text-ink">{s.service}</span>
       )}
       <p className="mt-0.5 text-[14.5px] leading-snug text-ink-soft">{s.who}</p>
+      {s.phone && (
+        <div className="mt-2">
+          <CallButton phone={s.phone} label={s.service} variant="plain" />
+        </div>
+      )}
     </div>
   );
 }
