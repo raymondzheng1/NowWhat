@@ -45,7 +45,18 @@ function main() {
       if (!e.id || !e.name || !e.layPrompt) hard.push(`${id}: element[${i}] missing id/name/layPrompt`);
     }
     for (const [i, c] of (g.leadingCases ?? []).entries()) {
-      if (!c.pinpoint) hard.push(`${id}: leadingCase[${i}] "${c.name}" has no pinpoint (verifier binds every citation)`);
+      // A missing pinpoint is TRACKED, not fatal.
+      //
+      // It was a hard failure, which is the wrong shape for the risk. A citation without a
+      // pinpoint is still true and still checkable — it just does not point at a page. The
+      // failure this project must actually prevent is an INVENTED pinpoint, and a hard gate
+      // here pushes exactly that way: the source materials record lecture references
+      // ("Sem 10 s5"), not judgment pages, so demanding one either blocks verified content
+      // or invites someone to guess. Guessing is how a wrong party name reached the corpus.
+      //
+      // The renderer omits an empty pinpoint cleanly, so nothing false is shown. This warns
+      // until a human supplies the page.
+      if (!c.pinpoint) warn.push(`${id}: leadingCase[${i}] "${c.name}" has no pinpoint yet`);
     }
     if (g.status !== "verified") warn.push(`${id}: status=seed — grounds not yet signed off (legal sign-off gate)`);
     if ((g.leadingCases ?? []).length === 0) warn.push(`${id}: no leading cases yet — v2 generator will degrade to "get help" for this ground`);

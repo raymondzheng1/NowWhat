@@ -2,45 +2,55 @@
 id: improper-purpose
 name: Improper purpose
 plainName: The power was used for the wrong reason
-oneLine: A power was used to achieve something other than what it was given for.
+oneLine: A power was used to get something it was not given for.
 whatItMeans: >-
-  A statutory power must be used for the purpose Parliament gave it. Using it to
-  achieve something else — even something the decision-maker thinks is a good
-  idea — can be unlawful.
+  Parliament gives each power for a reason. The power has to be used for that
+  reason. Using it to get something else can be unlawful. This holds even if
+  the decision-maker meant well.
 plainExample: >-
-  A permit is refused to punish someone for an unrelated complaint, rather than
-  on the permit's merits.
+  A housing officer refuses your transfer request. The real reason is a
+  complaint you made about something else.
 whatRelates:
-  - >-
-    The real reason for the decision seems to be something other than what the
-    power is for.
-  - The decision looks like it was made to achieve an unrelated aim.
+  - The reason you were given does not match what the rules are for.
+  - The decision followed soon after you made a complaint.
+  - You were told the decision would send a message to others.
+  - The reason you were given changed when you asked about it.
+  - The decision seems aimed at something the rules never mention.
 whatItIsNot: >-
-  It does not require a bad character — even a well-meant decision can be made
-  for an improper purpose.
+  It does not mean the decision-maker is a bad person. A well-meant decision
+  can still use a power the wrong way. Courts do not assume this lightly.
 usedIn:
   - judicial-review
 test: >-
-  A statutory power must be used for the purpose for which it was given; using
-  it for another purpose may be unlawful.
+  A statutory power may only be used for the purpose it was given for. If
+  another purpose was a substantial reason, the use may be unlawful.
 elements:
-  - id: actual-purpose
-    name: Power used for a different purpose
-    layPrompt: >-
-      Does it seem the real reason for the decision was something other than
-      what the power is for?
+  - id: proper-purpose
+    name: The purpose the power was given for
+    layPrompt: Do the rules say what this power is meant to do?
+  - id: other-purpose
+    name: A different purpose at work
+    layPrompt: Does the real reason look like something else?
+  - id: substantial
+    name: That other purpose was substantial
+    layPrompt: Did that other reason come up when the decision was explained?
 sources:
-  - Victoria Legal Aid — legalaid.vic.gov.au
+  - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
 leadingCases:
-  - name: 'Municipal Council of Sydney v Campbell [1925] AC 338'
-    pinpoint: at 343
-    explains: A power given for one purpose cannot be used for a different one.
-  - name: Thompson v Randwick Municipal Council (1950) 81 CLR 87
-    pinpoint: at 106
+  - name: >-
+      Schlieske v Minister for Immigration and Ethnic Affairs (1988) 84 ALR 719
+    pinpoint: ''
+    explains: A wide power still has to be used for the purposes of the Act.
+  - name: >-
+      Samrein Pty Ltd v Metropolitan Water Sewerage and Drainage Board (1982)
+      41 ALR 467
+    pinpoint: ''
     explains: >-
-      A decision fails if an improper purpose was a substantial reason — if the
-      power would not have been used without it.
+      The improper purpose need not be the only purpose, only a substantial
+      one.
 ---
 
-Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (citations + judgment pinpoints) added and approved by the owner on 2026-07-12. They are not yet rendered in the UI; the v2 elements/cases feature may rely on them.
+General information, not advice. The leading cases were refined on 2026-08-16 against our own judicial review materials.
+
+Provenance. This ground is drawn from our own verified judicial review materials. The cases it cites come from the same source. Verified on 2026-08-16. A supervising lawyer sign-off is tracked separately. The case list changed, so that sign-off needs to be renewed.

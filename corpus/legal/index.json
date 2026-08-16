@@ -1,5 +1,5 @@
 {
-  "builtAt": "6b742f3cfc0ee3bc",
+  "builtAt": "33f55ef8fa71f1a1",
   "processes": [
     {
       "id": "judicial-review",
@@ -212,6 +212,64 @@
       ]
     },
     {
+      "id": "delegated-legislation",
+      "name": "Invalid delegated legislation",
+      "plainName": "The rule they used may not be valid",
+      "oneLine": "The decision rests on a rule the Act may not allow.",
+      "whatItMeans": "Parliament passes Acts. It also lets others make rules under those Acts. These rules are called regulations, determinations or by-laws. A rule like that has to stay inside the Act. A rule outside the Act can be invalid.",
+      "plainExample": "You get a fine under a council by-law. The by-law bans something the Act never let it ban.",
+      "whatRelates": [
+        "The letter relies on a regulation or a by-law, not an Act.",
+        "The rule you were quoted is not in the law the letter names.",
+        "You were told the rule and the law say different things.",
+        "You were told a rule required this, and nobody could explain why.",
+        "Nobody could tell you what the rule was made for."
+      ],
+      "whatItIsNot": "It does not mean regulations and by-laws are not real law. Most of them are valid. Courts set a high bar before setting one aside.",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "test": "A rule made under an Act has to stay within that Act. The court asks whether the rule is appropriate and adapted to the purpose.",
+      "elements": [
+        {
+          "id": "within-subject",
+          "name": "Inside the subject the Act allows",
+          "layPrompt": "Does the letter name both a rule and the Act behind it?"
+        },
+        {
+          "id": "not-inconsistent",
+          "name": "Not inconsistent with the Act",
+          "layPrompt": "Were you told the rule and the Act say different things?"
+        },
+        {
+          "id": "made-for-purpose",
+          "name": "Made for the Act's purpose",
+          "layPrompt": "Could anyone tell you what the rule was made for?"
+        },
+        {
+          "id": "proportionate",
+          "name": "Appropriate and adapted",
+          "layPrompt": "Were you told why such a strict rule applied to you?"
+        }
+      ],
+      "sources": [
+        "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
+      ],
+      "status": "verified",
+      "leadingCases": [
+        {
+          "name": "Vanstone v Clark (2005) 147 FCR 299",
+          "pinpoint": "Weinberg J",
+          "explains": "Such a rule has to be appropriate and adapted to the Act's purpose."
+        },
+        {
+          "name": "Project Blue Sky Inc v Australian Broadcasting Authority (1998) 194 CLR 355",
+          "pinpoint": "",
+          "explains": "Whether a breach makes an act invalid depends on what the Act intended."
+        }
+      ]
+    },
+    {
       "id": "error-of-law",
       "name": "Error of law",
       "plainName": "They got the law wrong",
@@ -261,39 +319,52 @@
       "id": "improper-purpose",
       "name": "Improper purpose",
       "plainName": "The power was used for the wrong reason",
-      "oneLine": "A power was used to achieve something other than what it was given for.",
-      "whatItMeans": "A statutory power must be used for the purpose Parliament gave it. Using it to achieve something else — even something the decision-maker thinks is a good idea — can be unlawful.",
-      "plainExample": "A permit is refused to punish someone for an unrelated complaint, rather than on the permit's merits.",
+      "oneLine": "A power was used to get something it was not given for.",
+      "whatItMeans": "Parliament gives each power for a reason. The power has to be used for that reason. Using it to get something else can be unlawful. This holds even if the decision-maker meant well.",
+      "plainExample": "A housing officer refuses your transfer request. The real reason is a complaint you made about something else.",
       "whatRelates": [
-        "The real reason for the decision seems to be something other than what the power is for.",
-        "The decision looks like it was made to achieve an unrelated aim."
+        "The reason you were given does not match what the rules are for.",
+        "The decision followed soon after you made a complaint.",
+        "You were told the decision would send a message to others.",
+        "The reason you were given changed when you asked about it.",
+        "The decision seems aimed at something the rules never mention."
       ],
-      "whatItIsNot": "It does not require a bad character — even a well-meant decision can be made for an improper purpose.",
+      "whatItIsNot": "It does not mean the decision-maker is a bad person. A well-meant decision can still use a power the wrong way. Courts do not assume this lightly.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A statutory power must be used for the purpose for which it was given; using it for another purpose may be unlawful.",
+      "test": "A statutory power may only be used for the purpose it was given for. If another purpose was a substantial reason, the use may be unlawful.",
       "elements": [
         {
-          "id": "actual-purpose",
-          "name": "Power used for a different purpose",
-          "layPrompt": "Does it seem the real reason for the decision was something other than what the power is for?"
+          "id": "proper-purpose",
+          "name": "The purpose the power was given for",
+          "layPrompt": "Do the rules say what this power is meant to do?"
+        },
+        {
+          "id": "other-purpose",
+          "name": "A different purpose at work",
+          "layPrompt": "Does the real reason look like something else?"
+        },
+        {
+          "id": "substantial",
+          "name": "That other purpose was substantial",
+          "layPrompt": "Did that other reason come up when the decision was explained?"
         }
       ],
       "sources": [
-        "Victoria Legal Aid — legalaid.vic.gov.au"
+        "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
       ],
       "status": "verified",
       "leadingCases": [
         {
-          "name": "Municipal Council of Sydney v Campbell [1925] AC 338",
-          "pinpoint": "at 343",
-          "explains": "A power given for one purpose cannot be used for a different one."
+          "name": "Schlieske v Minister for Immigration and Ethnic Affairs (1988) 84 ALR 719",
+          "pinpoint": "",
+          "explains": "A wide power still has to be used for the purposes of the Act."
         },
         {
-          "name": "Thompson v Randwick Municipal Council (1950) 81 CLR 87",
-          "pinpoint": "at 106",
-          "explains": "A decision fails if an improper purpose was a substantial reason — if the power would not have been used without it."
+          "name": "Samrein Pty Ltd v Metropolitan Water Sewerage and Drainage Board (1982) 41 ALR 467",
+          "pinpoint": "",
+          "explains": "The improper purpose need not be the only purpose, only a substantial one."
         }
       ]
     },
@@ -301,50 +372,138 @@
       "id": "inflexible-policy",
       "name": "Inflexible policy / acting under dictation",
       "plainName": "They followed a rule or an order instead of deciding your case",
-      "oneLine": "A discretion was applied so rigidly, or so much at someone else's direction, that your case wasn't really considered.",
-      "whatItMeans": "A decision-maker who has a discretion must actually use it. Applying a policy so rigidly that they do not consider your particular circumstances, or simply doing what another person or body directed, can be unlawful.",
-      "plainExample": "An application is refused 'because that is our policy', without anyone looking at your specific situation.",
+      "oneLine": "A rule can be applied so rigidly that a person is never considered.",
+      "whatItMeans": "A decision-maker who has a discretion must actually use it. Applying a policy with no room for your circumstances can be unlawful. So can simply doing what another person told them to do.",
+      "plainExample": "You ask for more time to pay a fine. You are told 'we never do that', with no questions asked.",
       "whatRelates": [
-        "You were told 'that is just our policy', with no look at your circumstances.",
-        "The decision-maker seemed to be following someone else's direction.",
-        "Your particular situation does not seem to have been considered at all."
+        "You were told 'that is just our policy', and nothing more.",
+        "Nobody asked about your circumstances before saying no.",
+        "The decision-maker seemed to be following someone else's instruction.",
+        "Your written reasons repeat a general rule and stop there.",
+        "You had something new to say, and nobody would hear it."
       ],
-      "whatItIsNot": "It does not mean policies are not allowed — only that they cannot be applied with no room for your case.",
+      "whatItIsNot": "It does not mean policies are banned. It means a policy cannot leave your own case unheard.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "Fettering a discretion by an inflexible policy, or acting under another's dictation, may make a decision invalid.",
+      "test": "A decision-maker with a choice must really make it. A policy cannot be applied as a fixed rule. They also cannot just do what someone else says.",
       "elements": [
         {
           "id": "rigid-policy",
           "name": "Inflexible application of policy",
-          "layPrompt": "Was a policy applied without looking at your circumstances?"
+          "layPrompt": "Was a general rule applied without looking at your situation?"
         },
         {
           "id": "dictation",
           "name": "Acting under dictation",
-          "layPrompt": "Did the decision-maker just do what someone else told them to?"
+          "layPrompt": "Did the decision-maker simply do what someone else told them?"
         }
       ],
       "sources": [
-        "Victoria Legal Aid — legalaid.vic.gov.au"
+        "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
       ],
       "status": "verified",
       "leadingCases": [
         {
           "name": "Green v Daniels (1977) 13 ALR 1",
           "pinpoint": "Stephen J at 9-10",
-          "explains": "A policy cannot override what the Act says. This case was about unemployment benefit rules."
+          "explains": "A rule was applied so rigidly that the person was never considered."
+        }
+      ]
+    },
+    {
+      "id": "invalid-delegation",
+      "name": "Invalid delegation",
+      "plainName": "The wrong person made the decision",
+      "oneLine": "The law named one person to decide, and someone else decided.",
+      "whatItMeans": "An Act names who holds a power. Often that person can act through their staff. Sometimes the Act means they have to decide it themselves. If someone else decides, the decision can be unlawful.",
+      "plainExample": "Your payment is cancelled by a team leader. The Act gives that decision to the Secretary.",
+      "whatRelates": [
+        "The letter is signed by someone with a different job title.",
+        "The letter names no person at all, only a team.",
+        "The rules name one office, but a different office wrote to you.",
+        "You were told a senior officer decided, but someone else signed.",
+        "Nothing in the letter shows the signer was allowed to decide."
+      ],
+      "whatItIsNot": "It does not mean staff can never act for a minister. Many powers are used that way every day. The question is what the Act requires.",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "test": "Whether a subordinate may use the power depends on the Act. The court asks if the Act requires the named person to decide personally.",
+      "elements": [
+        {
+          "id": "named-holder",
+          "name": "Who the Act names",
+          "layPrompt": "Which office does the letter say the decision belongs to?"
         },
         {
-          "name": "British Oxygen Co Ltd v Board of Trade [1971] AC 610",
-          "pinpoint": "at 625",
-          "explains": "Having a policy is fine — refusing to listen to someone with something new to say is not."
+          "id": "personal-decision",
+          "name": "Whether that person had to decide it",
+          "layPrompt": "Does the letter say the named person decided it themselves?"
         },
         {
-          "name": "R v Anderson; Ex parte Ipec-Air Pty Ltd (1965) 113 CLR 177",
-          "pinpoint": "at 189, 192-193",
-          "explains": "The person given the power must decide for themselves, not simply follow someone else's instruction."
+          "id": "authority-to-sign",
+          "name": "Whether the signer was authorised",
+          "layPrompt": "Does anything show the signer was allowed to decide?"
+        }
+      ],
+      "sources": [
+        "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
+      ],
+      "status": "verified",
+      "leadingCases": [
+        {
+          "name": "Minister for Aboriginal Affairs v Peko-Wallsend Ltd (1986) 162 CLR 24",
+          "pinpoint": "Mason J",
+          "explains": "A minister can often act through staff. That is not true of every power."
+        },
+        {
+          "name": "Pattenden v Commissioner of Taxation [2008] FCA 1590",
+          "pinpoint": "Logan J",
+          "explains": "Whether a subordinate may sign in the named person's place depends on the Act."
+        }
+      ]
+    },
+    {
+      "id": "irrelevant-considerations",
+      "name": "Irrelevant considerations",
+      "plainName": "They relied on something that should not have mattered",
+      "oneLine": "The law can also name things a decision-maker must leave out.",
+      "whatItMeans": "Some Acts say what a decision-maker may not take into account. Relying on a forbidden matter can make a decision unlawful. This point often travels with a claim about the wrong purpose.",
+      "plainExample": "A fine is upheld partly because you complained about the officer. Your complaint had nothing to do with the fine.",
+      "whatRelates": [
+        "The reasons mention something that has nothing to do with the rules.",
+        "Your past, your attitude, or an old complaint seems to have counted.",
+        "A staff member raised a topic the rules never mention.",
+        "The outcome seems driven by something outside the scheme.",
+        "Cost or convenience seems to have driven a decision about your needs."
+      ],
+      "whatItIsNot": "It does not cover every fact you think was unfair. The law must actually put that matter out of bounds.",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "test": "An Act may forbid certain matters from being taken into account. Relying on a forbidden matter can make the decision invalid.",
+      "elements": [
+        {
+          "id": "forbidden-matter",
+          "name": "A matter the law puts out of bounds",
+          "layPrompt": "Do the rules say this topic should not affect the decision?"
+        },
+        {
+          "id": "was-relied-on",
+          "name": "The decision-maker relied on it",
+          "layPrompt": "Does that topic appear in the reasons you were given?"
+        }
+      ],
+      "sources": [
+        "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
+      ],
+      "status": "verified",
+      "leadingCases": [
+        {
+          "name": "Minister for Aboriginal Affairs v Peko-Wallsend Ltd (1986) 162 CLR 24",
+          "pinpoint": "",
+          "explains": "The same Act can also imply which matters must be left out."
         }
       ]
     },
@@ -446,95 +605,244 @@
       ]
     },
     {
-      "id": "procedural-fairness",
-      "name": "Procedural fairness (natural justice)",
-      "plainName": "You weren't given a fair chance",
-      "oneLine": "A fair hearing from a decision-maker who doesn't have a closed or biased mind.",
-      "whatItMeans": "Before a decision that affects you, the decision-maker usually has to tell you what is being considered and give you a real chance to respond. They also have to be free of bias — they should not have a personal interest in the outcome or have made up their mind in advance.",
-      "plainExample": "A payment is cancelled because of a report you were never shown and never had a chance to answer.",
+      "id": "procedural-fairness-bias",
+      "name": "Procedural fairness — the rule against bias",
+      "plainName": "The person deciding was not neutral",
+      "oneLine": "The person deciding must not have a stake, or a closed mind.",
+      "whatItMeans": "The person deciding must come to your case with an open mind. They should not have money or personal ties to the result. It can also matter how the situation looks to an outsider.",
+      "plainExample": "The council officer who looked into your case also decided your fine. Nobody else took part.",
       "whatRelates": [
-        "You were not told what the decision would be about before it was made.",
-        "You were not given a real chance to explain your side.",
-        "Information was used against you that you never got to see or respond to.",
-        "The decision-maker seemed to have decided before hearing from you, or had a personal stake."
+        "The same person looked into your case and then decided it.",
+        "The decision-maker had already said what they thought.",
+        "The decision-maker had money or family ties to the result.",
+        "You were told the answer before you finished explaining.",
+        "The decision-maker had a role at an earlier stage."
       ],
-      "whatItIsNot": "It does not mean you were entitled to win — only that you were entitled to a fair process.",
+      "whatItIsNot": "It does not mean the decision-maker must have no views. A firm view is not the same as a closed mind.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A decision-maker must give a person a fair hearing and be free of bias.",
+      "test": "The test asks what a fair-minded lay observer might think. It looks at what might sway the decision-maker. It also looks at how that connects to the decision.",
       "elements": [
         {
-          "id": "hearing",
-          "name": "Fair hearing",
-          "layPrompt": "Were you told what was being decided and given a real chance to respond before the decision was made?"
+          "id": "interest-or-role",
+          "name": "Something that might sway the decision-maker",
+          "layPrompt": "Did they have an interest, an earlier role, or a stated view?"
         },
         {
-          "id": "bias",
-          "name": "No bias",
-          "layPrompt": "Did the decision-maker seem to have made up their mind already? Or did they have a personal interest?"
+          "id": "connection",
+          "name": "A link to this decision",
+          "layPrompt": "Did that thing have anything to do with your decision?"
+        },
+        {
+          "id": "closed-mind",
+          "name": "A mind already made up",
+          "layPrompt": "Did they seem unable to change their mind, whatever you said?"
         }
       ],
       "sources": [
-        "Victoria Legal Aid — legalaid.vic.gov.au"
+        "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
       ],
       "status": "verified",
       "leadingCases": [
         {
-          "name": "Kioa v West (1985) 159 CLR 550",
-          "pinpoint": "Brennan J at 629",
-          "explains": "Some information may count against you. If it is credible and it matters, you usually get to see it first."
+          "name": "Isbester v Knox City Council (2015) 255 CLR 135",
+          "pinpoint": "",
+          "explains": "An officer who ran the case against a person then helped decide it."
         },
         {
           "name": "Ebner v Official Trustee in Bankruptcy (2000) 205 CLR 337",
-          "pinpoint": "at [6]",
-          "explains": "The bias test: would a fair-minded observer reasonably think the decision-maker might not be impartial?"
+          "pinpoint": "Gleeson CJ, McHugh, Gummow and Hayne JJ",
+          "explains": "The test asks what a fair-minded lay observer might reasonably think."
         },
         {
-          "name": "SZBEL v Minister for Immigration and Multicultural and Indigenous Affairs (2006) 228 CLR 152",
-          "pinpoint": "at [26]-[29]",
-          "explains": "You are entitled to know the issues the decision may turn on, so you can respond to them."
+          "name": "Minister for Immigration and Multicultural Affairs v Jia Legeng (2001) 205 CLR 507",
+          "pinpoint": "Gleeson CJ and Gummow J",
+          "explains": "Actual bias means a mind so fixed it cannot be changed."
+        }
+      ]
+    },
+    {
+      "id": "procedural-fairness-hearing",
+      "name": "Procedural fairness — the hearing rule",
+      "plainName": "You never got to have your say",
+      "oneLine": "You usually get told what is coming, and a real chance to reply.",
+      "whatItMeans": "A decision-maker usually has to tell you what is being decided. You usually get a real chance to reply before it happens. If something counts against you, you usually get to see it first.",
+      "plainExample": "Centrelink raises a debt using a report you were never shown. Nobody asked you to explain.",
+      "whatRelates": [
+        "You did not know a decision about you was coming.",
+        "Nobody asked you to explain your side of it.",
+        "Something was used against you that you never saw.",
+        "You asked to speak to someone, and were told no.",
+        "The process changed part way, and nobody told you."
+      ],
+      "whatItIsNot": "This is about the process, not the result. It does not mean the answer would have been different.",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "test": "First, does a fair hearing duty apply to this power? Second, what did that duty require in that situation? Both come from the Act and the facts.",
+      "elements": [
+        {
+          "id": "applies",
+          "name": "The duty applies",
+          "layPrompt": "Could this decision affect your rights, your money, or your home?"
+        },
+        {
+          "id": "notice",
+          "name": "Notice of what was being decided",
+          "layPrompt": "Were you told what was being looked at before it was decided?"
+        },
+        {
+          "id": "adverse-information",
+          "name": "Information against you was shown to you",
+          "layPrompt": "Was something used against you that you never got to see?"
+        },
+        {
+          "id": "chance-to-respond",
+          "name": "A real chance to respond",
+          "layPrompt": "Did you get a real chance to reply before the decision?"
+        }
+      ],
+      "sources": [
+        "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
+      ],
+      "status": "verified",
+      "leadingCases": [
+        {
+          "name": "Badari v Minister for Territory Families and Urban Housing [2025] HCA 47",
+          "pinpoint": "Gageler CJ, Gordon, Edelman, Steward and Gleeson JJ",
+          "explains": "A power to change a person's rent is presumed to require fairness."
+        },
+        {
+          "name": "Saeed v Minister for Immigration and Citizenship (2010) 241 CLR 252",
+          "pinpoint": "",
+          "explains": "Whether the duty applies is worked out by reading the Act."
+        },
+        {
+          "name": "Kioa v West (1985) 159 CLR 550",
+          "pinpoint": "Brennan J",
+          "explains": "Key information counting against a person should usually be shown to them."
+        },
+        {
+          "name": "Minister for Immigration and Border Protection v WZARH (2015) 256 CLR 326",
+          "pinpoint": "Kiefel, Bell and Keane JJ",
+          "explains": "Changing the promised process without telling the person can be unfair."
+        },
+        {
+          "name": "Nathanson v Minister for Home Affairs (2022) 276 CLR 80",
+          "pinpoint": "Kiefel CJ, Keane and Gleeson JJ",
+          "explains": "Deciding on a new issue without notice can deny a fair hearing."
         }
       ]
     },
     {
       "id": "relevant-considerations",
-      "name": "Relevant and irrelevant considerations",
-      "plainName": "They ignored something they had to weigh, or relied on something they shouldn't",
-      "oneLine": "A decision-maker must weigh what the law says matters — and ignore what it says doesn't.",
-      "whatItMeans": "A decision-maker must take into account the things the law requires them to consider, and must not rely on things the law says are irrelevant. Leaving out a required consideration, or relying on a forbidden one, can make a decision unlawful.",
-      "plainExample": "A housing decision ignores the medical evidence that the rules say must be taken into account.",
+      "name": "Relevant considerations",
+      "plainName": "They ignored something they had to take into account",
+      "oneLine": "The law can name things a decision-maker must take into account.",
+      "whatItMeans": "Some Acts say what a decision-maker must take into account. Missing one of those matters can make a decision unlawful. In Victoria, public bodies must also think about your human rights.",
+      "plainExample": "You send Centrelink medical reports about your illness. The debt decision never mentions them.",
       "whatRelates": [
-        "Something the rules say must be considered appears to have been left out.",
-        "The decision relied on something that should not have mattered.",
-        "You gave important information that the decision-maker did not appear to weigh."
+        "You gave them information that the decision never mentions.",
+        "Something the rules say must be weighed appears to have been left out.",
+        "Your reasons letter skips a matter you raised in writing.",
+        "A report or assessment you sent in is not discussed anywhere.",
+        "You are in Victoria and a human right may be affected."
       ],
-      "whatItIsNot": "It does not mean every point you raised had to be accepted — only that the required matters had to be genuinely considered.",
+      "whatItIsNot": "It does not mean every point you raised had to be accepted. The required matters only had to be genuinely considered.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A decision-maker must consider the matters the law requires, and must not rely on matters the law forbids.",
+      "test": "An Act may require certain matters to be taken into account. Failing to consider a required matter can make the decision invalid.",
       "elements": [
         {
-          "id": "ignored-relevant",
-          "name": "Ignored a required consideration",
-          "layPrompt": "Was there something important the law required them to take into account that they seem to have ignored?"
+          "id": "required-matter",
+          "name": "A matter the law required them to consider",
+          "layPrompt": "Do the rules list something they had to take into account?"
         },
         {
-          "id": "took-irrelevant",
-          "name": "Relied on an irrelevant consideration",
-          "layPrompt": "Did they rely on something that shouldn't have mattered to this decision?"
+          "id": "not-considered",
+          "name": "That matter was not considered",
+          "layPrompt": "Does the decision look like it left that matter out?"
+        },
+        {
+          "id": "charter-proper-consideration",
+          "name": "Proper consideration of a human right (Victoria)",
+          "layPrompt": "Are you in Victoria? Did this affect your home, family or privacy?"
         }
       ],
       "sources": [
-        "Victoria Legal Aid — legalaid.vic.gov.au"
+        "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
       ],
       "status": "verified",
       "leadingCases": [
         {
           "name": "Minister for Aboriginal Affairs v Peko-Wallsend Ltd (1986) 162 CLR 24",
           "pinpoint": "Mason J at 39-41",
-          "explains": "The Act decides what must be considered. How much weight each factor gets is generally for the decision-maker."
+          "explains": "The Act decides which matters a decision-maker must take into account."
+        },
+        {
+          "name": "Tickner v Chapman (1995) 57 FCR 451",
+          "pinpoint": "",
+          "explains": "A matter the law lists must be really thought about, not just filed."
+        },
+        {
+          "name": "Bare v Independent Broad-based Anti-corruption Commission (2015) 48 VR 129",
+          "pinpoint": "",
+          "explains": "In Victoria, a public body must think about your human rights too."
+        },
+        {
+          "name": "Thompson v Minogue (2021) 67 VR 301",
+          "pinpoint": "",
+          "explains": "A Victorian court applied that human rights duty to prison conditions."
+        }
+      ]
+    },
+    {
+      "id": "unlawful-policy",
+      "name": "Unlawful policy",
+      "plainName": "The policy itself does not match the law",
+      "oneLine": "A policy cannot cut down what the Act allows.",
+      "whatItMeans": "Departments write policies to guide their staff. A policy must fit inside the Act it sits under. A policy cannot contradict the Act. It also cannot remove a choice the Act gives.",
+      "plainExample": "An Act lets Centrelink waive a debt in special cases. A policy tells staff to never waive a debt.",
+      "whatRelates": [
+        "You were quoted a policy rule that the Act does not contain.",
+        "The policy turns a 'may' in the Act into a 'never'.",
+        "A guideline seems to add a condition the law never set.",
+        "Staff say they have no choice, but the Act gives one.",
+        "The policy and the wording of the law seem to disagree."
+      ],
+      "whatItIsNot": "Policies are allowed, and they are useful. The question is whether this policy fits the Act.",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "test": "A policy must be consistent with the Act it operates under. A policy that removes a discretion the Act gives may be unlawful.",
+      "elements": [
+        {
+          "id": "policy-relied-on",
+          "name": "A policy or guideline was used",
+          "layPrompt": "Were you told a policy or guideline decided the outcome?"
+        },
+        {
+          "id": "conflicts-with-act",
+          "name": "The policy conflicts with the Act",
+          "layPrompt": "Does the policy seem to say something different from the law?"
+        },
+        {
+          "id": "removes-discretion",
+          "name": "The policy removes a choice the Act gives",
+          "layPrompt": "Does the Act say 'may', where the policy says 'never'?"
+        }
+      ],
+      "sources": [
+        "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
+      ],
+      "status": "verified",
+      "leadingCases": [
+        {
+          "name": "Green v Daniels (1977) 13 ALR 1",
+          "pinpoint": "",
+          "explains": "A policy cannot override what the Act says."
         }
       ]
     },
@@ -581,6 +889,69 @@
           "name": "Minister for Immigration and Citizenship v Li (2013) 249 CLR 332",
           "pinpoint": "at [76]",
           "explains": "The test used in Australia now. A decision needs a reason you can see and follow."
+        }
+      ]
+    },
+    {
+      "id": "without-authority",
+      "name": "Acting without legal authority",
+      "plainName": "They never had the power to do this",
+      "oneLine": "Some decisions are made without the power the law requires.",
+      "whatItMeans": "Every government power comes from an Act of Parliament. The Act sets the limits of that power. A decision outside those limits has no legal authority behind it. The letter should tell you which law it relies on.",
+      "plainExample": "A letter raises a debt against you. The Act gives that office no power to raise debts.",
+      "whatRelates": [
+        "The letter does not name the law it was made under.",
+        "The letter comes from an office you have never dealt with.",
+        "The decision covers something the rules you were given do not mention.",
+        "You cannot find the power the letter says it is using.",
+        "The letter decides something you thought only a court could decide."
+      ],
+      "whatItIsNot": "This is not about whether the decision was harsh or unfair. It asks a narrower question. Did the power exist at all?",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "test": "A power may only be used within the limits the Act sets. Acting outside those limits is acting without legal authority.",
+      "elements": [
+        {
+          "id": "power-source",
+          "name": "A law that gives the power",
+          "layPrompt": "Does the letter name the law it was made under?"
+        },
+        {
+          "id": "within-limits",
+          "name": "Staying inside the limits",
+          "layPrompt": "Is the decision about something the rules you were given never mention?"
+        },
+        {
+          "id": "right-office",
+          "name": "The office the law names",
+          "layPrompt": "Does the office named in the letter match the one that wrote to you?"
+        }
+      ],
+      "sources": [
+        "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
+      ],
+      "status": "verified",
+      "leadingCases": [
+        {
+          "name": "Hossain v Minister for Immigration and Border Protection (2018) 264 CLR 123",
+          "pinpoint": "at [23]",
+          "explains": "An Act sets the limits of the power it gives out."
+        },
+        {
+          "name": "Craig v South Australia (1995) 184 CLR 163",
+          "pinpoint": "",
+          "explains": "One classic error is acting beyond the power the law gives."
+        },
+        {
+          "name": "Minister for Immigration and Multicultural Affairs v Bhardwaj (2002) 209 CLR 597",
+          "pinpoint": "at [53]",
+          "explains": "A decision made outside the power counts in law as no decision."
+        },
+        {
+          "name": "Attorney-General (NSW) v Quin (1990) 170 CLR 1",
+          "pinpoint": "",
+          "explains": "A court checks whether a decision was lawful, not whether it was right."
         }
       ]
     }

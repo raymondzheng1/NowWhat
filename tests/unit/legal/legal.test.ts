@@ -53,12 +53,20 @@ describe("legal-substance corpus (Learn concept layer)", () => {
   it("groundsForProcess returns the judicial-review grounds", () => {
     const jr = groundsForProcess("judicial-review");
     expect(jr.length).toBeGreaterThanOrEqual(9);
-    expect(jr.map((g) => g.id)).toContain("procedural-fairness");
+    expect(jr.map((g) => g.id)).toContain("procedural-fairness-hearing");
+    expect(jr.map((g) => g.id)).toContain("procedural-fairness-bias");
   });
 
-  it("any leading case carries a pinpoint (verifier binds every citation)", () => {
+  it("a pinpoint, where we have one, is never fabricated boilerplate", () => {
+    // Pinpoints are supplied by a human from the source judgment. We do not require one —
+    // demanding a page number we do not have is what invites a guess — but anything present
+    // must look like a real reference (a page, a paragraph, or a named judge).
     for (const g of LegalIndexSchema.parse(raw).grounds) {
-      for (const c of g.leadingCases) expect(c.pinpoint.length).toBeGreaterThan(0);
+      for (const c of g.leadingCases) {
+        if (!c.pinpoint) continue;
+        // A page, a paragraph, or a named judge — all real pinpoint forms.
+        expect(c.pinpoint, `${g.id}: ${c.name}`).toMatch(/\d|\b(?:J|JJ|CJ|P|JA)\b/);
+      }
     }
   });
 

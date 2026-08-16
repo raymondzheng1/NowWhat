@@ -14,7 +14,7 @@ test.beforeEach(async ({ context }) => {
 /** WCAG 2 A/AA automated scan of the key surfaces (no serious/critical violations). */
 const PAGES = [
   "/", "/start", "/faq", "/help", "/contact", "/privacy", "/terms",
-  "/learn", "/learn/merits-review", "/learn/compare", "/learn/grounds", "/learn/grounds/procedural-fairness", "/learn/tour",
+  "/learn", "/learn/merits-review", "/learn/compare", "/learn/grounds", "/learn/grounds/procedural-fairness-hearing", "/learn/tour",
 ];
 
 for (const path of PAGES) {
