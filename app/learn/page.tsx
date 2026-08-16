@@ -12,7 +12,7 @@ const CRUMB = [
 ];
 
 export const metadata: Metadata = {
-  title: "How review works — your options explained",
+  title: "Merits review and judicial review, explained",
   description:
     "Plain-English explanations of how to challenge an Australian government decision: merits review, judicial review, and the grounds of review. General information, not advice.",
   alternates: { canonical: "/learn" },

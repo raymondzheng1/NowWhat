@@ -137,6 +137,53 @@ export default function HomePage() {
         </ul>
       </section>
 
+      {/* ===== What we cover — the two governments, named plainly. Doubles as the page's
+           public-law keyword surface (merits review / judicial review / ART / VCAT). ===== */}
+      <section aria-labelledby="coverage-title" className="container-wide pb-14">
+        <p className="note mb-4 rotate-0.6">{t("coverageNote")}</p>
+        <h2 id="coverage-title" className="mb-3 text-h2">{t("coverageTitle")}</h2>
+        <p className="mb-7 max-w-[64ch] text-body text-ink-soft">{t("coverageLead")}</p>
+        <div className="grid gap-[26px] md:grid-cols-2">
+          {[
+            {
+              label: t("covCthLabel"),
+              title: t("covCthTitle"),
+              body: t("covCthBody"),
+              rot: "-1.1deg",
+              gradient: "linear-gradient(135deg,#2F6FBF,#308371)",
+            },
+            {
+              label: t("covVicLabel"),
+              title: t("covVicTitle"),
+              body: t("covVicBody"),
+              rot: "0.9deg",
+              gradient: "linear-gradient(135deg,#7A4FB3,#B75681)",
+            },
+          ].map((c) => (
+            <div
+              key={c.title}
+              className="card sticker flex gap-4 !p-[22px]"
+              style={{ "--rot": c.rot } as React.CSSProperties}
+            >
+              {/* A word, not a number — so this is a gradient tag, not the fixed 44px chip
+                  (which clips anything longer than "01"). */}
+              <span
+                className="inline-flex h-fit shrink-0 items-center rounded-sticker px-3 py-2 font-display text-[11px] font-black uppercase tracking-[0.08em] text-white shadow-chip"
+                style={{ background: c.gradient }}
+                aria-hidden="true"
+              >
+                {c.label}
+              </span>
+              <div className="min-w-0">
+                <h3 className="font-display text-[19px] font-black leading-snug text-ink">{c.title}</h3>
+                <p className="mt-1.5 text-sm text-ink-soft">{c.body}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+        <p className="mt-5 max-w-[64ch] text-sm text-ink-faint">{t("covFoot")}</p>
+      </section>
+
       {/* ===== Time limit (always amber + calm) + the empty slot ===== */}
       <section className="container-wide grid gap-[26px] pb-14 md:grid-cols-2">
         <div

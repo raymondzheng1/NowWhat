@@ -3,7 +3,7 @@ import { RightsSaverClient } from "@/components/feature/RightsSaverClient";
 import { getProcess, groundsForProcess } from "@/lib/legal";
 
 export const metadata: Metadata = {
-  title: "Work out what you can do",
+  title: "Work out how to review a government decision",
   description:
     "Answer a few plain questions about a government decision (Victoria or Commonwealth) and get the review path, the time-limit rule, a draft request for reasons, and free help — in plain English. Nothing you enter is stored.",
   alternates: { canonical: "/start" },

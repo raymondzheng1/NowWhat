@@ -5,8 +5,9 @@ import { getPublishedFaqs } from "@/lib/faq/load";
 import { PageHeader } from "@/components/ui/PageHeader";
 
 export const metadata: Metadata = {
-  title: "Common questions",
-  description: "Plain-language answers about government decisions — grounded in the rules and checked by a person before publishing.",
+  title: "Common questions about government decisions",
+  description:
+    "Plain-English answers on reviewing Commonwealth and Victorian government decisions — Centrelink, fines, renting and housing — each grounded in sourced rules and checked by a person.",
   alternates: { canonical: "/faq" },
 };
 

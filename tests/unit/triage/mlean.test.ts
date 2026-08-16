@@ -3,7 +3,7 @@ import { triage, avenueView } from "@/lib/triage";
 import { listDataEntries } from "@/lib/data";
 import { deadlineRuleView } from "@/lib/deadline/rule";
 import { reasonsView, reasonsRequestTemplate, REASONS_CLOCK_WARNING } from "@/lib/reasons";
-import { checkTripwire } from "@/lib/tripwire";
+import { checkTripwire, TRIPWIRE_MESSAGES, URGENT_REASONS } from "@/lib/tripwire";
 import { buildHandoff } from "@/lib/handoff";
 
 describe("M-Lean triage (deterministic Rights Saver)", () => {
@@ -77,22 +77,55 @@ describe("reasons (corrected clock warning)", () => {
   });
 });
 
-describe("tripwire (stop and route)", () => {
-  it("stops for family/guardianship/mental-health", () => {
-    const r = checkTripwire({ jurisdiction: "Vic", flags: { family: true } });
-    expect(r.stop).toBe(true);
-    expect(r.reasons).toContain("family-guardianship-mental-health");
-  });
-
-  it("stops for migration (out of scope), imminent deadline, and a privative clause", () => {
-    expect(checkTripwire({ jurisdiction: "Cth", flags: { migration: true } }).stop).toBe(true);
-    expect(checkTripwire({ jurisdiction: "Vic", flags: { deadlineImminentOrPassed: true } }).stop).toBe(true);
+describe("tripwire — two tiers: STOP (out of scope) vs URGENT (timing)", () => {
+  it("stops for the high-harm / out-of-scope decisions", () => {
+    for (const flags of [{ family: true }, { criminal: true }, { detention: true }, { migration: true }]) {
+      const r = checkTripwire({ jurisdiction: "Vic", flags });
+      expect(r.stop, JSON.stringify(flags)).toBe(true);
+    }
     expect(checkTripwire({ jurisdiction: "Vic", flags: {}, entry: { privativeClause: true } }).stop).toBe(true);
     expect(checkTripwire({ jurisdiction: "Vic", flags: {}, unclassifiable: true }).stop).toBe(true);
   });
 
+  it("a family/guardianship/mental-health DECISION still routes to a person", () => {
+    const r = checkTripwire({ jurisdiction: "Vic", flags: { family: true } });
+    expect(r.stop).toBe(true);
+    expect(r.stopReasons).toContain("family-guardianship-mental-health");
+  });
+
+  it("timing flags are URGENT, not a stop — the person still gets their options", () => {
+    // This is the fix for the service being a dead end: the two most commonly ticked
+    // boxes are about being in a hurry, which is when guidance matters most.
+    for (const flags of [{ deadlineImminentOrPassed: true }, { hearingBooked: true }]) {
+      const r = checkTripwire({ jurisdiction: "Vic", flags });
+      expect(r.stop, JSON.stringify(flags)).toBe(false);
+      expect(r.urgent, JSON.stringify(flags)).toBe(true);
+      expect(r.urgentReasons.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("a stop still wins when it coincides with an urgent timing flag", () => {
+    const r = checkTripwire({
+      jurisdiction: "Vic",
+      flags: { criminal: true, deadlineImminentOrPassed: true },
+    });
+    expect(r.stop).toBe(true);
+    expect(r.urgent).toBe(true);
+    expect(r.stopReasons).toContain("criminal");
+    expect(r.urgentReasons).toContain("deadline-imminent-or-passed");
+  });
+
   it("does not stop a clean matter", () => {
-    expect(checkTripwire({ jurisdiction: "Vic", flags: {}, entry: { privativeClause: false } }).stop).toBe(false);
+    const r = checkTripwire({ jurisdiction: "Vic", flags: {}, entry: { privativeClause: false } });
+    expect(r.stop).toBe(false);
+    expect(r.urgent).toBe(false);
+    expect(r.reasons).toEqual([]);
+  });
+
+  it("every urgent reason explains what to do AND that options follow", () => {
+    for (const r of URGENT_REASONS) {
+      expect(TRIPWIRE_MESSAGES[r].toLowerCase()).toMatch(/today|options below/);
+    }
   });
 });
 

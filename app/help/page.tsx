@@ -7,9 +7,9 @@ import { PrivacyNote } from "@/components/ui/PrivacyNote";
 import { directoryByTier } from "@/lib/help/services";
 
 export const metadata: Metadata = {
-  title: "Get free help",
+  title: "Free legal help with a government decision",
   description:
-    "Free, independent Victorian services that can help with a government decision: tribunals, the Ombudsman, Victoria Legal Aid, community legal centres, and how to find a lawyer.",
+    "Free, independent help with a Commonwealth or Victorian government decision: tribunals (ART, VCAT), the Ombudsman, Victoria Legal Aid, community legal centres, and how to find a lawyer.",
   alternates: { canonical: "/help" },
 };
 

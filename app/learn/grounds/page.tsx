@@ -7,7 +7,7 @@ import { JsonLd } from "@/components/site/JsonLd";
 import { definedTermSetLd } from "@/lib/seo/jsonld";
 
 export const metadata: Metadata = {
-  title: "The grounds of review explained",
+  title: "The grounds of judicial review explained",
   description:
     "The common grounds of judicial review — procedural fairness, relevant considerations, unreasonableness, jurisdictional error and more — each in plain English with everyday examples. General information, not advice.",
   alternates: { canonical: "/learn/grounds" },

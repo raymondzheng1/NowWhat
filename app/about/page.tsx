@@ -4,8 +4,9 @@ import { PageHeader } from "@/components/ui/PageHeader";
 import { Disclaimer } from "@/components/ui/Disclaimer";
 
 export const metadata: Metadata = {
-  title: "About this service",
-  description: "A free service that helps people understand and respond to government decisions — grounded in the rules, never guessing.",
+  title: "About this free public-law service",
+  description:
+    "A free service explaining how to challenge an Australian Government or Victorian decision — merits review, judicial review and the grounds of judicial review, grounded in sourced rules.",
   alternates: { canonical: "/about" },
 };
 

@@ -50,8 +50,11 @@ const AREA_CHIP = [
  * come last, so this restores it. Same two colours as the base rule (#FFFFFF + --ink).
  */
 
-const FLAG_KEYS: { key: keyof TripwireFlags; label: string }[] = [
-  { key: "family", label: "flagFamily" },
+const FLAG_KEYS: { key: keyof TripwireFlags; label: string; hint?: string }[] = [
+  // The family/mental-health flag is the one people over-tick: it must read as "the
+  // DECISION is one of these", not "my life involves one of these", or the Centrelink,
+  // housing and fines users this service exists for get handed away.
+  { key: "family", label: "flagFamily", hint: "flagFamilyHint" },
   { key: "criminal", label: "flagCriminal" },
   { key: "detention", label: "flagDetention" },
   { key: "migration", label: "flagMigration" },
@@ -382,7 +385,7 @@ function WhatStep({
           </legend>
           <p className="clear-both text-[15.5px] leading-relaxed text-ink-soft">{t("checkHelp")}</p>
           <div className="mt-3 space-y-1">
-            {FLAG_KEYS.map(({ key, label }) => (
+            {FLAG_KEYS.map(({ key, label, hint }) => (
               <label
                 key={key}
                 /* py + min-h keeps each row a >= 44px tap target on a phone. */
@@ -394,7 +397,14 @@ function WhatStep({
                   onChange={(e) => setFlags({ ...flags, [key]: e.target.checked })}
                   className="mt-0.5 h-5 w-5 shrink-0 accent-ink"
                 />
-                <span>{t(label)}</span>
+                <span>
+                  {t(label)}
+                  {hint && (
+                    <span className="mt-1 block text-[14.5px] leading-snug text-ink-faint">
+                      {t(hint)}
+                    </span>
+                  )}
+                </span>
               </label>
             ))}
           </div>
@@ -544,6 +554,39 @@ function ResultStep({
         <h1 className="mt-2 font-display text-[30px] font-black leading-[1.05] text-ink sm:text-[38px]">{entry.title}</h1>
       </div>
       <Disclaimer />
+
+      {/* Urgent, but NOT a dead end. Timing flags (deadline soon/passed, hearing booked)
+          used to stop the flow entirely, which left the people in the biggest hurry with
+          nothing to act on. Now we lead with "call today" and still show every option
+          below — amber, because on this product time pressure is never red. */}
+      {trip.urgent && (
+        <section
+          className="sticker rounded-card border-2 border-amber-border bg-amber-bg p-5 sm:p-6"
+          style={{ "--rot": "-0.6deg" } as React.CSSProperties}
+        >
+          <div className="flex items-start gap-3.5">
+            <span aria-hidden="true" className="mt-0.5 text-[20px] leading-none text-amber-ink">◔</span>
+            <div className="min-w-0 flex-1">
+              <h2 className="font-display text-[21px] font-black leading-tight text-ink">
+                {t("urgentTitle")}
+              </h2>
+              <ul className="mt-2.5 space-y-2 text-[15.5px] leading-snug text-ink-soft">
+                {trip.urgentReasons.map((r) => (
+                  <li key={r} className="flex gap-2.5">
+                    <span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 flex-none rounded-[2px] bg-amber-border" />
+                    <span>{TRIPWIRE_MESSAGES[r]}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-2.5 text-[15.5px] leading-snug text-ink-soft">{t("urgentBody")}</p>
+              <Link href="/help" className="btn btn-help mt-4">
+                {t("helpMore")} <span aria-hidden="true">→</span>
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
+
       {/* The album's empty-slot device: this decision has no pathway of its own yet. Dashed,
           never shadowed — it is a gap on the page, not a sticker. Never used for a deadline. */}
       {entry.isFallback && (

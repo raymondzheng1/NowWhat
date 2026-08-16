@@ -60,11 +60,32 @@ test("tripwire: a sensitive matter routes straight to a person (no builder outpu
   }).toPass({ timeout: 15_000 });
 
   await page.getByRole("button", { name: /notice to vacate|renting/i }).first().click();
-  await page.getByRole("checkbox", { name: /child protection, family, guardianship/i }).check();
+  await page.getByRole("checkbox", { name: /child protection, family law, guardianship/i }).check();
   await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
   await page.getByRole("button", { name: /see my next steps/i }).click();
 
   await expect(page.getByRole("heading", { name: /talk to a free legal service/i })).toBeVisible({ timeout: 15_000 });
   // The builder output (avenue / time limit) must NOT appear on a route-out.
   await expect(page.getByRole("heading", { name: /who can review this/i })).toHaveCount(0);
+});
+
+test("urgent timing does NOT dead-end: the person still gets their options", async ({ page }) => {
+  // Regression guard for the "it always sends me to a human" failure: the time-limit and
+  // hearing flags are the most commonly ticked, and they must warn without withholding.
+  await page.goto("/start");
+  const vic = page.getByRole("button", { name: /victorian state body/i });
+  await expect(async () => {
+    await vic.click();
+    await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });
+  }).toPass({ timeout: 15_000 });
+
+  await page.getByRole("button", { name: /notice to vacate|renting/i }).first().click();
+  await page.getByRole("checkbox", { name: /time limit is very soon/i }).check();
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+
+  // Urgent banner AND the full result.
+  await expect(page.getByRole("heading", { name: /call a free service today/i })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("heading", { name: /who can review this/i })).toBeVisible();
+  await expect(page.getByText(/ask for the reasons/i)).toBeVisible();
 });

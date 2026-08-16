@@ -37,7 +37,29 @@ import { ConsentBanner } from "@/components/analytics/ConsentBanner";
 import { siteUrl, PRODUCT_NAME, PRODUCT_TAGLINE } from "@/lib/config";
 
 const description =
-  "Free, plain-English help to understand a government decision: what it means, the review pathway, the time limit, a draft you can use, and free legal help. We never keep your letter.";
+  "Free, plain-English help to challenge an Australian Government (Commonwealth) or Victorian government decision: merits review, judicial review, the grounds of judicial review, time limits, a draft letter you can send, and free legal help. We never keep your letter.";
+
+/**
+ * Search terms this service should be findable on. Kept honest — every one of these is a
+ * topic the site actually covers in depth, in plain English, with sources.
+ */
+const KEYWORDS = [
+  "merits review",
+  "judicial review",
+  "grounds of judicial review",
+  "public law",
+  "administrative law",
+  "appeal a government decision",
+  "review a government decision",
+  "Administrative Review Tribunal",
+  "ART appeal",
+  "VCAT review",
+  "Commonwealth government decision",
+  "Victorian government decision",
+  "Centrelink decision review",
+  "statement of reasons",
+  "free legal help Victoria",
+];
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl()),
@@ -47,6 +69,7 @@ export const metadata: Metadata = {
   },
   description,
   applicationName: PRODUCT_NAME,
+  keywords: KEYWORDS,
   alternates: { canonical: "/" },
   icons: {
     icon: [
