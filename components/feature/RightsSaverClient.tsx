@@ -11,7 +11,8 @@ import { planFor } from "@/lib/analysis";
 import { AnalysisPanel } from "@/components/feature/AnalysisPanel";
 import { deadlineRuleView } from "@/lib/deadline/rule";
 import { reasonsRequestTemplate, REASONS_CLOCK_WARNING } from "@/lib/reasons";
-import { buildDraft, type DraftKind } from "@/lib/draft/build";
+import { type DraftKind } from "@/lib/draft/build";
+import { composeLetter, LETTER_GROUND_HEADINGS, LAWYER_NOTE_ONLY } from "@/lib/letter/compose";
 import type { PathwayEntry } from "@/lib/schemas/corpus";
 import {
   checkTripwire,
@@ -96,6 +97,7 @@ export function RightsSaverClient({
   corpusByEntry?: Record<string, PathwayEntry>;
 }) {
   const t = useTranslations("rights");
+  const tLetter = useTranslations("letter");
   const allEntries = useMemo(() => listDataEntries(), []);
 
   const [step, setStep] = useState<Step>("who");
@@ -281,6 +283,7 @@ export function RightsSaverClient({
               jrGrounds={jrGrounds}
               relatedGrounds={relatedGrounds}
               onToggleGround={toggleGround}
+              tLetter={tLetter}
               faqs={faqsByEntry[entry.id] ?? []}
               corpusEntry={corpusByEntry[entry.id]}
             />
@@ -607,6 +610,7 @@ function WhatStep({
 
 function ResultStep({
   t,
+  tLetter,
   entry,
   jurisdiction,
   decisionDate,
@@ -622,6 +626,7 @@ function ResultStep({
   corpusEntry,
 }: {
   t: ReturnType<typeof useTranslations>;
+  tLetter: ReturnType<typeof useTranslations>;
   entry: DataPathway;
   jurisdiction: Jurisdiction;
   decisionDate: string;
@@ -640,6 +645,10 @@ function ResultStep({
   // `null` means "whichever path comes first for this decision" — resolved once we know it.
   const [applyKind, setApplyKind] = useState<DraftKind | null>(null);
   const [applyCopied, setApplyCopied] = useState(false);
+  // What the person types about their own situation. Held in component state only: it is
+  // never written to storage, never put in the URL, and never sent anywhere. It exists to be
+  // composed into a letter they then send themselves.
+  const [account, setAccount] = useState<Record<string, string>>({});
 
   const trip = checkTripwire({ jurisdiction, flags, entry });
   const stopServices = servicesForStop(trip.stopReasons);
@@ -703,16 +712,39 @@ function ResultStep({
     href: `/learn/${pp.id}`,
   }));
   const activeApply = applyKinds.find((k) => k.id === applyKind) ?? applyKinds[0];
+  // The universal questions, in the order they appear. "Has anything changed?" is merits-only:
+  // a court reviews the decision as it was made, so the question would mislead on that path.
+  const universalQs = [
+    { id: "q-what", label: t("accountQWhat") },
+    { id: "q-story", label: t("accountQStory") },
+    ...(av.mrAvailable ? [{ id: "q-changed", label: t("accountQChanged") }] : []),
+    { id: "q-want", label: t("accountQWant") },
+    { id: "q-attach", label: t("accountQAttach") },
+  ];
+
   const applyDraft =
-    corpusEntry && activeApply ? buildDraft(corpusEntry, activeApply.id) : null;
+    corpusEntry && activeApply
+      ? composeLetter({
+          entry: corpusEntry,
+          kind: activeApply.id,
+          account: { answers: account, groundIds: relatedGrounds },
+          headingFor: (k) => tLetter(k),
+          groundsLead: tLetter("groundsLead"),
+          otherConcerns: tLetter("otherConcerns"),
+          universal: universalQs,
+        })
+      : null;
 
   // What is actually on this page, in the order it appears.
   const contents = [
     { id: "r-analysis", label: t("analysisTitle") },
     ...(av.mrAvailable || av.jrAvailable ? [{ id: "r-learn", label: t("learnTitle") }] : []),
     { id: "r-reasons", label: t("reasonsTitle") },
+    ...((av.mrAvailable || av.jrAvailable) && jrGrounds.length > 0
+      ? [{ id: "r-grounds", label: t("groundsTitle") }]
+      : []),
+    ...(relatedGrounds.length > 0 || applyDraft ? [{ id: "r-account", label: t("accountTitle") }] : []),
     ...(applyDraft ? [{ id: "r-apply", label: t("applyTitle") }] : []),
-    ...(av.jrAvailable && jrGrounds.length > 0 ? [{ id: "r-grounds", label: t("groundsTitle") }] : []),
     ...(faqs.length > 0 ? [{ id: "r-faq", label: t("faqTitle") }] : []),
     { id: "r-handoff", label: t("handoffTitle") },
   ];
@@ -1001,6 +1033,107 @@ function ResultStep({
         </button>
       </section>
 
+      {/* Grounds people raise — in-flow, neutral; selection flows into the hand-off */}
+      {(av.mrAvailable || av.jrAvailable) && jrGrounds.length > 0 && (
+        <section id="r-grounds" data-tour="grounds" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("groundsTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("groundsLead")}</p>
+          <div className="mt-5">
+            <GroundsExplorer
+              grounds={jrGrounds}
+              selectable
+              selected={relatedGrounds}
+              onToggle={onToggleGround}
+              linkBase="/learn/grounds"
+            />
+          </div>
+          <Link href="/learn/grounds" className="link-text mt-5 inline-flex min-h-[44px]">
+            {t("groundsMore")}
+          </Link>
+        </section>
+      )}
+
+      {/* Tell us what happened — the account that makes the letter theirs.
+          Everything here is optional, stays in component state, and is composed into the
+          letter below by a pure function. Nothing is sent: the person sends the letter. */}
+      {applyDraft && (
+        <section id="r-account" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("accountTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("accountLead")}</p>
+          <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-faint">{t("accountPrivacy")}</p>
+
+          {/* The admissions guard. A person writing freely about a Centrelink debt can put
+              something in a letter that counts against them, and nothing else on this page
+              warns them. */}
+          <p className="mt-4 rounded-sticker border-2 border-amber-border bg-amber-bg px-4 py-3 text-[15px] leading-relaxed text-ink-soft">
+            {t("accountAdmitWarn")}
+          </p>
+
+          <div className="mt-5 space-y-5">
+            {universalQs.map((q) => (
+              <label key={q.id} className="block">
+                <span className="mb-1.5 block font-display text-[15.5px] font-extrabold text-ink">
+                  {q.label}
+                </span>
+                <textarea
+                  value={account[q.id] ?? ""}
+                  onChange={(e) => setAccount((a) => ({ ...a, [q.id]: e.target.value }))}
+                  rows={3}
+                  className="input leading-relaxed"
+                />
+              </label>
+            ))}
+
+            {/* One box per ground they marked, with that ground's own lawyer-verified
+                prompts underneath. The nine grounds that carry no letter heading still get a
+                box — what they write goes into the note for a free service. */}
+            {relatedGrounds.map((id) => {
+              const g = jrGrounds.find((x) => x.id === id);
+              if (!g) return null;
+              if (id === "bad-faith") {
+                return (
+                  <p key={id} className="rounded-sticker border-2 border-line bg-cream px-4 py-3 text-[15px] leading-relaxed text-ink-soft">
+                    {t("accountGroundNoteSerious")}
+                  </p>
+                );
+              }
+              const inLetter = Boolean(LETTER_GROUND_HEADINGS[id]) && !LAWYER_NOTE_ONLY.has(id);
+              return (
+                <label key={id} className="block">
+                  <span className="mb-1.5 block font-display text-[15.5px] font-extrabold text-ink">
+                    {t("accountGroundQ", { name: g.plainName })}
+                  </span>
+                  {!inLetter && (
+                    <span className="mb-1.5 block text-[14.5px] leading-snug text-ink-faint">
+                      {t("accountGroundNoteLawyer")}
+                    </span>
+                  )}
+                  {g.elements.length > 0 && (
+                    <span className="mb-1.5 block text-[14.5px] leading-snug text-ink-faint">
+                      {t("accountGroundHint")}
+                      <ul className="mt-1 space-y-0.5">
+                        {g.elements.map((el) => (
+                          <li key={el.id} className="flex gap-2">
+                            <span aria-hidden="true" className="mt-[8px] h-1 w-1 flex-none rounded-full bg-ink-faint" />
+                            <span>{el.layPrompt}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </span>
+                  )}
+                  <textarea
+                    value={account[`g-${id}`] ?? ""}
+                    onChange={(e) => setAccount((a) => ({ ...a, [`g-${id}`]: e.target.value }))}
+                    rows={3}
+                    className="input leading-relaxed"
+                  />
+                </label>
+              );
+            })}
+          </div>
+        </section>
+      )}
+
       {/* Apply for review — one draft per path, chosen by the person. Built on-device from
           the corpus entry (pure function, no request), so the no-network promise holds. */}
       {applyDraft && activeApply && (
@@ -1058,26 +1191,6 @@ function ResultStep({
           >
             {applyCopied ? t("reasonsCopied") : t("reasonsCopy")}
           </button>
-        </section>
-      )}
-
-      {/* Grounds people raise — in-flow, neutral; selection flows into the hand-off */}
-      {av.jrAvailable && jrGrounds.length > 0 && (
-        <section id="r-grounds" data-tour="grounds" className="card">
-          <h2 className="font-display text-[21px] font-black text-ink">{t("groundsTitle")}</h2>
-          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("groundsLead")}</p>
-          <div className="mt-5">
-            <GroundsExplorer
-              grounds={jrGrounds}
-              selectable
-              selected={relatedGrounds}
-              onToggle={onToggleGround}
-              linkBase="/learn/grounds"
-            />
-          </div>
-          <Link href="/learn/grounds" className="link-text mt-5 inline-flex min-h-[44px]">
-            {t("groundsMore")}
-          </Link>
         </section>
       )}
 

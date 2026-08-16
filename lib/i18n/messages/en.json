@@ -254,7 +254,21 @@
     "flagCriminalHint": "Tick this if police, a prosecutor or a court is involved in this decision in any way, including if you have been asked to attend an interview, or you have been told a debt may be referred.",
     "flagDetentionHint": "Tick this if the person this decision is about is being held, or is about to be released.",
     "outOfScope": "We cannot help with visas, criminal matters, child protection, family law, guardianship, or compulsory mental-health treatment. Those need a person — tap Free help at the top.",
-    "tileExamplesList": "Such as {list}"
+    "tileExamplesList": "Such as {list}",
+    "accountTitle": "Tell us what happened",
+    "accountLead": "This is what makes your letter yours. Write as much or as little as you like. Every box is optional.",
+    "accountPrivacy": "This stays on your device while you type. Nothing is sent until you choose to send the letter yourself.",
+    "accountAdmitWarn": "Some things can count against you if you write them down. If you are not sure whether to put something in, leave it out and ask a free service first.",
+    "accountQWhat": "What was the decision about?",
+    "accountQStory": "What happened, in your own words?",
+    "accountQWant": "What do you want to happen now?",
+    "accountQChanged": "Has anything changed since the decision?",
+    "accountQAttach": "What can you send with your letter?",
+    "accountGroundQ": "You marked this: “{name}”. What happened?",
+    "accountGroundHint": "It might help to think about:",
+    "accountGroundNoteLawyer": "This one is not in your letter. It goes in your note for a free legal service.",
+    "accountGroundNoteSerious": "This is a serious thing to say about a person. It is not in your letter or your note. Please raise it with a free legal service.",
+    "groundsLeadMerits": "These are problems people point to. Tick anything that sounds like your situation. What you tick shapes the letter below, and nothing is decided for you."
   },
   "wizard": {
     "title": "Let's work out what you can do",
@@ -494,5 +508,15 @@
     "bodyIos": "To keep this on your home screen: tap the Share button, then choose “Add to Home Screen”.",
     "action": "Add to home screen",
     "dismiss": "No thanks"
+  },
+  "letter": {
+    "groundsLead": "Below are the things I want looked at. I marked these from a list of common problems. I am not a lawyer.",
+    "otherConcerns": "I have other concerns about this decision. I am taking those to a free legal service.",
+    "groundHearing": "I did not get a chance to have my say",
+    "groundRelevant": "I gave them information the decision does not mention",
+    "groundRule": "I was told a rule applied, and nobody asked about my situation",
+    "groundWrongFact": "The decision uses a fact about me that is wrong",
+    "groundOffTopic": "The reasons talk about something I do not think is part of this decision",
+    "groundSigner": "The letter names one person as decision-maker, and a different person signed it"
   }
 }
