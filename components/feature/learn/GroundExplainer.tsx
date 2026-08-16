@@ -44,12 +44,61 @@ export function GroundExplainer({ ground: g, level = "h2" }: { ground: Ground; l
         </ul>
       </div>
 
+      {/* The questions behind the ground. These were written as `elements[].layPrompt`, are
+          lawyer-verified, and were rendered nowhere — the richest lay-facing material in the
+          corpus sat unused. They ask about lived experience, never for a legal conclusion. */}
+      {g.elements.length > 0 && (
+        <div>
+          <h3 className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-red-ink">
+            Questions this ground asks
+          </h3>
+          <ul className="mt-3.5 space-y-3.5">
+            {g.elements.map((e) => (
+              <li key={e.id} className="rounded-card border-2 border-line bg-cream px-4 py-3.5">
+                <p className="font-display text-[12.5px] font-black uppercase tracking-[0.1em] text-ink-faint">
+                  {e.name}
+                </p>
+                <p className="mt-1 text-[16px] leading-[1.6] text-ink">{e.layPrompt}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       {g.whatItIsNot ? (
         <div className="rounded-card border-l-[6px] border-ink bg-paper px-5 py-4 shadow-card">
           <h3 className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-ink">What this does not mean</h3>
           <p className="mt-2 text-[16px] leading-[1.6] text-ink-soft">{g.whatItIsNot}</p>
         </div>
       ) : null}
+
+      {/* The authorities. Rendered last and deliberately quietly: a citation is here to show
+          the ground is real law, not to suggest anyone's own case will go the same way. That
+          sentence is load-bearing — a reader who meets "the decision was quashed" without it
+          can reasonably hear a promise. */}
+      {g.leadingCases.length > 0 && (
+        <div className="border-t-2 border-line pt-6">
+          <h3 className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-red-ink">
+            Where this ground comes from
+          </h3>
+          <p className="mt-1.5 max-w-[60ch] text-[14.5px] leading-[1.55] text-ink-faint">
+            Courts worked this ground out over many years. These are the decisions it rests on.
+            Every case turns on its own facts, so none of them tells you what will happen with
+            your decision.
+          </p>
+          <ul className="mt-4 space-y-4">
+            {g.leadingCases.map((c) => (
+              <li key={c.name}>
+                <p className="font-display text-[15.5px] font-extrabold leading-snug text-ink">
+                  {c.name}
+                  {c.pinpoint ? <span className="font-normal text-ink-faint"> — {c.pinpoint}</span> : null}
+                </p>
+                <p className="mt-1 text-[15.5px] leading-[1.6] text-ink-soft">{c.explains}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       <p className="font-mono text-[13px] tracking-[0.04em] text-ink-faint">
         Mostly used in {g.usedIn.includes("judicial-review") ? "judicial review" : ""}
