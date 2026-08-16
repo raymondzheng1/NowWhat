@@ -3,6 +3,8 @@ import { AskClient } from "@/components/feature/AskClient";
 import { getFaqsForEntry } from "@/lib/faq/load";
 import { listEntries } from "@/lib/corpus/index";
 import { listDataEntries } from "@/lib/data/index";
+import { analysisForCorpusEntry } from "@/lib/analysis/for-corpus";
+import { getProcess } from "@/lib/legal";
 
 export const metadata: Metadata = {
   title: "Ask a question about a government decision",
@@ -25,7 +27,17 @@ function connections() {
     ]),
   );
   const pathwayIds = listDataEntries().map((e) => e.id);
-  return { faqsByEntry, pathwayIds };
+  // The same "what this means for you" the guided flow gives, keyed by decision type. The
+  // decode explains the LETTER; this explains the decision it is about.
+  const merits = getProcess("merits-review")!;
+  const judicial = getProcess("judicial-review")!;
+  const analysisByEntry: Record<string, NonNullable<ReturnType<typeof analysisForCorpusEntry>>> =
+    {};
+  for (const e of listEntries()) {
+    const a = analysisForCorpusEntry(e.id, merits, judicial);
+    if (a) analysisByEntry[e.id] = a;
+  }
+  return { faqsByEntry, pathwayIds, analysisByEntry, merits, judicial };
 }
 
 export default function AskPage() {

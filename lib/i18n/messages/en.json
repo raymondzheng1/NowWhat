@@ -308,7 +308,8 @@
     "options": "What you may be able to do",
     "fallbackNote": "We matched this to a general guide. The details of your situation matter, so it's worth checking with a free service.",
     "notCoveredTitle": "We don't have a guide for this yet",
-    "notCoveredBody": "We couldn't match this letter to confirmed information, so we won't guess. A free legal service can explain it and your options."
+    "notCoveredBody": "We couldn't match this letter to confirmed information, so we won't guess. A free legal service can explain it and your options.",
+    "analysisScopeNote": "This part is about this kind of decision, not about your letter. It is general information."
   },
   "deadline": {
     "title": "The important date",

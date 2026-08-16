@@ -2,7 +2,11 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { AutoTextarea } from "@/components/ui/AutoTextarea";
+import { AnalysisPanel } from "@/components/feature/AnalysisPanel";
+import type { CorpusAnalysis } from "@/lib/analysis/for-corpus";
+import type { Process } from "@/lib/schemas/legal";
 import type { EntrySummary } from "@/lib/corpus/summary";
 import type { Draft } from "@/lib/draft/build";
 import { Crest } from "@/components/ui/Wordmark";
@@ -77,6 +81,10 @@ export interface ResultViewProps {
   faqs?: { slug: string; question: string }[];
   /** True when a procedural pathway exists for this entry, so we can offer the guided flow. */
   hasPathway?: boolean;
+  /** The review analysis for this decision type — same engine and copy as the /start result. */
+  analysis?: CorpusAnalysis;
+  meritsReview?: Process;
+  judicialReview?: Process;
 }
 
 /**
@@ -106,7 +114,11 @@ export function ResultView({
   onBack,
   faqs = [],
   hasPathway = false,
+  analysis,
+  meritsReview,
+  judicialReview,
 }: ResultViewProps) {
+  const tDecode = useTranslations("decode");
   const [kind, setKind] = useState<DraftKind>("reasons-request");
   const [draft, setDraft] = useState<Draft | null>(null);
   const [editing, setEditing] = useState(false);
@@ -294,6 +306,23 @@ export function ResultView({
                 picture. */}
             {/* The answer explains the decision; this is how the person acts on it. Without
                 this the decode/ask result was a dead end — no route to the pathway analysis. */}
+            {/* What this DECISION TYPE means — the same analysis, the same copy and the same
+                verified sources as the guided flow. The decode above explains the letter;
+                this explains the options behind it. Scope note first, because the path
+                cards are about the decision type and not about their particular letter. */}
+            {analysis && meritsReview && judicialReview && (
+              <>
+                <p className="note text-ink-faint">{tDecode("analysisScopeNote")}</p>
+                <AnalysisPanel
+                  plan={analysis.plan}
+                  avenue={analysis.avenue}
+                  meritsReview={meritsReview}
+                  judicialReview={judicialReview}
+                  deadline={analysis.deadline}
+                />
+              </>
+            )}
+
             {hasPathway && (
               <section
                 className="card sticker border-2 border-ink"

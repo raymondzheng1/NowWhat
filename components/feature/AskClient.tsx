@@ -9,6 +9,8 @@ import { ToolTopBar } from "@/components/site/ToolTopBar";
 import { PrivacyNote } from "@/components/ui/PrivacyNote";
 import { Busy } from "@/components/ui/Busy";
 import { ErrorPanel } from "@/components/ui/ErrorPanel";
+import type { CorpusAnalysis } from "@/lib/analysis/for-corpus";
+import type { Process } from "@/lib/schemas/legal";
 import { CATEGORY } from "@/components/feature/categories";
 import { useTour } from "@/components/feature/tour/useTour";
 import { TOUR_ASK } from "@/lib/tour/steps";
@@ -18,9 +20,19 @@ export interface AskClientProps {
   faqsByEntry?: Record<string, { slug: string; question: string }[]>;
   /** Decision types that have a procedural pathway behind them. */
   pathwayIds?: string[];
+  /** The lawyer-verified review analysis per decision type (server-computed). */
+  analysisByEntry?: Record<string, CorpusAnalysis>;
+  merits?: Process;
+  judicial?: Process;
 }
 
-export function AskClient({ faqsByEntry = {}, pathwayIds = [] }: AskClientProps = {}) {
+export function AskClient({
+  faqsByEntry = {},
+  pathwayIds = [],
+  analysisByEntry = {},
+  merits,
+  judicial,
+}: AskClientProps = {}) {
   const t = useTranslations("ask");
   const tc = useTranslations("common");
   const te = useTranslations("errors");
@@ -60,6 +72,9 @@ export function AskClient({ faqsByEntry = {}, pathwayIds = [] }: AskClientProps 
       <ResultView
         faqs={faqsByEntry[result.entry.id] ?? []}
         hasPathway={pathwayIds.includes(result.entry.id)}
+        analysis={analysisByEntry[result.entry.id]}
+        meritsReview={merits}
+        judicialReview={judicial}
         entry={result.entry}
         category={CATEGORY[result.entry.id] ?? result.entry.title}
         answer={result.answer.restated || result.entry.title}
