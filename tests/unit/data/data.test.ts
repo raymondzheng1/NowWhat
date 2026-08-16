@@ -61,3 +61,35 @@ describe("procedural data layer", () => {
     expect(getDataEntry("nope")).toBeUndefined();
   });
 });
+
+/**
+ * An `example` chip is a COVERAGE CLAIM, not decoration: it asserts that the Act this entry
+ * names governs that decision, that the review body is right for it, that the reasons
+ * request addresses the right decision-maker, and that the help services actually help with
+ * it. So it may only appear on a verified, sourced entry — enforced by data-check too, so
+ * the rule survives a reviewer forgetting it.
+ */
+describe("tile examples are a coverage claim", () => {
+  const index = DataIndexSchema.parse(raw);
+
+  it("only verified entries declare examples", () => {
+    for (const e of index.entries) {
+      if (e.examples.length > 0) expect(e.status, e.id).toBe("verified");
+    }
+  });
+
+  it("no example states a time figure", () => {
+    for (const e of index.entries) {
+      for (const x of e.examples) {
+        expect(x, `${e.id}: ${x}`).not.toMatch(/\b\d+\s*(day|days|week|weeks|month|months|year|years)\b/i);
+      }
+    }
+  });
+
+  it("examples never leak into classification — they describe, they do not match", () => {
+    const tokens = new Set(index.classification.map((t) => t.token));
+    for (const e of index.entries) {
+      for (const x of e.examples) expect(tokens.has(x.toLowerCase())).toBe(false);
+    }
+  });
+});

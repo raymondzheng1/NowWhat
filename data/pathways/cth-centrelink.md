@@ -47,6 +47,11 @@ mrCriteria:
   - >-
     VERIFY against the Social Security Act 1991 / Administration Act 1999 — real
     substantive criteria only
+examples:
+  - 'A debt or overpayment notice'
+  - 'A payment cancelled or reduced'
+  - 'A claim that was rejected'
+  - 'JobSeeker, Age Pension or DSP'
 getHelp:
   - service: Economic Justice Australia (welfare rights centres)
     link: 'https://www.ejaustralia.org.au'

@@ -44,6 +44,11 @@ mrCriteria:
   - >-
     VERIFY against the relevant housing policy / enabling Act — real substantive
     criteria only
+examples:
+  - 'A public housing application refused'
+  - 'A transfer or priority access decision'
+  - 'An eligibility decision'
+  - 'A notice about your public housing'
 getHelp:
   - service: Housing Appeals Office
     link: 'https://www.housing.vic.gov.au'

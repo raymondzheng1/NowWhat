@@ -80,6 +80,16 @@ export const DataPathwaySchema = z.object({
   privativeClause: z.boolean().default(false),
   forms: z.array(DataFormSchema).default([]),
   mrCriteria: z.array(z.string()).default([]),
+  /**
+   * Kinds of decision this pathway covers, in the words a person would use. Shown as chips
+   * on the tile so someone recognises their own situation instead of guessing.
+   *
+   * An example is a COVERAGE CLAIM: it says the Act named in this entry's deadlineRule
+   * governs that decision, the review body is right for it, the reasons request addresses
+   * the right decision-maker, and the help services actually help with it. So it may only
+   * appear on a verified, sourced entry, and it may never state a time figure.
+   */
+  examples: z.array(z.string()).max(8).default([]),
   getHelp: z.array(HelpRefSchema).min(1),
   status: z.enum(["seed", "verified"]).default("seed"),
   /** True for the generic per-jurisdiction fallback entries. */

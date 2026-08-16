@@ -55,6 +55,20 @@ function main() {
 
     // THE no-unsourced-deadline invariant: a numeric time figure may only appear on a
     // verified entry with a real (non-VERIFY) source + date.
+    // An example says: the Act this entry names governs that decision, the review body is
+    // right for it, the reasons request addresses the right decision-maker, and the help
+    // services actually help with it. That is a coverage claim, so it needs the same
+    // verification as any other claim — and it may never carry a time figure of its own.
+    const examples = Array.isArray(e.examples) ? e.examples : [];
+    if (examples.length && !(verified && realSource && realDate)) {
+      hard.push(
+        `${id}: declares examples but is not verified+sourced — an example is a coverage claim`,
+      );
+    }
+    for (const x of examples) {
+      if (hasTimeFigure(x)) hard.push(`${id}: example must not state a time figure: "${x}"`);
+    }
+
     if (hasTimeFigure(e.deadlineRule) && !(verified && realSource && realDate)) {
       hard.push(
         `${id}: deadlineRule states a numeric time figure but the entry is not verified+sourced — never show an unsourced deadline number`,

@@ -1,5 +1,5 @@
 {
-  "builtAt": "bf5e8b031846e50a",
+  "builtAt": "9ad88de57e41e8ca",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -52,6 +52,12 @@
       "forms": [],
       "mrCriteria": [
         "VERIFY against the Social Security Act 1991 / Administration Act 1999 — real substantive criteria only"
+      ],
+      "examples": [
+        "A debt or overpayment notice",
+        "A payment cancelled or reduced",
+        "A claim that was rejected",
+        "JobSeeker, Age Pension or DSP"
       ],
       "getHelp": [
         {
@@ -145,7 +151,8 @@
       ],
       "status": "seed",
       "isFallback": true,
-      "body": "SEED generic fallback for a Commonwealth decision that doesn't match a specific entry —\nplaceholders only until lawyer-verified. Always routes to human help; never shows an\nunconfirmed deadline number."
+      "body": "SEED generic fallback for a Commonwealth decision that doesn't match a specific entry —\nplaceholders only until lawyer-verified. Always routes to human help; never shows an\nunconfirmed deadline number.",
+      "examples": []
     },
     {
       "id": "vic-fines",
@@ -197,6 +204,12 @@
       "forms": [],
       "mrCriteria": [
         "VERIFY against the Fines Reform Act 2014 / Infringements Act 2006 — real substantive criteria only"
+      ],
+      "examples": [
+        "A parking or speeding fine",
+        "A toll or public transport fine",
+        "A council fine",
+        "Enforcement, or trouble paying"
       ],
       "getHelp": [
         {
@@ -291,7 +304,8 @@
       ],
       "status": "seed",
       "isFallback": true,
-      "body": "SEED generic fallback for a Victorian decision that doesn't match a specific entry —\nplaceholders only until lawyer-verified. Always routes to human help; never shows an\nunconfirmed deadline number."
+      "body": "SEED generic fallback for a Victorian decision that doesn't match a specific entry —\nplaceholders only until lawyer-verified. Always routes to human help; never shows an\nunconfirmed deadline number.",
+      "examples": []
     },
     {
       "id": "vic-public-housing",
@@ -342,6 +356,12 @@
       "forms": [],
       "mrCriteria": [
         "VERIFY against the relevant housing policy / enabling Act — real substantive criteria only"
+      ],
+      "examples": [
+        "A public housing application refused",
+        "A transfer or priority access decision",
+        "An eligibility decision",
+        "A notice about your public housing"
       ],
       "getHelp": [
         {
@@ -442,7 +462,8 @@
       ],
       "status": "seed",
       "isFallback": false,
-      "body": "SEED procedural entry — every figure is a placeholder until a supervising Australian\nlawyer verifies it and flips `status` to `verified`. Time limits are shown as a rule\nwith a verified-as-at date and an official source link, never as a countdown."
+      "body": "SEED procedural entry — every figure is a placeholder until a supervising Australian\nlawyer verifies it and flips `status` to `verified`. Time limits are shown as a rule\nwith a verified-as-at date and an official source link, never as a countdown.",
+      "examples": []
     }
   ],
   "classification": [

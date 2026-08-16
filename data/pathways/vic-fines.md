@@ -47,6 +47,11 @@ mrCriteria:
   - >-
     VERIFY against the Fines Reform Act 2014 / Infringements Act 2006 — real
     substantive criteria only
+examples:
+  - 'A parking or speeding fine'
+  - 'A toll or public transport fine'
+  - 'A council fine'
+  - 'Enforcement, or trouble paying'
 getHelp:
   - service: Fines Victoria
     link: 'https://www.fines.vic.gov.au'

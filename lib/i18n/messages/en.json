@@ -127,7 +127,7 @@
     "whoCth": "An Australian Government body",
     "whoCthDesc": "Like Centrelink, the tax office, or another federal agency.",
     "whatTitle": "What is the decision about?",
-    "whatHelp": "Pick the closest one. If none fit, choose the last option.",
+    "whatHelp": "Pick the closest one. Each one lists the kinds of decision it covers. If none of these fit, we may not have a guide for your decision — a free service can point you the right way.",
     "dateLabel": "What date is on the decision? (optional)",
     "checkTitle": "Does any of these apply?",
     "checkHelp": "Some of these mean a person should help you directly. Others just mean we will show you how to get help quickly. Leave them blank if none apply.",
@@ -252,7 +252,9 @@
     "stopNotesAttribution": "(Prepared with a free self-help tool, using the answers I gave it. General information only, not legal advice.)",
     "stopNotesDate": "Date on the decision",
     "flagCriminalHint": "Tick this if police, a prosecutor or a court is involved in this decision in any way, including if you have been asked to attend an interview, or you have been told a debt may be referred.",
-    "flagDetentionHint": "Tick this if the person this decision is about is being held, or is about to be released."
+    "flagDetentionHint": "Tick this if the person this decision is about is being held, or is about to be released.",
+    "outOfScope": "We cannot help with visas, criminal matters, child protection, family law, guardianship, or compulsory mental-health treatment. Those need a person — tap Free help at the top.",
+    "tileExamplesList": "Such as {list}"
   },
   "wizard": {
     "title": "Let's work out what you can do",

@@ -28,6 +28,7 @@ function normalise(file, raw, body) {
   e.keywords = asArray(e.keywords);
   e.forms = asArray(e.forms);
   e.mrCriteria = asArray(e.mrCriteria);
+  e.examples = asArray(e.examples);
   e.getHelp = asArray(e.getHelp);
   e.status = e.status ?? "seed";
   e.isFallback = e.isFallback ?? false;

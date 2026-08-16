@@ -93,6 +93,7 @@ export function collectCustomerCopy() {
         if (typeof text === "string" && text.trim()) records.push({ file: rel, where, text });
       };
       add("title", e.title);
+      (e.examples ?? []).forEach((x, i) => add(`examples[${i}]`, x));
       add("deadlineRule", e.deadlineRule);
       add("avenue.noReviewEndpoint", e.avenue?.noReviewEndpoint);
       add("reasonsRequest.how", e.reasonsRequest?.how);

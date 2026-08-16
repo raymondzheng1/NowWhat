@@ -413,6 +413,13 @@ function WhatStep({
       <h1 className="font-display text-[30px] font-black leading-[1.05] text-ink sm:text-[40px]">{t("whatTitle")}</h1>
       <p className="mt-3 max-w-[560px] text-[17px] text-ink-soft">{t("whatHelp")}</p>
 
+      {/* What we cannot cover, BEFORE the person starts choosing. It existed only as
+          checkbox labels further down the page, which is too late to save anyone a wasted
+          journey. */}
+      <p className="mt-4 max-w-[560px] rounded-sticker border-2 border-line bg-cream px-4 py-3 text-[15px] leading-relaxed text-ink-soft">
+        {t("outOfScope")}
+      </p>
+
       <div ref={areaRef} data-tour="area-cards" className="mt-7 grid gap-5 sm:grid-cols-2">
         {areas.map((e, i) => {
           const Glyph = Icon[AREA_ICON[e.id] ?? "Document"];
@@ -431,8 +438,18 @@ function WhatStep({
               <span className="chip" style={{ background: AREA_CHIP[i % AREA_CHIP.length] }}>
                 <Glyph className="h-6 w-6 text-white" strokeWidth={1.9} />
               </span>
-              <span className="min-w-0 flex-1 font-display text-[16.5px] font-extrabold leading-snug text-ink">
-                {e.title}
+              <span className="min-w-0 flex-1">
+                <span className="block font-display text-[16.5px] font-extrabold leading-snug text-ink">
+                  {e.title}
+                </span>
+                {/* Name the situations this guide covers, so people recognise their own
+                    instead of guessing at a category. Inside the button on purpose: a
+                    screen-reader user needs the same cue a sighted user gets. */}
+                {e.examples.length > 0 && (
+                  <span className="mt-1 block text-[14px] leading-snug text-ink-faint">
+                    {t("tileExamplesList", { list: e.examples.slice(0, 4).join(" · ") })}
+                  </span>
+                )}
               </span>
               <span
                 aria-hidden="true"
