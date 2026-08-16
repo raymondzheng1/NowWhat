@@ -23,17 +23,30 @@ export function getLegalCorpus(): LegalIndex {
 }
 
 // ---- Grounds ----
-export function listGrounds(): Ground[] {
-  return getLegalCorpus().grounds;
+
+/**
+ * PUBLICATION GATE. `status: seed` means "drafted, not yet confirmed by a supervising
+ * lawyer" — but it gated nothing: every reader of the corpus returned seed grounds happily,
+ * so a seed ground would have received a public URL, a sitemap entry, Article structured
+ * data, and a tickable checkbox in the /start flow the moment it was built. The status field
+ * was decorative.
+ *
+ * Display paths must go through these. Build scripts, linters and tests that deliberately
+ * need everything pass `includeUnverified`.
+ */
+export function listGrounds(includeUnverified = false): Ground[] {
+  const all = getLegalCorpus().grounds;
+  return includeUnverified ? all : all.filter((g) => g.status === "verified");
 }
 
-export function getGround(id: string): Ground | undefined {
-  return getLegalCorpus().grounds.find((g) => g.id === id);
+/** Returns a seed ground only when explicitly asked — see listGrounds. */
+export function getGround(id: string, includeUnverified = false): Ground | undefined {
+  return listGrounds(includeUnverified).find((g) => g.id === id);
 }
 
 /** Grounds used in a given process (e.g. all judicial-review grounds). */
-export function groundsForProcess(kind: ReviewKind): Ground[] {
-  return getLegalCorpus().grounds.filter((g) => g.usedIn.includes(kind));
+export function groundsForProcess(kind: ReviewKind, includeUnverified = false): Ground[] {
+  return listGrounds(includeUnverified).filter((g) => g.usedIn.includes(kind));
 }
 
 /** True once a ground has at least one verified leading case (v2 readiness check). */

@@ -38,8 +38,8 @@ leadingCases:
   - name: Green v Daniels (1977) 13 ALR 1
     pinpoint: Stephen J at 9-10
     explains: >-
-      A policy cannot override what the Act itself requires — decided on
-      unemployment-benefit rules.
+      A policy cannot override what the Act says. This case was about
+      unemployment benefit rules.
   - name: 'British Oxygen Co Ltd v Board of Trade [1971] AC 610'
     pinpoint: at 625
     explains: >-

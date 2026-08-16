@@ -131,6 +131,11 @@ export function collectCustomerCopy() {
       push(rel, "whatItIsNot", g.whatItIsNot);
       (g.whatRelates ?? []).forEach((s, i) => push(rel, `whatRelates[${i}]`, s));
       (g.elements ?? []).forEach((e, i) => push(rel, `element[${i}].layPrompt`, e.layPrompt));
+      // `test` and the case notes are customer-facing the moment we render them, and both
+      // were invisible to every gate. A case note is the highest-risk string in the product:
+      // it is where "this case means you win" would creep in.
+      push(rel, "test", g.test);
+      (g.leadingCases ?? []).forEach((c, i) => push(rel, `leadingCase[${i}].explains`, c.explains));
     }
   }
 

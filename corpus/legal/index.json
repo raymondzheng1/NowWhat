@@ -1,5 +1,5 @@
 {
-  "builtAt": "f1cb27e0ef87b178",
+  "builtAt": "6b742f3cfc0ee3bc",
   "processes": [
     {
       "id": "judicial-review",
@@ -334,7 +334,7 @@
         {
           "name": "Green v Daniels (1977) 13 ALR 1",
           "pinpoint": "Stephen J at 9-10",
-          "explains": "A policy cannot override what the Act itself requires — decided on unemployment-benefit rules."
+          "explains": "A policy cannot override what the Act says. This case was about unemployment benefit rules."
         },
         {
           "name": "British Oxygen Co Ltd v Board of Trade [1971] AC 610",
@@ -385,17 +385,17 @@
         {
           "name": "Craig v South Australia (1995) 184 CLR 163",
           "pinpoint": "at 179",
-          "explains": "The classic list: identifying the wrong issue, ignoring relevant material, or misunderstanding the power."
+          "explains": "Sets out the classic errors. Asking the wrong question. Ignoring material it had to consider. Misunderstanding the power it was given."
         },
         {
           "name": "Kirk v Industrial Court (NSW) (2010) 239 CLR 531",
           "pinpoint": "at [96]-[100]",
-          "explains": "State Supreme Courts can always review for jurisdictional error — Parliament cannot take that away."
+          "explains": "A State Supreme Court can always check for this kind of error. Parliament cannot take that away."
         },
         {
           "name": "Plaintiff S157/2002 v Commonwealth (2003) 211 CLR 476",
           "pinpoint": "at [76]",
-          "explains": "Even a law saying a decision is final cannot protect a decision affected by jurisdictional error."
+          "explains": "A law can say a decision is final. That still does not protect a decision made outside the power."
         }
       ]
     },
@@ -472,7 +472,7 @@
         {
           "id": "bias",
           "name": "No bias",
-          "layPrompt": "Was there anything suggesting the decision-maker had already made up their mind, or had a personal interest?"
+          "layPrompt": "Did the decision-maker seem to have made up their mind already? Or did they have a personal interest?"
         }
       ],
       "sources": [
@@ -483,7 +483,7 @@
         {
           "name": "Kioa v West (1985) 159 CLR 550",
           "pinpoint": "Brennan J at 629",
-          "explains": "If information that is credible, relevant and significant could count against you, it usually has to be put to you first."
+          "explains": "Some information may count against you. If it is credible and it matters, you usually get to see it first."
         },
         {
           "name": "Ebner v Official Trustee in Bankruptcy (2000) 205 CLR 337",
@@ -575,12 +575,12 @@
         {
           "name": "Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1 KB 223",
           "pinpoint": "at 230",
-          "explains": "The origin of the ground: a decision so unreasonable that no reasonable authority could have made it."
+          "explains": "Where this ground began. A decision can be so unreasonable that no reasonable body could have made it."
         },
         {
           "name": "Minister for Immigration and Citizenship v Li (2013) 249 CLR 332",
           "pinpoint": "at [76]",
-          "explains": "The modern Australian test: a decision needs an evident and intelligible justification."
+          "explains": "The test used in Australia now. A decision needs a reason you can see and follow."
         }
       ]
     }

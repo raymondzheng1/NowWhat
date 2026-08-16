@@ -33,8 +33,8 @@ elements:
   - id: bias
     name: No bias
     layPrompt: >-
-      Was there anything suggesting the decision-maker had already made up their
-      mind, or had a personal interest?
+      Did the decision-maker seem to have made up their mind already? Or did
+      they have a personal interest?
 sources:
   - Victoria Legal Aid — legalaid.vic.gov.au
 status: verified
@@ -42,8 +42,8 @@ leadingCases:
   - name: Kioa v West (1985) 159 CLR 550
     pinpoint: Brennan J at 629
     explains: >-
-      If information that is credible, relevant and significant could count
-      against you, it usually has to be put to you first.
+      Some information may count against you. If it is credible and it
+      matters, you usually get to see it first.
   - name: Ebner v Official Trustee in Bankruptcy (2000) 205 CLR 337
     pinpoint: 'at [6]'
     explains: >-

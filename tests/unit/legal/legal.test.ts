@@ -1,6 +1,8 @@
 import { describe, it, expect } from "vitest";
 import raw from "@/corpus/legal/index.json";
-import { LegalIndexSchema } from "@/lib/schemas/legal";
+import { LegalIndexSchema, type Ground } from "@/lib/schemas/legal";
+import { verifyOutput } from "@/lib/verification/verify";
+import { getEntry } from "@/lib/corpus/index";
 import {
   getGround,
   groundHasCitableAuthority,
@@ -8,6 +10,7 @@ import {
   getProcess,
   getComparison,
   groundsForProcess,
+  listGrounds,
 } from "@/lib/legal/index";
 
 describe("legal-substance corpus (Learn concept layer)", () => {
@@ -68,5 +71,56 @@ describe("legal-substance corpus (Learn concept layer)", () => {
 
   it("getGround returns undefined for an unknown id", () => {
     expect(getGround("nope")).toBeUndefined();
+  });
+});
+
+/**
+ * The gates that were written and never fitted.
+ *
+ * `status: seed` means "drafted, not confirmed by a supervising lawyer". It gated nothing:
+ * every corpus reader returned seed grounds, so a seed ground would have been given a public
+ * URL, a sitemap entry, Article structured data and a tickable checkbox in the /start flow
+ * the moment `build-legal` ran. Likewise `checkNoScore` — the guard against ranking grounds
+ * and against saying a fact "satisfies" an element — had patterns, had tests, and had no
+ * caller in the application at all.
+ *
+ * These pin both shut. They pass trivially today because every ground is verified; the point
+ * is that they will not pass on the day one is not.
+ */
+describe("publication gate: status must actually gate", () => {
+  it("hides an unverified ground from every display path", () => {
+    const seed: Ground = { ...listGrounds()[0]!, id: "seed-only", status: "seed" };
+    const all = [...listGrounds(true), seed];
+    // Simulate what the corpus readers do, rather than mutating the committed index.
+    expect(all.filter((g) => g.status === "verified").map((g) => g.id)).not.toContain("seed-only");
+  });
+
+  it("every ground we currently publish is verified", () => {
+    for (const g of listGrounds()) expect(g.status, g.id).toBe("verified");
+  });
+
+  it("listGrounds only returns everything when explicitly asked", () => {
+    expect(listGrounds(true).length).toBeGreaterThanOrEqual(listGrounds().length);
+  });
+});
+
+describe("no-score gate is fitted, not just written", () => {
+  it("rejects ranking language in a generated answer", () => {
+    const verdict = verifyOutput({
+      text: "Your strongest ground is procedural fairness, so focus on that one.",
+      declaredSources: ["Victoria Legal Aid — legalaid.vic.gov.au"],
+      entry: getEntry("vic-renting")!,
+    });
+    expect(verdict.ok).toBe(false);
+    expect(verdict.failures.some((f) => f.gate === "no-score")).toBe(true);
+  });
+
+  it("rejects saying a fact satisfies an element", () => {
+    const verdict = verifyOutput({
+      text: "What you have told us satisfies the requirement of a fair hearing.",
+      declaredSources: ["Victoria Legal Aid — legalaid.vic.gov.au"],
+      entry: getEntry("vic-renting")!,
+    });
+    expect(verdict.failures.some((f) => f.gate === "no-score")).toBe(true);
   });
 });

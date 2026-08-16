@@ -1,5 +1,5 @@
 import type { PathwayEntry } from "@/lib/schemas/corpus";
-import { checkNoAdvice, checkNoAiMentions } from "@/lib/safety/no-advice";
+import { checkNoAdvice, checkNoAiMentions, checkNoScore } from "@/lib/safety/no-advice";
 import { fkGrade } from "@/lib/text/readability";
 import { READING_GRADE } from "@/lib/config";
 
@@ -196,6 +196,17 @@ export function verifyOutput(input: VerifyInput): VerifyResult {
   const advice = checkNoAdvice(text);
   for (const h of advice.hits) {
     failures.push({ gate: "no-advice", detail: `${h.why}: "${h.match}"` });
+  }
+
+  // 6b. No ranking, no "satisfies an element".
+  //
+  // `checkNoScore` guards the two rules that matter most once the product talks about
+  // grounds — never rank them ("strongest", "focus on", "likely to succeed"), and never say
+  // a fact SATISFIES an element when it can only relate to one. It existed, with patterns
+  // and tests, and had no caller anywhere in the app: the gate was written and never fitted.
+  const score = checkNoScore(text);
+  for (const h of score.hits) {
+    failures.push({ gate: "no-score", detail: `${h.why}: "${h.match}"` });
   }
 
   // 7. No AI mentions.

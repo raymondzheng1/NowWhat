@@ -4,8 +4,12 @@
 
 import { collectCustomerCopy, loadPatterns } from "./lib/copy-surfaces.mjs";
 
-const { advice, prediction } = loadPatterns();
-const rules = [...advice, ...prediction].map((r) => ({
+// `score` bans ranking grounds ("strongest", "focus on", "likely to succeed") and `satisfies`
+// bans saying a fact MEETS an element rather than relating to it. Both were enforced on model
+// output only (checkNoScore), so nothing we authored ourselves had ever been checked for the
+// two rules that matter most once the product starts talking about grounds.
+const { advice, prediction, score, satisfies } = loadPatterns();
+const rules = [...advice, ...prediction, ...(score ?? []), ...(satisfies ?? [])].map((r) => ({
   re: new RegExp(r.pattern, "i"),
   why: r.why,
 }));

@@ -45,13 +45,13 @@ leadingCases:
       KB 223
     pinpoint: at 230
     explains: >-
-      The origin of the ground: a decision so unreasonable that no reasonable
-      authority could have made it.
+      Where this ground began. A decision can be so unreasonable that no
+      reasonable body could have made it.
   - name: Minister for Immigration and Citizenship v Li (2013) 249 CLR 332
     pinpoint: 'at [76]'
     explains: >-
-      The modern Australian test: a decision needs an evident and intelligible
-      justification.
+      The test used in Australia now. A decision needs a reason you can see
+      and follow.
 ---
 
 Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (citations + judgment pinpoints) added and approved by the owner on 2026-07-12. They are not yet rendered in the UI; the v2 elements/cases feature may rely on them.

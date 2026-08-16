@@ -39,11 +39,18 @@ function stripMarkdown(s) {
     .trim();
 }
 
-const records = collectCustomerCopy().filter(
-  (r) =>
-    /plainLanguageExplainer|body|answer|description/.test(r.where) &&
-    stripMarkdown(r.text).length > 120,
-);
+// Case-insensitive, and reaching the prose fields we actually publish. The 120-character
+// floor stays for long-form prose (FK is meaningless on a fragment) but a legal `test` or a
+// case note is short BY DESIGN and is exactly the copy most likely to be unreadable — so
+// those are measured whatever their length.
+const ALWAYS_MEASURE = /test|leadingCase\[\d+\]\.explains|layPrompt/i;
+const records = collectCustomerCopy().filter((r) => {
+  if (ALWAYS_MEASURE.test(r.where)) return stripMarkdown(r.text).length > 40;
+  return (
+    /plainLanguageExplainer|body|answer|description/i.test(r.where) &&
+    stripMarkdown(r.text).length > 120
+  );
+});
 
 const violations = [];
 let worst = { grade: 0, where: "—" };
