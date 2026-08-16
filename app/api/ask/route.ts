@@ -6,6 +6,7 @@ import { precheck } from "@/lib/cost/guard";
 import { retrieveForAsk, buildContext } from "@/lib/retrieval/select";
 import { runAsk } from "@/lib/generation/runner";
 import { isModelConfigured } from "@/lib/generation/anthropic";
+import { sendQaCopy } from "@/lib/email/qa";
 import { getEntry, FALLBACK_ENTRY_ID } from "@/lib/corpus/index";
 import { toEntrySummary } from "@/lib/corpus/summary";
 
@@ -72,6 +73,11 @@ export async function POST(req: NextRequest) {
   }
 
   if (result.status !== "answered" || !result.data) {
+    sendQaCopy("ask", {
+      Question: parsed.data.question,
+      Outcome: `not-covered (${result.reason ?? "unknown"}${result.rejectedGates?.length ? ": " + result.rejectedGates.join(", ") : ""})`,
+      "Matched guide": retrieved.entry.id,
+    });
     return apiJson(
       {
         ok: true,
@@ -84,6 +90,13 @@ export async function POST(req: NextRequest) {
       ctx,
     );
   }
+
+  sendQaCopy("ask", {
+    Question: parsed.data.question,
+    "Matched guide": retrieved.entry.id,
+    Answer: result.data.answer,
+    "Next step": result.data.nextStep,
+  });
 
   return apiJson(
     {

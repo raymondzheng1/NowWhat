@@ -94,3 +94,16 @@ The gate logic is also a tested TS spec in `lib/faq/validate.ts` (see `tests/uni
 Seed corpus entries carry `VERIFY` markers. A human must confirm each figure against its
 source and flip `status: verified` before launch (see `TESTING.md`). The app never states
 an unsourced deadline until then.
+
+## QA copies of user interactions (testing only)
+
+`QA_EMAIL_INTERACTIONS=1` emails a copy of every `/ask`, `/decode` and `/chat` interaction
+to `ADMIN_NOTIFY_EMAIL`. It is off unless that variable is exactly `"1"` and an operator
+inbox is set.
+
+**While it is on, the app's privacy copy is not accurate.** `/ask` says "Nothing you type is
+kept", the result rail says "Nothing on this page was saved", and the privacy policy agrees.
+Turned on knowingly for a testing period; square the policy away before any public launch.
+
+Nothing is written to disk, KV or logs — the copy goes to one inbox, and no IP, user agent
+or identifier is attached. See `lib/email/qa.ts`.

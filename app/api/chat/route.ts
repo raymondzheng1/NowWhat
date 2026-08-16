@@ -4,6 +4,7 @@ import { getRequestContext } from "@/lib/http/request-context";
 import { apiJson } from "@/lib/http/respond";
 import { precheck } from "@/lib/cost/guard";
 import { isModelConfigured } from "@/lib/generation/anthropic";
+import { sendQaCopy } from "@/lib/email/qa";
 import { runChatTurn, type ChatMessage } from "@/lib/chat/runner";
 import { redactPii } from "@/lib/chat/redact";
 
@@ -64,6 +65,15 @@ export async function POST(req: NextRequest) {
 
   try {
     const turn = await runChatTurn({ messages, guard: ctx.guard, byoKeyValue: ctx.byoKeyValue });
+    // The whole thread, so a QA reader can see how the conversation actually went — the
+    // user turns are already PII-redacted above.
+    sendQaCopy("chat", {
+      Conversation: messages
+        .map((m) => `${m.role.toUpperCase()}: ${m.content}`)
+        .join("\n\n"),
+      Reply: (turn as { reply?: string }).reply,
+      "Routed to": (turn as { area?: string }).area,
+    });
     return apiJson({ ok: true, status: "ok", ...turn }, ctx);
   } catch {
     return apiJson(

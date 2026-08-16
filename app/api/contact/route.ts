@@ -13,8 +13,12 @@ const ContactSchema = z.object({
   name: z.string().trim().min(1).max(120),
   email: z.string().trim().email().max(200),
   message: z.string().trim().min(10).max(5000),
-  // Honeypot — real users leave this empty; bots fill it.
-  company: z.string().max(0).optional().or(z.literal("")),
+  // Honeypot. Accepts ANY value: rejecting a non-empty one at the schema level turned a
+  // browser autofill into a 400 that highlighted no field, so a real person read "Please
+  // check what you entered" with nothing to correct. Chrome fills this despite
+  // autoComplete="off" because the old id and label both said "company". The route decides
+  // what to do with it below.
+  company: z.string().max(200).optional(),
 });
 
 const MAX_PER_IP_PER_HOUR = 3; // harness §16.3
@@ -32,8 +36,10 @@ export async function POST(req: NextRequest) {
   }
   const parsed = ContactSchema.safeParse(body);
   if (!parsed.success) return bad();
-  // Honeypot tripped → pretend success, send nothing.
-  if (parsed.data.company) return apiJson({ ok: true }, ctx);
+  // Honeypot tripped. We used to drop the message silently, which meant an autofilled field
+  // threw away a real person's enquiry with no trace. Now it is delivered and FLAGGED, so
+  // nothing is ever lost and the operator can judge for themselves.
+  const suspected = Boolean(parsed.data.company?.trim());
 
   if (!isEmailConfigured()) {
     return apiJson({ ok: false, message: "errors.contactUnavailable" }, ctx, 503);
@@ -58,8 +64,8 @@ export async function POST(req: NextRequest) {
   const result = await sendEmail({
     to,
     replyTo: email,
-    subject: `What Now? — contact form: ${name}`.slice(0, 200),
-    tag: "contact",
+    subject: `${suspected ? "[possible spam] " : ""}What Now? — contact form: ${name}`.slice(0, 200),
+    tag: suspected ? "contact-suspect" : "contact",
     text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
     html: `<h2>New contact-form message</h2><p><strong>Name:</strong> ${escapeHtml(name)}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p><hr/><pre style="white-space:pre-wrap;font-family:inherit">${escapeHtml(message)}</pre>`,
   });

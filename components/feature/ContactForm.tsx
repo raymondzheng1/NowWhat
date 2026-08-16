@@ -141,10 +141,24 @@ export function ContactForm() {
       />
       {errors.message && <p id="c-message-err" className="mt-2 text-sm font-semibold text-danger">{errors.message}</p>}
 
-      {/* Honeypot — visually hidden, off-screen; real users never fill it. */}
+      {/* Honeypot. The id and label used to say "company", which is precisely what Chrome's
+          autofill matches on — so it filled the field for real people and their message was
+          rejected. Neutral naming, plus the opt-out attributes the major password managers
+          honour. A filled value is now flagged rather than fatal (see the route). */}
       <div aria-hidden="true" className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
-        <label htmlFor="c-company">Company</label>
-        <input id="c-company" tabIndex={-1} autoComplete="off" value={company} onChange={(e) => setCompany(e.target.value)} />
+        <label htmlFor="c-ref-2">Reference</label>
+        <input
+          id="c-ref-2"
+          name="c-ref-2"
+          type="text"
+          tabIndex={-1}
+          autoComplete="off"
+          data-lpignore="true"
+          data-1p-ignore="true"
+          data-form-type="other"
+          value={company}
+          onChange={(e) => setCompany(e.target.value)}
+        />
       </div>
 
       <button type="submit" className="btn btn-primary btn-lg mt-6 w-full sm:w-auto" disabled={status === "sending"}>

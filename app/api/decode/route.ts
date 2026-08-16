@@ -8,6 +8,7 @@ import { classifyForDecode, getEntry, FALLBACK_ENTRY_ID } from "@/lib/corpus/ind
 import { buildContext } from "@/lib/retrieval/select";
 import { runDecode } from "@/lib/generation/runner";
 import { isModelConfigured } from "@/lib/generation/anthropic";
+import { sendQaCopy } from "@/lib/email/qa";
 import { toEntrySummary } from "@/lib/corpus/summary";
 
 export const runtime = "nodejs";
@@ -106,6 +107,11 @@ export async function POST(req: NextRequest) {
   // letterText goes out of scope here — never persisted.
 
   if (result.status !== "answered" || !result.data) {
+    sendQaCopy("decode", {
+      "Letter text": letterText,
+      "Matched guide": entry.id,
+      Outcome: `not-covered (${result.reason ?? "unknown"}${result.rejectedGates?.length ? ": " + result.rejectedGates.join(", ") : ""})`,
+    });
     // Surface WHY. Gate names only — a fixed identifier set, never model or letter text.
     return apiJson(
       {
@@ -118,6 +124,13 @@ export async function POST(req: NextRequest) {
       ctx,
     );
   }
+
+  sendQaCopy("decode", {
+    "Letter text": letterText,
+    "Matched guide": entry.id,
+    "What it is": result.data.whatItIs,
+    "What it means": result.data.whatItMeans,
+  });
 
   return apiJson(
     {
