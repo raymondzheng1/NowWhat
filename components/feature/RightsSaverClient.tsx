@@ -7,6 +7,7 @@ import { listDataEntries, getDataEntry } from "@/lib/data";
 import type { DataPathway, Jurisdiction } from "@/lib/schemas/data";
 import type { Process, Ground } from "@/lib/schemas/legal";
 import { avenueView } from "@/lib/triage";
+import { planFor, type PathPlan } from "@/lib/analysis";
 import { deadlineRuleView } from "@/lib/deadline/rule";
 import { reasonsRequestTemplate, REASONS_CLOCK_WARNING } from "@/lib/reasons";
 import { checkTripwire, TRIPWIRE_MESSAGES, type TripwireFlags } from "@/lib/tripwire";
@@ -512,6 +513,7 @@ function ResultStep({
   }
 
   const av = avenueView(entry);
+  const plan = planFor({ avenue: av, meritsReview, judicialReview, jurisdiction });
   const dl = deadlineRuleView(entry);
   const template = reasonsRequestTemplate(entry, {
     about: entry.title.toLowerCase(),
@@ -597,6 +599,111 @@ function ResultStep({
           {t("fallbackNote")}
         </p>
       )}
+
+      {/* ===== The analysis: what this means, and how each path actually works =====
+           Everything substantive is corpus-verified (the question each forum decides, what
+           it can and cannot do). We order the paths — merits review first where it exists,
+           because only a tribunal can substitute a different decision — and describe what
+           each forum weighs. We never rate the person's prospects or tell them what to do. */}
+      <section data-tour="analysis" className="card sticker" style={{ "--rot": "-0.5deg" } as React.CSSProperties}>
+        <h2 className="font-display text-[21px] font-black text-ink">{t("analysisTitle")}</h2>
+        <p className="mt-2.5 text-[16px] leading-relaxed text-ink-soft">{t(plan.leadKey)}</p>
+
+        {plan.paths.length > 0 && (
+          <ol className="mt-5 space-y-4">
+            {plan.paths.map((p: PathPlan) => (
+              <li key={p.id} className="rounded-card border-2 border-line bg-cream p-4 sm:p-5">
+                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                  <span className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-red-ink">
+                    {p.order === 1 ? t("pathOrderFirst") : t("pathOrderNext")}
+                  </span>
+                  <span className="mono text-ink-faint">{t("pathVia", { body: p.body })}</span>
+                </div>
+                <h3 className="mt-1.5 font-display text-[19px] font-black text-ink">
+                  {p.id === "merits-review" ? meritsReview.name : judicialReview.name}
+                </h3>
+
+                {/* The question the forum decides — the foundation the whole path rests on. */}
+                <p className="mt-3 font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-ink-faint">
+                  {t("pathAsks")}
+                </p>
+                <p className="mt-1 font-display text-[18px] font-extrabold italic leading-snug text-ink">
+                  “{p.question}”
+                </p>
+
+                {/* What that means for the material that matters — the strategy. */}
+                <p className="mt-3.5 font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-ink-faint">
+                  {t("pathFocus")}
+                </p>
+                <p className="mt-1 text-[15.5px] leading-relaxed text-ink-soft">{t(p.focusKey)}</p>
+
+                <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <p className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-help-ink">
+                      {t("pathCanDo")}
+                    </p>
+                    <ul className="mt-1.5 space-y-1.5 text-[15px] leading-snug text-ink-soft">
+                      {p.canDo.map((x) => (
+                        <li key={x} className="flex gap-2">
+                          <span aria-hidden="true" className="mt-[8px] h-1.5 w-1.5 flex-none rounded-[2px] bg-help" />
+                          <span>{x}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  {p.cannotDo.length > 0 && (
+                    <div>
+                      <p className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-ink-faint">
+                        {t("pathCannot")}
+                      </p>
+                      <ul className="mt-1.5 space-y-1.5 text-[15px] leading-snug text-ink-soft">
+                        {p.cannotDo.map((x) => (
+                          <li key={x} className="flex gap-2">
+                            <span aria-hidden="true" className="mt-[8px] h-1.5 w-1.5 flex-none rounded-[2px] bg-ink-faint" />
+                            <span>{x}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </li>
+            ))}
+          </ol>
+        )}
+
+        {/* The sequence — what people usually do, in order. */}
+        <div className="mt-6 border-t-2 border-line pt-5">
+          <h3 className="font-display text-[19px] font-black text-ink">{t("stepsTitle")}</h3>
+          <p className="mt-1.5 text-[15.5px] leading-relaxed text-ink-soft">{t("stepsLead")}</p>
+          <ol className="mt-4 space-y-3.5">
+            {[
+              { n: "01", title: t("step1"), body: t("step1Body") },
+              { n: "02", title: t("step2"), body: t("step2Body") },
+              {
+                n: "03",
+                title: t("step3", { body: plan.primary?.body ?? t("helpTitle") }),
+                body: t("step3Body"),
+              },
+              { n: "04", title: t("step4"), body: t("step4Body") },
+            ].map((s) => (
+              <li key={s.n} className="flex gap-3.5">
+                <span
+                  className="chip !h-9 !w-9 !text-[13px]"
+                  style={{ background: "linear-gradient(135deg,#2B8A4B,#308371)" }}
+                  aria-hidden="true"
+                >
+                  {s.n}
+                </span>
+                <div className="min-w-0 flex-1">
+                  <p className="font-display text-[16px] font-extrabold leading-snug text-ink">{s.title}</p>
+                  <p className="mt-0.5 text-[15px] leading-snug text-ink-soft">{s.body}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
 
       {/* Who can review this */}
       <section data-tour="avenue" className="card">

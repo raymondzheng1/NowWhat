@@ -42,7 +42,7 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
   await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
   await expect(page.getByRole("heading", { name: /who can review this/i })).toBeVisible();
   await expect(page.getByText(/time limits:/i)).toBeVisible(); // brief generic note, not a headline
-  await expect(page.getByText(/ask for the reasons/i)).toBeVisible();
+  await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible();
   await expect(page.getByText(/not legal advice/i)).toBeVisible(); // disclaimer
   await expect(page.getByText(/free help/i).first()).toBeVisible();
 
@@ -87,5 +87,5 @@ test("urgent timing does NOT dead-end: the person still gets their options", asy
   // Urgent banner AND the full result.
   await expect(page.getByRole("heading", { name: /call a free service today/i })).toBeVisible({ timeout: 15_000 });
   await expect(page.getByRole("heading", { name: /who can review this/i })).toBeVisible();
-  await expect(page.getByText(/ask for the reasons/i)).toBeVisible();
+  await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible();
 });

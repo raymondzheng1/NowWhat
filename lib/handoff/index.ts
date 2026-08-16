@@ -36,8 +36,14 @@ export function buildHandoff(input: HandoffInput): string {
     `Date of decision: ${dash(input.decisionDate)}`,
     "",
     "POSSIBLE REVIEW PATH (to confirm with a lawyer):",
-    triage.avenue.mrAvailable ? `- Merits review: ${triage.avenue.mrBody}` : "- Merits review: may not be available",
-    triage.avenue.jrAvailable ? `- Judicial review: ${triage.avenue.jrForum}` : "- Judicial review: may not be available",
+    // Each path carries the question that forum decides, so the person (and the service
+    // they hand this to) can see at a glance what each one is actually for.
+    triage.avenue.mrAvailable
+      ? `- Merits review: ${triage.avenue.mrBody} — asks "Is this the correct or preferable decision?" (a tribunal can substitute a new decision)`
+      : "- Merits review: may not be available",
+    triage.avenue.jrAvailable
+      ? `- Judicial review: ${triage.avenue.jrForum} — asks "Was the decision made lawfully?" (a court cannot substitute its own decision)`
+      : "- Judicial review: may not be available",
   ];
   if (triage.avenue.noReviewEndpoint) lines.push(`- Note: ${triage.avenue.noReviewEndpoint}`);
   lines.push(
