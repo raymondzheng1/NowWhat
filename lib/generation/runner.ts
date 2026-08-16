@@ -41,6 +41,16 @@ function tryParse(text: string): unknown | null {
 
 export interface GenerationResult<T> {
   status: "answered" | "not-covered";
+  /**
+   * WHY we ended up with nothing, when we did. A genuine "the corpus does not cover this"
+   * is a completely different event from "we generated an answer and our own gates rejected
+   * it three times", and from the outside they were indistinguishable — which is how a total
+   * model outage hid behind the honest "not covered" screen. Gate NAMES only: they are a
+   * fixed set of identifiers, never the model's text, so nothing about the person's letter
+   * can travel in here.
+   */
+  reason?: "not-in-corpus" | "gates-rejected";
+  rejectedGates?: string[];
   data?: T;
   attempts: number;
   lastFailures?: VerifyFailure[];
@@ -97,14 +107,20 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
     const data = safe.data as T;
 
     const { covered, text, declaredSources } = opts.extract(data);
-    if (!covered) return { status: "not-covered", attempts };
+    if (!covered) return { status: "not-covered", attempts, reason: "not-in-corpus" };
 
     const verdict = verifyOutput({ text, declaredSources, entry: opts.entry });
     if (verdict.ok) return { status: "answered", data, attempts };
     lastFailures = verdict.failures; // diagnostic only — never contains PII
   }
 
-  return { status: "not-covered", attempts, lastFailures };
+  return {
+    status: "not-covered",
+    attempts,
+    lastFailures,
+    reason: lastFailures?.length ? "gates-rejected" : undefined,
+    rejectedGates: lastFailures ? [...new Set(lastFailures.map((f) => f.gate))] : undefined,
+  };
 }
 
 export function runAsk(

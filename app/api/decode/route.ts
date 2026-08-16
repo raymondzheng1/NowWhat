@@ -106,7 +106,17 @@ export async function POST(req: NextRequest) {
   // letterText goes out of scope here — never persisted.
 
   if (result.status !== "answered" || !result.data) {
-    return apiJson({ ok: true, status: "not-covered", getHelp: entry.getHelp }, ctx);
+    // Surface WHY. Gate names only — a fixed identifier set, never model or letter text.
+    return apiJson(
+      {
+        ok: true,
+        status: "not-covered",
+        getHelp: entry.getHelp,
+        why: result.reason,
+        gates: result.rejectedGates,
+      },
+      ctx,
+    );
   }
 
   return apiJson(

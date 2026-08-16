@@ -77,6 +77,9 @@ export async function POST(req: NextRequest) {
         ok: true,
         status: "not-covered",
         getHelp: (retrieved.entry.getHelp.length ? retrieved.entry : fallbackHelp)?.getHelp ?? [],
+        // Gate names only — a fixed identifier set, never model or user text.
+        why: result.reason,
+        gates: result.rejectedGates,
       },
       ctx,
     );
