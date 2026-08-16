@@ -9,7 +9,7 @@ import { Icon } from "@/components/ui/icons";
 /**
  * Site header (sticker album). A 2px ink rule under a row of: the logo sticker (white,
  * rotated -1.2deg, hard shadow) on the left, and the nav on the right, ending in the red
- * "A person, any time" pill — the always-visible route to a human (product constraint #2).
+ * "Talk to a person" pill — the always-visible route to a human (product constraint #2).
  *
  * Mobile: the same logo sticker plus a hamburger that opens a sheet; the human-help pill
  * stays visible at all widths, because it must never be behind a menu.
@@ -52,10 +52,12 @@ export function SiteNav() {
           ))}
           <Link
             href="/help"
-            className="sticker inline-flex min-h-[44px] items-center rounded-pill px-5 py-3 text-cream-onRed"
+            className="sticker inline-flex min-h-[44px] items-center gap-2 rounded-pill px-5 py-3 text-cream-onRed"
             style={{ "--rot": "0.8deg", background: "var(--red-cta)" } as React.CSSProperties}
           >
+            <Icon.People className="h-[18px] w-[18px] shrink-0" strokeWidth={2.2} aria-hidden="true" />
             {t("person")}
+            <span className="sr-only">{t("personSr")}</span>
           </Link>
         </nav>
 
@@ -63,10 +65,12 @@ export function SiteNav() {
         <div className="flex items-center gap-3 md:hidden">
           <Link
             href="/help"
-            className="sticker inline-flex min-h-[44px] items-center rounded-pill px-4 py-3 font-display text-[12px] font-extrabold uppercase tracking-[0.06em] text-cream-onRed"
+            className="sticker inline-flex min-h-[44px] items-center gap-1.5 rounded-pill px-4 py-3 font-display text-[12px] font-extrabold uppercase tracking-[0.06em] text-cream-onRed"
             style={{ "--rot": "0.8deg", background: "var(--red-cta)" } as React.CSSProperties}
           >
+            <Icon.People className="h-4 w-4 shrink-0" strokeWidth={2.2} aria-hidden="true" />
             {t("person")}
+            <span className="sr-only">{t("personSr")}</span>
           </Link>
           <button
             type="button"
@@ -97,7 +101,7 @@ export function SiteNav() {
             ))}
             <li className="py-4">
               <Link href="/help" className="btn btn-primary w-full" onClick={() => setOpen(false)}>
-                {t("help")}
+                {t("person")}
               </Link>
             </li>
           </ul>

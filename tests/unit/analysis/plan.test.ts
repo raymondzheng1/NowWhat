@@ -61,7 +61,7 @@ describe("analysis plan (what this means, and in what order)", () => {
   });
 
   it("every lead/focus key it can emit exists in the message catalog", () => {
-    const r = messages.rights as Record<string, string>;
+    const r = messages.rights as unknown as Record<string, string>;
     for (const key of [
       "analysisLeadBoth",
       "analysisLeadMerits",
@@ -75,7 +75,7 @@ describe("analysis plan (what this means, and in what order)", () => {
   });
 
   it("the strategy copy describes what the FORUM weighs — never what the reader must do", () => {
-    const r = messages.rights as Record<string, string>;
+    const r = messages.rights as unknown as Record<string, string>;
     const prose = `${r.focusMerits} ${r.focusJudicial}`.toLowerCase();
     for (const banned of ["you should", "you must", "we recommend", "your best", "likely to succeed"]) {
       expect(prose, banned).not.toContain(banned);

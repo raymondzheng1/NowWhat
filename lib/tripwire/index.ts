@@ -30,8 +30,7 @@ export type TripwireReason =
   | "migration"
   | "hearing-on-foot"
   | "deadline-imminent-or-passed"
-  | "privative-clause"
-  | "unclassifiable";
+  | "privative-clause";
 
 /** Reasons that are about timing, not scope — urgent, but we still help. */
 export const URGENT_REASONS: readonly TripwireReason[] = [
@@ -62,7 +61,6 @@ export interface TripwireInput {
   flags: TripwireFlags;
   entry?: Pick<DataPathway, "privativeClause"> | null;
   /** The triage couldn't confidently classify the decision. */
-  unclassifiable?: boolean;
 }
 
 export interface TripwireResult {
@@ -88,7 +86,6 @@ export function checkTripwire(input: TripwireInput): TripwireResult {
   if (f.detention) stopReasons.push("detention");
   if (f.migration) stopReasons.push("migration");
   if (input.entry?.privativeClause) stopReasons.push("privative-clause");
-  if (input.unclassifiable) stopReasons.push("unclassifiable");
 
   if (f.deadlineImminentOrPassed) urgentReasons.push("deadline-imminent-or-passed");
   if (f.hearingBooked) urgentReasons.push("hearing-on-foot");
@@ -102,23 +99,23 @@ export function checkTripwire(input: TripwireInput): TripwireResult {
   };
 }
 
-/** Plain-language explanation for each tripwire reason (shown on the route-out screen). */
-export const TRIPWIRE_MESSAGES: Record<TripwireReason, string> = {
-  "family-guardianship-mental-health":
-    "Decisions about child protection, family law, guardianship or compulsory mental-health treatment are sensitive and have their own rules. A lawyer or community legal centre should help with these directly.",
-  criminal:
-    "Anything with a criminal element needs a lawyer. Please get legal help rather than using a self-help tool.",
-  detention: "If someone is in detention, this needs urgent legal help, not a self-help tool.",
-  migration:
-    "Migration and visa decisions are outside what this tool covers. A registered migration agent or lawyer can help.",
-  "hearing-on-foot":
-    "A hearing is already booked or underway, so timing matters a lot. Talk to a free legal service today — your options below will help you explain the matter quickly.",
-  "deadline-imminent-or-passed":
-    "Your time limit is very soon or has passed, so please contact a free legal service today. Missing a limit does not always end things, and your options below will help you have that conversation.",
-  "privative-clause":
-    "This kind of decision has special rules that limit review. A lawyer should look at it directly.",
-  unclassifiable:
-    "We couldn't confidently work out the right path for this decision, so we won't guess. A free legal service can point you the right way.",
+/**
+ * i18n key per tripwire reason.
+ *
+ * These strings used to live here as literals. They are customer prose AND they are
+ * interpolated into a document the person hands to a legal service — but
+ * `scripts/lib/copy-surfaces.mjs` never opens `lib/*.ts`, so the no-advice, no-AI-mention
+ * and reading-level linters could not see a word of them. They now live under
+ * `rights.tripwire.*` where the gates apply.
+ */
+export const TRIPWIRE_MESSAGE_KEYS: Record<TripwireReason, string> = {
+  "family-guardianship-mental-health": "tripwire.familyGuardianshipMentalHealth",
+  criminal: "tripwire.criminal",
+  detention: "tripwire.detention",
+  migration: "tripwire.migration",
+  "hearing-on-foot": "tripwire.hearingOnFoot",
+  "deadline-imminent-or-passed": "tripwire.deadlineImminentOrPassed",
+  "privative-clause": "tripwire.privativeClause",
 };
 
 /**
@@ -206,19 +203,6 @@ export const TRIPWIRE_SERVICES: Record<TripwireReason, HelpService[]> = {
       link: "https://www.fclc.org.au",
     },
   ],
-  unclassifiable: [
-    {
-      service: "Victoria Legal Aid",
-      who: "free legal information and advice — Legal Help line",
-      phone: "1300 792 387",
-      link: "https://www.legalaid.vic.gov.au",
-    },
-    {
-      service: "Community legal centres",
-      who: "free local legal help — find your nearest centre",
-      link: "https://www.fclc.org.au",
-    },
-  ],
   // Timing reasons never reach the stop screen (they are URGENT, not STOP), but the record
   // has to be total; the urgent banner uses the decision's own services.
   "hearing-on-foot": [],
@@ -234,4 +218,40 @@ export function servicesForStop(reasons: TripwireReason[]): HelpService[] {
     }
   }
   return out;
+}
+
+/**
+ * What we can safely offer on a hand-over screen, per stop reason.
+ *
+ * A bare "talk to a free legal service" adds nothing. But we cannot analyse a matter our
+ * corpus does not cover, so everything offered here is about USING the appointment — what
+ * to bring, what to ask, and a note to take along. None of it asserts a legal proposition,
+ * names a forum, or states a time limit, so it is safe for every reason.
+ *
+ * `urgentPerson` marks the cohorts where "today" genuinely matters: someone at risk of
+ * being charged or already held, and child-protection or compulsory-treatment matters,
+ * which are routinely listed within days.
+ *
+ * NOTE the deliberate absence: no reason receives a draft letter. A written statement to a
+ * child-protection department, a treating authority or a prosecuting agency is evidence in
+ * a forum none of our knowledge sources covers. Whether that may ever change for family
+ * matters is a legal call, not an engineering one.
+ */
+export interface StopCapabilities {
+  urgentPerson: boolean;
+}
+
+const STOP_CAPABILITIES: Record<TripwireReason, StopCapabilities> = {
+  "family-guardianship-mental-health": { urgentPerson: true },
+  criminal: { urgentPerson: true },
+  detention: { urgentPerson: true },
+  migration: { urgentPerson: false },
+  "privative-clause": { urgentPerson: false },
+  "hearing-on-foot": { urgentPerson: false },
+  "deadline-imminent-or-passed": { urgentPerson: false },
+};
+
+/** Most-restrictive-wins across every reason that fired. */
+export function capabilitiesForStop(reasons: TripwireReason[]): StopCapabilities {
+  return { urgentPerson: reasons.some((r) => STOP_CAPABILITIES[r]?.urgentPerson) };
 }

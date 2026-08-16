@@ -12,7 +12,13 @@ import { deadlineRuleView } from "@/lib/deadline/rule";
 import { reasonsRequestTemplate, REASONS_CLOCK_WARNING } from "@/lib/reasons";
 import { buildDraft, type DraftKind } from "@/lib/draft/build";
 import type { PathwayEntry } from "@/lib/schemas/corpus";
-import { checkTripwire, servicesForStop, TRIPWIRE_MESSAGES, type TripwireFlags } from "@/lib/tripwire";
+import {
+  checkTripwire,
+  servicesForStop,
+  capabilitiesForStop,
+  TRIPWIRE_MESSAGE_KEYS,
+  type TripwireFlags,
+} from "@/lib/tripwire";
 import { buildHandoff } from "@/lib/handoff";
 import { Disclaimer } from "@/components/ui/Disclaimer";
 import { AutoTextarea } from "@/components/ui/AutoTextarea";
@@ -61,8 +67,8 @@ const FLAG_KEYS: { key: keyof TripwireFlags; label: string; hint?: string }[] = 
   // DECISION is one of these", not "my life involves one of these", or the Centrelink,
   // housing and fines users this service exists for get handed away.
   { key: "family", label: "flagFamily", hint: "flagFamilyHint" },
-  { key: "criminal", label: "flagCriminal" },
-  { key: "detention", label: "flagDetention" },
+  { key: "criminal", label: "flagCriminal", hint: "flagCriminalHint" },
+  { key: "detention", label: "flagDetention", hint: "flagDetentionHint" },
   { key: "migration", label: "flagMigration" },
   { key: "hearingBooked", label: "flagHearing" },
   { key: "deadlineImminentOrPassed", label: "flagDeadline" },
@@ -571,6 +577,38 @@ function ResultStep({
 
   const trip = checkTripwire({ jurisdiction, flags, entry });
   const stopServices = servicesForStop(trip.stopReasons);
+  const caps = capabilitiesForStop(trip.stopReasons);
+
+  /**
+   * A note to take to the service. It records WHAT THE PERSON TICKED, in the words they
+   * were shown — not our explanation of why we stopped, which would read in a lawyer's
+   * hands as the person's own account of their matter. Built and saved on the device.
+   */
+  function downloadStopNotes() {
+    const ticked = FLAG_KEYS.filter((f) => flags[f.key]).map((f) => `- ${t(f.label)}`);
+    const text = [
+      t("stopNotesHeading"),
+      t("stopNotesAttribution"),
+      "",
+      `${t("stopNotesArea")}: ${entry.title}`,
+      `${t("stopNotesDate")}: ${decisionDate || t("stopNotesBlank")}`,
+      "",
+      `${t("stopNotesTicked")}:`,
+      ...(ticked.length ? ticked : [`- ${t("stopNotesBlank")}`]),
+      "",
+      `${t("stopPrepTitle")}:`,
+      ...[1, 2, 3, 4, 5, 6].map((n) => `- ${t(`stopPrep${n}`)}`),
+      "",
+      `${t("stopAskTitle")}:`,
+      ...[1, 2, 3, 4, 5].map((n) => `- ${t(`stopAsk${n}`)}`),
+    ].join("\n");
+    const url = URL.createObjectURL(new Blob([text], { type: "text/plain;charset=utf-8" }));
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = t("stopNotesFile");
+    a.click();
+    URL.revokeObjectURL(url);
+  }
 
   // --- Tripwire: stop and route to a person (no builder output) ---
   if (trip.stop) {
@@ -591,6 +629,22 @@ function ResultStep({
                 {t("routeTitle")}
               </h1>
               <p className="mt-2 text-[16px] leading-relaxed text-help-ink">{t("routeBody")}</p>
+              {/* The number, first. This is the highest-stakes screen in the product: the
+                  route to a human must be the first thing a thumb can reach, not two
+                  screens down. */}
+              {stopServices[0]?.phone && (
+                <div className="mt-4">
+                  <CallButton phone={stopServices[0].phone} label={stopServices[0].service} />
+                  <p className="mt-1.5 text-[14px] leading-snug text-help-ink">
+                    {stopServices[0].service}
+                  </p>
+                </div>
+              )}
+              {caps.urgentPerson && (
+                <p className="mt-3 text-[15.5px] font-medium leading-snug text-help-ink">
+                  {t("stopCallNowNote")}
+                </p>
+              )}
             </div>
           </div>
           <ul className="mt-4 space-y-2 text-[15.5px] leading-snug text-help-ink">
@@ -599,7 +653,7 @@ function ResultStep({
             {trip.stopReasons.map((r) => (
               <li key={r} className="flex gap-2.5">
                 <span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 flex-none rounded-[2px] bg-help" />
-                <span>{TRIPWIRE_MESSAGES[r]}</span>
+                <span>{t(TRIPWIRE_MESSAGE_KEYS[r])}</span>
               </li>
             ))}
           </ul>
@@ -608,6 +662,43 @@ function ResultStep({
             criminal duty lawyer, not the fines office. The decision-area services stay
             below as a secondary list, never the primary answer. */}
         <GetHelp services={stopServices} title={t("routeHelpTitle")} />
+        {/* The value we CAN add when we cannot analyse the matter.
+            None of this asserts a legal proposition, names a forum, or states a time limit
+            — it is about making the appointment count. That is why it is safe for every
+            stop reason, including the most serious. */}
+        <section className="card">
+          <p className="text-[16px] font-medium leading-relaxed text-ink">{t("stopStillHelpful")}</p>
+
+          <h2 className="mt-5 font-display text-[21px] font-black text-ink">{t("stopPrepTitle")}</h2>
+          <p className="mt-1.5 text-[15.5px] leading-relaxed text-ink-soft">{t("stopPrepLead")}</p>
+          <ul className="mt-3.5 space-y-2.5">
+            {[1, 2, 3, 4, 5, 6].map((n) => (
+              <li key={n} className="flex gap-2.5 text-[15.5px] leading-snug text-ink">
+                <span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 flex-none rounded-[2px] bg-ink" />
+                <span>{t(`stopPrep${n}`)}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-3 text-[15px] leading-relaxed text-ink-soft">{t("stopPrepNote")}</p>
+
+          <h2 className="mt-7 font-display text-[21px] font-black text-ink">{t("stopAskTitle")}</h2>
+          <p className="mt-1.5 text-[15.5px] leading-relaxed text-ink-soft">{t("stopAskLead")}</p>
+          <ul className="mt-3.5 space-y-2.5">
+            {[1, 2, 3, 4, 5].map((n) => (
+              <li key={n} className="flex gap-2.5 text-[15.5px] leading-snug text-ink">
+                <span aria-hidden="true" className="mt-[3px] flex-none font-display font-black text-red-ink">?</span>
+                <span>{t(`stopAsk${n}`)}</span>
+              </li>
+            ))}
+          </ul>
+
+          <h2 className="mt-7 font-display text-[21px] font-black text-ink">{t("stopNotesTitle")}</h2>
+          <p className="mt-1.5 text-[15.5px] leading-relaxed text-ink-soft">{t("stopNotesLead")}</p>
+          <button type="button" onClick={downloadStopNotes} className="btn btn-secondary mt-4">
+            {t("stopNotesDownload")}
+          </button>
+        </section>
+
         <details className="card">
           <summary className="cursor-pointer py-2 font-display text-[16px] font-extrabold text-ink">
             {t("routeAlsoTitle")}
@@ -741,7 +832,7 @@ function ResultStep({
                 {trip.urgentReasons.map((r) => (
                   <li key={r} className="flex gap-2.5">
                     <span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 flex-none rounded-[2px] bg-amber-border" />
-                    <span>{TRIPWIRE_MESSAGES[r]}</span>
+                    <span>{t(TRIPWIRE_MESSAGE_KEYS[r])}</span>
                   </li>
                 ))}
               </ul>

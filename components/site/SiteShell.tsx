@@ -9,7 +9,7 @@ import { ChatLauncher } from "@/components/site/ChatLauncher";
 /**
  * Site shell (sticker album). Composes the persistent chrome around the page:
  *  - content/marketing pages: the sticker header (logo + nav + the always-visible
- *    "A person, any time" pill), the footer, and the persistent chat launcher.
+ *    "Talk to a person" pill), the footer, and the persistent chat launcher.
  *  - focused tool surfaces (/start, /ask, /decode, /chat): no marketing chrome and no
  *    launcher — those pages bring their own minimal header so the task stays calm.
  */

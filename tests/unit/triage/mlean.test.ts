@@ -3,7 +3,13 @@ import { triage, avenueView } from "@/lib/triage";
 import { listDataEntries } from "@/lib/data";
 import { deadlineRuleView } from "@/lib/deadline/rule";
 import { reasonsView, reasonsRequestTemplate, REASONS_CLOCK_WARNING } from "@/lib/reasons";
-import { checkTripwire, TRIPWIRE_MESSAGES, URGENT_REASONS } from "@/lib/tripwire";
+import {
+  checkTripwire,
+  capabilitiesForStop,
+  TRIPWIRE_MESSAGE_KEYS,
+  URGENT_REASONS,
+} from "@/lib/tripwire";
+import messages from "@/lib/i18n/messages/en.json";
 import { buildHandoff } from "@/lib/handoff";
 
 describe("M-Lean triage (deterministic Rights Saver)", () => {
@@ -84,7 +90,6 @@ describe("tripwire — two tiers: STOP (out of scope) vs URGENT (timing)", () =>
       expect(r.stop, JSON.stringify(flags)).toBe(true);
     }
     expect(checkTripwire({ jurisdiction: "Vic", flags: {}, entry: { privativeClause: true } }).stop).toBe(true);
-    expect(checkTripwire({ jurisdiction: "Vic", flags: {}, unclassifiable: true }).stop).toBe(true);
   });
 
   it("a family/guardianship/mental-health DECISION still routes to a person", () => {
@@ -122,10 +127,30 @@ describe("tripwire — two tiers: STOP (out of scope) vs URGENT (timing)", () =>
     expect(r.reasons).toEqual([]);
   });
 
-  it("every urgent reason explains what to do AND that options follow", () => {
+  it("every urgent reason tells the person to act today", () => {
+    const tw = messages.rights.tripwire as Record<string, string>;
     for (const r of URGENT_REASONS) {
-      expect(TRIPWIRE_MESSAGES[r].toLowerCase()).toMatch(/today|options below/);
+      const key = TRIPWIRE_MESSAGE_KEYS[r].split(".")[1]!;
+      expect(tw[key]!.toLowerCase()).toMatch(/today/);
     }
+  });
+
+  it("every tripwire reason resolves to a real message", () => {
+    const tw = messages.rights.tripwire as Record<string, string>;
+    for (const key of Object.values(TRIPWIRE_MESSAGE_KEYS)) {
+      expect(tw[key.split(".")[1]!], key).toBeTruthy();
+    }
+  });
+
+  it("no stop reason offers a draft letter; the serious cohorts are marked urgent", () => {
+    // Writing unsupervised to a child-protection department, a treating authority or a
+    // prosecuting agency creates evidence in forums none of our sources cover.
+    expect(capabilitiesForStop(["criminal"]).urgentPerson).toBe(true);
+    expect(capabilitiesForStop(["family-guardianship-mental-health"]).urgentPerson).toBe(true);
+    expect(capabilitiesForStop(["detention"]).urgentPerson).toBe(true);
+    expect(capabilitiesForStop(["migration"]).urgentPerson).toBe(false);
+    // Most-restrictive wins across a mixed set.
+    expect(capabilitiesForStop(["migration", "criminal"]).urgentPerson).toBe(true);
   });
 });
 
