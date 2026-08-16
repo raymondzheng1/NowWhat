@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { planFor } from "@/lib/analysis";
 import { getProcess } from "@/lib/legal";
 import { triage, avenueView } from "@/lib/triage";
+import { getDataEntry, listDataEntries } from "@/lib/data";
 import messages from "@/lib/i18n/messages/en.json";
 
 const merits = getProcess("merits-review")!;
@@ -82,5 +83,57 @@ describe("analysis plan (what this means, and in what order)", () => {
     // Each names the test the forum applies.
     expect(r.focusMerits!.toLowerCase()).toContain("correct or preferable");
     expect(r.focusJudicial!.toLowerCase()).toContain("how the decision was made");
+  });
+});
+
+/**
+ * Which forum a person is sent to is decision-specific, and naming the wrong one is the
+ * most damaging error this product can make. The data layer is the lawyer-verified source
+ * per decision type; the legal corpus only knows the GENERAL body per jurisdiction.
+ *
+ * Regression: preferring the corpus unconditionally meant the lawyer's value was never
+ * reached, so Victorian fines and public housing both rendered "VCAT" — the wrong forum for
+ * fines, and it silently dropped the free Housing Appeals Office step for housing.
+ */
+describe("the merits-review body is the one the lawyer verified for THAT decision", () => {
+  function meritsBody(id: string): string | undefined {
+    const e = getDataEntry(id)!;
+    return planFor({
+      avenue: avenueView(e),
+      meritsReview: getProcess("merits-review")!,
+      judicialReview: getProcess("judicial-review")!,
+      jurisdiction: e.jurisdiction,
+    }).paths.find((p) => p.id === "merits-review")?.body;
+  }
+
+  it("Victorian fines go to internal review then the Magistrates' Court, NOT VCAT", () => {
+    const body = meritsBody("vic-fines");
+    expect(body).toBe("internal review then Magistrates' Court");
+    expect(body).not.toMatch(/VCAT/i);
+  });
+
+  it("public housing keeps the Housing Appeals Office step", () => {
+    expect(meritsBody("vic-public-housing")).toMatch(/Housing Appeals Office/i);
+  });
+
+  it("a bare acronym is expanded from the corpus, not shown as a code", () => {
+    expect(meritsBody("cth-centrelink")).toBe("The Administrative Review Tribunal (ART)");
+    expect(meritsBody("vic-renting")).toMatch(/^VCAT \(/);
+  });
+
+  it("no entry ever renders an internal judicial-review code", () => {
+    for (const e of listDataEntries()) {
+      const plan = planFor({
+        avenue: avenueView(e),
+        meritsReview: getProcess("merits-review")!,
+        judicialReview: getProcess("judicial-review")!,
+        jurisdiction: e.jurisdiction,
+      });
+      for (const p of plan.paths) {
+        // The codes themselves — not any slash: "The Federal Court / Federal Circuit and
+        // Family Court" is the corpus' real name for the forum.
+        expect(p.body).not.toMatch(/ADJR|SCV-O56/);
+      }
+    }
   });
 });

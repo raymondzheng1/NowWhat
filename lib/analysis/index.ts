@@ -52,14 +52,33 @@ export interface ResultPlan {
 }
 
 /**
- * The name to show for the forum. The procedural data layer stores short internal codes
- * for the judicial-review forum ("ADJR/FederalCourt", "SCV-O56"), which must never reach a
- * reader. The legal corpus already holds the proper name for each jurisdiction, so prefer
- * that and fall back to the data-layer value only if there is no match.
+ * Values in the data layer that are NOT a readable forum name: internal routing codes, and
+ * bare acronyms that read better as the corpus' full title. Everything else in that field
+ * is the supervising lawyer's own decision-specific wording and must be shown verbatim.
  */
-function forumName(p: Process, jurisdiction: Jurisdiction | undefined, fallback: string): string {
-  const body = p.bodies.find((b) => b.jurisdiction === jurisdiction);
-  return body?.name ?? fallback;
+const NOT_A_FORUM_NAME = new Set(["ADJR/FederalCourt", "SCV-O56", "ART", "VCAT"]);
+
+/**
+ * The name to show for the forum.
+ *
+ * This is decision-specific and getting it wrong sends someone to the wrong place, so the
+ * order matters. The data layer is the LAWYER-VERIFIED, per-decision source: for Victorian
+ * fines the reviewing body is "internal review then Magistrates' Court", and for public
+ * housing it is "Housing Appeals Office, then VCAT where applicable". Those must win.
+ *
+ * The legal corpus holds only the GENERAL body for each jurisdiction (VCAT / ART), which is
+ * right when the data layer offers nothing readable — an internal judicial-review code, or
+ * a bare acronym left behind after `cleanForDisplay` truncates at the first bracket.
+ *
+ * An earlier version preferred the corpus unconditionally. Because the corpus has a body for
+ * every jurisdiction, the lawyer's value was never reached, and fines and public-housing
+ * results both named VCAT — the wrong forum for fines, and silently dropping the free
+ * Housing Appeals Office step for housing.
+ */
+function forumName(p: Process, jurisdiction: Jurisdiction | undefined, dataValue: string): string {
+  const v = dataValue.trim();
+  if (v && !NOT_A_FORUM_NAME.has(v)) return v;
+  return p.bodies.find((b) => b.jurisdiction === jurisdiction)?.name ?? v;
 }
 
 /**
