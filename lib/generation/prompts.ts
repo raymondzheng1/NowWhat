@@ -1,10 +1,12 @@
+import { CONNECTIVES } from "@/lib/verification/own-words";
+
 /**
  * Generation prompts. The STABLE system prompt (method + hard-no rules) is cacheable
  * (lib/generation/anthropic.ts). Method comes from KNOWLEDGE/answer-structures.md;
  * legal substance comes ONLY from the corpus context passed in the user message.
  */
 
-export type Task = "ask" | "decode";
+export type Task = "ask" | "decode" | "letter";
 
 const HARD_NO = `
 ABSOLUTE RULES (a person in a vulnerable situation depends on this being safe):
@@ -44,9 +46,109 @@ Return JSON:
 }
 `.trim();
 
+
+/**
+ * The letter task is NOT a writing task, and the prompt says so in its first line. The model
+ * chooses which of the person's own words go under which heading; every sentence is checked
+ * against its own quote by machine, and a point that fails is dropped rather than repaired.
+ *
+ * CONNECTIVES is interpolated rather than restated, so the prompt and the gate cannot drift.
+ */
+const LETTER_SYSTEM = `
+You help a person put THEIR OWN WORDS into a letter about a government decision.
+You are not writing the letter. You are choosing which of their words go where.
+
+Everything you produce is sent to a government office over that person's name. If a review
+officer asks them "what makes you say that?", they must be able to answer from memory. They
+cannot defend a sentence they did not write. One invented detail can cost them belief on the
+parts that were true. That is the whole reason for the rules below.
+
+WHAT YOU RETURN
+For each point they marked, zero or more items. Each item is two things:
+  "quote"     - their own words, copied EXACTLY and CONTINUOUSLY from their account,
+                character for character. One continuous run. Never two parts joined.
+                Never corrected. Never tidied.
+  "sentences" - one to three short sentences in the first person, made ONLY from the words
+                inside that quote, ready to sit under that heading.
+The quote is your proof. Every sentence is checked against its own quote by machine.
+
+THE ONE RULE THAT MATTERS
+You may DELETE words from the quote. You may REORDER them. You may SPLIT it into short
+sentences. You may fix capital letters and full stops. You may NOT ADD.
+
+Adding means any fact, name, place, date, number, reason, feeling or detail that is not
+already inside that quote. Do not sharpen it. Do not fill a gap. Do not make it read better.
+Do not make a number more exact. If they wrote "a couple of weeks", write "a couple of
+weeks". If a detail would help their letter and they did not write it, leave it out.
+
+WORDS YOU MAY ADD
+Only these joining words, and nothing else:
+${[...CONNECTIVES].join(", ")}
+
+Every other word must be inside that point's own quote. This is checked by machine. One word
+they did not write and the whole point is thrown away, and they are left with less.
+
+Notice what is NOT on that list. There is no "should", "must", "would", "could", "may",
+"might", "will" or "can". Those turn what happened into what ought to have happened, and that
+is not your job. There is no "because", "therefore" or "so". Why something happened is a
+guess. What happened is a fact.
+
+KEEP THEIR DOUBT
+If the quote holds a doubt, the sentences must hold the same doubt. "I think", "maybe",
+"around", "I can't remember", "they told me" - these are not padding. They are what makes the
+sentence safe to stand behind. Never drop one. A sentence that sounds more certain than what
+they wrote is an invention, even when every word is theirs.
+
+WHAT HAPPENED, NOT WHAT IT MEANS
+The heading already carries the point. Your sentences carry only the facts under it.
+Write what the person saw, heard, did, sent, or was told. Never write what it proves, what
+rule was broken, what anyone ought to have done, or that anything was unfair, unlawful,
+invalid or unreasonable. Never name a legal test. Never name a court case.
+
+  They wrote: "I sent my doctors letter to Centrelink on 3 March. The debt notice does not
+  mention it anywhere."
+  WRONG: "Centrelink failed to consider relevant medical evidence."
+  RIGHT: "I sent my doctors letter on 3 March." / "The debt notice does not mention it."
+
+  They wrote: "The agent told me its our policy for all late rent. Nobody asked me why the
+  rent was late."
+  WRONG: "The agent applied a blanket policy and should have considered my circumstances."
+  RIGHT: "The agent told me it is our policy for all late rent." / "Nobody asked me why the
+  rent was late."
+
+Never use these words, even if the person used them first: unfair, unreasonable, unlawful,
+invalid, breach, denied, entitled, duty, failed to, should have, ought, required to, bias,
+natural justice, procedural fairness, no evidence.
+
+KEEP SENTENCES SHORT - under 15 words. If a clause will not fit, split it or drop the point.
+Never compress it: compression is where invention starts.
+
+If nothing in their account belongs under a point, return no items for that point. That is a
+correct answer, not a failure.
+
+Output MUST be a single JSON object and nothing else - no prose, no code fences.
+`.trim();
+
+const LETTER_SHAPE = `
+Return JSON:
+{
+  "points": [
+    {
+      "groundId": string,        // exactly as given in THE POINTS THEY MARKED
+      "items": [
+        { "quote": string, "sentences": string[] }
+      ]
+    }
+  ]
+}
+`.trim();
+
 export function systemPrompt(task: Task): string {
   const role =
     "You help ordinary people understand letters and decisions from government, in plain language. You are calm, respectful and non-judgemental.";
+  // The letter task is not a writing task, so it gets neither the explainer role nor the
+  // answer-shaped HARD_NO block — it has its own, stricter set.
+  if (task === "letter") return `${LETTER_SYSTEM}\n\n${LETTER_SHAPE}`;
   const shape = task === "ask" ? ASK_SHAPE : DECODE_SHAPE;
   return `${role}\n\n${HARD_NO}\n\n${shape}`;
 }
@@ -63,7 +165,7 @@ export function userPrompt(
    */
   retryHint?: string,
 ): string {
-  const label = task === "ask" ? "QUESTION" : "LETTER TEXT";
+  const label = task === "ask" ? "QUESTION" : task === "letter" ? "THEIR ACCOUNT" : "LETTER TEXT";
   return [
     ...(retryHint ? [`IMPORTANT — your previous attempt was rejected: ${retryHint}`, ""] : []),
     "CORPUS CONTEXT (the only facts you may use):",

@@ -649,6 +649,14 @@ function ResultStep({
   // never written to storage, never put in the URL, and never sent anywhere. It exists to be
   // composed into a letter they then send themselves.
   const [account, setAccount] = useState<Record<string, string>>({});
+  // Lines the model selected FROM the person's own words, and which of them they have ticked.
+  // Only ticked lines reach the letter, so nothing is ever sent that they have not read.
+  const [picked, setPicked] = useState<
+    { groundId: string; sentences: { text: string; sensitive: string[] }[] }[] | null
+  >(null);
+  const [chosen, setChosen] = useState<Set<string>>(new Set());
+  const [letterBusy, setLetterBusy] = useState(false);
+  const [letterMsg, setLetterMsg] = useState<string | null>(null);
 
   const trip = checkTripwire({ jurisdiction, flags, entry });
   const stopServices = servicesForStop(trip.stopReasons);
@@ -722,7 +730,23 @@ function ResultStep({
       ? composeLetter({
           entry: corpusEntry,
           kind: activeApply.id,
-          account: { answers: account, groundIds: relatedGrounds },
+          account: {
+            answers: {
+              ...account,
+              // Ticked lines become the text under each heading. Untouched if they never
+              // pressed the button, so the deterministic letter is unchanged.
+              ...Object.fromEntries(
+                (picked ?? []).map((p) => [
+                  `g-${p.groundId}`,
+                  p.sentences
+                    .filter((x) => chosen.has(`${p.groundId}::${x.text}`))
+                    .map((x) => x.text)
+                    .join(" "),
+                ]),
+              ),
+            },
+            groundIds: relatedGrounds,
+          },
           headingFor: (k) => tLetter(k),
           groundsLead: tLetter("groundsLead"),
           otherConcerns: tLetter("otherConcerns"),
@@ -1106,6 +1130,107 @@ function ResultStep({
                   );
                 })}
               </ul>
+            </div>
+          )}
+
+          {/* The one action on /start that sends anything. Labelled so, next to the button,
+              because every other word on this page promises the opposite. */}
+          <div className="mt-6 border-t-2 border-line pt-5">
+            <p className="text-[15px] leading-relaxed text-ink-soft">{t("letterSendNote")}</p>
+            <button
+              type="button"
+              disabled={letterBusy || (account["q-story"] ?? "").trim().length < 20}
+              onClick={async () => {
+                setLetterBusy(true);
+                setLetterMsg(null);
+                try {
+                  const res = await fetch("/api/letter", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    cache: "no-store",
+                    body: JSON.stringify({
+                      entryId: entry.id,
+                      account: account["q-story"] ?? "",
+                      groundIds: relatedGrounds,
+                    }),
+                  });
+                  const data = await res.json();
+                  if (data.status === "ready") {
+                    setPicked(data.points);
+                    setChosen(new Set());
+                  } else if (data.status === "third-party") setLetterMsg(t("letterThirdParty"));
+                  else if (data.status === "nothing-usable") setLetterMsg(t("letterNothing"));
+                  else setLetterMsg(t("letterUnavailable"));
+                } catch {
+                  setLetterMsg(t("letterUnavailable"));
+                } finally {
+                  setLetterBusy(false);
+                }
+              }}
+              className="btn btn-primary mt-3.5 disabled:opacity-60"
+            >
+              {letterBusy ? t("letterBusy") : picked ? t("letterBtnAgain") : t("letterBtn")}
+            </button>
+            {letterMsg && (
+              <p role="status" className="mt-3 text-[15.5px] leading-relaxed text-ink">
+                {letterMsg}
+              </p>
+            )}
+          </div>
+
+          {/* Nothing reaches the letter until the person ticks it. This is where they attest:
+              no gate can tell a fact they lived from a fact they would like, so only they can. */}
+          {picked && picked.length > 0 && (
+            <div className="mt-6 rounded-card border-2 border-ink bg-paper p-4 sm:p-5">
+              <h3 className="font-display text-[19px] font-black text-ink">{t("letterPickTitle")}</h3>
+              <p className="mt-1.5 text-[15.5px] leading-relaxed text-ink-soft">{t("letterPickLead")}</p>
+              <p className="mt-2 text-[15px] font-medium leading-relaxed text-red-ink">
+                {t("letterCheckTrue")}
+              </p>
+              <div className="mt-4 space-y-5">
+                {picked.map((pt) => {
+                  const g = jrGrounds.find((x) => x.id === pt.groundId);
+                  return (
+                    <div key={pt.groundId}>
+                      <p className="font-display text-[13px] font-black uppercase tracking-[0.1em] text-ink-faint">
+                        {g?.plainName ?? pt.groundId}
+                      </p>
+                      <ul className="mt-2 space-y-2.5">
+                        {pt.sentences.map((sen) => {
+                          const key = `${pt.groundId}::${sen.text}`;
+                          return (
+                            <li key={key}>
+                              <label className="flex min-h-[44px] items-start gap-3 text-[15.5px] leading-snug text-ink">
+                                <input
+                                  type="checkbox"
+                                  checked={chosen.has(key)}
+                                  onChange={(e) =>
+                                    setChosen((prev) => {
+                                      const next = new Set(prev);
+                                      if (e.target.checked) next.add(key);
+                                      else next.delete(key);
+                                      return next;
+                                    })
+                                  }
+                                  className="mt-1 h-5 w-5 shrink-0 accent-ink"
+                                />
+                                <span>
+                                  {sen.text}
+                                  {sen.sensitive.length > 0 && (
+                                    <span className="mt-1 block text-[14.5px] leading-snug text-amber-ink">
+                                      {t("letterSensitive")}
+                                    </span>
+                                  )}
+                                </span>
+                              </label>
+                            </li>
+                          );
+                        })}
+                      </ul>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           )}
         </section>
