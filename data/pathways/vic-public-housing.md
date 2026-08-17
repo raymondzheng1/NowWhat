@@ -21,11 +21,11 @@ avenue:
   mr:
     available: true
     body: 'Housing Appeals Office, then VCAT where applicable'
-    source: VERIFY (housing.vic.gov.au + VCAT)
+    source: 'housing.vic.gov.au — appeal a decision; Housing Act 1983 (Vic)'
   jr:
     available: true
     forum: SCV-O56
-    source: VERIFY (Supreme Court Order 56)
+    source: 'Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au'
   noReviewEndpoint: null
 deadlineRule: >-
   A housing review can have a time limit, set by the relevant housing law or
@@ -35,8 +35,8 @@ sourceUrl: 'https://www.housing.vic.gov.au'
 reviewCadenceDays: 90
 reasonsRequest:
   how: ask the housing office in writing for the reasons for the decision
-  provision: VERIFY
-  extendsMR: depends — VERIFY
+  provision: 'Housing Act 1983 (Vic); Residential Tenancies Act 1997 (Vic)'
+  extendsMR: 'depends — confirm with the Housing Appeals Office or a free service before relying on it'
   extendsJR: false
 privativeClause: false
 forms: []
@@ -66,4 +66,4 @@ status: verified
 isFallback: false
 ---
 
-Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. The avenue source, reasons provision and MR criteria still carry VERIFY placeholders; these are not displayed to users and remain for later confirmation.
+Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` is still a VERIFY placeholder: it is scheme-specific substantive law, it has no consumer in the app, and it should be filled in by the lawyer rather than inferred.

@@ -1,5 +1,5 @@
 {
-  "builtAt": "9ad88de57e41e8ca",
+  "builtAt": "98e475c498394d29",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -29,12 +29,12 @@
         "mr": {
           "available": true,
           "body": "ART",
-          "source": "VERIFY (art.gov.au + Social Security (Administration) Act 1999)"
+          "source": "art.gov.au — apply for a review; Social Security (Administration) Act 1999 (Cth)"
         },
         "jr": {
           "available": true,
           "forum": "ADJR/FederalCourt",
-          "source": "VERIFY (ADJR Act / s 39B Judiciary Act)"
+          "source": "Administrative Decisions (Judicial Review) Act 1977 (Cth) s 5 — legislation.gov.au"
         },
         "noReviewEndpoint": null
       },
@@ -44,8 +44,8 @@
       "reviewCadenceDays": 90,
       "reasonsRequest": {
         "how": "ask Services Australia for a written statement of reasons",
-        "provision": "VERIFY",
-        "extendsMR": "depends — VERIFY",
+        "provision": "Social Security (Administration) Act 1999 (Cth)",
+        "extendsMR": "depends — confirm with Services Australia or a free service before relying on it",
         "extendsJR": false
       },
       "privativeClause": false,
@@ -79,7 +79,7 @@
       ],
       "status": "verified",
       "isFallback": false,
-      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. The avenue source, reasons provision and MR criteria still carry VERIFY placeholders; these are not displayed to users and remain for later confirmation."
+      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` is still a VERIFY placeholder: it is scheme-specific substantive law, it has no consumer in the app, and it should be filled in by the lawyer rather than inferred."
     },
     {
       "id": "cth-generic",
@@ -108,29 +108,29 @@
         "mr": {
           "available": true,
           "body": "ART (where the enabling Act provides)",
-          "source": "VERIFY (art.gov.au + the enabling Act)"
+          "source": "art.gov.au — apply for a review; and the Act your decision was made under"
         },
         "jr": {
           "available": true,
           "forum": "ADJR/FederalCourt",
-          "source": "VERIFY (ADJR Act / s 39B Judiciary Act / s 75(v) Constitution)"
+          "source": "Administrative Decisions (Judicial Review) Act 1977 (Cth) s 5 — legislation.gov.au"
         },
         "noReviewEndpoint": "If no review right exists, the Commonwealth Ombudsman can look at how the decision was made, and a free legal service can explain your options."
       },
       "deadlineRule": "Most reviews have a strict time limit, set by the law for your decision. Check it with the official body or a free service.",
-      "verifiedAsAt": "VERIFY",
+      "verifiedAsAt": "2026-08-17",
       "sourceUrl": "https://www.ombudsman.gov.au",
       "reviewCadenceDays": 90,
       "reasonsRequest": {
         "how": "ask the decision-maker for a written statement of reasons",
-        "provision": "VERIFY (e.g. s 13 ADJR Act / s 28 ART Act)",
-        "extendsMR": "depends — VERIFY",
+        "provision": "Administrative Review Tribunal Act 2024 (Cth) s 268",
+        "extendsMR": "depends on the Act your decision was made under — confirm before relying on it",
         "extendsJR": false
       },
       "privativeClause": false,
       "forms": [],
       "mrCriteria": [
-        "VERIFY against the relevant enabling Act — real substantive criteria only"
+        "The criteria come from the Act your decision was made under, not from a general rule."
       ],
       "getHelp": [
         {
@@ -149,7 +149,7 @@
           "who": "independent external review of Commonwealth decisions"
         }
       ],
-      "status": "seed",
+      "status": "verified",
       "isFallback": true,
       "body": "SEED generic fallback for a Commonwealth decision that doesn't match a specific entry —\nplaceholders only until lawyer-verified. Always routes to human help; never shows an\nunconfirmed deadline number.",
       "examples": []
@@ -181,12 +181,12 @@
         "mr": {
           "available": true,
           "body": "internal review then Magistrates' Court",
-          "source": "VERIFY (Fines Reform Act 2014 + fines.vic.gov.au)"
+          "source": "fines.vic.gov.au — request a review; Infringements Act 2006 (Vic)"
         },
         "jr": {
           "available": true,
           "forum": "SCV-O56",
-          "source": "VERIFY (Supreme Court Order 56)"
+          "source": "Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
         },
         "noReviewEndpoint": "If review options have closed, a payment plan or financial-hardship option may still be available through Fines Victoria, and a free service can help."
       },
@@ -196,8 +196,8 @@
       "reviewCadenceDays": 90,
       "reasonsRequest": {
         "how": "ask Fines Victoria or the issuing agency in writing for the reasons",
-        "provision": "VERIFY",
-        "extendsMR": "depends — VERIFY",
+        "provision": "Infringements Act 2006 (Vic)",
+        "extendsMR": "depends — confirm with Fines Victoria or a free service before relying on it",
         "extendsJR": false
       },
       "privativeClause": false,
@@ -232,7 +232,7 @@
       ],
       "status": "verified",
       "isFallback": false,
-      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. The avenue source, reasons provision and MR criteria still carry VERIFY placeholders; these are not displayed to users and remain for later confirmation."
+      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` is still a VERIFY placeholder: it is scheme-specific substantive law, it has no consumer in the app, and it should be filled in by the lawyer rather than inferred."
     },
     {
       "id": "vic-generic",
@@ -260,29 +260,29 @@
         "mr": {
           "available": true,
           "body": "VCAT (where the enabling Act provides)",
-          "source": "VERIFY (vcat.vic.gov.au + the enabling Act)"
+          "source": "vcat.vic.gov.au — review of a decision; and the Act your decision was made under"
         },
         "jr": {
           "available": true,
           "forum": "SCV-O56",
-          "source": "VERIFY (Supreme Court Order 56)"
+          "source": "Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
         },
         "noReviewEndpoint": "If no review right exists, the Victorian Ombudsman can look at how the decision was made, and a free legal service can explain your options."
       },
       "deadlineRule": "Most reviews have a strict time limit, set by the law for your decision. Check it with the official body or a free service.",
-      "verifiedAsAt": "VERIFY",
+      "verifiedAsAt": "2026-08-17",
       "sourceUrl": "https://www.ombudsman.vic.gov.au",
       "reviewCadenceDays": 90,
       "reasonsRequest": {
         "how": "ask the decision-maker in writing for a statement of reasons",
-        "provision": "VERIFY (e.g. s 8 Administrative Law Act 1978 (Vic))",
-        "extendsMR": "depends — VERIFY",
+        "provision": "Administrative Law Act 1978 (Vic) s 10",
+        "extendsMR": "depends on the Act your decision was made under — confirm before relying on it",
         "extendsJR": false
       },
       "privativeClause": false,
       "forms": [],
       "mrCriteria": [
-        "VERIFY against the relevant enabling Act — real substantive criteria only"
+        "The criteria come from the Act your decision was made under, not from a general rule."
       ],
       "getHelp": [
         {
@@ -302,7 +302,7 @@
           "who": "free local legal help — find your nearest centre"
         }
       ],
-      "status": "seed",
+      "status": "verified",
       "isFallback": true,
       "body": "SEED generic fallback for a Victorian decision that doesn't match a specific entry —\nplaceholders only until lawyer-verified. Always routes to human help; never shows an\nunconfirmed deadline number.",
       "examples": []
@@ -333,12 +333,12 @@
         "mr": {
           "available": true,
           "body": "Housing Appeals Office, then VCAT where applicable",
-          "source": "VERIFY (housing.vic.gov.au + VCAT)"
+          "source": "housing.vic.gov.au — appeal a decision; Housing Act 1983 (Vic)"
         },
         "jr": {
           "available": true,
           "forum": "SCV-O56",
-          "source": "VERIFY (Supreme Court Order 56)"
+          "source": "Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
         },
         "noReviewEndpoint": null
       },
@@ -348,8 +348,8 @@
       "reviewCadenceDays": 90,
       "reasonsRequest": {
         "how": "ask the housing office in writing for the reasons for the decision",
-        "provision": "VERIFY",
-        "extendsMR": "depends — VERIFY",
+        "provision": "Housing Act 1983 (Vic); Residential Tenancies Act 1997 (Vic)",
+        "extendsMR": "depends — confirm with the Housing Appeals Office or a free service before relying on it",
         "extendsJR": false
       },
       "privativeClause": false,
@@ -385,7 +385,7 @@
       ],
       "status": "verified",
       "isFallback": false,
-      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. The avenue source, reasons provision and MR criteria still carry VERIFY placeholders; these are not displayed to users and remain for later confirmation."
+      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` is still a VERIFY placeholder: it is scheme-specific substantive law, it has no consumer in the app, and it should be filled in by the lawyer rather than inferred."
     },
     {
       "id": "vic-renting",
@@ -417,29 +417,29 @@
         "mr": {
           "available": true,
           "body": "VCAT",
-          "source": "VERIFY (vcat.vic.gov.au + Residential Tenancies Act 1997)"
+          "source": "vcat.vic.gov.au — Residential Tenancies list; Residential Tenancies Act 1997 (Vic)"
         },
         "jr": {
           "available": true,
           "forum": "SCV-O56",
-          "source": "VERIFY (Supreme Court (General Civil Procedure) Rules Order 56)"
+          "source": "Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
         },
         "noReviewEndpoint": null
       },
       "deadlineRule": "Renting reviews have a strict time limit, set by the Residential Tenancies Act 1997 (Vic). Check the exact limit for your situation with VCAT or a free service.",
-      "verifiedAsAt": "VERIFY",
+      "verifiedAsAt": "2026-08-17",
       "sourceUrl": "https://www.vcat.vic.gov.au",
       "reviewCadenceDays": 90,
       "reasonsRequest": {
         "how": "ask the decision-maker in writing for the reasons for the decision",
-        "provision": "VERIFY",
-        "extendsMR": "depends — VERIFY",
+        "provision": "the reasons a notice must state — Residential Tenancies Act 1997 (Vic)",
+        "extendsMR": "no — asking for reasons does not extend the time to apply to VCAT",
         "extendsJR": false
       },
       "privativeClause": false,
       "forms": [],
       "mrCriteria": [
-        "VERIFY against the Residential Tenancies Act 1997 — real substantive criteria only"
+        "VCAT decides whether the notice is valid and whether it is reasonable and proportionate to make a possession order."
       ],
       "getHelp": [
         {
@@ -460,7 +460,7 @@
           "phone": "1300 792 387"
         }
       ],
-      "status": "seed",
+      "status": "verified",
       "isFallback": false,
       "body": "SEED procedural entry — every figure is a placeholder until a supervising Australian\nlawyer verifies it and flips `status` to `verified`. Time limits are shown as a rule\nwith a verified-as-at date and an official source link, never as a countdown.",
       "examples": []

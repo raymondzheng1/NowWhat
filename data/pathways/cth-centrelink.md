@@ -23,11 +23,11 @@ avenue:
   mr:
     available: true
     body: ART
-    source: VERIFY (art.gov.au + Social Security (Administration) Act 1999)
+    source: 'art.gov.au — apply for a review; Social Security (Administration) Act 1999 (Cth)'
   jr:
     available: true
     forum: ADJR/FederalCourt
-    source: VERIFY (ADJR Act / s 39B Judiciary Act)
+    source: 'Administrative Decisions (Judicial Review) Act 1977 (Cth) s 5 — legislation.gov.au'
   noReviewEndpoint: null
 deadlineRule: >-
   Centrelink reviews have a time limit, set by the Social Security
@@ -38,8 +38,8 @@ sourceUrl: 'https://www.servicesaustralia.gov.au/reviews-and-appeals'
 reviewCadenceDays: 90
 reasonsRequest:
   how: ask Services Australia for a written statement of reasons
-  provision: VERIFY
-  extendsMR: depends — VERIFY
+  provision: 'Social Security (Administration) Act 1999 (Cth)'
+  extendsMR: 'depends — confirm with Services Australia or a free service before relying on it'
   extendsJR: false
 privativeClause: false
 forms: []
@@ -67,4 +67,4 @@ status: verified
 isFallback: false
 ---
 
-Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. The avenue source, reasons provision and MR criteria still carry VERIFY placeholders; these are not displayed to users and remain for later confirmation.
+Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` is still a VERIFY placeholder: it is scheme-specific substantive law, it has no consumer in the app, and it should be filled in by the lawyer rather than inferred.

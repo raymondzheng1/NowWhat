@@ -22,11 +22,11 @@ avenue:
   mr:
     available: true
     body: internal review then Magistrates' Court
-    source: VERIFY (Fines Reform Act 2014 + fines.vic.gov.au)
+    source: 'fines.vic.gov.au — request a review; Infringements Act 2006 (Vic)'
   jr:
     available: true
     forum: SCV-O56
-    source: VERIFY (Supreme Court Order 56)
+    source: 'Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au'
   noReviewEndpoint: >-
     If review options have closed, a payment plan or financial-hardship option
     may still be available through Fines Victoria, and a free service can help.
@@ -38,8 +38,8 @@ sourceUrl: 'https://www.fines.vic.gov.au'
 reviewCadenceDays: 90
 reasonsRequest:
   how: ask Fines Victoria or the issuing agency in writing for the reasons
-  provision: VERIFY
-  extendsMR: depends — VERIFY
+  provision: 'Infringements Act 2006 (Vic)'
+  extendsMR: 'depends — confirm with Fines Victoria or a free service before relying on it'
   extendsJR: false
 privativeClause: false
 forms: []
@@ -68,4 +68,4 @@ status: verified
 isFallback: false
 ---
 
-Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. The avenue source, reasons provision and MR criteria still carry VERIFY placeholders; these are not displayed to users and remain for later confirmation.
+Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` is still a VERIFY placeholder: it is scheme-specific substantive law, it has no consumer in the app, and it should be filled in by the lawyer rather than inferred.

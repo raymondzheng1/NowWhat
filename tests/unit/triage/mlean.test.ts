@@ -72,10 +72,27 @@ describe("reasons (corrected clock warning)", () => {
     expect(REASONS_CLOCK_WARNING.toLowerCase()).toContain("judicial review");
   });
 
-  it("a seed provision is hidden (no VERIFY leak) and the template has no advice", () => {
+  it("no entry ever leaks a VERIFY placeholder as a provision", () => {
+    // Provisions were real as at 2026-08-17. This asserts the invariant rather than the
+    // value, so it keeps holding whichever way the data moves.
+    for (const e of listDataEntries()) {
+      expect(e.reasonsRequest.provision, e.id).toBeTruthy();
+      expect(reasonsView(e).provision ?? "", e.id).not.toContain("VERIFY");
+    }
+  });
+
+  it("a provision still carrying VERIFY is suppressed, not shown", () => {
+    const real = triage({ jurisdiction: "Cth", decisionType: "Centrelink debt" }).entry;
+    const unconfirmed = {
+      ...real,
+      reasonsRequest: { ...real.reasonsRequest, provision: "VERIFY (not yet confirmed)" },
+    };
+    expect(reasonsView(unconfirmed).provision).toBeNull();
+    expect(reasonsRequestTemplate(unconfirmed, { decisionMaker: "X" }).toLowerCase()).not.toContain("verify");
+  });
+
+  it("the reasons template carries no advice", () => {
     const r = triage({ jurisdiction: "Cth", decisionType: "Centrelink debt" });
-    const v = reasonsView(r.entry);
-    expect(v.provision).toBeNull();
     const tpl = reasonsRequestTemplate(r.entry, { decisionMaker: "Services Australia" });
     expect(tpl.toLowerCase()).not.toContain("verify");
     expect(tpl.toLowerCase()).not.toContain("you should");

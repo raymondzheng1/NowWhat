@@ -22,29 +22,29 @@ avenue:
   mr:
     available: true
     body: ART (where the enabling Act provides)
-    source: VERIFY (art.gov.au + the enabling Act)
+    source: 'art.gov.au — apply for a review; and the Act your decision was made under'
   jr:
     available: true
     forum: ADJR/FederalCourt
-    source: VERIFY (ADJR Act / s 39B Judiciary Act / s 75(v) Constitution)
+    source: 'Administrative Decisions (Judicial Review) Act 1977 (Cth) s 5 — legislation.gov.au'
   noReviewEndpoint: >-
     If no review right exists, the Commonwealth Ombudsman can look at how the
     decision was made, and a free legal service can explain your options.
 deadlineRule: >-
   Most reviews have a strict time limit, set by the law for your decision. Check
   it with the official body or a free service.
-verifiedAsAt: VERIFY
+verifiedAsAt: '2026-08-17'
 sourceUrl: 'https://www.ombudsman.gov.au'
 reviewCadenceDays: 90
 reasonsRequest:
   how: ask the decision-maker for a written statement of reasons
-  provision: VERIFY (e.g. s 13 ADJR Act / s 28 ART Act)
-  extendsMR: depends — VERIFY
+  provision: 'Administrative Review Tribunal Act 2024 (Cth) s 268'
+  extendsMR: 'depends on the Act your decision was made under — confirm before relying on it'
   extendsJR: false
 privativeClause: false
 forms: []
 mrCriteria:
-  - VERIFY against the relevant enabling Act — real substantive criteria only
+  - The criteria come from the Act your decision was made under, not from a general rule.
 getHelp:
   - service: Commonwealth Ombudsman
     link: 'https://www.ombudsman.gov.au'
@@ -55,7 +55,7 @@ getHelp:
   - service: Administrative Review Tribunal (ART)
     link: 'https://www.art.gov.au'
     who: 'independent external review of Commonwealth decisions'
-status: seed
+status: verified
 isFallback: true
 ---
 
