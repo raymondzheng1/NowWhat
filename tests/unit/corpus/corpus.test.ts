@@ -1,7 +1,15 @@
 import { describe, it, expect } from "vitest";
 import raw from "@/corpus/index.json";
 import { CorpusIndexSchema } from "@/lib/schemas/corpus";
-import { classify, classifyForDecode, getEntry, getCorpus, FALLBACK_ENTRY_ID } from "@/lib/corpus/index";
+import {
+  classify,
+  classifyForDecode,
+  getEntry,
+  getCorpus,
+  listEntries,
+  guessJurisdiction,
+  FALLBACK_ENTRY_ID,
+} from "@/lib/corpus/index";
 
 describe("corpus index", () => {
   it("validates against the Zod schema (authoritative gate, no drift)", () => {
@@ -92,5 +100,51 @@ describe("the fallback entry is chosen, never matched", () => {
     );
     expect(match?.entryId).toBe("vic-generic");
     expect(match?.isFallback).toBe(true);
+  });
+});
+
+
+/**
+ * The Commonwealth catch-all, and the fallback that had to change with it.
+ *
+ * A single "vic-generic" fallback meant a Commonwealth letter matching no specific guide was
+ * routed to a VICTORIAN entry and told about VCAT. Adding a Commonwealth catch-all achieves
+ * nothing unless the fallback is chosen by jurisdiction too.
+ */
+describe("the catch-all matches the government that wrote the letter", () => {
+  it("routes a Commonwealth letter to the Commonwealth catch-all", () => {
+    const m = classifyForDecode(
+      "This letter is from the National Disability Insurance Agency about your plan. The NDIA has decided to change your funding.",
+    );
+    expect(m?.entryId).toBe("cth-generic");
+    expect(m?.isFallback).toBe(true);
+  });
+
+  it("routes a Victorian letter to the Victorian catch-all", () => {
+    const m = classifyForDecode(
+      "This is a notice from the Victorian Ombudsman about a decision of a state body.",
+    );
+    expect(m?.entryId).toBe("vic-generic");
+  });
+
+  it("does NOT treat a Victorian postal address as a Victorian decision", () => {
+    // Commonwealth letters carry "Victoria 3000" in the address block, which would misroute
+    // exactly the people this is meant to help.
+    expect(guessJurisdiction("Services Australia. GPO Box 1234, Melbourne Victoria 3000.")).toBe("Cth");
+  });
+
+  it("keeps a specific guide ahead of either catch-all", () => {
+    const m = classifyForDecode("Notice of decision about your Centrelink debt from Services Australia.");
+    expect(m?.entryId).toBe("cth-centrelink");
+    expect(m?.isFallback).toBe(false);
+  });
+
+  it("publishes only verified entries", () => {
+    for (const e of listEntries()) expect(e.status, e.id).toBe("verified");
+  });
+
+  it("the Commonwealth catch-all never competes for a match", () => {
+    const index = getCorpus();
+    expect(index.classification.filter((t) => t.entryId === "cth-generic")).toEqual([]);
   });
 });
