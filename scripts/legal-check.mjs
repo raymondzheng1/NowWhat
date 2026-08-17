@@ -13,6 +13,7 @@ const INDEX = resolve(ROOT, "corpus/legal/index.json");
 
 const hard = [];
 const warn = [];
+let noPinpoint = 0;
 
 function main() {
   if (!existsSync(INDEX)) {
@@ -56,14 +57,22 @@ function main() {
       //
       // The renderer omits an empty pinpoint cleanly, so nothing false is shown. This warns
       // until a human supplies the page.
-      if (!c.pinpoint) warn.push(`${id}: leadingCase[${i}] "${c.name}" has no pinpoint yet`);
+      // OWNER DECISION (2026-08-17): a pinpoint is optional and we do not chase one.
+      // The source materials record lecture references, not judgment pages, and a hard
+      // requirement here either blocks verified content or invites a guess — guessing is
+      // what produced a wrong party name once already. Counted, not listed: eleven lines of
+      // warning about work nobody intends to do is noise that hides real warnings.
+      if (!c.pinpoint) noPinpoint++;
     }
     if (g.status !== "verified") warn.push(`${id}: status=seed — grounds not yet signed off (legal sign-off gate)`);
     if ((g.leadingCases ?? []).length === 0) warn.push(`${id}: no leading cases yet — v2 generator will degrade to "get help" for this ground`);
   }
 
   if (warn.length) console.warn("legal-check warnings:\n  " + warn.join("\n  "));
-  console.log(`legal-check: ${processes.length} processes, ${grounds.length} grounds.`);
+  console.log(
+    `legal-check: ${processes.length} processes, ${grounds.length} grounds` +
+      (noPinpoint ? ` (${noPinpoint} citation(s) without a pinpoint — accepted).` : "."),
+  );
   if (hard.length) {
     console.error("\nlegal-check FAILED:\n  " + hard.join("\n  "));
     process.exit(1);
