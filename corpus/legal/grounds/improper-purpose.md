@@ -39,6 +39,11 @@ sources:
 status: verified
 leadingCases:
   - name: >-
+      R v Toohey; Ex parte Northern Land Council (1981) 151 CLR 170
+    pinpoint: ''
+    explains: >-
+      A power used for a purpose the Act never gave it is not a valid use.
+  - name: >-
       Schlieske v Minister for Immigration and Ethnic Affairs (1988) 84 ALR 719
     pinpoint: ''
     explains: A wide power still has to be used for the purposes of the Act.

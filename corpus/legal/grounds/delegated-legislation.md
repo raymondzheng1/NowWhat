@@ -41,6 +41,12 @@ sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
 leadingCases:
+  - name: >-
+      R v Toohey; Ex parte Northern Land Council (1981) 151 CLR 170
+    pinpoint: ''
+    explains: >-
+      A rule made for a purpose outside the Act is not valid, even if it looks
+      valid.
   - name: Vanstone v Clark (2005) 147 FCR 299
     pinpoint: Weinberg J
     explains: >-
