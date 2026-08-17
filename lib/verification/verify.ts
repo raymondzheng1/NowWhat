@@ -20,6 +20,16 @@ export interface VerifyInput {
   declaredSources: string[];
   /** The matched corpus entry (the allow-list of facts). */
   entry: PathwayEntry;
+  /**
+   * Extra sources this output is entitled to rely on, beyond the pathway entry.
+   *
+   * The allow-list is built from a decode-corpus PathwayEntry, which knows nothing about the
+   * legal-substance corpus. So an output that legitimately draws on a GROUND — its name, its
+   * plain-English test — had no way to declare where that came from: the source-binding and
+   * out-of-corpus gates would either reject honest text or wave it through unchecked. Callers
+   * working from corpus/legal pass the sources of the grounds they actually used.
+   */
+  extraSources?: string[];
 }
 
 export interface VerifyFailure {
@@ -38,9 +48,10 @@ const OTHER_STATE_BODIES = ["ncat", "qcat", "sacat", "tascat"];
 
 const norm = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
 
-function allowedSourceBlob(entry: PathwayEntry): string {
+function allowedSourceBlob(entry: PathwayEntry, extra: string[] = []): string {
   return norm(
     [
+      ...extra,
       ...entry.sources,
       ...entry.pathways.map((p) => p.source),
       entry.rightToReasons.source,
@@ -51,8 +62,9 @@ function allowedSourceBlob(entry: PathwayEntry): string {
   );
 }
 
-function allowedSourceList(entry: PathwayEntry): string[] {
+function allowedSourceList(entry: PathwayEntry, extra: string[] = []): string[] {
   return [
+    ...extra,
     ...entry.sources,
     ...entry.pathways.map((p) => p.source),
     entry.rightToReasons.source,
@@ -129,13 +141,13 @@ function groundedTimeFigures(entry: PathwayEntry): Set<string> {
 
 export function verifyOutput(input: VerifyInput): VerifyResult {
   const failures: VerifyFailure[] = [];
-  const { text, declaredSources, entry } = input;
+  const { text, declaredSources, entry, extraSources = [] } = input;
   const t = norm(text);
-  const blob = allowedSourceBlob(entry);
+  const blob = allowedSourceBlob(entry, extraSources);
 
   // 1. Source allow-list — every declared source must be grounded in the entry's sources
   //    (substring, shared domain, or strong word overlap — models reword sources).
-  const allowList = allowedSourceList(entry);
+  const allowList = allowedSourceList(entry, extraSources);
   for (const src of declaredSources) {
     const d = norm(src);
     if (!d) continue;

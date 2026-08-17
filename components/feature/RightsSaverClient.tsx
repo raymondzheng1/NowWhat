@@ -712,15 +712,10 @@ function ResultStep({
     href: `/learn/${pp.id}`,
   }));
   const activeApply = applyKinds.find((k) => k.id === applyKind) ?? applyKinds[0];
-  // The universal questions, in the order they appear. "Has anything changed?" is merits-only:
-  // a court reviews the decision as it was made, so the question would mislead on that path.
-  const universalQs = [
-    { id: "q-what", label: t("accountQWhat") },
-    { id: "q-story", label: t("accountQStory") },
-    ...(av.mrAvailable ? [{ id: "q-changed", label: t("accountQChanged") }] : []),
-    { id: "q-want", label: t("accountQWant") },
-    { id: "q-attach", label: t("accountQAttach") },
-  ];
+  // ONE box. Five labelled questions read as a form to fill in, and a frightened person on a
+  // phone abandons forms; they will tell the story once, in their own order, if asked once.
+  // The prompts that were the question labels become hints under the box, so nothing is lost.
+  const universalQs = [{ id: "q-story", label: t("accountQStory") }];
 
   const applyDraft =
     corpusEntry && activeApply
@@ -1053,84 +1048,66 @@ function ResultStep({
         </section>
       )}
 
-      {/* Tell us what happened — the account that makes the letter theirs.
-          Everything here is optional, stays in component state, and is composed into the
-          letter below by a pure function. Nothing is sent: the person sends the letter. */}
+      {/* Tell us what happened — one box, in their own words.
+          The grounds they ticked above are the lead indicator: they decide which headings the
+          letter is organised under. This text never leaves the device until they press the
+          button below it. */}
       {applyDraft && (
         <section id="r-account" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("accountTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("accountLead")}</p>
-          <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-faint">{t("accountPrivacy")}</p>
 
-          {/* The admissions guard. A person writing freely about a Centrelink debt can put
-              something in a letter that counts against them, and nothing else on this page
-              warns them. */}
+          {/* The admissions guard. Someone writing freely about a Centrelink debt can put
+              something in a letter that counts against them, and nothing else warns them. */}
           <p className="mt-4 rounded-sticker border-2 border-amber-border bg-amber-bg px-4 py-3 text-[15px] leading-relaxed text-ink-soft">
             {t("accountAdmitWarn")}
           </p>
 
-          <div className="mt-5 space-y-5">
-            {universalQs.map((q) => (
-              <label key={q.id} className="block">
-                <span className="mb-1.5 block font-display text-[15.5px] font-extrabold text-ink">
-                  {q.label}
-                </span>
-                <textarea
-                  value={account[q.id] ?? ""}
-                  onChange={(e) => setAccount((a) => ({ ...a, [q.id]: e.target.value }))}
-                  rows={3}
-                  className="input leading-relaxed"
-                />
-              </label>
-            ))}
+          <label className="mt-5 block">
+            <span className="mb-1.5 block font-display text-[15.5px] font-extrabold text-ink">
+              {t("accountQStory")}
+            </span>
+            <span className="mb-2 block text-[14.5px] leading-snug text-ink-faint">
+              {t("accountHint")}
+            </span>
+            <textarea
+              value={account["q-story"] ?? ""}
+              onChange={(e) => setAccount((a) => ({ ...a, "q-story": e.target.value }))}
+              rows={10}
+              className="input leading-relaxed"
+              placeholder={t("accountPlaceholder")}
+            />
+          </label>
 
-            {/* One box per ground they marked, with that ground's own lawyer-verified
-                prompts underneath. The nine grounds that carry no letter heading still get a
-                box — what they write goes into the note for a free service. */}
-            {relatedGrounds.map((id) => {
-              const g = jrGrounds.find((x) => x.id === id);
-              if (!g) return null;
-              if (id === "bad-faith") {
-                return (
-                  <p key={id} className="rounded-sticker border-2 border-line bg-cream px-4 py-3 text-[15px] leading-relaxed text-ink-soft">
-                    {t("accountGroundNoteSerious")}
-                  </p>
-                );
-              }
-              const inLetter = Boolean(LETTER_GROUND_HEADINGS[id]) && !LAWYER_NOTE_ONLY.has(id);
-              return (
-                <label key={id} className="block">
-                  <span className="mb-1.5 block font-display text-[15.5px] font-extrabold text-ink">
-                    {t("accountGroundQ", { name: g.plainName })}
-                  </span>
-                  {!inLetter && (
-                    <span className="mb-1.5 block text-[14.5px] leading-snug text-ink-faint">
-                      {t("accountGroundNoteLawyer")}
-                    </span>
-                  )}
-                  {g.elements.length > 0 && (
-                    <span className="mb-1.5 block text-[14.5px] leading-snug text-ink-faint">
-                      {t("accountGroundHint")}
-                      <ul className="mt-1 space-y-0.5">
-                        {g.elements.map((el) => (
-                          <li key={el.id} className="flex gap-2">
-                            <span aria-hidden="true" className="mt-[8px] h-1 w-1 flex-none rounded-full bg-ink-faint" />
-                            <span>{el.layPrompt}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </span>
-                  )}
-                  <textarea
-                    value={account[`g-${id}`] ?? ""}
-                    onChange={(e) => setAccount((a) => ({ ...a, [`g-${id}`]: e.target.value }))}
-                    rows={3}
-                    className="input leading-relaxed"
-                  />
-                </label>
-              );
-            })}
-          </div>
+          {/* What they marked, and what it will do. Ticking a ground had no visible effect
+              before — this is the connection between the two. */}
+          {relatedGrounds.length > 0 && (
+            <div className="mt-5 rounded-sticker border-2 border-line bg-cream px-4 py-3.5">
+              <p className="font-display text-[13px] font-black uppercase tracking-[0.1em] text-ink-faint">
+                {t("accountMarkedTitle")}
+              </p>
+              <ul className="mt-2 space-y-1.5">
+                {relatedGrounds.map((id) => {
+                  const g = jrGrounds.find((x) => x.id === id);
+                  if (!g) return null;
+                  const inLetter = Boolean(LETTER_GROUND_HEADINGS[id]) && !LAWYER_NOTE_ONLY.has(id);
+                  return (
+                    <li key={id} className="flex gap-2.5 text-[15px] leading-snug text-ink">
+                      <span aria-hidden="true" className="mt-[8px] h-1.5 w-1.5 flex-none rounded-[2px] bg-red" />
+                      <span>
+                        {g.plainName}
+                        {!inLetter && (
+                          <span className="block text-[14px] text-ink-faint">
+                            {t("accountGroundNoteLawyer")}
+                          </span>
+                        )}
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          )}
         </section>
       )}
 

@@ -256,11 +256,11 @@
     "outOfScope": "We cannot help with visas, criminal matters, child protection, family law, guardianship, or compulsory mental-health treatment. Those need a person — tap Free help at the top.",
     "tileExamplesList": "Such as {list}",
     "accountTitle": "Tell us what happened",
-    "accountLead": "This is what makes your letter yours. Write as much or as little as you like. Every box is optional.",
+    "accountLead": "Write it once, in your own words. There is no right way to say it.",
     "accountPrivacy": "This stays on your device while you type. Nothing is sent until you choose to send the letter yourself.",
     "accountAdmitWarn": "Some things can count against you if you write them down. If you are not sure whether to put something in, leave it out and ask a free service first.",
     "accountQWhat": "What was the decision about?",
-    "accountQStory": "What happened, in your own words?",
+    "accountQStory": "What happened?",
     "accountQWant": "What do you want to happen now?",
     "accountQChanged": "Has anything changed since the decision?",
     "accountQAttach": "What can you send with your letter?",
@@ -268,7 +268,10 @@
     "accountGroundHint": "It might help to think about:",
     "accountGroundNoteLawyer": "This one is not in your letter. It goes in your note for a free legal service.",
     "accountGroundNoteSerious": "This is a serious thing to say about a person. It is not in your letter or your note. Please raise it with a free legal service.",
-    "groundsLeadMerits": "These are problems people point to. Tick anything that sounds like your situation. What you tick shapes the letter below, and nothing is decided for you."
+    "groundsLeadMerits": "These are problems people point to. Tick anything that sounds like your situation. What you tick shapes the letter below, and nothing is decided for you.",
+    "accountHint": "Useful things to include: what the decision was about, what you told them and when, anything they never asked you about, what has changed since, and what you want to happen now.",
+    "accountPlaceholder": "Start anywhere. You can come back and add more.",
+    "accountMarkedTitle": "What you marked above"
   },
   "wizard": {
     "title": "Let's work out what you can do",
