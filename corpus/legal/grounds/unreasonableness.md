@@ -41,6 +41,11 @@ sources:
 status: verified
 leadingCases:
   - name: >-
+      Minister for Home Affairs v DUA16 (2020) 271 CLR 550
+    pinpoint: ''
+    explains: >-
+      A decision needs a reason you can see and follow.
+  - name: >-
       Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1
       KB 223
     pinpoint: at 230

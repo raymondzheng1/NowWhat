@@ -39,6 +39,12 @@ sources:
 status: verified
 leadingCases:
   - name: >-
+      ABC Developmental Learning Centres Pty Ltd v Secretary, Department of
+      Human Services [2007] VSC 37
+    pinpoint: ''
+    explains: >-
+      Acting outside the scope the Act allows is acting without authority.
+  - name: >-
       Hossain v Minister for Immigration and Border Protection (2018) 264 CLR
       123
     pinpoint: 'at [23]'

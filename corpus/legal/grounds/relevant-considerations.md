@@ -39,6 +39,13 @@ sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
 leadingCases:
+  - name: >-
+      Certain Children v Minister for Families and Children (No 2) (2017) 52 VR
+      441
+    pinpoint: ''
+    explains: >-
+      In Victoria, Charter rights can be part of what a decision-maker must
+      weigh.
   - name: Minister for Aboriginal Affairs v Peko-Wallsend Ltd (1986) 162 CLR 24
     pinpoint: Mason J at 39-41
     explains: >-

@@ -38,6 +38,12 @@ sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
 leadingCases:
+  - name: >-
+      Drake v Minister for Immigration and Ethnic Affairs (No 1) (1979) 46 FLR
+      409
+    pinpoint: ''
+    explains: >-
+      A policy must leave the decision-maker's discretion intact.
   - name: Green v Daniels (1977) 13 ALR 1
     pinpoint: ''
     explains: A policy cannot override what the Act says.

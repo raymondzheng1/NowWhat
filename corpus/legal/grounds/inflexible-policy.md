@@ -35,6 +35,12 @@ sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
 leadingCases:
+  - name: >-
+      Drake v Minister for Immigration and Ethnic Affairs (No 1) (1979) 46 FLR
+      409
+    pinpoint: ''
+    explains: >-
+      A policy may guide a decision. It may not replace it.
   - name: Green v Daniels (1977) 13 ALR 1
     pinpoint: Stephen J at 9-10
     explains: >-

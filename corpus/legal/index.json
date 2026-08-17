@@ -1,5 +1,5 @@
 {
-  "builtAt": "33f55ef8fa71f1a1",
+  "builtAt": "c26ea81ddec88873",
   "processes": [
     {
       "id": "judicial-review",
@@ -405,6 +405,11 @@
       "status": "verified",
       "leadingCases": [
         {
+          "name": "Drake v Minister for Immigration and Ethnic Affairs (No 1) (1979) 46 FLR 409",
+          "pinpoint": "",
+          "explains": "A policy may guide a decision. It may not replace it."
+        },
+        {
           "name": "Green v Daniels (1977) 13 ALR 1",
           "pinpoint": "Stephen J at 9-10",
           "explains": "A rule was applied so rigidly that the person was never considered."
@@ -777,6 +782,11 @@
       "status": "verified",
       "leadingCases": [
         {
+          "name": "Certain Children v Minister for Families and Children (No 2) (2017) 52 VR 441",
+          "pinpoint": "",
+          "explains": "In Victoria, Charter rights can be part of what a decision-maker must weigh."
+        },
+        {
           "name": "Minister for Aboriginal Affairs v Peko-Wallsend Ltd (1986) 162 CLR 24",
           "pinpoint": "Mason J at 39-41",
           "explains": "The Act decides which matters a decision-maker must take into account."
@@ -840,6 +850,11 @@
       "status": "verified",
       "leadingCases": [
         {
+          "name": "Drake v Minister for Immigration and Ethnic Affairs (No 1) (1979) 46 FLR 409",
+          "pinpoint": "",
+          "explains": "A policy must leave the decision-maker's discretion intact."
+        },
+        {
           "name": "Green v Daniels (1977) 13 ALR 1",
           "pinpoint": "",
           "explains": "A policy cannot override what the Act says."
@@ -880,6 +895,11 @@
       ],
       "status": "verified",
       "leadingCases": [
+        {
+          "name": "Minister for Home Affairs v DUA16 (2020) 271 CLR 550",
+          "pinpoint": "",
+          "explains": "A decision needs a reason you can see and follow."
+        },
         {
           "name": "Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1 KB 223",
           "pinpoint": "at 230",
@@ -933,6 +953,11 @@
       ],
       "status": "verified",
       "leadingCases": [
+        {
+          "name": "ABC Developmental Learning Centres Pty Ltd v Secretary, Department of Human Services [2007] VSC 37",
+          "pinpoint": "",
+          "explains": "Acting outside the scope the Act allows is acting without authority."
+        },
         {
           "name": "Hossain v Minister for Immigration and Border Protection (2018) 264 CLR 123",
           "pinpoint": "at [23]",
