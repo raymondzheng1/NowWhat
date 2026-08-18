@@ -17,12 +17,15 @@ whatRelates:
   - The reasons rely on something the letter itself rules out.
 whatItIsNot: >-
   This is not about the decision being harsh, or about you disagreeing. It is
-  about reasoning that does not hold together.
+  about reasoning that does not hold together. Not every slip in logic counts.
+  Where reasonable people could draw different conclusions from the same
+  evidence, preferring one of them is not illogical.
 usedIn:
   - judicial-review
 test: >-
   A conclusion reached with no logical or rational path from the material is not
-  a proper exercise of the power.
+  a proper exercise of the power. The threshold is whether no rational
+  decision-maker could have reached that conclusion on that evidence.
 elements:
   - id: contradiction
     name: A step that does not follow
@@ -50,3 +53,13 @@ This ground is about the steps, not the result. It is closely tied to unreasonab
 and in practice the two are often raised together.
 
 Ground and authorities taken from our own verified judicial review materials.
+
+Threshold and carve-out added 2026-08-19 from SZMDS as our materials record it: the threshold is
+"whether no rational decision-maker could have arrived at the same conclusion on the same
+evidence"; "Not every lapse in logic will give rise to jurisdictional error"; and where "logical
+or rational or reasonable minds might differ in respect of the conclusions to be drawn from that
+evidence, a decision cannot be said by a reviewing court to be illogical ... simply because one
+conclusion has been preferred to another possible conclusion".
+
+That last sentence is the one most worth showing a member of the public. Without it, "the reasons
+do not follow" reads as an invitation to re-argue the facts, which is not what this ground is.

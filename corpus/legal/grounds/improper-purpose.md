@@ -23,7 +23,8 @@ usedIn:
   - judicial-review
 test: >-
   A statutory power may only be used for the purpose it was given for. If
-  another purpose was a substantial reason, the use may be unlawful.
+  another purpose was a substantial reason, the use may be unlawful. It is for
+  the person challenging the decision to show that, and it is not assumed.
 elements:
   - id: proper-purpose
     name: The purpose the power was given for
@@ -59,3 +60,7 @@ leadingCases:
 General information, not advice. The leading cases were refined on 2026-08-16 against our own judicial review materials.
 
 Provenance. This ground is drawn from our own verified judicial review materials. The cases it cites come from the same source. Verified on 2026-08-16. A supervising lawyer sign-off is tracked separately. The case list changed, so that sign-off needs to be renewed.
+
+Onus added 2026-08-19: "The onus of establishing that the decision-maker acted for an improper
+purposes lies on the applicant (Toohey)", and our materials list improper purpose among the
+stringent grounds because it "will not be inferred".

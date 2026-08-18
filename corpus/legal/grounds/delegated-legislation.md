@@ -18,12 +18,15 @@ whatRelates:
   - Nobody could tell you what the rule was made for.
 whatItIsNot: >-
   It does not mean regulations and by-laws are not real law. Most of them are
-  valid. Courts set a high bar before setting one aside.
+  valid. Courts set a high bar before setting one aside. Showing a rule is
+  invalid is also only the first step. You then have to show what that meant
+  for your own decision.
 usedIn:
   - judicial-review
 test: >-
   A rule made under an Act has to stay within that Act. The court asks whether
-  the rule is appropriate and adapted to the purpose.
+  the rule can reasonably be seen as appropriate and adapted to the purpose the
+  Act set. That leaves real room for the rule-maker.
 elements:
   - id: within-subject
     name: Inside the subject the Act allows
@@ -62,3 +65,12 @@ leadingCases:
 General information, not advice. The rule number printed on the letter is what this ground looks at. It keeps four elements, because a rule can fail in four separate ways.
 
 Provenance. This ground is drawn from our own verified judicial review materials. The cases it cites come from the same source. Verified on 2026-08-16. A supervising lawyer sign-off is tracked separately.
+
+Two corrections 2026-08-19. The test was stated as whether the rule "is appropriate and adapted";
+Vanstone's formulation is "whether the delegated legislation is CAPABLE OF BEING REASONABLY
+CONSIDERED to be appropriate and adapted to achieve the prescribed purpose". Dropping that clause
+turns a deferential standard into a stricter one than the law applies.
+
+And our materials treat invalidity as step one of two — "Step 1: Regulation invalid? Step 2: How
+does that affect the decision?" — so `whatItIsNot` now says so. Without it, someone could read a
+bad regulation as the end of the argument rather than the start of one.

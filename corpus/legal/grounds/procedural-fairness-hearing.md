@@ -5,8 +5,9 @@ plainName: You never got to have your say
 oneLine: You usually get told what is coming, and a real chance to reply.
 whatItMeans: >-
   A decision-maker usually has to tell you what is being decided. You usually
-  get a real chance to reply before it happens. If something counts against
-  you, you usually get to see it first.
+  get a real chance to reply before it happens. If something important counts
+  against you, and it is the sort of thing a decision-maker would rely on, you
+  usually get to see it first.
 plainExample: >-
   Centrelink raises a debt using a report you were never shown. Nobody asked
   you to explain.
@@ -18,7 +19,9 @@ whatRelates:
   - The process changed part way, and nobody told you.
 whatItIsNot: >-
   This is about the process, not the result. It does not mean the answer would
-  have been different.
+  have been different. There is also no single picture of what a fair hearing
+  looks like. Depending on the power and the situation it can mean a full
+  hearing, or very little.
 usedIn:
   - judicial-review
 test: >-
@@ -69,3 +72,9 @@ New entry. It splits the hearing rule from the bias rule, following our review m
 The Badari case name follows the High Court's own record. [2025] HCA 47 is Badari v Minister for Territory Families and Urban Housing. It is not "Badari v Northern Land Council" — that party name does not exist. The case concerns rent determinations under s 23 of the Housing Act 1982 (NT).
 
 Provenance. This ground is drawn from our own verified judicial review materials. The cases it cites come from the same source. Verified on 2026-08-16. A supervising lawyer sign-off is tracked separately.
+
+Sharpened 2026-08-19 from the JR Hypo. Two points the entry had flattened: the disclosure duty
+attaches to adverse information that is "credible, relevant and significant" (Kioa) rather than to
+everything on the file; and the content of the duty "can range from requiring a full trial to
+nothingness" (Badari; Brennan J in Kioa), which is the honest thing to tell someone before they
+conclude that any shortfall in process is a breach.

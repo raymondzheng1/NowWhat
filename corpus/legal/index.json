@@ -1,5 +1,5 @@
 {
-  "builtAt": "1b62ed8456ab0736",
+  "builtAt": "f27c874d78d79142",
   "processes": [
     {
       "id": "judicial-review",
@@ -390,11 +390,11 @@
         "You were told a rule required this, and nobody could explain why.",
         "Nobody could tell you what the rule was made for."
       ],
-      "whatItIsNot": "It does not mean regulations and by-laws are not real law. Most of them are valid. Courts set a high bar before setting one aside.",
+      "whatItIsNot": "It does not mean regulations and by-laws are not real law. Most of them are valid. Courts set a high bar before setting one aside. Showing a rule is invalid is also only the first step. You then have to show what that meant for your own decision.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A rule made under an Act has to stay within that Act. The court asks whether the rule is appropriate and adapted to the purpose.",
+      "test": "A rule made under an Act has to stay within that Act. The court asks whether the rule can reasonably be seen as appropriate and adapted to the purpose the Act set. That leaves real room for the rule-maker.",
       "elements": [
         {
           "id": "within-subject",
@@ -500,11 +500,11 @@
         "A conclusion appears with no step in between.",
         "The reasons rely on something the letter itself rules out."
       ],
-      "whatItIsNot": "This is not about the decision being harsh, or about you disagreeing. It is about reasoning that does not hold together.",
+      "whatItIsNot": "This is not about the decision being harsh, or about you disagreeing. It is about reasoning that does not hold together. Not every slip in logic counts. Where reasonable people could draw different conclusions from the same evidence, preferring one of them is not illogical.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A conclusion reached with no logical or rational path from the material is not a proper exercise of the power.",
+      "test": "A conclusion reached with no logical or rational path from the material is not a proper exercise of the power. The threshold is whether no rational decision-maker could have reached that conclusion on that evidence.",
       "elements": [
         {
           "id": "contradiction",
@@ -553,7 +553,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A statutory power may only be used for the purpose it was given for. If another purpose was a substantial reason, the use may be unlawful.",
+      "test": "A statutory power may only be used for the purpose it was given for. If another purpose was a substantial reason, the use may be unlawful. It is for the person challenging the decision to show that, and it is not assumed.",
       "elements": [
         {
           "id": "proper-purpose",
@@ -947,7 +947,7 @@
       "name": "Procedural fairness — the hearing rule",
       "plainName": "You never got to have your say",
       "oneLine": "You usually get told what is coming, and a real chance to reply.",
-      "whatItMeans": "A decision-maker usually has to tell you what is being decided. You usually get a real chance to reply before it happens. If something counts against you, you usually get to see it first.",
+      "whatItMeans": "A decision-maker usually has to tell you what is being decided. You usually get a real chance to reply before it happens. If something important counts against you, and it is the sort of thing a decision-maker would rely on, you usually get to see it first.",
       "plainExample": "Centrelink raises a debt using a report you were never shown. Nobody asked you to explain.",
       "whatRelates": [
         "You did not know a decision about you was coming.",
@@ -956,7 +956,7 @@
         "You asked to speak to someone, and were told no.",
         "The process changed part way, and nobody told you."
       ],
-      "whatItIsNot": "This is about the process, not the result. It does not mean the answer would have been different.",
+      "whatItIsNot": "This is about the process, not the result. It does not mean the answer would have been different. There is also no single picture of what a fair hearing looks like. Depending on the power and the situation it can mean a full hearing, or very little.",
       "usedIn": [
         "judicial-review"
       ],
