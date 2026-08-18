@@ -25,6 +25,9 @@ canApply:
     You usually need to be a person affected by the decision (this is called
     standing).
   - There is almost always a time limit — this is the part people miss most.
+  - >-
+    If the time limit has passed, the tribunal can still be asked to allow a
+    late application. It does not have to say yes, but it can be asked.
 whatHappens:
   - You lodge an application with the tribunal.
   - Often there is an informal stage that tries to sort it out first.

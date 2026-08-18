@@ -220,7 +220,7 @@
       "detention": "If someone is in detention, this needs urgent legal help, not a self-help tool.",
       "migration": "Migration and visa decisions are outside what this tool covers. A registered migration agent or lawyer can help.",
       "hearingOnFoot": "A hearing is already booked or underway, so timing matters a lot. Please talk to a free legal service today.",
-      "deadlineImminentOrPassed": "Your time limit is very soon, or it has passed. Please contact a free legal service today.",
+      "deadlineImminentOrPassed": "Your time limit is very soon, or it has passed. A tribunal can be asked to accept a late application, so please contact a free legal service today.",
       "privativeClause": "This kind of decision has extra rules about going to court. Those rules cannot stop a court checking whether the decision-maker had the power to decide at all. It is technical, so a lawyer should look at it directly."
     },
     "stopStillHelpful": "There is still something useful you can do before you call.",
@@ -346,7 +346,7 @@
     "compute": "Work out the time limit",
     "renderableLead": "Based on the date you gave, the time limit for this step is",
     "daysRemaining": "{days} days left",
-    "passedWarning": "This date may have already passed. A time limit being missed doesn't always end things — a free service can tell you what's still possible.",
+    "passedWarning": "This date may have already passed. That does not always end things. A tribunal can be asked to allow a late application, and a free service can tell you what is still possible.",
     "howCounted": "Counted {howCounted}.",
     "unverifiedTitle": "A time limit applies",
     "addReminder": "Add a reminder to my calendar",

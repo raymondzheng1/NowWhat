@@ -1,5 +1,5 @@
 {
-  "builtAt": "f27c874d78d79142",
+  "builtAt": "7ae34cef2c66831d",
   "processes": [
     {
       "id": "judicial-review",
@@ -78,7 +78,8 @@
       "canApply": [
         "There must be a law that gives a right of review for this kind of decision.",
         "You usually need to be a person affected by the decision (this is called standing).",
-        "There is almost always a time limit — this is the part people miss most."
+        "There is almost always a time limit — this is the part people miss most.",
+        "If the time limit has passed, the tribunal can still be asked to allow a late application. It does not have to say yes, but it can be asked."
       ],
       "whatHappens": [
         "You lodge an application with the tribunal.",
