@@ -1,5 +1,5 @@
 {
-  "builtAt": "98e475c498394d29",
+  "builtAt": "e234411660c98704",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -275,7 +275,7 @@
       "reviewCadenceDays": 90,
       "reasonsRequest": {
         "how": "ask the decision-maker in writing for a statement of reasons",
-        "provision": "Administrative Law Act 1978 (Vic) s 10",
+        "provision": "Administrative Law Act 1978 (Vic) s 8",
         "extendsMR": "depends on the Act your decision was made under — confirm before relying on it",
         "extendsJR": false
       },

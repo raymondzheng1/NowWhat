@@ -37,7 +37,7 @@ sourceUrl: 'https://www.ombudsman.vic.gov.au'
 reviewCadenceDays: 90
 reasonsRequest:
   how: ask the decision-maker in writing for a statement of reasons
-  provision: 'Administrative Law Act 1978 (Vic) s 10'
+  provision: 'Administrative Law Act 1978 (Vic) s 8'
   extendsMR: 'depends on the Act your decision was made under — confirm before relying on it'
   extendsJR: false
 privativeClause: false
