@@ -9,7 +9,7 @@ rows:
   - { aspect: "Who can apply", mr: "Whoever the law for that decision says can apply", jr: "A person with a real interest in the decision" }
   - { aspect: "Cost and formality", mr: "Usually cheaper and less formal", jr: "More formal, and often needs a lawyer" }
   - { aspect: "The money risk", mr: "Usually free, or a low fee", jr: "Court fees. You may also be ordered to pay the other side's costs." }
-  - { aspect: "When it is available", mr: "Only where a law gives a review right", jr: "Where there is a legal error (a ground of review)" }
+  - { aspect: "When it is available", mr: "Only where a law gives a review right for that decision", jr: "Generally available. Whether there was a legal error is the question a court decides, not a condition for asking. A law cannot take that power away from the court." }
 chooser:
   question: "What are you hoping for?"
   options:

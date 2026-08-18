@@ -7,7 +7,8 @@ question: Is this the correct or preferable decision?
 whatItIs: >-
   Merits review means an independent tribunal looks at the decision again — on
   the facts and the law — as if it were being made fresh. The tribunal stands in
-  the shoes of the original decision-maker and applies the same rules. It can
+  the shoes of the original decision-maker. It must apply the same rules that
+  bound them, so it is not free to decide on general fairness alone. It can
   agree with the decision, change part of it, or replace it with a different
   one. It is usually cheaper, faster, and less formal than going to court.
 bodies:

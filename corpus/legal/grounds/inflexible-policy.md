@@ -1,6 +1,6 @@
 ---
 id: inflexible-policy
-name: Inflexible policy / acting under dictation
+name: Inflexible application of policy / acting under dictation
 plainName: They followed a rule or an order instead of deciding your case
 oneLine: A rule can be applied so rigidly that a person is never considered.
 whatItMeans: >-

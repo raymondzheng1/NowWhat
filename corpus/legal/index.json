@@ -1,5 +1,5 @@
 {
-  "builtAt": "7ae34cef2c66831d",
+  "builtAt": "2110f111ac2a6cf0",
   "processes": [
     {
       "id": "judicial-review",
@@ -62,7 +62,7 @@
       "plainName": "Asking for a fresh look at the decision",
       "oneLine": "A tribunal looks at your case again and can make a different decision.",
       "question": "Is this the correct or preferable decision?",
-      "whatItIs": "Merits review means an independent tribunal looks at the decision again — on the facts and the law — as if it were being made fresh. The tribunal stands in the shoes of the original decision-maker and applies the same rules. It can agree with the decision, change part of it, or replace it with a different one. It is usually cheaper, faster, and less formal than going to court.",
+      "whatItIs": "Merits review means an independent tribunal looks at the decision again — on the facts and the law — as if it were being made fresh. The tribunal stands in the shoes of the original decision-maker. It must apply the same rules that bound them, so it is not free to decide on general fairness alone. It can agree with the decision, change part of it, or replace it with a different one. It is usually cheaper, faster, and less formal than going to court.",
       "bodies": [
         {
           "jurisdiction": "Cth",
@@ -153,8 +153,8 @@
       },
       {
         "aspect": "When it is available",
-        "mr": "Only where a law gives a review right",
-        "jr": "Where there is a legal error (a ground of review)"
+        "mr": "Only where a law gives a review right for that decision",
+        "jr": "Generally available. Whether there was a legal error is the question a court decides, not a condition for asking. A law cannot take that power away from the court."
       }
     ],
     "chooser": {
@@ -597,7 +597,7 @@
     },
     {
       "id": "inflexible-policy",
-      "name": "Inflexible policy / acting under dictation",
+      "name": "Inflexible application of policy / acting under dictation",
       "plainName": "They followed a rule or an order instead of deciding your case",
       "oneLine": "A rule can be applied so rigidly that a person is never considered.",
       "whatItMeans": "A decision-maker who has a discretion must actually use it. Applying a policy with no room for your circumstances can be unlawful. So can simply doing what another person told them to do.",
@@ -1091,7 +1091,7 @@
       "name": "A state of mind the power depended on",
       "plainName": "They had to be satisfied of something first",
       "oneLine": "Some powers only exist once the decision-maker is satisfied of something.",
-      "whatItMeans": "Sometimes an Act says a decision can be made if the decision-maker is satisfied of something. The law asks whether they really turned their mind to it. A view reached with no sensible path to it is not being satisfied at all.",
+      "whatItMeans": "Sometimes an Act says a decision can be made if the decision-maker is satisfied of something. Courts describe this in two ways. One looks at whether the reasoning holds together. The other asks whether the conclusion was open to them on the material they had. The bar is a high one either way.",
       "plainExample": "A rule lets an office act if it is satisfied you were told. Nobody looked at whether you were told.",
       "whatRelates": [
         "The letter states a conclusion about you with nothing behind it.",
@@ -1099,11 +1099,11 @@
         "The material in front of them pointed the other way.",
         "Two parts of the letter cannot both be true."
       ],
-      "whatItIsNot": "This is not about disagreeing with the outcome. It is about whether they really formed the view the law asked them to form.",
+      "whatItIsNot": "This is not about disagreeing with the outcome. It is about whether they really formed the view the law asked them to form. Not every slip in logic counts, and a court will be slow to step in.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "Where a power depends on the decision-maker being satisfied of something, that state of satisfaction must be reached on a rational basis.",
+      "test": "Where a power depends on the decision-maker being satisfied of something, that state of satisfaction must be reached on a rational basis. The threshold is whether no rational decision-maker could have reached that conclusion on that evidence.",
       "elements": [
         {
           "id": "was-satisfied",
@@ -1125,6 +1125,11 @@
           "name": "Minister for Immigration and Citizenship v SZMDS (2010) 240 CLR 611",
           "pinpoint": "",
           "explains": "A view held with no logical path to it is not the state of mind the law asked for."
+        },
+        {
+          "name": "Plaintiff M70/2011 v Minister for Immigration and Citizenship (2011) 244 CLR 144",
+          "pinpoint": "French CJ",
+          "explains": "Where a power depends on the decision-maker forming a state of mind, that state of mind is itself the thing the power depends on."
         }
       ],
       "jurisdictions": []

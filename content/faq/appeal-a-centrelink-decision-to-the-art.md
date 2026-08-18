@@ -24,7 +24,7 @@ updated: '2026-06-30'
 
 ## What is the ART?
 
-The ART is independent. It is not part of Centrelink. It can look at many Centrelink decisions again and decide if they were right.
+The ART is independent. It is not part of Centrelink. It can look at many Centrelink decisions again and make the decision fresh. It is not marking Centrelink’s work. It decides what the right decision is now, using the most up-to-date information you give it.
 
 ## What steps come before the ART?
 
