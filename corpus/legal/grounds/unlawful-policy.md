@@ -38,9 +38,7 @@ sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
 leadingCases:
-  - name: >-
-      Drake v Minister for Immigration and Ethnic Affairs (No 1) (1979) 46 FLR
-      409
+  - name: Re Drake (No 2)
     pinpoint: ''
     explains: >-
       A policy must leave the decision-maker's discretion intact.
@@ -52,3 +50,9 @@ leadingCases:
 A policy can go wrong in two different ways. The policy itself may not match the Act. That is this ground. Or a lawful policy may be applied without looking at the person. That is the inflexible policy ground instead.
 
 Provenance. This ground is drawn from our own verified judicial review materials. The cases it cites come from the same source. Verified on 2026-08-16. A supervising lawyer sign-off is tracked separately.
+
+Case corrected 2026-08-19. This entry cited Drake (No 1); every policy proposition in our
+materials is attributed to Drake (No 2) — "It must not apply a policy that is unlawful,
+inconsistent with the statute, or leads to an improper exercise of discretion. (Drake No 2)" and
+"Lawful policy 'leaves the range of discretion intact while guiding the exercise of the power'
+(Drake No 2)". Drake (No 1) is the authority for the nature of merits review, a different point.

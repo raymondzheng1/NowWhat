@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { listDataEntries, getDataEntry } from "@/lib/data";
 import type { DataPathway, Jurisdiction } from "@/lib/schemas/data";
-import type { Process, Ground } from "@/lib/schemas/legal";
+import { groundAppliesIn, type Process, type Ground } from "@/lib/schemas/legal";
 import { avenueView } from "@/lib/triage";
 import { planFor } from "@/lib/analysis";
 import { AnalysisPanel } from "@/components/feature/AnalysisPanel";
@@ -642,6 +642,13 @@ function ResultStep({
   corpusEntry?: PathwayEntry;
 }) {
   // Hooks first: the tripwire below can return early, and hook order must not change.
+  // Grounds are scoped to where the person actually is. Every common-law ground is unscoped
+  // and survives; the Victorian Charter ground does not reach a Commonwealth decision, and
+  // offering it there would send someone looking for a protection they do not have.
+  const shownGrounds = useMemo(
+    () => jrGrounds.filter((g) => groundAppliesIn(g, jurisdiction)),
+    [jrGrounds, jurisdiction],
+  );
   // `null` means "whichever path comes first for this decision" — resolved once we know it.
   const [applyKind, setApplyKind] = useState<DraftKind | null>(null);
   const [applyCopied, setApplyCopied] = useState(false);
@@ -759,7 +766,7 @@ function ResultStep({
     { id: "r-analysis", label: t("analysisTitle") },
     ...(av.mrAvailable || av.jrAvailable ? [{ id: "r-learn", label: t("learnTitle") }] : []),
     { id: "r-reasons", label: t("reasonsTitle") },
-    ...((av.mrAvailable || av.jrAvailable) && jrGrounds.length > 0
+    ...((av.mrAvailable || av.jrAvailable) && shownGrounds.length > 0
       ? [{ id: "r-grounds", label: t("groundsTitle") }]
       : []),
     ...(relatedGrounds.length > 0 || applyDraft ? [{ id: "r-account", label: t("accountTitle") }] : []),
@@ -773,7 +780,7 @@ function ResultStep({
     decisionDate: decisionDate || undefined,
   });
 
-  const groundNameById = new Map(jrGrounds.map((g) => [g.id, g.plainName] as const));
+  const groundNameById = new Map(shownGrounds.map((g) => [g.id, g.plainName] as const));
 
   function downloadHandoff() {
     const text = buildHandoff({
@@ -1053,13 +1060,13 @@ function ResultStep({
       </section>
 
       {/* Grounds people raise — in-flow, neutral; selection flows into the hand-off */}
-      {(av.mrAvailable || av.jrAvailable) && jrGrounds.length > 0 && (
+      {(av.mrAvailable || av.jrAvailable) && shownGrounds.length > 0 && (
         <section id="r-grounds" data-tour="grounds" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("groundsTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("groundsLead")}</p>
           <div className="mt-5">
             <GroundsExplorer
-              grounds={jrGrounds}
+              grounds={shownGrounds}
               selectable
               selected={relatedGrounds}
               onToggle={onToggleGround}
@@ -1112,7 +1119,7 @@ function ResultStep({
               </p>
               <ul className="mt-2 space-y-1.5">
                 {relatedGrounds.map((id) => {
-                  const g = jrGrounds.find((x) => x.id === id);
+                  const g = shownGrounds.find((x) => x.id === id);
                   if (!g) return null;
                   const inLetter = Boolean(LETTER_GROUND_HEADINGS[id]) && !LAWYER_NOTE_ONLY.has(id);
                   return (

@@ -1,5 +1,5 @@
 {
-  "builtAt": "60011ae255efe6ea",
+  "builtAt": "c689db1f3a544464",
   "processes": [
     {
       "id": "judicial-review",
@@ -87,13 +87,16 @@
       "remedies": [
         "Affirm — keep the decision the same.",
         "Vary — change part of the decision.",
-        "Set aside and substitute — replace it with a new decision."
+        "Set aside and substitute — replace it with a new decision.",
+        "Remit — send it back to the original decision-maker to be made again, with directions about how."
       ],
       "limits": [
         "Merits review is only available where a law provides it — not every decision can be reviewed on the merits."
       ],
       "goodToKnow": [
-        "Because the tribunal can change the outcome, merits review is usually what people want when they disagree with the result."
+        "Because the tribunal can change the outcome, merits review is usually what people want when they disagree with the result.",
+        "The tribunal decides on the best and most current information. So you can usually give it things that did not exist when the first decision was made, such as a new medical report.",
+        "The tribunal applies the same rules the first decision-maker had to apply. It is not free to decide on general fairness alone."
       ],
       "sources": [
         "VCAT — vcat.vic.gov.au",
@@ -126,9 +129,24 @@
         "jr": "Set it aside and send it back — not replace it"
       },
       {
+        "aspect": "The evidence they look at",
+        "mr": "The best and most current evidence. You can give them new information.",
+        "jr": "Usually only what was in front of the original decision-maker."
+      },
+      {
+        "aspect": "Who can apply",
+        "mr": "Whoever the law for that decision says can apply",
+        "jr": "A person with a real interest in the decision"
+      },
+      {
         "aspect": "Cost and formality",
         "mr": "Usually cheaper and less formal",
         "jr": "More formal, and often needs a lawyer"
+      },
+      {
+        "aspect": "The money risk",
+        "mr": "Usually free, or a low fee",
+        "jr": "Court fees. You may also be ordered to pay the other side's costs."
       },
       {
         "aspect": "When it is available",
@@ -170,6 +188,14 @@
         "a": "Sometimes both are possible. They have different time limits, so it is worth getting free legal advice early so you do not miss one."
       },
       {
+        "q": "Can I give them new information?",
+        "a": "At merits review, usually yes. The tribunal decides on the best and most current evidence, so it can look at things that did not exist when the first decision was made. Judicial review is different — a court usually looks only at what was in front of the original decision-maker."
+      },
+      {
+        "q": "Could I have to pay the government's legal costs?",
+        "a": "At a tribunal, usually not — merits review is designed to be low-cost and people often act for themselves. Judicial review is a court case, so there are court fees and a court can order you to pay the other side's costs. This is one reason to get free legal help before filing in a court."
+      },
+      {
         "q": "Is merits review or judicial review cheaper?",
         "a": "Merits review at a tribunal is usually cheaper and less formal than going to court for judicial review. Many tribunal reviews are free or low-cost; check the rule for your decision."
       }
@@ -209,7 +235,8 @@
           "pinpoint": "at [43]-[48]",
           "explains": "What bad faith requires — a serious allegation of dishonesty that is rarely made out."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "breach-consequences",
@@ -224,11 +251,11 @@
         "A time frame in the rules was not kept to.",
         "Something went wrong that might have changed the answer."
       ],
-      "whatItIsNot": "This is not a ground on its own. It is the question that follows once something has gone wrong.",
+      "whatItIsNot": "This is not a ground on its own. It is the question that follows once something has gone wrong. It is also not a single rule for every mistake: a few problems are serious enough to count without asking whether they changed the outcome.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "Whether a mistake makes a decision invalid depends on the purpose of the Act, and on whether the mistake could have made a difference.",
+      "test": "Whether a mistake makes a decision invalid depends on the purpose of the Act, and on whether the mistake could have made a difference. Some problems do not need that second step. Bias and unreasonableness count on their own.",
       "elements": [
         {
           "id": "what-was-missed",
@@ -260,6 +287,78 @@
           "name": "Hossain v Minister for Immigration and Border Protection (2018) 264 CLR 123",
           "pinpoint": "at [29]",
           "explains": "A mistake usually has to be able to change the outcome to matter."
+        },
+        {
+          "name": "Minister for Immigration and Multicultural Affairs v Bhardwaj (2002) 209 CLR 597",
+          "pinpoint": "Gaudron and Gummow JJ",
+          "explains": "Where the error goes to the power itself, the law treats what happened as no decision at all."
+        }
+      ],
+      "jurisdictions": []
+    },
+    {
+      "id": "charter-proper-consideration",
+      "name": "Human rights were not properly considered (Victoria)",
+      "plainName": "They did not properly think about your human rights",
+      "oneLine": "In Victoria, a public authority has to give real thought to your human rights.",
+      "whatItMeans": "Victoria has a Charter of human rights. It binds public authorities in Victoria. It asks two things of them. They must not act in a way that is not compatible with your human rights. They must also give proper consideration to any human right the decision affects. Proper consideration means real thought, not a box ticked.",
+      "plainExample": "A public body decides where you will live. Nothing in the reasons shows anyone thought about what that would mean for your family.",
+      "whatRelates": [
+        "A Victorian public authority made the decision.",
+        "The decision affects something personal — your home, your family, your privacy, or how you were treated.",
+        "The reasons never mention your rights at all.",
+        "The reasons mention your rights, but only as a heading.",
+        "A right was limited, and the reasons do not explain why that was needed."
+      ],
+      "whatItIsNot": "This is not a case you win on its own. Breaking this duty is unlawful, but by itself it does not automatically make the decision invalid. It usually runs alongside another ground rather than replacing one. It also applies only in Victoria.",
+      "usedIn": [
+        "judicial-review"
+      ],
+      "jurisdictions": [
+        "Vic"
+      ],
+      "test": "A public authority must not act incompatibly with a human right, and must give proper consideration to a relevant human right. Proper consideration is a higher standard than the ordinary duty to take a relevant matter into account.",
+      "elements": [
+        {
+          "id": "public-authority",
+          "name": "A Victorian public authority",
+          "layPrompt": "Was the decision made by a Victorian public body?"
+        },
+        {
+          "id": "right-affected",
+          "name": "A human right the decision touches",
+          "layPrompt": "Did the decision affect something the Charter protects, such as your home, your family, or your privacy?"
+        },
+        {
+          "id": "real-thought",
+          "name": "Real thought about the effect on you",
+          "layPrompt": "Do the reasons show they thought about what this would mean for you?"
+        },
+        {
+          "id": "justified",
+          "name": "Whether limiting the right was justified",
+          "layPrompt": "If a right was limited, do the reasons explain why that limit was necessary?"
+        }
+      ],
+      "sources": [
+        "Owner's administrative-law knowledge base (Combined MR/JR Framework; JR Hypo, 2026-08-19)"
+      ],
+      "status": "verified",
+      "leadingCases": [
+        {
+          "name": "Bare v IBAC",
+          "pinpoint": "",
+          "explains": "Proper consideration has two sides. One is about the thinking. It asks whether they really turned their mind to the effect on you."
+        },
+        {
+          "name": "Certain Children",
+          "pinpoint": "",
+          "explains": "Both sides of the duty must be met. A breach is unlawful, but on its own it is not jurisdictional error."
+        },
+        {
+          "name": "Thompson v Minogue",
+          "pinpoint": "",
+          "explains": "Once a right is limited, it is for the state to show the limit is demonstrably justified."
         }
       ]
     },
@@ -324,7 +423,8 @@
           "pinpoint": "",
           "explains": "Whether a breach makes an act invalid depends on what the Act intended."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "error-of-law",
@@ -370,7 +470,8 @@
           "pinpoint": "at 394-397",
           "explains": "Where the line runs between a question of fact and a question of law."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "illogicality",
@@ -417,7 +518,8 @@
           "pinpoint": "at 367 [76]",
           "explains": "A decision needs a reason you can see and follow."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "improper-purpose",
@@ -475,7 +577,8 @@
           "pinpoint": "",
           "explains": "The improper purpose need not be the only purpose, only a substantial one."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "inflexible-policy",
@@ -514,7 +617,7 @@
       "status": "verified",
       "leadingCases": [
         {
-          "name": "Drake v Minister for Immigration and Ethnic Affairs (No 1) (1979) 46 FLR 409",
+          "name": "Re Drake (No 2)",
           "pinpoint": "",
           "explains": "A policy may guide a decision. It may not replace it."
         },
@@ -523,7 +626,8 @@
           "pinpoint": "Stephen J at 9-10",
           "explains": "A rule was applied so rigidly that the person was never considered."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "invalid-delegation",
@@ -576,7 +680,8 @@
           "pinpoint": "Logan J",
           "explains": "Whether a subordinate may sign in the named person's place depends on the Act."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "irrelevant-considerations",
@@ -619,7 +724,8 @@
           "pinpoint": "",
           "explains": "The same Act can also imply which matters must be left out."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "jurisdictional-error",
@@ -670,7 +776,8 @@
           "pinpoint": "at [76]",
           "explains": "A law can say a decision is final. That still does not protect a decision made outside the power."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "no-evidence",
@@ -716,7 +823,8 @@
           "pinpoint": "at [28]",
           "explains": "Some facts must actually exist before a power can be used — and a court can check for itself."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "objective-jurisdictional-fact",
@@ -763,14 +871,15 @@
           "pinpoint": "at [22]",
           "explains": "A court can decide such a fact for itself, not just review the view taken."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "procedural-fairness-bias",
       "name": "Procedural fairness — the rule against bias",
       "plainName": "The person deciding was not neutral",
       "oneLine": "The person deciding must not have a stake, or a closed mind.",
-      "whatItMeans": "The person deciding must come to your case with an open mind. They should not have money or personal ties to the result. It can also matter how the situation looks to an outsider.",
+      "whatItMeans": "The person deciding must come to your case with an open mind. They should not have money or personal ties to the result. There are two separate versions of this. One asks what was actually in their mind. The other asks how the situation would look to a fair-minded onlooker. The second one is the more usual way it is raised.",
       "plainExample": "The council officer who looked into your case also decided your fine. Nobody else took part.",
       "whatRelates": [
         "The same person looked into your case and then decided it.",
@@ -779,11 +888,11 @@
         "You were told the answer before you finished explaining.",
         "The decision-maker had a role at an earlier stage."
       ],
-      "whatItIsNot": "It does not mean the decision-maker must have no views. A firm view is not the same as a closed mind.",
+      "whatItIsNot": "It does not mean the decision-maker must have no views. A firm view is not the same as a closed mind. Showing what was really in someone's mind is a high bar, so the fair-minded-onlooker version is the one usually relied on.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "The test asks what a fair-minded lay observer might think. It looks at what might sway the decision-maker. It also looks at how that connects to the decision.",
+      "test": "For a reasonable apprehension of bias, a decision-maker is disqualified if a fair-minded lay observer might reasonably apprehend that they might not bring an impartial mind to the question. The question is one of possibility, real and not remote, rather than probability. For actual bias, the state of mind must be so committed to a conclusion already formed as to be incapable of alteration.",
       "elements": [
         {
           "id": "interest-or-role",
@@ -792,8 +901,8 @@
         },
         {
           "id": "connection",
-          "name": "A link to this decision",
-          "layPrompt": "Did that thing have anything to do with your decision?"
+          "name": "A link between that thing and this decision",
+          "layPrompt": "Can you join the dots between that thing and the decision going the way it did?"
         },
         {
           "id": "closed-mind",
@@ -802,26 +911,22 @@
         }
       ],
       "sources": [
-        "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
+        "Owner's administrative-law knowledge base (JR Hypo, 2026-08-19)"
       ],
       "status": "verified",
       "leadingCases": [
         {
-          "name": "Isbester v Knox City Council (2015) 255 CLR 135",
-          "pinpoint": "",
-          "explains": "An officer who ran the case against a person then helped decide it."
+          "name": "Minister for Immigration and Multicultural Affairs v Jia Legeng (2001) 205 CLR 507",
+          "pinpoint": "Gleeson CJ and Gummow J",
+          "explains": "Actual bias means a mind so fixed it cannot be changed. Having leanings one way is not enough."
         },
         {
           "name": "Ebner v Official Trustee in Bankruptcy (2000) 205 CLR 337",
           "pinpoint": "Gleeson CJ, McHugh, Gummow and Hayne JJ",
-          "explains": "The test asks what a fair-minded lay observer might reasonably think."
-        },
-        {
-          "name": "Minister for Immigration and Multicultural Affairs v Jia Legeng (2001) 205 CLR 507",
-          "pinpoint": "Gleeson CJ and Gummow J",
-          "explains": "Actual bias means a mind so fixed it cannot be changed."
+          "explains": "The other version asks what a fair-minded onlooker might think. It has two steps. First, name the thing that might pull the decision off course. Then show how it connects to this decision."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "procedural-fairness-hearing",
@@ -894,7 +999,8 @@
           "pinpoint": "Kiefel CJ, Keane and Gleeson JJ",
           "explains": "Deciding on a new issue without notice can deny a fair hearing."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "relevant-considerations",
@@ -962,7 +1068,8 @@
           "pinpoint": "",
           "explains": "A Victorian court applied that human rights duty to prison conditions."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "subjective-jurisdictional-fact",
@@ -1004,7 +1111,8 @@
           "pinpoint": "",
           "explains": "A view held with no logical path to it is not the state of mind the law asked for."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "unlawful-policy",
@@ -1048,7 +1156,7 @@
       "status": "verified",
       "leadingCases": [
         {
-          "name": "Drake v Minister for Immigration and Ethnic Affairs (No 1) (1979) 46 FLR 409",
+          "name": "Re Drake (No 2)",
           "pinpoint": "",
           "explains": "A policy must leave the decision-maker's discretion intact."
         },
@@ -1057,7 +1165,8 @@
           "pinpoint": "",
           "explains": "A policy cannot override what the Act says."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "unreasonableness",
@@ -1096,7 +1205,7 @@
         {
           "name": "Minister for Home Affairs v DUA16 (2020) 271 CLR 550",
           "pinpoint": "",
-          "explains": "A decision needs a reason you can see and follow."
+          "explains": "Heard with a second case that went the other way. Whether a failure is unreasonable turns on the statute and on what actually went wrong."
         },
         {
           "name": "Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1 KB 223",
@@ -1107,8 +1216,14 @@
           "name": "Minister for Immigration and Citizenship v Li (2013) 249 CLR 332",
           "pinpoint": "at [76]",
           "explains": "The test used in Australia now. A decision needs a reason you can see and follow."
+        },
+        {
+          "name": "Minister for Immigration and Border Protection v SZVFW (2018) 264 CLR 541",
+          "pinpoint": "Kiefel CJ",
+          "explains": "The test is a stringent one. A court will not step in lightly where the law leaves the choice to the decision-maker."
         }
-      ]
+      ],
+      "jurisdictions": []
     },
     {
       "id": "without-authority",
@@ -1176,7 +1291,8 @@
           "pinpoint": "",
           "explains": "A court checks whether a decision was lawful, not whether it was right."
         }
-      ]
+      ],
+      "jurisdictions": []
     }
   ],
   "triage": {

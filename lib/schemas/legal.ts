@@ -52,9 +52,27 @@ export const GroundSchema = z.object({
   elements: z.array(ElementSchema).min(1),
   leadingCases: z.array(LeadingCaseSchema).default([]),
   sources: z.array(z.string()).default([]),
+  /**
+   * Where this ground is available. EMPTY MEANS EVERYWHERE — true of every common-law
+   * ground, so existing entries need no change. Set it only for a ground that genuinely
+   * does not exist outside one jurisdiction: the Charter of Human Rights and
+   * Responsibilities Act 2006 is Victorian, and showing it to somebody challenging a
+   * Commonwealth decision would send them looking for a protection they do not have.
+   */
+  jurisdictions: z.array(JurisdictionName).default([]),
   status: z.enum(["seed", "verified"]).default("seed"),
 });
 export type Ground = z.infer<typeof GroundSchema>;
+
+/** True when `g` is available to somebody in `jurisdiction` (unscoped grounds always are). */
+export function groundAppliesIn(
+  g: Pick<Ground, "jurisdictions">,
+  jurisdiction: "Vic" | "Cth" | undefined,
+): boolean {
+  if (!g.jurisdictions || g.jurisdictions.length === 0) return true;
+  if (!jurisdiction) return true;
+  return g.jurisdictions.includes(jurisdiction);
+}
 
 // ---- Processes (merits review / judicial review) ---------------------------
 export const ProcessBodySchema = z.object({

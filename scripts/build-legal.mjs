@@ -48,6 +48,7 @@ function loadGrounds() {
     g.elements = asArray(g.elements);
     g.leadingCases = asArray(g.leadingCases);
     g.sources = asArray(g.sources);
+    g.jurisdictions = asArray(g.jurisdictions);
     g.whatItIsNot = g.whatItIsNot ?? "";
     g.status = g.status ?? "seed";
     const need = (c, m) => { if (!c) fail(`grounds/${f}: ${m}`); };

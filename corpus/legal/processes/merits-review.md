@@ -34,6 +34,9 @@ remedies:
   - Affirm — keep the decision the same.
   - Vary — change part of the decision.
   - Set aside and substitute — replace it with a new decision.
+  - >-
+    Remit — send it back to the original decision-maker to be made again, with
+    directions about how.
 limits:
   - >-
     Merits review is only available where a law provides it — not every decision
@@ -42,6 +45,13 @@ goodToKnow:
   - >-
     Because the tribunal can change the outcome, merits review is usually what
     people want when they disagree with the result.
+  - >-
+    The tribunal decides on the best and most current information. So you can
+    usually give it things that did not exist when the first decision was made,
+    such as a new medical report.
+  - >-
+    The tribunal applies the same rules the first decision-maker had to apply.
+    It is not free to decide on general fairness alone.
 sources:
   - VCAT — vcat.vic.gov.au
   - Administrative Review Tribunal — art.gov.au

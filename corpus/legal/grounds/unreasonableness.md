@@ -44,7 +44,8 @@ leadingCases:
       Minister for Home Affairs v DUA16 (2020) 271 CLR 550
     pinpoint: ''
     explains: >-
-      A decision needs a reason you can see and follow.
+      Heard with a second case that went the other way. Whether a failure is
+      unreasonable turns on the statute and on what actually went wrong.
   - name: >-
       Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1
       KB 223
@@ -57,6 +58,17 @@ leadingCases:
     explains: >-
       The test used in Australia now. A decision needs a reason you can see
       and follow.
+  - name: >-
+      Minister for Immigration and Border Protection v SZVFW (2018) 264 CLR 541
+    pinpoint: 'Kiefel CJ'
+    explains: >-
+      The test is a stringent one. A court will not step in lightly where the
+      law leaves the choice to the decision-maker.
 ---
 
 Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (citations + judgment pinpoints) added and approved by the owner on 2026-07-12. They are not yet rendered in the UI; the v2 elements/cases feature may rely on them.
+
+Two corrections 2026-08-19. DUA16 was explaining Li's proposition ("evident and intelligible
+justification"); in our materials DUA16 is the case where the failure was NOT legally unreasonable,
+paired with CHK16 where it was. And SZVFW was missing entirely, though our materials pair it with
+Li throughout and it carries "The test for unreasonableness is 'necessarily stringent'".

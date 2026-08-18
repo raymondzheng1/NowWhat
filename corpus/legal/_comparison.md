@@ -5,7 +5,10 @@ rows:
   - { aspect: "Who decides", mr: "A tribunal (VCAT or the ART)", jr: "A court (Supreme Court or Federal Court)" }
   - { aspect: "What they look at", mr: "The facts and the law, fresh", jr: "Only how the decision was made — its legality" }
   - { aspect: "What they can do", mr: "Change or replace the decision", jr: "Set it aside and send it back — not replace it" }
+  - { aspect: "The evidence they look at", mr: "The best and most current evidence. You can give them new information.", jr: "Usually only what was in front of the original decision-maker." }
+  - { aspect: "Who can apply", mr: "Whoever the law for that decision says can apply", jr: "A person with a real interest in the decision" }
   - { aspect: "Cost and formality", mr: "Usually cheaper and less formal", jr: "More formal, and often needs a lawyer" }
+  - { aspect: "The money risk", mr: "Usually free, or a low fee", jr: "Court fees. You may also be ordered to pay the other side's costs." }
   - { aspect: "When it is available", mr: "Only where a law gives a review right", jr: "Where there is a legal error (a ground of review)" }
 chooser:
   question: "What are you hoping for?"
@@ -20,6 +23,10 @@ faq:
     a: "If you want a different outcome, merits review (where a law provides it) is usually the path. If the problem is how the decision was made, judicial review checks its legality. The time limits are different, so a free legal service can help you choose quickly."
   - q: "Can I use both merits review and judicial review?"
     a: "Sometimes both are possible. They have different time limits, so it is worth getting free legal advice early so you do not miss one."
+  - q: "Can I give them new information?"
+    a: "At merits review, usually yes. The tribunal decides on the best and most current evidence, so it can look at things that did not exist when the first decision was made. Judicial review is different — a court usually looks only at what was in front of the original decision-maker."
+  - q: "Could I have to pay the government's legal costs?"
+    a: "At a tribunal, usually not — merits review is designed to be low-cost and people often act for themselves. Judicial review is a court case, so there are court fees and a court can order you to pay the other side's costs. This is one reason to get free legal help before filing in a court."
   - q: "Is merits review or judicial review cheaper?"
     a: "Merits review at a tribunal is usually cheaper and less formal than going to court for judicial review. Many tribunal reviews are free or low-cost; check the rule for your decision."
 ---
