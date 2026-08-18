@@ -1,5 +1,5 @@
 {
-  "builtAt": "c689db1f3a544464",
+  "builtAt": "1b62ed8456ab0736",
   "processes": [
     {
       "id": "judicial-review",
@@ -46,6 +46,8 @@
         "Judicial review is about legality, not about whether the decision was harsh or wrong on the facts."
       ],
       "goodToKnow": [
+        "A tribunal's own decision can be judicially reviewed. The tribunal acts under a law too, so a court can check that it kept within the law.",
+        "A court will not simply disagree with the result. It looks at whether the decision was made lawfully.",
         "Judicial review can be technical and the time limits are tight — getting free legal help early really matters."
       ],
       "sources": [
@@ -186,6 +188,18 @@
       {
         "q": "Can I use both merits review and judicial review?",
         "a": "Sometimes both are possible. They have different time limits, so it is worth getting free legal advice early so you do not miss one."
+      },
+      {
+        "q": "If both are open, which one comes first?",
+        "a": "Where a law gives a right to merits review, that is usually the step people take first. It costs less, it can change the outcome, and a fresh decision may settle the matter without a court. Judicial review does not disappear in the meantime — it stays open for the legality questions."
+      },
+      {
+        "q": "What if the tribunal decides against me too?",
+        "a": "A tribunal's decision is itself a decision made under a law. That means it can be judicially reviewed as well, on the same legality grounds — for example if the tribunal applied the wrong test or did not give you a fair hearing. This is technical, so it is worth free legal help."
+      },
+      {
+        "q": "Is there one first step that helps either way?",
+        "a": "Asking for the reasons in writing helps with both. It is usually free, and it shows you what the decision-maker actually relied on. That is what tells you whether your complaint is about the outcome or about how the decision was made."
       },
       {
         "q": "Can I give them new information?",

@@ -53,6 +53,12 @@ limits:
     or wrong on the facts.
 goodToKnow:
   - >-
+    A tribunal's own decision can be judicially reviewed. The tribunal acts
+    under a law too, so a court can check that it kept within the law.
+  - >-
+    A court will not simply disagree with the result. It looks at whether the
+    decision was made lawfully.
+  - >-
     Judicial review can be technical and the time limits are tight — getting
     free legal help early really matters.
 sources:

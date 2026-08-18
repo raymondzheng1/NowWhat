@@ -66,6 +66,14 @@ pathways:
     howToStart: "ask for a payment plan, or ask about a Work and Development Permit if you are in hardship (for example illness, disability, addiction, homelessness or family violence)"
     cost: "free"
     source: "fines.vic.gov.au — pay by instalments; Work and Development Permit"
+  - name: "Complain to the Victorian Ombudsman"
+    body: "Victorian Ombudsman"
+    deadline: "There is no strict time limit on making a complaint, but complaining sooner is usually better."
+    deadlineDays: null
+    deadlineVerified: false
+    howToStart: "make a complaint through ombudsman.vic.gov.au — this is about how the agency handled things, so keep track of any review time limit as well"
+    cost: "free"
+    source: "Victorian Ombudsman — ombudsman.vic.gov.au"
 rightToReasons:
   available: "yes"
   how: "after a review, the agency must tell you the outcome in writing"
@@ -106,6 +114,7 @@ sources:
   - "Fines Victoria — online.fines.vic.gov.au"
   - "Infringements Act 2006 (Vic) — legislation.vic.gov.au"
   - "Victoria Legal Aid — Fines and infringements — legalaid.vic.gov.au"
+  - 'Victorian Ombudsman — ombudsman.vic.gov.au'
 lastVerified: "2026-06-16"
 ---
 

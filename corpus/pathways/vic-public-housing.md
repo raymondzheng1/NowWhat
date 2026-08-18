@@ -59,6 +59,14 @@ pathways:
     howToStart: "use the provider's internal complaints process, then contact the Housing Registrar"
     cost: "free"
     source: "tenantsvic.org.au — community housing"
+  - name: "Complain to the Victorian Ombudsman"
+    body: "Victorian Ombudsman"
+    deadline: "There is no strict time limit on making a complaint, but complaining sooner is usually better."
+    deadlineDays: null
+    deadlineVerified: false
+    howToStart: "make a complaint through ombudsman.vic.gov.au — this is separate from an appeal, so keep track of any appeal time limit as well"
+    cost: "free"
+    source: "Victorian Ombudsman — ombudsman.vic.gov.au"
 rightToReasons:
   available: "yes"
   how: "if your application is not approved you get a letter explaining why, and a notice to vacate must state the reason"
@@ -98,6 +106,7 @@ sources:
   - "Victorian housing department — Appeal a decision (Housing Appeals Office) — housing.vic.gov.au"
   - "Residential Tenancies Act 1997 (Vic); VCAT — vcat.vic.gov.au"
   - "Tenants Victoria — tenantsvic.org.au"
+  - 'Victorian Ombudsman — ombudsman.vic.gov.au'
 lastVerified: "2026-06-16"
 ---
 

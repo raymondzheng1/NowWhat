@@ -46,6 +46,14 @@ pathways:
     howToStart: "apply to the ART for review, usually after the internal review"
     cost: "applying for review of a Centrelink decision is usually free"
     source: "art.gov.au — apply for a review"
+  - name: "Complain to the Commonwealth Ombudsman"
+    body: "Commonwealth Ombudsman"
+    deadline: "There is no strict time limit on making a complaint, but complaining sooner is usually better."
+    deadlineDays: null
+    deadlineVerified: false
+    howToStart: "make a complaint through ombudsman.gov.au — this is separate from asking for a review, so keep track of any review time limit as well"
+    cost: "free"
+    source: "Commonwealth Ombudsman — ombudsman.gov.au"
 rightToReasons:
   available: "yes"
   how: "you can ask Services Australia for a written statement of the reasons for the decision"
@@ -82,6 +90,7 @@ sources:
   - "Social Security (Administration) Act 1999 (Cth) — legislation.gov.au"
   - "Administrative Review Tribunal — art.gov.au"
   - "Economic Justice Australia — ejaustralia.org.au"
+  - 'Commonwealth Ombudsman — ombudsman.gov.au'
 lastVerified: "2026-06-30"
 ---
 

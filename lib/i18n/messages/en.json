@@ -221,7 +221,7 @@
       "migration": "Migration and visa decisions are outside what this tool covers. A registered migration agent or lawyer can help.",
       "hearingOnFoot": "A hearing is already booked or underway, so timing matters a lot. Please talk to a free legal service today.",
       "deadlineImminentOrPassed": "Your time limit is very soon, or it has passed. Please contact a free legal service today.",
-      "privativeClause": "This kind of decision has special rules that limit review. A lawyer should look at it directly."
+      "privativeClause": "This kind of decision has extra rules about going to court. Those rules cannot stop a court checking whether the decision-maker had the power to decide at all. It is technical, so a lawyer should look at it directly."
     },
     "stopStillHelpful": "There is still something useful you can do before you call.",
     "stopCallNowNote": "You told us this involves a criminal matter or someone being held. Talking to a lawyer today matters more than anything else on this page.",
