@@ -54,6 +54,14 @@ pathways:
     howToStart: "make a complaint through ombudsman.gov.au — this is separate from asking for a review, so keep track of any review time limit as well"
     cost: "free"
     source: "Commonwealth Ombudsman — ombudsman.gov.au"
+  - name: "Ask a court to check the decision was made lawfully (judicial review)"
+    body: "Federal Court of Australia / Federal Circuit and Family Court"
+    deadline: "Court time limits are strict, and asking for reasons does not pause them. Please talk to a free legal service before you file anything."
+    deadlineDays: null
+    deadlineVerified: false
+    howToStart: "talk to a free legal service first — this is a court process and it is technical"
+    cost: "Court fees apply and there is a risk of paying the other side's costs."
+    source: "Administrative Decisions (Judicial Review) Act 1977 (Cth) s 5 — legislation.gov.au"
 rightToReasons:
   available: "yes"
   how: "you can ask Services Australia for a written statement of the reasons for the decision"
@@ -91,6 +99,7 @@ sources:
   - "Administrative Review Tribunal — art.gov.au"
   - "Economic Justice Australia — ejaustralia.org.au"
   - 'Commonwealth Ombudsman — ombudsman.gov.au'
+  - 'Administrative Decisions (Judicial Review) Act 1977 (Cth) — legislation.gov.au'
 lastVerified: "2026-06-30"
 ---
 

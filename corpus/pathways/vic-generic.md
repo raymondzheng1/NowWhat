@@ -56,6 +56,14 @@ pathways:
     howToStart: "complain to the organisation first, then to the Victorian Ombudsman if you are still unhappy"
     cost: "free"
     source: "ombudsman.vic.gov.au"
+  - name: "Ask a court to check the decision was made lawfully (judicial review)"
+    body: "Supreme Court of Victoria"
+    deadline: "Court time limits are strict and shorter than tribunal ones. Asking for reasons does not pause them. Please talk to a free legal service before you file anything."
+    deadlineDays: null
+    deadlineVerified: false
+    howToStart: "talk to a free legal service first — this is a court process and it is technical"
+    cost: "Court fees apply and there is a risk of paying the other side's costs."
+    source: "Administrative Law Act 1978 (Vic); Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
 rightToReasons:
   available: "yes"
   how: "you can ask the decision-maker, in writing, for a statement of reasons within 28 days of the decision"
@@ -91,6 +99,7 @@ sources:
   - "VCAT — Application for review of a decision — vcat.vic.gov.au"
   - "Victorian Ombudsman — ombudsman.vic.gov.au"
   - "Victoria Legal Aid — legalaid.vic.gov.au"
+  - 'Supreme Court of Victoria — supremecourt.vic.gov.au'
 lastVerified: "2026-06-16"
 ---
 

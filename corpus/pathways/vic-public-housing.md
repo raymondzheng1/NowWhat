@@ -67,6 +67,14 @@ pathways:
     howToStart: "make a complaint through ombudsman.vic.gov.au — this is separate from an appeal, so keep track of any appeal time limit as well"
     cost: "free"
     source: "Victorian Ombudsman — ombudsman.vic.gov.au"
+  - name: "Ask a court to check the decision was made lawfully (judicial review)"
+    body: "Supreme Court of Victoria"
+    deadline: "Court time limits are strict and shorter than tribunal ones. Asking for reasons does not pause them. Please talk to a free legal service before you file anything."
+    deadlineDays: null
+    deadlineVerified: false
+    howToStart: "talk to a free legal service first — this is a court process and it is technical"
+    cost: "Court fees apply and there is a risk of paying the other side's costs."
+    source: "Administrative Law Act 1978 (Vic); Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
 rightToReasons:
   available: "yes"
   how: "if your application is not approved you get a letter explaining why, and a notice to vacate must state the reason"
@@ -107,6 +115,7 @@ sources:
   - "Residential Tenancies Act 1997 (Vic); VCAT — vcat.vic.gov.au"
   - "Tenants Victoria — tenantsvic.org.au"
   - 'Victorian Ombudsman — ombudsman.vic.gov.au'
+  - 'Supreme Court of Victoria — supremecourt.vic.gov.au'
 lastVerified: "2026-06-16"
 ---
 

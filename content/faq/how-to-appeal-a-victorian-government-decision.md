@@ -2,11 +2,12 @@
 title: "How do I appeal a Victorian government decision?"
 description: "Many Victorian government decisions can be reviewed at VCAT, but not all. Your decision letter is the best guide. Here are the steps, in plain English."
 question: "How do I appeal a Victorian government decision?"
-answer: "It depends on the law your decision was made under. Many Victorian government decisions can be reviewed at VCAT, but not all. Your decision letter should say if you can apply, and by when. You can also ask for written reasons within 28 days, and the Victorian Ombudsman takes free complaints. Free legal help can confirm what applies to you."
+answer: "It depends on the law your decision was made under. Many Victorian government decisions can be reviewed at VCAT, but not all. Your decision letter should say if you can apply, and by when. You can also ask for written reasons within 28 days. If VCAT cannot review it, the Victorian Ombudsman takes free complaints, and a court can be asked to check whether the decision was made lawfully. Free legal help can confirm what applies to you."
 entryId: vic-generic
 category: "Government decisions"
 sources:
   - "Victorian Civil and Administrative Tribunal Act 1998 (Vic) — legislation.vic.gov.au"
+  - "Supreme Court of Victoria — supremecourt.vic.gov.au"
   - "VCAT — Application for review of a decision — vcat.vic.gov.au"
   - "Victorian Ombudsman — ombudsman.vic.gov.au"
 related:
@@ -38,6 +39,18 @@ in place of the original one. The time limit is often 28 days, counted from the
 decision or from when you get the reasons. But the Act that applies can set a
 different, sometimes shorter, limit — the letter is the place to check. A fee usually
 applies, and fee waivers and concessions are available.
+
+## If VCAT cannot review it
+
+There is a second path, and it is a different question. A court can be asked to check whether
+the decision was made lawfully. This is called judicial review. It does not ask whether the
+decision was right. It asks whether the decision-maker followed the law, stayed within their
+power, and gave you a fair process.
+
+A court can set a decision aside and send it back to be made again. It cannot make a new
+decision for you. This path is more formal than VCAT, there are court fees, and a court can
+order you to pay the other side's costs. The time limits are strict and shorter than tribunal
+ones. Talk to a free legal service before you file anything.
 
 ## Other options, and free help
 
