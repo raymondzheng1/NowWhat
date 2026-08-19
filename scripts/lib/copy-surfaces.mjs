@@ -137,6 +137,20 @@ export function collectCustomerCopy() {
       push(rel, "test", g.test);
       (g.leadingCases ?? []).forEach((c, i) => push(rel, `leadingCase[${i}].explains`, c.explains));
     }
+    // Concepts are the mind-map structural nodes. Every field below renders, so every field
+    // below is gated — a new content type that no gate reads is how unchecked prose ships.
+    for (const c of idx.concepts ?? []) {
+      const rel = `legal (concept ${c.id})`;
+      push(rel, "oneLine", c.oneLine);
+      push(rel, "whatItMeans", c.whatItMeans);
+      push(rel, "whatItIsNot", c.whatItIsNot);
+      (c.keyPoints ?? []).forEach((s, i) => push(rel, `keyPoint[${i}]`, s));
+      (c.options ?? []).forEach((o, i) => {
+        push(rel, `option[${i}].whatItDoes`, o.whatItDoes);
+        push(rel, `option[${i}].note`, o.note);
+      });
+      (c.leadingCases ?? []).forEach((x, i) => push(rel, `leadingCase[${i}].explains`, x.explains));
+    }
   }
 
   return records;

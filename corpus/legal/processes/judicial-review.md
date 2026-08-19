@@ -25,8 +25,11 @@ bodies:
       constitutional judicial review of Commonwealth officers (s 75(v)
       Constitution).
   - jurisdiction: Vic
-    name: The Supreme Court of Victoria (Order 56)
-    note: 'the Victorian equivalent, for state government decisions.'
+    name: The Supreme Court of Victoria
+    note: >-
+      the Victorian equivalent, for state government decisions. There are two
+      ways in, and they have different time limits, so this is worth asking a
+      free legal service about early.
 canApply:
   - >-
     You need a 'ground of review' — a specific legal error in how the decision
@@ -44,6 +47,9 @@ remedies:
   - Set aside (quash) the decision.
   - 'Send it back (remit) to be decided again, lawfully.'
   - 'Orders to require or stop action, in some cases.'
+  - >-
+    A declaration — a formal statement of what the legal position is, without
+    ordering anyone to do anything.
 limits:
   - >-
     The court cannot substitute its own decision — it cannot simply give you the

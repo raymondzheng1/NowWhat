@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { listProcesses, listGrounds, getComparison } from "@/lib/legal";
+import { listProcesses, listGrounds, getComparison, listConcepts } from "@/lib/legal";
 import { LearnContainer } from "@/components/feature/learn/LearnContainer";
 import { LearnTrust } from "@/components/feature/learn/LearnTrust";
 import { JsonLd } from "@/components/site/JsonLd";
@@ -26,6 +26,7 @@ export default function LearnHubPage() {
   // Merits review first — it's the path most people want (a different outcome).
   const processes = [...listProcesses()].sort((a) => (a.id === "merits-review" ? -1 : 1));
   const grounds = listGrounds();
+  const concepts = listConcepts();
   const comparison = getComparison();
 
   const learnItems = [
@@ -33,6 +34,7 @@ export default function LearnHubPage() {
     { name: "Judicial review explained", path: "/learn/judicial-review" },
     { name: "The grounds of review", path: "/learn/grounds" },
     { name: "Merits review vs judicial review", path: "/learn/compare" },
+    { name: "How it all fits together", path: "/learn/how-review-fits-together" },
   ];
 
   return (
@@ -140,6 +142,35 @@ export default function LearnHubPage() {
           </svg>
         </Link>
       </section>
+
+      {/* The structural layer: which door, who may knock, what is behind it. Grounds answer
+          "what went wrong"; these answer everything around it. */}
+      {concepts.length > 0 && (
+        <section aria-labelledby="learn-fits" className="mt-16">
+          <h2 id="learn-fits" className="font-display text-[26px] font-black text-ink">
+            How it all fits together
+          </h2>
+          <p className="mt-3 max-w-[60ch] text-[16px] leading-[1.7] text-ink-soft">
+            Beyond the grounds: which body can help, whether you are the right person to ask, and
+            what you can actually walk away with.
+          </p>
+          <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+            {concepts.map((c) => (
+              <li key={c.id}>
+                <Link
+                  href={`/learn/how-review-fits-together/${c.id}`}
+                  className="flex min-h-[44px] flex-col justify-center gap-1 rounded-card border-2 border-line bg-paper px-4 py-3 no-underline transition hover:shadow-lift"
+                >
+                  <span className="font-display text-[16.5px] font-black leading-snug text-ink">
+                    {c.plainName}
+                  </span>
+                  <span className="text-[14.5px] leading-snug text-ink-soft">{c.oneLine}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
 
       <LearnTrust />
     </LearnContainer>

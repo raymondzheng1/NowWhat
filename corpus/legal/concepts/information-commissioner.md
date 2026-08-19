@@ -1,0 +1,80 @@
+---
+id: information-commissioner
+name: Reasons and freedom of information
+plainName: Getting the reasons, and getting the documents
+oneLine: Two different requests. One asks why. The other asks to see the file.
+order: 50
+appliesTo:
+  - any
+whatItMeans: >-
+  There are two separate things you can ask for, and people often mix them up.
+  You can ask the decision-maker for a written statement of reasons. That tells
+  you why. You can also make a freedom of information request. That asks to see
+  documents. Asking for reasons is usually the more useful first step, and it is
+  free.
+whatItIsNot: >-
+  A freedom of information request is not a way to have a decision reviewed.
+  Neither is a request for reasons. They get you information, and information is
+  what tells you whether a review is worth it and what to say.
+keyPoints:
+  - >-
+    A written statement of reasons tells you what the decision-maker actually
+    relied on.
+  - Asking for reasons is a useful first step on either review path.
+  - >-
+    Freedom of information is a separate right. It asks to see documents rather
+    than to be told why.
+  - >-
+    If a freedom of information request is refused, that refusal can usually be
+    reviewed.
+  - >-
+    Time limits apply to both. Check the limit for your decision rather than
+    assuming.
+options:
+  - name: A statement of reasons
+    plainName: Asking why
+    whatItDoes: >-
+      Asks the decision-maker to set out, in writing, the reasons for the
+      decision.
+    note: >-
+      For an Australian Government decision this right comes from the
+      Administrative Decisions (Judicial Review) Act 1977 (Cth) s 13. In
+      Victoria it comes from the Administrative Law Act 1978 (Vic) s 8.
+  - name: A freedom of information request
+    plainName: Asking to see the documents
+    whatItDoes: >-
+      Asks an agency for copies of documents it holds, including documents about
+      you.
+    note: >-
+      A refusal can usually be reviewed. Federally the Office of the Australian
+      Information Commissioner handles that. In Victoria it is the Office of the
+      Victorian Information Commissioner.
+leadingCases: []
+sources:
+  - Owner's administrative-law knowledge base (Combined MR/JR Framework; Venture Concepts, 2026-08-19)
+  - Office of the Australian Information Commissioner — oaic.gov.au
+  - Office of the Victorian Information Commissioner — ovic.vic.gov.au
+status: verified
+---
+
+The mind map's fourth top-level avenue, split into the half our materials cover and the half they
+do not.
+
+**The reasons half is well grounded.** The Framework calls a statutory reasons request the shared
+first step of either path — "A statutory reasons request (ADJR s 13; ALA s 8 in Vic) is often the
+first step in either path" — and the Venture brief notes such requests "are under-used because
+people don't know they exist", which is precisely the gap this node closes.
+
+**The freedom-of-information half is not covered by the four documents at all.** They contain no
+FOI doctrine, no procedure and no case law; the only mention anywhere is a volume figure in the
+Venture brief. So every FOI statement here is deliberately generic: that the right exists, that it
+asks for documents rather than for reasons, that a refusal can usually be reviewed, and that time
+limits apply and should be checked. **No FOI deadline, fee or section number is stated**, because
+none is available from a source this app trusts.
+
+For the lawyer: the FOI half needs verification before it can carry any specifics. The two
+regulators named are the review bodies and are cited as sources; nothing else about FOI process
+should be added here until it can be sourced the way the rest of the corpus is.
+
+The two requests are kept visually separate throughout, because a reader who conflates them will
+ask the wrong body for the wrong thing and lose weeks doing it.

@@ -22,6 +22,7 @@ function main() {
   }
   const index = JSON.parse(readFileSync(INDEX, "utf8"));
   const grounds = index.grounds ?? [];
+  const concepts = index.concepts ?? [];
   const processes = index.processes ?? [];
 
   if (grounds.length === 0) hard.push("legal corpus has no grounds");
@@ -69,8 +70,22 @@ function main() {
   }
 
   if (warn.length) console.warn("legal-check warnings:\n  " + warn.join("\n  "));
+  // Concepts are rendered customer content, so they carry the corpus' standing obligations:
+  // every entry names a source, and an entry that is not signed off must not ship as verified.
+  const seenConcept = new Set();
+  for (const c of concepts) {
+    const id = `concept ${c.id || "(no id)"}`;
+    if (!c.id) hard.push(`${id}: missing id`);
+    if (seenConcept.has(c.id)) hard.push(`${id}: duplicate id`);
+    seenConcept.add(c.id);
+    if (!c.whatItMeans) hard.push(`${id}: missing whatItMeans`);
+    if (!Array.isArray(c.appliesTo) || c.appliesTo.length === 0) hard.push(`${id}: needs appliesTo`);
+    if (!Array.isArray(c.sources) || c.sources.length === 0) hard.push(`${id}: needs a source`);
+    if (c.status !== "verified") warn.push(`${id}: status=seed — not yet signed off`);
+  }
+
   console.log(
-    `legal-check: ${processes.length} processes, ${grounds.length} grounds` +
+    `legal-check: ${processes.length} processes, ${grounds.length} grounds, ${concepts.length} concepts` +
       (noPinpoint ? ` (${noPinpoint} citation(s) without a pinpoint — accepted).` : "."),
   );
   if (hard.length) {

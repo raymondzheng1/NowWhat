@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { listDataEntries, getDataEntry } from "@/lib/data";
 import type { DataPathway, Jurisdiction } from "@/lib/schemas/data";
-import { groundAppliesIn, type Process, type Ground } from "@/lib/schemas/legal";
+import { groundAppliesIn, type Process, type Ground, type Concept } from "@/lib/schemas/legal";
 import { avenueView } from "@/lib/triage";
 import { planFor } from "@/lib/analysis";
 import { AnalysisPanel } from "@/components/feature/AnalysisPanel";
@@ -85,12 +85,15 @@ export function RightsSaverClient({
   meritsReview,
   judicialReview,
   jrGrounds,
+  concepts = [],
   faqsByEntry = {},
   corpusByEntry = {},
 }: {
   meritsReview: Process;
   judicialReview: Process;
   jrGrounds: Ground[];
+  /** Structural nodes (remedies, standing, the complaint routes) — explanatory only. */
+  concepts?: Concept[];
   /** Published FAQ articles keyed by the decision type they were written for. */
   faqsByEntry?: Record<string, FaqLink[]>;
   /** Decode-corpus entries keyed by id, so application drafts can be built on-device. */
@@ -281,6 +284,7 @@ export function RightsSaverClient({
               meritsReview={meritsReview}
               judicialReview={judicialReview}
               jrGrounds={jrGrounds}
+              concepts={concepts}
               relatedGrounds={relatedGrounds}
               onToggleGround={toggleGround}
               tLetter={tLetter}
@@ -620,6 +624,7 @@ function ResultStep({
   meritsReview,
   judicialReview,
   jrGrounds,
+  concepts,
   relatedGrounds,
   onToggleGround,
   faqs,
@@ -636,6 +641,7 @@ function ResultStep({
   meritsReview: Process;
   judicialReview: Process;
   jrGrounds: Ground[];
+  concepts: Concept[];
   relatedGrounds: string[];
   onToggleGround: (id: string) => void;
   faqs: FaqLink[];
@@ -648,6 +654,12 @@ function ResultStep({
   const shownGrounds = useMemo(
     () => jrGrounds.filter((g) => groundAppliesIn(g, jurisdiction)),
     [jrGrounds, jurisdiction],
+  );
+  // Same jurisdiction rule as the grounds: an unscoped concept applies everywhere, and a
+  // scoped one only where it exists. The two federal routes must not surface in Victoria.
+  const shownConcepts = useMemo(
+    () => concepts.filter((c) => c.jurisdictions.length === 0 || c.jurisdictions.includes(jurisdiction)),
+    [concepts, jurisdiction],
   );
   // `null` means "whichever path comes first for this decision" — resolved once we know it.
   const [applyKind, setApplyKind] = useState<DraftKind | null>(null);
@@ -1076,6 +1088,33 @@ function ResultStep({
           <Link href="/learn/grounds" className="link-text mt-5 inline-flex min-h-[44px]">
             {t("groundsMore")}
           </Link>
+        </section>
+      )}
+
+      {/* The structural layer, scoped to where the person is. These answer the questions that
+          come AFTER "what went wrong" — what a court can actually give you, whether you are the
+          right person to ask, and the free routes that exist alongside review. Kept as links
+          rather than expanded inline: a result screen is already long, and someone who needs
+          these will follow them. */}
+      {shownConcepts.length > 0 && (
+        <section id="r-concepts" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("conceptsTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("conceptsLead")}</p>
+          <ul className="mt-4 grid gap-2.5">
+            {shownConcepts.map((c) => (
+              <li key={c.id}>
+                <Link
+                  href={`/learn/how-review-fits-together/${c.id}`}
+                  className="flex min-h-[44px] flex-col justify-center gap-0.5 rounded-card border-2 border-line bg-paper px-4 py-2.5 no-underline transition hover:shadow-lift"
+                >
+                  <span className="font-display text-[16px] font-black leading-snug text-ink">
+                    {c.plainName}
+                  </span>
+                  <span className="text-[14.5px] leading-snug text-ink-soft">{c.oneLine}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
         </section>
       )}
 

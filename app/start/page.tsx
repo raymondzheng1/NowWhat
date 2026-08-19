@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { RightsSaverClient } from "@/components/feature/RightsSaverClient";
-import { getProcess, groundsForProcess } from "@/lib/legal";
+import { getProcess, groundsForProcess, listConcepts } from "@/lib/legal";
 import { listDataEntries } from "@/lib/data";
 import { getFaqsForEntry } from "@/lib/faq/load";
 import { listEntries } from "@/lib/corpus/index";
@@ -41,6 +41,7 @@ export default function StartPage() {
       meritsReview={getProcess("merits-review")!}
       judicialReview={getProcess("judicial-review")!}
       jrGrounds={groundsForProcess("judicial-review")}
+      concepts={listConcepts()}
     />
   );
 }

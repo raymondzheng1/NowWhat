@@ -1,5 +1,5 @@
 {
-  "builtAt": "2110f111ac2a6cf0",
+  "builtAt": "148bd86bb8c8d7d7",
   "processes": [
     {
       "id": "judicial-review",
@@ -21,8 +21,8 @@
         },
         {
           "jurisdiction": "Vic",
-          "name": "The Supreme Court of Victoria (Order 56)",
-          "note": "the Victorian equivalent, for state government decisions."
+          "name": "The Supreme Court of Victoria",
+          "note": "the Victorian equivalent, for state government decisions. There are two ways in, and they have different time limits, so this is worth asking a free legal service about early."
         }
       ],
       "canApply": [
@@ -39,7 +39,8 @@
       "remedies": [
         "Set aside (quash) the decision.",
         "Send it back (remit) to be decided again, lawfully.",
-        "Orders to require or stop action, in some cases."
+        "Orders to require or stop action, in some cases.",
+        "A declaration — a formal statement of what the legal position is, without ordering anyone to do anything."
       ],
       "limits": [
         "The court cannot substitute its own decision — it cannot simply give you the outcome you want, only require a lawful re-decision.",
@@ -94,7 +95,9 @@
         "Remit — send it back to the original decision-maker to be made again, with directions about how."
       ],
       "limits": [
-        "Merits review is only available where a law provides it — not every decision can be reviewed on the merits."
+        "Merits review is only available where a law provides it — not every decision can be reviewed on the merits.",
+        "A tribunal is not a court. It sits inside government, and it is doing administration rather than deciding a legal dispute between you and the state.",
+        "Government policy can guide the tribunal, but it cannot decide the matter for it."
       ],
       "goodToKnow": [
         "Because the tribunal can change the outcome, merits review is usually what people want when they disagree with the result.",
@@ -1312,6 +1315,320 @@
           "explains": "A court checks whether a decision was lawful, not whether it was right."
         }
       ],
+      "jurisdictions": []
+    }
+  ],
+  "concepts": [
+    {
+      "id": "justiciability",
+      "name": "Justiciability",
+      "plainName": "Some decisions a court will not look at",
+      "oneLine": "A few kinds of government action sit outside what a court will review.",
+      "order": 10,
+      "appliesTo": [
+        "judicial-review"
+      ],
+      "whatItMeans": "Courts review government decisions. But not every act of government is the kind of thing a court will rule on. Some choices belong to the elected government, not to a judge. What matters is the subject matter, not where the power came from. Everyday decisions made under an Act are the ordinary case, and courts do review those.",
+      "whatItIsNot": "This is not a hurdle for ordinary decisions. A Centrelink debt, a fine, a housing refusal or a licence decision is made under an Act, and that is exactly the kind of decision courts review every day. This narrow rule is about things like going to war.",
+      "keyPoints": [
+        "Decisions made under an Act are the normal case, and they are reviewable.",
+        "A small group of powers sits further from review — things like foreign relations, national security, or a decision to go to war.",
+        "What counts is the subject matter of the power, not the label on where it came from.",
+        "Courts are more willing to step in where the action directly affects one person's rights or interests.",
+        "They are less willing where the action is political in nature and affects the public at large."
+      ],
+      "options": [],
+      "leadingCases": [
+        {
+          "name": "Council of Civil Service Unions v Minister for the Civil Service",
+          "pinpoint": "at 421",
+          "explains": "What decides this is the subject matter of the power, not the source it came from."
+        },
+        {
+          "name": "Minister for Arts Heritage and the Environment v Peko-Wallsend Ltd (1987) 15 FCR 274",
+          "pinpoint": "",
+          "explains": "These powers were once beyond review altogether. That is no longer so."
+        }
+      ],
+      "sources": [
+        "Owner's administrative-law knowledge base (Review Notes; JR Hypo, 2026-08-19)"
+      ],
+      "status": "verified",
+      "jurisdictions": []
+    },
+    {
+      "id": "adjr-or-common-law",
+      "name": "The two ways into a federal court",
+      "plainName": "There is more than one door",
+      "oneLine": "Commonwealth decisions can be challenged by two different routes.",
+      "order": 20,
+      "appliesTo": [
+        "judicial-review"
+      ],
+      "jurisdictions": [
+        "Cth"
+      ],
+      "whatItMeans": "For an Australian Government decision there is more than one way to ask a court to check it. One is a statute made for the job. It is the more straightforward route. The other is the court's older, wider power. Each reaches slightly different things. Which one fits is a question for a lawyer, not something you have to work out.",
+      "whatItIsNot": "This is not a choice you need to make before you get help. You do not have to name a route to ask a free legal service for advice. It is here so the question makes sense when someone asks it.",
+      "keyPoints": [
+        "There is more than one way to bring a Commonwealth decision to a court.",
+        "The statutory route is described as the more straightforward one.",
+        "It covers a decision of an administrative character made under an Act. It also covers some conduct leading up to a decision, and a failure to decide when there was a duty to.",
+        "Some decisions are carved out of it, including decisions of the Governor-General.",
+        "The wider route reaches things the statutory one does not, such as powers that do not come from an Act, and the validity of rules and regulations."
+      ],
+      "options": [
+        {
+          "name": "The Administrative Decisions (Judicial Review) Act 1977 (Cth)",
+          "plainName": "The statutory route",
+          "whatItDoes": "Lets a federal court review a decision of an administrative character made under an Act. It is the more straightforward and less technical route.",
+          "note": "It does not reach every Commonwealth decision. Some are excluded by the Act itself."
+        },
+        {
+          "name": "Section 39B of the Judiciary Act 1903 (Cth)",
+          "plainName": "The wider route",
+          "whatItDoes": "A broader power. It reaches powers that do not come from an Act, and the validity of rules and regulations.",
+          "note": "It is not limited in the same way as the statutory route, but it is more technical."
+        }
+      ],
+      "leadingCases": [
+        {
+          "name": "Griffith University v Tang (2005) 221 CLR 99",
+          "pinpoint": "",
+          "explains": "The decision must be one an Act required or allowed. It must also affect legal rights or duties, and get that power from the Act itself."
+        },
+        {
+          "name": "Australian Broadcasting Tribunal v Bond",
+          "pinpoint": "",
+          "explains": "The decision is usually one that settles something, rather than a step along the way."
+        }
+      ],
+      "sources": [
+        "Owner's administrative-law knowledge base (JR Hypo, 2026-08-19)"
+      ],
+      "status": "verified"
+    },
+    {
+      "id": "remedies",
+      "name": "What a court can give you",
+      "plainName": "What you can actually walk away with",
+      "oneLine": "A court can undo a decision. It cannot make a new one for you.",
+      "order": 30,
+      "appliesTo": [
+        "judicial-review"
+      ],
+      "whatItMeans": "This is the part people are most often surprised by. If a court finds the decision was not made lawfully, it can wipe it out. It can order the decision-maker to do their job. It can stop them acting unlawfully. What it cannot do is decide the matter itself. The file goes back, and the same body decides it again, this time properly.",
+      "whatItIsNot": "It is not a way to get the answer you wanted. A court will not grant your payment, cancel your debt, or give you the licence. If that is what you need, a tribunal is the path that can do it, where a law allows one.",
+      "keyPoints": [
+        "A court can set a decision aside and send it back.",
+        "It cannot substitute its own decision for the decision-maker's.",
+        "The same body usually decides again. It may reach the same answer, lawfully this time.",
+        "Which remedy you ask for shapes which court you go to, and who is allowed to ask.",
+        "Remedies are discretionary, though a court starts from the position of granting relief where a case is made out."
+      ],
+      "options": [
+        {
+          "name": "Certiorari",
+          "plainName": "Wiping out the decision",
+          "whatItDoes": "Cancels the legal effect of a decision that was not made lawfully.",
+          "note": "In the High Court this is asked for alongside one of the orders below, rather than on its own."
+        },
+        {
+          "name": "Mandamus",
+          "plainName": "Making them do their job",
+          "whatItDoes": "Orders a public official to carry out a duty they owe, according to law.",
+          "note": "It works where a duty has been left undone. It does not work where the law leaves the choice to them."
+        },
+        {
+          "name": "Prohibition",
+          "plainName": "Stopping them",
+          "whatItDoes": "Stops a decision-maker from deciding unlawfully, or from carrying on an unlawful course of action.",
+          "note": "Useful while something is still happening, rather than after it is over."
+        },
+        {
+          "name": "Injunction",
+          "plainName": "An order to do or stop something",
+          "whatItDoes": "Orders someone to do a particular thing, or to stop doing one.",
+          "note": "You need a legal right of your own for this one."
+        },
+        {
+          "name": "Declaration",
+          "plainName": "A statement of where you stand",
+          "whatItDoes": "A formal statement of what the legal position is, without ordering anyone to do anything.",
+          "note": "There has to be a real dispute. A court will not answer a hypothetical question."
+        }
+      ],
+      "leadingCases": [
+        {
+          "name": "Ainsworth v Criminal Justice Commission",
+          "pinpoint": "",
+          "explains": "Wiping out a decision is about its legal effect. A declaration states where the parties stand."
+        },
+        {
+          "name": "City of Enfield v Development Assessment Commission (2000) 199 CLR 135",
+          "pinpoint": "",
+          "explains": "A court has a choice about granting relief, but it starts from the position of granting it."
+        }
+      ],
+      "sources": [
+        "Owner's administrative-law knowledge base (JR Hypo; Combined MR/JR Framework, 2026-08-19)"
+      ],
+      "status": "verified",
+      "jurisdictions": []
+    },
+    {
+      "id": "standing",
+      "name": "Standing",
+      "plainName": "Whether you are the right person to bring it",
+      "oneLine": "If the decision was about you, this is almost never the problem.",
+      "order": 40,
+      "appliesTo": [
+        "any"
+      ],
+      "whatItMeans": "Before anyone looks at your case, there is a question of whether you are the right person to raise it. This is called standing. If the decision was made about you, and it affects your money, your home, your payment or your licence, you will normally have it. The question really matters for people further from the decision, such as a group objecting on behalf of others.",
+      "whatItIsNot": "It is not a test of how strong your case is. It only asks whether you are the right person to bring it. Someone can have standing and still not succeed, and someone can care deeply and still not have standing.",
+      "keyPoints": [
+        "If the decision was about you and affects you, standing is rarely the obstacle.",
+        "The test is not the same for every route.",
+        "At a tribunal, the law for your decision usually says who may apply. It is often anyone whose interests are affected.",
+        "Interests are read broadly. They are not limited to money or property, and they can be affected indirectly.",
+        "For a court, a general concern about government is not enough on its own."
+      ],
+      "options": [
+        {
+          "name": "Merits review at a tribunal",
+          "plainName": "Applying to a tribunal",
+          "whatItDoes": "The law that created the review right usually says who may apply. Often that is a person whose interests are affected by the decision.",
+          "note": "Interests are read widely. They are not limited to money or property, and it does not matter that someone else is affected too."
+        },
+        {
+          "name": "The statutory route to a federal court",
+          "plainName": "A person aggrieved",
+          "whatItDoes": "Asks whether you are a person aggrieved. This is not read narrowly.",
+          "note": "It means something beyond what any member of the public has. Harm to your economic interests can be enough."
+        },
+        {
+          "name": "Asking a court to wipe out or stop a decision",
+          "plainName": "A real effect on you",
+          "whatItDoes": "Asks whether the decision has a sufficient effect on your legal rights or interests.",
+          "note": "Damage to a personal or business reputation can count."
+        },
+        {
+          "name": "Asking a court to make someone do their duty",
+          "plainName": "A duty owed to you",
+          "whatItDoes": "Asks whether you have a sufficient interest, or a special legal right, in seeing a public duty carried out.",
+          "note": "The starting question is whether a duty is genuinely left undone."
+        },
+        {
+          "name": "Asking for an order or a statement of your position",
+          "plainName": "A special interest",
+          "whatItDoes": "Asks for a special interest in the subject matter — more than an ordinary member of the public has.",
+          "note": "A purely emotional or intellectual concern is not enough on its own. An order to do or stop something needs a legal right."
+        }
+      ],
+      "leadingCases": [
+        {
+          "name": "Australian Conservation Foundation v Commonwealth",
+          "pinpoint": "",
+          "explains": "A special interest is needed. Caring about an issue, without more, is not enough."
+        },
+        {
+          "name": "Onus v Alcoa",
+          "pinpoint": "",
+          "explains": "A cultural or religious connection to what is at stake can be a special interest."
+        },
+        {
+          "name": "Argos Pty Ltd v Corbell",
+          "pinpoint": "",
+          "explains": "Harm to your economic interests can make you a person aggrieved."
+        }
+      ],
+      "sources": [
+        "Owner's administrative-law knowledge base (JR Hypo; Review Notes, 2026-08-19)"
+      ],
+      "status": "verified",
+      "jurisdictions": []
+    },
+    {
+      "id": "information-commissioner",
+      "name": "Reasons and freedom of information",
+      "plainName": "Getting the reasons, and getting the documents",
+      "oneLine": "Two different requests. One asks why. The other asks to see the file.",
+      "order": 50,
+      "appliesTo": [
+        "any"
+      ],
+      "whatItMeans": "There are two separate things you can ask for, and people often mix them up. You can ask the decision-maker for a written statement of reasons. That tells you why. You can also make a freedom of information request. That asks to see documents. Asking for reasons is usually the more useful first step, and it is free.",
+      "whatItIsNot": "A freedom of information request is not a way to have a decision reviewed. Neither is a request for reasons. They get you information, and information is what tells you whether a review is worth it and what to say.",
+      "keyPoints": [
+        "A written statement of reasons tells you what the decision-maker actually relied on.",
+        "Asking for reasons is a useful first step on either review path.",
+        "Freedom of information is a separate right. It asks to see documents rather than to be told why.",
+        "If a freedom of information request is refused, that refusal can usually be reviewed.",
+        "Time limits apply to both. Check the limit for your decision rather than assuming."
+      ],
+      "options": [
+        {
+          "name": "A statement of reasons",
+          "plainName": "Asking why",
+          "whatItDoes": "Asks the decision-maker to set out, in writing, the reasons for the decision.",
+          "note": "For an Australian Government decision this right comes from the Administrative Decisions (Judicial Review) Act 1977 (Cth) s 13. In Victoria it comes from the Administrative Law Act 1978 (Vic) s 8."
+        },
+        {
+          "name": "A freedom of information request",
+          "plainName": "Asking to see the documents",
+          "whatItDoes": "Asks an agency for copies of documents it holds, including documents about you.",
+          "note": "A refusal can usually be reviewed. Federally the Office of the Australian Information Commissioner handles that. In Victoria it is the Office of the Victorian Information Commissioner."
+        }
+      ],
+      "leadingCases": [],
+      "sources": [
+        "Owner's administrative-law knowledge base (Combined MR/JR Framework; Venture Concepts, 2026-08-19)",
+        "Office of the Australian Information Commissioner — oaic.gov.au",
+        "Office of the Victorian Information Commissioner — ovic.vic.gov.au"
+      ],
+      "status": "verified",
+      "jurisdictions": []
+    },
+    {
+      "id": "ombudsman",
+      "name": "The Ombudsman",
+      "plainName": "A free complaint about how you were treated",
+      "oneLine": "Complaining is free, but the Ombudsman cannot change your decision.",
+      "order": 60,
+      "appliesTo": [
+        "complaint"
+      ],
+      "whatItMeans": "The Ombudsman takes complaints about government departments and agencies. Complaining is free. It can look at how a decision was made, and at how you were treated along the way. What it cannot do is overturn or change the decision. That is the difference between the Ombudsman and a tribunal or a court.",
+      "whatItIsNot": "It is not a review body. Many people expect a complaint to reverse a decision, and it cannot. Even where the Ombudsman agrees with you, the decision itself still stands. A complaint also runs separately from any review, so a review time limit keeps running while you wait.",
+      "keyPoints": [
+        "Complaining to the Ombudsman is free.",
+        "The Ombudsman cannot overturn or change a decision.",
+        "It can look at how a decision was made, and how you were treated.",
+        "Where no law gives a right to review, this is one of the paths that remains — a court is the other.",
+        "A complaint is separate from a review. Keep track of any review time limit as well."
+      ],
+      "options": [
+        {
+          "name": "Commonwealth Ombudsman",
+          "plainName": "For Australian Government bodies",
+          "whatItDoes": "Takes free complaints about Australian Government departments and agencies, including Services Australia.",
+          "note": "There is no strict time limit on complaining, but sooner is usually better. Complaints go through ombudsman.gov.au."
+        },
+        {
+          "name": "Victorian Ombudsman",
+          "plainName": "For Victorian government bodies",
+          "whatItDoes": "Takes free complaints about Victorian government bodies, including councils and agencies.",
+          "note": "The usual step is to complain to the organisation first. Complaints go through ombudsman.vic.gov.au."
+        }
+      ],
+      "leadingCases": [],
+      "sources": [
+        "Commonwealth Ombudsman — ombudsman.gov.au",
+        "Victorian Ombudsman — ombudsman.vic.gov.au",
+        "Owner's administrative-law knowledge base (Combined MR/JR Framework, 2026-08-19)"
+      ],
+      "status": "verified",
       "jurisdictions": []
     }
   ],

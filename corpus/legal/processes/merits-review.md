@@ -45,6 +45,13 @@ limits:
   - >-
     Merits review is only available where a law provides it — not every decision
     can be reviewed on the merits.
+  - >-
+    A tribunal is not a court. It sits inside government, and it is doing
+    administration rather than deciding a legal dispute between you and the
+    state.
+  - >-
+    Government policy can guide the tribunal, but it cannot decide the matter
+    for it.
 goodToKnow:
   - >-
     Because the tribunal can change the outcome, merits review is usually what

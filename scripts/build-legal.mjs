@@ -17,6 +17,7 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const DIR = resolve(ROOT, "corpus/legal");
 const GROUNDS = resolve(DIR, "grounds");
 const PROCESSES = resolve(DIR, "processes");
+const CONCEPTS = resolve(DIR, "concepts");
 const OUT = resolve(DIR, "index.json");
 
 const errors = [];
@@ -99,9 +100,45 @@ function loadProcesses() {
   return out;
 }
 
+function loadConcepts() {
+  if (!existsSync(CONCEPTS)) return [];
+  const files = readdirSync(CONCEPTS).filter((f) => f.endsWith(".md") && !f.startsWith("_")).sort();
+  const out = [];
+  const seen = new Set();
+  for (const f of files) {
+    let c;
+    try {
+      c = readFront(CONCEPTS, f);
+    } catch (err) {
+      fail(`concepts/${f}: frontmatter parse error — ${err.message}`);
+      continue;
+    }
+    c.appliesTo = asArray(c.appliesTo);
+    c.jurisdictions = asArray(c.jurisdictions);
+    c.keyPoints = asArray(c.keyPoints);
+    c.options = asArray(c.options);
+    c.leadingCases = asArray(c.leadingCases);
+    c.sources = asArray(c.sources);
+    c.whatItIsNot = c.whatItIsNot ?? "";
+    c.order = typeof c.order === "number" ? c.order : 50;
+    c.status = c.status ?? "seed";
+    const need = (cond, m) => { if (!cond) fail(`concepts/${f}: ${m}`); };
+    need(c.id, "missing id");
+    need(c.name && c.plainName && c.oneLine, "missing name/plainName/oneLine");
+    need(c.whatItMeans, "missing whatItMeans");
+    need(c.appliesTo.length >= 1, "needs ≥1 appliesTo");
+    need(c.sources.length >= 1, "needs ≥1 source");
+    if (seen.has(c.id)) fail(`concepts/${f}: duplicate id "${c.id}"`);
+    seen.add(c.id);
+    out.push(c);
+  }
+  return out;
+}
+
 function main() {
   const grounds = loadGrounds();
   const processes = loadProcesses();
+  const concepts = loadConcepts();
 
   let comparison = null;
   const cmpPath = resolve(DIR, "_comparison.md");
@@ -127,11 +164,12 @@ function main() {
 
   grounds.sort((a, b) => a.id.localeCompare(b.id));
   processes.sort((a, b) => a.id.localeCompare(b.id));
-  const payload = { processes, comparison, grounds, triage };
+  concepts.sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
+  const payload = { processes, comparison, grounds, concepts, triage };
   const builtAt = createHash("sha256").update(JSON.stringify(payload)).digest("hex").slice(0, 16);
   if (!existsSync(dirname(OUT))) mkdirSync(dirname(OUT), { recursive: true });
   writeFileSync(OUT, JSON.stringify({ builtAt, ...payload }, null, 2) + "\n", "utf8");
-  console.log(`Built corpus/legal/index.json — ${processes.length} processes, ${grounds.length} grounds, comparison + triage.`);
+  console.log(`Built corpus/legal/index.json — ${processes.length} processes, ${grounds.length} grounds, ${concepts.length} concepts, comparison + triage.`);
 }
 
 main();

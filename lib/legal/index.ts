@@ -5,6 +5,7 @@ import {
   type Ground,
   type Process,
   type Comparison,
+  type Concept,
   type ReviewKind,
 } from "@/lib/schemas/legal";
 
@@ -66,4 +67,33 @@ export function getProcess(id: ReviewKind): Process | undefined {
 
 export function getComparison(): Comparison {
   return getLegalCorpus().comparison;
+}
+
+// ---- Concepts (the mind-map structural nodes) ----
+
+/**
+ * Concepts are explanatory nodes, not grounds and not processes: the justiciability gate,
+ * the two federal judicial-review routes, remedies, standing, and the two non-review
+ * avenues. Unverified entries are withheld for the same reason grounds are — a half-checked
+ * statement about which court can help you is worse than no statement.
+ */
+export function listConcepts(includeUnverified = false): Concept[] {
+  const all = getLegalCorpus().concepts ?? [];
+  return includeUnverified ? all : all.filter((c) => c.status === "verified");
+}
+
+export function getConcept(id: string, includeUnverified = false): Concept | undefined {
+  return listConcepts(includeUnverified).find((c) => c.id === id);
+}
+
+/** Concepts that sit on a given route, scoped to where the person actually is. */
+export function conceptsFor(
+  route: "merits-review" | "judicial-review" | "complaint",
+  jurisdiction?: "Vic" | "Cth",
+): Concept[] {
+  return listConcepts().filter(
+    (c) =>
+      (c.appliesTo.includes(route) || c.appliesTo.includes("any")) &&
+      (c.jurisdictions.length === 0 || !jurisdiction || c.jurisdictions.includes(jurisdiction)),
+  );
 }

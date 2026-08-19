@@ -141,11 +141,51 @@ export const TriageSchema = z.object({
 });
 export type Triage = z.infer<typeof TriageSchema>;
 
+// ---- Concepts (the owner's decision-tree mind map) -------------------------
+/**
+ * The structural nodes of an administrative-law problem that are NOT grounds and NOT the two
+ * review processes: the justiciability gate, the AD(JR)/common-law split, the remedies a court
+ * can give, standing, and the two non-review avenues (Ombudsman, Information Commissioner).
+ *
+ * These come from the owner's mind map. They are explanatory only — nothing here decides
+ * anything for a person, and several exist mainly so a reader understands why their free legal
+ * service is asking a question that seems beside the point.
+ */
+export const ConceptOptionSchema = z.object({
+  name: z.string(),
+  plainName: z.string(),
+  whatItDoes: z.string(),
+  note: z.string().default(""),
+});
+
+export const ConceptSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  plainName: z.string().min(1),
+  oneLine: z.string().min(1),
+  whatItMeans: z.string().min(1),
+  whatItIsNot: z.string().default(""),
+  /** Which route(s) this node sits on. "complaint" covers the Ombudsman/FOI avenues. */
+  appliesTo: z.array(z.enum(["merits-review", "judicial-review", "complaint", "any"])).min(1),
+  /** EMPTY MEANS EVERYWHERE — same convention as GroundSchema.jurisdictions. */
+  jurisdictions: z.array(JurisdictionName).default([]),
+  keyPoints: z.array(z.string()).default([]),
+  /** Sub-items: each remedy, each standing test. Empty where the node has none. */
+  options: z.array(ConceptOptionSchema).default([]),
+  leadingCases: z.array(LeadingCaseSchema).default([]),
+  sources: z.array(z.string()).default([]),
+  /** Order in the mind map's flow, low first — so the library reads as the tree does. */
+  order: z.number().default(50),
+  status: z.enum(["seed", "verified"]).default("seed"),
+});
+export type Concept = z.infer<typeof ConceptSchema>;
+
 export const LegalIndexSchema = z.object({
   builtAt: z.string(),
   processes: z.array(ProcessSchema).default([]),
   comparison: ComparisonSchema,
   grounds: z.array(GroundSchema),
+  concepts: z.array(ConceptSchema).default([]),
   triage: TriageSchema,
 });
 export type LegalIndex = z.infer<typeof LegalIndexSchema>;

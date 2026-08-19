@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteUrl } from "@/lib/config";
 import { getPublishedFaqs } from "@/lib/faq/load";
-import { listGrounds } from "@/lib/legal";
+import { listGrounds, listConcepts } from "@/lib/legal";
 
 /**
  * sitemap.xml (harness §8). Stable lastModified (a content constant, not new Date()).
@@ -18,7 +18,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/learn/compare",
     "/learn/grounds",
     "/learn/tour",
+    "/learn/how-review-fits-together",
     ...listGrounds().map((g) => `/learn/grounds/${g.id}`),
+    ...listConcepts().map((c) => `/learn/how-review-fits-together/${c.id}`),
   ];
   const staticRoutes = [
     "", "/start", "/chat", "/ask", "/decode", "/faq", "/help", "/about", "/contact", "/privacy", "/terms",
