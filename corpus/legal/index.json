@@ -1,5 +1,5 @@
 {
-  "builtAt": "09ca8a96aae3214c",
+  "builtAt": "89d21a931f019db4",
   "processes": [
     {
       "id": "judicial-review",
@@ -388,6 +388,11 @@
       "whatItMeans": "Parliament passes Acts. It also lets others make rules under those Acts. These rules are called regulations, determinations or by-laws. A rule like that has to stay inside the Act. A rule outside the Act can be invalid.",
       "plainExample": "You get a fine under a council by-law. The by-law bans something the Act never let it ban.",
       "whatRelates": [
+        "The rule covers something the Act never gave power over.",
+        "The rule goes further than the Act allows.",
+        "The rule clashes with the Act it was made under, or with another Act.",
+        "The rule was made for a purpose the Act was not about.",
+        "The rule goes so far that the Act cannot have meant to allow it.",
         "The letter relies on a regulation or a by-law, not an Act.",
         "The rule you were quoted is not in the law the letter names.",
         "You were told the rule and the law say different things.",
@@ -660,6 +665,8 @@
       "whatItMeans": "An Act names who holds a power. Often that person can act through their staff. Sometimes the Act means they have to decide it themselves. If someone else decides, the decision can be unlawful.",
       "plainExample": "Your payment is cancelled by a team leader. The Act gives that decision to the Secretary.",
       "whatRelates": [
+        "The power is one the Act gave to a named person by name.",
+        "The department is large, and the power is used very often.",
         "The letter is signed by someone with a different job title.",
         "The letter names no person at all, only a team.",
         "The rules name one office, but a different office wrote to you.",

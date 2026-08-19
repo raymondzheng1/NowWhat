@@ -11,6 +11,11 @@ plainExample: >-
   You get a fine under a council by-law. The by-law bans something the Act
   never let it ban.
 whatRelates:
+  - The rule covers something the Act never gave power over.
+  - The rule goes further than the Act allows.
+  - The rule clashes with the Act it was made under, or with another Act.
+  - The rule was made for a purpose the Act was not about.
+  - The rule goes so far that the Act cannot have meant to allow it.
   - The letter relies on a regulation or a by-law, not an Act.
   - The rule you were quoted is not in the law the letter names.
   - You were told the rule and the law say different things.
@@ -74,3 +79,9 @@ turns a deferential standard into a stricter one than the law applies.
 And our materials treat invalidity as step one of two — "Step 1: Regulation invalid? Step 2: How
 does that affect the decision?" — so `whatItIsNot` now says so. Without it, someone could read a
 bad regulation as the end of the argument rather than the start of one.
+
+Vanstone's five routes to invalidity added to `whatRelates` 2026-08-19: dealing with a subject
+outside the power; exceeding the prescribed limits; being inconsistent with or repugnant to the
+empowering Act or another Act; being made for an impermissible purpose; and an effect so
+unreasonable it cannot fall within the legislature's contemplation. The entry previously carried
+only the first.

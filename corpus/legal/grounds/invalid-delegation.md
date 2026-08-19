@@ -11,6 +11,8 @@ plainExample: >-
   Your payment is cancelled by a team leader. The Act gives that decision to
   the Secretary.
 whatRelates:
+  - The power is one the Act gave to a named person by name.
+  - The department is large, and the power is used very often.
   - The letter is signed by someone with a different job title.
   - The letter names no person at all, only a team.
   - The rules name one office, but a different office wrote to you.
@@ -52,3 +54,9 @@ leadingCases:
 General information, not advice. The signature block is the part of the letter this ground looks at.
 
 Provenance. This ground is drawn from our own verified judicial review materials. The cases it cites come from the same source. Verified on 2026-08-16. A supervising lawyer sign-off is tracked separately.
+
+Pattenden's factors added 2026-08-19. Whether a power must be exercised by its named holder
+"depends on the nature of the power and other circumstances – eg, size of department, geographic
+area for which department is responsible, frequency of the exercise of power". Those factors
+usually point AWAY from a delegation problem in a big agency doing routine work, which is the
+honest thing for a reader to know before pursuing this.
