@@ -52,6 +52,7 @@ options:
 leadingCases: []
 sources:
   - Owner's administrative-law knowledge base (Combined MR/JR Framework; Venture Concepts, 2026-08-19)
+  - Administrative Law Act 1978 (Vic) — legislation.vic.gov.au
   - Office of the Australian Information Commissioner — oaic.gov.au
   - Office of the Victorian Information Commissioner — ovic.vic.gov.au
 status: verified
@@ -78,3 +79,18 @@ should be added here until it can be sourced the way the rest of the corpus is.
 
 The two requests are kept visually separate throughout, because a reader who conflates them will
 ask the wrong body for the wrong thing and lose weeks doing it.
+
+**s 8 verified against the Act itself, 2026-08-19.** The four documents disagreed — three statements
+gave the Victorian reasons right as s 8, the JR Hypo gave it as s 10. Checked against the
+*Administrative Law Act 1978* (Vic): **s 8 is "Reasons for decision to be furnished by tribunal on
+request by party concerned"** and **s 10 is "Reasons to be part of record"**. The Hypo's reference
+is a slip. This is now sourced to the Act rather than to the secondary materials.
+
+One qualification is with the lawyer. Section 8 places the duty on a "tribunal", which s 2 defines
+functionally — "a person or body of persons who, in arriving at the decision in question, is or are
+by law required ... to act in a judicial manner to the extent of observing one or more of the rules
+of natural justice". That is broad, and will usually capture an administrative decision-maker
+affecting someone's rights or licence, but it is not every decision-maker. This entry currently
+states the right without qualification. Naming the term "tribunal" in customer copy would mislead
+badly — a reader hears VCAT — so the proposal put to the lawyer keeps "the decision-maker" and adds
+a sentence noting the right does not reach every decision.
