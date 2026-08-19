@@ -1,5 +1,5 @@
 {
-  "builtAt": "148bd86bb8c8d7d7",
+  "builtAt": "09ca8a96aae3214c",
   "processes": [
     {
       "id": "judicial-review",
@@ -460,7 +460,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "An error of law (including one on the face of the record) may be reviewable.",
+      "test": "An error of law happens where the decision-maker had the power but got the law wrong. That can mean misreading a word in the Act, using the wrong test, or misunderstanding the limits of the power. Some of these errors go to the power itself. Others show on the face of the reasons and may still be corrected.",
       "elements": [
         {
           "id": "wrong-test",
@@ -482,6 +482,11 @@
           "name": "Craig v South Australia (1995) 184 CLR 163",
           "pinpoint": "at 175-180",
           "explains": "Distinguishes errors of law within power from errors that take a decision-maker outside it."
+        },
+        {
+          "name": "Kirk v Industrial Court (NSW) (2010) 239 CLR 531",
+          "pinpoint": "",
+          "explains": "An error that shows on the face of the record can be corrected, even where it did not go to the power itself."
         },
         {
           "name": "Collector of Customs v Agfa-Gevaert Ltd (1996) 186 CLR 389",
@@ -958,7 +963,8 @@
         "Nobody asked you to explain your side of it.",
         "Something was used against you that you never saw.",
         "You asked to speak to someone, and were told no.",
-        "The process changed part way, and nobody told you."
+        "The process changed part way, and nobody told you.",
+        "They decided it on a different basis than you were led to expect, and you never got to answer that."
       ],
       "whatItIsNot": "This is about the process, not the result. It does not mean the answer would have been different. There is also no single picture of what a fair hearing looks like. Depending on the power and the situation it can mean a full hearing, or very little.",
       "usedIn": [
@@ -1038,7 +1044,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "An Act may require certain matters to be taken into account. Failing to consider a required matter can make the decision invalid.",
+      "test": "An Act may require certain matters to be taken into account. It can say so outright, or it can be implied from what the Act is for. Failing to consider a required matter can make the decision invalid.",
       "elements": [
         {
           "id": "required-matter",

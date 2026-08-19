@@ -47,7 +47,7 @@ pathways:
     howCounted: "usually from the decision, or from when you get the statement of reasons"
     howToStart: "check your decision letter for a review right and the Act it names, then apply to VCAT to review the decision"
     cost: "a fee usually applies, but fee waivers and concessions are available"
-    source: "Victorian Civil and Administrative Tribunal Act 1998 (Vic) s 70; vcat.vic.gov.au — application for review of a decision"
+    source: "Victorian Civil and Administrative Tribunal Act 1998 (Vic) ss 42, 48; vcat.vic.gov.au — application for review of a decision"
   - name: "Complain to the Victorian Ombudsman"
     body: "Victorian Ombudsman"
     deadline: "No fixed deadline, though the Ombudsman may not look at complaints older than 12 months. Complain to the organisation first."

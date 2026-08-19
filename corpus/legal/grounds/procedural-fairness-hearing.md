@@ -17,6 +17,9 @@ whatRelates:
   - Something was used against you that you never saw.
   - You asked to speak to someone, and were told no.
   - The process changed part way, and nobody told you.
+  - >-
+    They decided it on a different basis than you were led to expect, and you
+    never got to answer that.
 whatItIsNot: >-
   This is about the process, not the result. It does not mean the answer would
   have been different. There is also no single picture of what a fair hearing

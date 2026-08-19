@@ -41,7 +41,7 @@ reviewCadenceDays: 90
 reasonsRequest:
   how: ask the decision-maker in writing for the reasons for the decision
   provision: 'the reasons a notice must state — Residential Tenancies Act 1997 (Vic)'
-  extendsMR: 'no — asking for reasons does not extend the time to apply to VCAT'
+  extendsMR: 'depends — confirm with VCAT or a free service before relying on it'
   extendsJR: false
 privativeClause: false
 forms: []

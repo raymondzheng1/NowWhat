@@ -23,8 +23,9 @@ whatItIsNot: >-
 usedIn:
   - judicial-review
 test: >-
-  An Act may require certain matters to be taken into account. Failing to
-  consider a required matter can make the decision invalid.
+  An Act may require certain matters to be taken into account. It can say so
+  outright, or it can be implied from what the Act is for. Failing to consider a
+  required matter can make the decision invalid.
 elements:
   - id: required-matter
     name: A matter the law required them to consider
@@ -70,3 +71,8 @@ Victoria has a Charter of Human Rights and Responsibilities. The Charter does no
 This explainer was split from the irrelevant considerations ground on 2026-08-16.
 
 Provenance. This ground is drawn from our own verified judicial review materials. The cases it cites come from the same source. Verified on 2026-08-16. A supervising lawyer sign-off is tracked separately. The text changed materially, so that sign-off needs to be renewed.
+
+Sharpened 2026-08-19: per Mason J in Peko-Wallsend the subject matter, scope and purpose of an Act
+"may either expressly state, or necessarily imply, that a certain consideration must (or must not)
+be taken into account". The entry implied a required matter had to be written down, which would
+lead someone to drop a real complaint after failing to find it listed.
