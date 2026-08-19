@@ -38,6 +38,12 @@ export interface PathPlan {
   canDo: string[];
   /** What the forum cannot do (corpus limits). */
   cannotDo: string[];
+  /**
+   * What this forum decides FOR THIS DECISION TYPE — the substantive criteria the lawyer
+   * supplied per scheme, not the generic "correct or preferable" framing. Merits review only:
+   * judicial review applies grounds of review, not the enabling Act's criteria.
+   */
+  criteria: string[];
   /** i18n key for the "what carries weight here" paragraph. */
   focusKey: "focusMerits" | "focusJudicial";
 }
@@ -95,12 +101,15 @@ export function planFor({
   meritsReview,
   judicialReview,
   jurisdiction,
+  criteria = [],
 }: {
   avenue: AvenueView;
   meritsReview: Process;
   judicialReview: Process;
   /** Used to pick the right body name from the corpus (ART vs VCAT, Federal vs Supreme). */
   jurisdiction?: Jurisdiction;
+  /** `mrCriteria` from the lawyer-verified procedural layer, for this decision type. */
+  criteria?: string[];
 }): ResultPlan {
   const paths: PathPlan[] = [];
 
@@ -114,6 +123,7 @@ export function planFor({
       question: meritsReview.question,
       canDo: meritsReview.remedies,
       cannotDo: meritsReview.limits,
+      criteria,
       focusKey: "focusMerits",
     });
   }
@@ -125,6 +135,7 @@ export function planFor({
       question: judicialReview.question,
       canDo: judicialReview.remedies,
       cannotDo: judicialReview.limits,
+      criteria: [],
       focusKey: "focusJudicial",
     });
   }

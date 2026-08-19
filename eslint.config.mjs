@@ -17,6 +17,8 @@ const eslintConfig = [
       "playwright-report/**",
       "next-env.d.ts",
       "scripts/**",
+      // Build scripts for review packs, not app source — same reasoning as scripts/**.
+      "docs/**",
       "corpus/index.json",
       "corpus/legal/index.json",
       "data/index.json",

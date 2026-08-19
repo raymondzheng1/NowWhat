@@ -93,6 +93,26 @@ export function AnalysisPanel({
             </p>
             <p className="mt-1 text-[15.5px] leading-relaxed text-ink-soft">{t(p.focusKey)}</p>
 
+            {/* The scheme-specific test, supplied by the supervising lawyer. Everything else in
+                this panel is the same for any decision; this is the part that is about THIS one,
+                so it sits directly under the focus paragraph rather than in the two-column grid
+                below, where it would read as a footnote. */}
+            {p.criteria.length > 0 && (
+              <>
+                <p className="mt-3.5 font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-ink-faint">
+                  {t("pathCriteria")}
+                </p>
+                <ul className="mt-1.5 space-y-1.5 text-[15px] leading-snug text-ink-soft">
+                  {p.criteria.map((x) => (
+                    <li key={x} className="flex gap-2">
+                      <span aria-hidden="true" className="mt-[8px] h-1.5 w-1.5 flex-none rounded-[2px] bg-accent" />
+                      <span>{x}</span>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div>
                 <p className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-help-ink">

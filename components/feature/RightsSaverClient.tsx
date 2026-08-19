@@ -723,7 +723,13 @@ function ResultStep({
   // full analysis and pathway follow it. Nothing is hidden.
 
   const av = avenueView(entry);
-  const plan = planFor({ avenue: av, meritsReview, judicialReview, jurisdiction });
+  const plan = planFor({
+    avenue: av,
+    meritsReview,
+    judicialReview,
+    jurisdiction,
+    criteria: entry.mrCriteria ?? [],
+  });
 
   // The application letters differ by path: merits review asks a tribunal for the correct
   // or preferable decision on the facts; judicial review is a court process about how the

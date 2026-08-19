@@ -137,3 +137,46 @@ describe("the merits-review body is the one the lawyer verified for THAT decisio
     }
   });
 });
+
+/**
+ * The scheme-specific criteria the supervising lawyer supplied on 2026-08-19. Until then the
+ * field had no consumer at all, so these assert the wiring as much as the content.
+ */
+describe("merits-review criteria (what the tribunal decides for THIS decision)", () => {
+  it("every decision type now carries criteria, and none leaks a placeholder", () => {
+    for (const e of listDataEntries()) {
+      expect(e.mrCriteria.length, e.id).toBeGreaterThan(0);
+      for (const c of e.mrCriteria) expect(c, e.id).not.toContain("VERIFY");
+    }
+  });
+
+  it("criteria reach the merits path and never the judicial one", () => {
+    // Judicial review applies the grounds of review, not the enabling Act's criteria.
+    // Showing a scheme's substantive test under a court would misdescribe what it does.
+    const p = planFor({
+      avenue: AV, meritsReview: merits, judicialReview: judicial,
+      criteria: ["The tribunal decides whether the rules were applied correctly."],
+    });
+    expect(p.paths.find((x) => x.id === "merits-review")!.criteria).toHaveLength(1);
+    expect(p.paths.find((x) => x.id === "judicial-review")!.criteria).toEqual([]);
+  });
+
+  it("omitting criteria is safe — the panel simply renders nothing", () => {
+    const p = plan(AV);
+    expect(p.paths[0]!.criteria).toEqual([]);
+  });
+
+  it("the housing criteria lead with legislation, not departmental policy", () => {
+    // The draft put to the lawyer said the reviewer checks "its own policies and procedures".
+    // They replaced it: policy guides a statutory decision, it does not supply the test — which
+    // is also what our own unlawful-policy and inflexible-policy grounds hold.
+    const housing = getDataEntry("vic-public-housing")!;
+    const first = housing.mrCriteria[0]!.toLowerCase();
+    expect(first).toContain("legislation");
+    expect(first).not.toMatch(/its own polic/);
+  });
+
+  it("the heading that introduces them is customer copy and exists", () => {
+    expect(messages.rights.pathCriteria).toBeTruthy();
+  });
+});
