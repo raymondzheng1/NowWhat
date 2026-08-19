@@ -1,5 +1,5 @@
 {
-  "builtAt": "a7df80e74c8aff45",
+  "builtAt": "95af33ecbc94aa22",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -82,7 +82,7 @@
       ],
       "status": "verified",
       "isFallback": false,
-      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` is still a VERIFY placeholder: it is scheme-specific substantive law, it has no consumer in the app, and it should be filled in by the lawyer rather than inferred."
+      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` was supplied by the supervising lawyer on 2026-08-19, confirmed as drafted from the matching verified decode entry."
     },
     {
       "id": "cth-generic",
@@ -238,7 +238,7 @@
       ],
       "status": "verified",
       "isFallback": false,
-      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` is still a VERIFY placeholder: it is scheme-specific substantive law, it has no consumer in the app, and it should be filled in by the lawyer rather than inferred."
+      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` was supplied by the supervising lawyer on 2026-08-19, confirmed as drafted from the matching verified decode entry. Note this scheme has no tribunal step — the path is internal review, then the Magistrates' Court."
     },
     {
       "id": "vic-generic",
@@ -393,7 +393,7 @@
       ],
       "status": "verified",
       "isFallback": false,
-      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` is still a VERIFY placeholder: it is scheme-specific substantive law, it has no consumer in the app, and it should be filled in by the lawyer rather than inferred."
+      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` was settled by the supervising lawyer on 2026-08-19. The draft put to them said the reviewer checks whether the department applied \"its own policies and procedures\"; they replaced it with the relevant legislation, policies and procedures, because policy guides a statutory decision rather than supplying the test. The same overstatement was corrected in the decode entry, where it was user-facing."
     },
     {
       "id": "vic-renting",
