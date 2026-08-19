@@ -4,7 +4,6 @@ import Link from "next/link";
 import { listConcepts, getConcept } from "@/lib/legal";
 import { LearnContainer } from "@/components/feature/learn/LearnContainer";
 import { LearnTrust } from "@/components/feature/learn/LearnTrust";
-import { Disclaimer } from "@/components/ui/Disclaimer";
 import { JsonLd } from "@/components/site/JsonLd";
 import { articleLd } from "@/lib/seo/jsonld";
 
@@ -149,11 +148,7 @@ export default async function ConceptPage({ params }: { params: Promise<{ id: st
         </section>
       )}
 
-      <div className="mt-12">
-        <Disclaimer />
-      </div>
-
-      <p className="mt-8">
+      <p className="mt-12">
         <Link
           href="/learn/how-review-fits-together"
           className="link-text inline-flex min-h-[44px] items-center"

@@ -15,6 +15,9 @@ test.beforeEach(async ({ context }) => {
 const PAGES = [
   "/", "/start", "/faq", "/help", "/contact", "/privacy", "/terms",
   "/learn", "/learn/merits-review", "/learn/compare", "/learn/grounds", "/learn/grounds/procedural-fairness-hearing", "/learn/tour",
+  // The concept layer: the index plus one detail page with every optional block populated
+  // (keyPoints, options, leadingCases, sources), so the richest template is the one audited.
+  "/learn/how-review-fits-together", "/learn/how-review-fits-together/remedies",
 ];
 
 for (const path of PAGES) {
