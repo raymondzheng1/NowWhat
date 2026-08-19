@@ -20,7 +20,9 @@ keyPoints:
   - >-
     A written statement of reasons tells you what the decision-maker actually
     relied on.
-  - Asking for reasons is a useful first step on either review path.
+  - >-
+    Asking for reasons is a useful first step on either review path. Whether
+    they must give them depends on the type of decision.
   - >-
     Freedom of information is a separate right. It asks to see documents rather
     than to be told why.
@@ -34,8 +36,8 @@ options:
   - name: A statement of reasons
     plainName: Asking why
     whatItDoes: >-
-      Asks the decision-maker to set out, in writing, the reasons for the
-      decision.
+      In many cases you can ask the decision-maker for written reasons. Whether
+      there is a legal duty to give them depends on the type of decision.
     note: >-
       For an Australian Government decision this right comes from the
       Administrative Decisions (Judicial Review) Act 1977 (Cth) s 13. In
@@ -46,9 +48,11 @@ options:
       Asks an agency for copies of documents it holds, including documents about
       you.
     note: >-
-      A refusal can usually be reviewed. Federally the Office of the Australian
-      Information Commissioner handles that. In Victoria it is the Office of the
-      Victorian Information Commissioner.
+      The Freedom of Information Act 1982 applies federally, and Victoria has an
+      Act of the same name. Charges may apply. A refusal can usually be reviewed.
+      The Office of the Australian Information Commissioner and the Office of the
+      Victorian Information Commissioner are common review bodies for FOI
+      decisions.
 leadingCases: []
 sources:
   - Owner's administrative-law knowledge base (Combined MR/JR Framework; Venture Concepts, 2026-08-19)
@@ -94,3 +98,21 @@ affecting someone's rights or licence, but it is not every decision-maker. This 
 states the right without qualification. Naming the term "tribunal" in customer copy would mislead
 badly — a reader hears VCAT — so the proposal put to the lawyer keeps "the decision-maker" and adds
 a sentence noting the right does not reach every decision.
+
+**Lawyer review applied, 2026-08-19.** Four refinements, all from one principle: do not overstate a
+legal proposition where the source material itself acknowledges a limit.
+
+*Q2.* "Federally the OAIC handles that" implied the Commissioner is both the first review step and
+the whole pathway. Neither is sourced. Now: they "are common review bodies for FOI decisions".
+
+*Q3, Q6.* Naming the Acts was approved, and charges may be mentioned in general terms with no
+figures.
+
+*Q7 — nothing added.* The internal-review step stays unstated. The recommendation put to the lawyer
+asked them to confirm the step existed and what it was called, which is an admission it was not
+verified. Under this app's own rule that is a reason to say nothing, not a reason to ask the reader
+to rely on it. No statement about internal review appears anywhere in this entry.
+
+*Q9.* The qualification moved into the core statement instead of trailing after it. A reader takes
+the first sentence and stops, so a caveat placed second is not read by the person most likely to be
+misled by the first.

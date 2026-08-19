@@ -44,9 +44,15 @@ reasonsRequest:
 privativeClause: false
 forms: []
 mrCriteria:
+  - The reviewing agency decides whether the fine should stand or be cancelled.
   - >-
-    VERIFY against the Fines Reform Act 2014 / Infringements Act 2006 — real
-    substantive criteria only
+    The grounds include a mistake of identity, and a decision that was contrary
+    to law.
+  - >-
+    They also include exceptional circumstances, and special circumstances such
+    as mental illness, disability, serious addiction, homelessness, or family
+    violence.
+  - If the matter goes to court instead, the court decides the charge itself.
 examples:
   - 'A parking or speeding fine'
   - 'A toll or public transport fine'

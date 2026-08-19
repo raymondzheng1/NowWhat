@@ -42,8 +42,12 @@ privativeClause: false
 forms: []
 mrCriteria:
   - >-
-    VERIFY against the relevant housing policy / enabling Act — real substantive
-    criteria only
+    The reviewer considers whether the department correctly applied the relevant
+    legislation, policies and procedures.
+  - For an eviction, VCAT decides whether the notice to vacate is valid.
+  - >-
+    For an eviction, VCAT also decides whether it is reasonable and proportionate
+    to make you leave. It weighs the impact on you and your household.
 examples:
   - 'A public housing application refused'
   - 'A transfer or priority access decision'

@@ -44,9 +44,12 @@ reasonsRequest:
 privativeClause: false
 forms: []
 mrCriteria:
+  - The tribunal decides whether the rules were applied correctly to your situation.
   - >-
-    VERIFY against the Social Security Act 1991 / Administration Act 1999 — real
-    substantive criteria only
+    It decides whether the facts relied on were right, such as the income and
+    dates used.
+  - Where there is a debt, it decides whether the debt is owed and how much it is.
+  - It decides whether your circumstances were properly taken into account.
 examples:
   - 'A debt or overpayment notice'
   - 'A payment cancelled or reduced'

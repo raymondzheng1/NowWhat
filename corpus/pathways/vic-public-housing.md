@@ -82,7 +82,7 @@ rightToReasons:
   source: "housing.vic.gov.au; tenantsvic.org.au"
   verified: true
 groundsOrCriteria:
-  - "for housing decisions: whether the housing department applied its policies and procedures correctly"
+  - "for housing decisions: whether the department correctly applied the relevant legislation, policies and procedures"
   - "for an eviction: whether the notice to vacate is valid"
   - "for an eviction: whether it is reasonable and proportionate to make you leave — VCAT must weigh the impact on you and your household"
   - "family violence or serious hardship affecting your housing"

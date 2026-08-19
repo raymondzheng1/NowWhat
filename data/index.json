@@ -1,5 +1,5 @@
 {
-  "builtAt": "cb8acb46de1da26a",
+  "builtAt": "a7df80e74c8aff45",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -51,7 +51,10 @@
       "privativeClause": false,
       "forms": [],
       "mrCriteria": [
-        "VERIFY against the Social Security Act 1991 / Administration Act 1999 — real substantive criteria only"
+        "The tribunal decides whether the rules were applied correctly to your situation.",
+        "It decides whether the facts relied on were right, such as the income and dates used.",
+        "Where there is a debt, it decides whether the debt is owed and how much it is.",
+        "It decides whether your circumstances were properly taken into account."
       ],
       "examples": [
         "A debt or overpayment notice",
@@ -203,7 +206,10 @@
       "privativeClause": false,
       "forms": [],
       "mrCriteria": [
-        "VERIFY against the Fines Reform Act 2014 / Infringements Act 2006 — real substantive criteria only"
+        "The reviewing agency decides whether the fine should stand or be cancelled.",
+        "The grounds include a mistake of identity, and a decision that was contrary to law.",
+        "They also include exceptional circumstances, and special circumstances such as mental illness, disability, serious addiction, homelessness, or family violence.",
+        "If the matter goes to court instead, the court decides the charge itself."
       ],
       "examples": [
         "A parking or speeding fine",
@@ -355,7 +361,9 @@
       "privativeClause": false,
       "forms": [],
       "mrCriteria": [
-        "VERIFY against the relevant housing policy / enabling Act — real substantive criteria only"
+        "The reviewer considers whether the department correctly applied the relevant legislation, policies and procedures.",
+        "For an eviction, VCAT decides whether the notice to vacate is valid.",
+        "For an eviction, VCAT also decides whether it is reasonable and proportionate to make you leave. It weighs the impact on you and your household."
       ],
       "examples": [
         "A public housing application refused",
