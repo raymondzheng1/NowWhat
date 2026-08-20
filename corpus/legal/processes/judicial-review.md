@@ -59,6 +59,11 @@ limits:
     or wrong on the facts.
 goodToKnow:
   - >-
+    A refusal counts as a decision. Being told no is something you can ask about.
+  - >-
+    A failure to decide can count too, where they had a duty to decide and did
+    not.
+  - >-
     A tribunal's own decision can be judicially reviewed. The tribunal acts
     under a law too, so a court can check that it kept within the law.
   - >-
@@ -74,3 +79,9 @@ status: verified
 ---
 
 Explainer reviewed and confirmed by a supervising lawyer (2026-06-30). General information, not advice.
+
+Refusals and failures added 2026-08-19. The Administrative Law Act 1978 (Vic) s 2 defines a
+decision to include "a refusal or failure to perform a duty or to exercise a power to make such a
+decision", and the ADJR Act reaches a failure to decide where there was a duty to (s 7). People
+routinely assume that being told no, or being left waiting, is not the kind of thing review is
+for. It is.

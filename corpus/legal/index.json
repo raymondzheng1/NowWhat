@@ -1,5 +1,5 @@
 {
-  "builtAt": "8112d7366888836b",
+  "builtAt": "b9b65be6cfde886b",
   "processes": [
     {
       "id": "judicial-review",
@@ -47,6 +47,8 @@
         "Judicial review is about legality, not about whether the decision was harsh or wrong on the facts."
       ],
       "goodToKnow": [
+        "A refusal counts as a decision. Being told no is something you can ask about.",
+        "A failure to decide can count too, where they had a duty to decide and did not.",
         "A tribunal's own decision can be judicially reviewed. The tribunal acts under a law too, so a court can check that it kept within the law.",
         "A court will not simply disagree with the result. It looks at whether the decision was made lawfully.",
         "Judicial review can be technical and the time limits are tight — getting free legal help early really matters."
@@ -1651,7 +1653,7 @@
       "Victoria",
       "Commonwealth"
     ],
-    "mrVsJr": "Merits review asks 'what is the correct or preferable decision?' — a tribunal stands in the decision-maker's shoes and can change the outcome. Judicial review asks 'was the decision lawful?' — a court checks the process and can set a decision aside, but cannot substitute its own. Choose by what the person wants: a different outcome points to merits review (if available); an unlawful process, or no merits-review right, points to judicial review. VERIFY the avenues for each decision against the data layer.",
+    "mrVsJr": "Merits review asks 'what is the correct or preferable decision?' — a tribunal stands in the decision-maker's shoes and can change the outcome. Judicial review asks 'was the decision lawful?' — a court checks the process and can set a decision aside, but cannot substitute its own. Choose by what the person wants: a different outcome points to merits review (if available); an unlawful process, or no merits-review right, points to judicial review. The avenue, body and time limit for a specific decision come from the lawyer-verified procedural layer, never from here.",
     "remedies": {
       "mr": "affirm, vary, or set aside and substitute the decision (merits review)",
       "jr": "quash / set aside and send back to be remade; cannot substitute a new decision (judicial review)"
