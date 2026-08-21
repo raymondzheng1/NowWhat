@@ -107,3 +107,40 @@ export function itemListLd(o: {
     })),
   };
 }
+
+/**
+ * HowTo for the guided flow.
+ *
+ * This is the one schema type that actually describes what /start is: a sequence of steps that
+ * ends with a person knowing their options. It is also the shape search engines show for
+ * "how do I appeal a …" queries, which is exactly what somebody types at the moment they need
+ * this app.
+ *
+ * The steps describe the PRODUCT, not a legal procedure. Nothing here asserts a deadline, names
+ * a forum, or promises an outcome, so it cannot drift out of step with the corpus.
+ */
+export function howToLd(o: {
+  name: string;
+  description: string;
+  path: string;
+  steps: { name: string; text: string }[];
+}): Record<string, unknown> {
+  const base = siteUrl();
+  return {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: o.name,
+    description: o.description,
+    url: `${base}${o.path}`,
+    totalTime: "PT5M",
+    supply: [{ "@type": "HowToSupply", name: "The decision letter, if you have it" }],
+    step: o.steps.map((st, i) => ({
+      "@type": "HowToStep",
+      position: i + 1,
+      name: st.name,
+      text: st.text,
+      url: `${base}${o.path}#step-${i + 1}`,
+    })),
+    publisher: organization(),
+  };
+}

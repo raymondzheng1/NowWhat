@@ -4,11 +4,13 @@ import { getProcess, groundsForProcess, listConcepts } from "@/lib/legal";
 import { listDataEntries } from "@/lib/data";
 import { getFaqsForEntry } from "@/lib/faq/load";
 import { listEntries } from "@/lib/corpus/index";
+import { JsonLd } from "@/components/site/JsonLd";
+import { howToLd } from "@/lib/seo/jsonld";
 
 export const metadata: Metadata = {
   title: "Work out how to review a government decision",
   description:
-    "Answer a few plain questions about a government decision (Victoria or Commonwealth) and get the review path, the time-limit rule, a draft request for reasons, and free help — in plain English. Nothing you enter is stored.",
+    "Answer a few plain questions about a Centrelink, fine, housing or other government decision (Victoria or Commonwealth). See every option — internal review, merits review at the ART or VCAT, judicial review, the Ombudsman, and freedom of information — with the time-limit rule, a draft request for reasons, and where to get help. Plain English. Nothing you enter is stored.",
   alternates: { canonical: "/start" },
 };
 
@@ -35,6 +37,25 @@ export default function StartPage() {
   const corpusByEntry = Object.fromEntries(listEntries().map((e) => [e.id, e]));
 
   return (
+    <>
+      <JsonLd
+        data={howToLd({
+          name: "How to have an Australian government decision reviewed",
+          description:
+            "Work out which review options apply to a government decision in Victoria or under Commonwealth law, and what each one can do.",
+          path: "/start",
+          steps: [
+            { name: "Say who made the decision",
+              text: "Choose whether an Australian Government body or a state body made the decision. The steps are similar in other states, but the rules come from that state's own laws." },
+            { name: "Say what the decision was about",
+              text: "Pick the closest kind of decision, add the date on the letter, and tell us anything that makes your situation different." },
+            { name: "See your options",
+              text: "Read what each route can do — internal review by the department, merits review at a tribunal, judicial review in a court, a free complaint to the Ombudsman, and freedom of information." },
+            { name: "Take the next step",
+              text: "Use the draft request for reasons, note the time-limit rule for your decision, and take it to a human service." },
+          ],
+        })}
+      />
     <RightsSaverClient
       corpusByEntry={corpusByEntry}
       faqsByEntry={faqsByEntry}
@@ -43,5 +64,6 @@ export default function StartPage() {
       jrGrounds={groundsForProcess("judicial-review")}
       concepts={listConcepts()}
     />
+    </>
   );
 }

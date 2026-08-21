@@ -59,6 +59,20 @@ const KEYWORDS = [
   "Centrelink decision review",
   "statement of reasons",
   "free legal help Victoria",
+  // The avenues added 2026-08-22. People search for these by name far more often than they
+  // search for "merits review" — someone whose payment stopped types "Centrelink internal
+  // review", not "administrative law".
+  "internal review",
+  "Centrelink internal review",
+  "Ombudsman complaint",
+  "Commonwealth Ombudsman",
+  "Victorian Ombudsman",
+  "freedom of information review",
+  "FOI review",
+  "Information Commissioner review",
+  "how to appeal a Centrelink decision",
+  "notice to vacate Victoria",
+  "fine review Victoria",
 ];
 
 export const metadata: Metadata = {
