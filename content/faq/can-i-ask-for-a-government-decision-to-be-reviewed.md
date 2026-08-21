@@ -38,6 +38,10 @@ your time to apply to VCAT to when you get the reasons.
 The time limit to apply to VCAT is often 28 days, but the Act that applies can set a
 different, sometimes shorter, limit. Check the time limit on your letter and act early.
 
+### If the time limit has already passed
+
+Missing the date does not always end things. VCAT can be asked to allow a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+
 ## If VCAT cannot review it
 
 There is a second path, and it is a different question. A court can be asked to check whether
@@ -47,8 +51,8 @@ power, and gave you a fair process.
 
 A court can set a decision aside and send it back to be made again. It cannot make a new
 decision for you. This path is more formal than VCAT, there are court fees, and a court can
-order you to pay the other side's costs. The time limits are strict and shorter than tribunal
-ones. Talk to a free legal service before you file anything.
+order you to pay the other side's costs. The time limits are strict, and they run from the
+decision rather than from when you finish trying other things. Talk to a free legal service before you file anything.
 
 ## If a decision can't be reviewed
 

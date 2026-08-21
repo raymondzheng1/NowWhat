@@ -1,5 +1,5 @@
 {
-  "builtAt": "85efe4efec6fe0f8",
+  "builtAt": "241890f5472696bd",
   "processes": [
     {
       "id": "judicial-review",
@@ -813,21 +813,20 @@
     },
     {
       "id": "no-evidence",
-      "name": "No evidence / mistake of material fact",
+      "name": "No evidence",
       "plainName": "A key finding had no evidence behind it",
       "oneLine": "A finding that mattered was made with no evidence to support it.",
-      "whatItMeans": "A decision can be challenged if a finding on a key fact was made with no evidence at all to support it, or rested on a clear mistake about a fact the decision turned on. It is not enough that the evidence was weak — there must be no evidence, or a clear error on a central point.",
+      "whatItMeans": "A decision can be challenged if a finding on a key fact was made with no evidence at all behind it. The finding has to be one the decision turned on. It is not enough that the evidence was thin, or that you disagree with how much weight it was given.",
       "plainExample": "A debt is raised on the basis you were paid on dates that the records show you were not.",
       "whatRelates": [
-        "A key finding was made with nothing to support it.",
-        "The decision turned on a fact that is simply wrong.",
+        "A key finding was made with nothing at all to support it.",
         "Evidence you gave that contradicts a central finding appears to have been overlooked."
       ],
-      "whatItIsNot": "It does not cover a decision you just think got the facts wrong on balance — the error has to be on a critical point with no support.",
+      "whatItIsNot": "This is not a way to argue the facts again. A court checking whether a decision was lawful does not decide the facts a second time. Where the problem is that a fact is simply wrong, merits review is usually the process that looks at that. A human service can tell you which one fits your letter.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A material finding made with no evidence, or a decision based on a mistake of a material fact, may be reviewable.",
+      "test": "A finding of fact that was a critical step in the decision, made where there was nothing to support it, may make the decision unlawful. Thin evidence is not the same as no evidence.",
       "elements": [
         {
           "id": "no-support",
@@ -835,12 +834,13 @@
           "layPrompt": "Was there an important finding with no evidence at all behind it?"
         },
         {
-          "id": "material-mistake",
-          "name": "Mistake about a central fact",
-          "layPrompt": "Did the decision rely on a fact that is plainly wrong?"
+          "id": "critical",
+          "name": "The finding mattered",
+          "layPrompt": "Was that finding a step the decision rested on?"
         }
       ],
       "sources": [
+        "Owner's administrative-law knowledge base (judicial review memorandum, 2026-08-22)",
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
@@ -849,11 +849,6 @@
           "name": "Australian Broadcasting Tribunal v Bond (1990) 170 CLR 321",
           "pinpoint": "Mason CJ at 355-356",
           "explains": "Findings have to rest on evidence that actually proves something, not on nothing."
-        },
-        {
-          "name": "Corporation of the City of Enfield v Development Assessment Commission (2000) 199 CLR 135",
-          "pinpoint": "at [28]",
-          "explains": "Some facts must actually exist before a power can be used — and a court can check for itself."
         }
       ],
       "jurisdictions": []

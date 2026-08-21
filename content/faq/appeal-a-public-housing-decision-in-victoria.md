@@ -33,6 +33,10 @@ Tenancies Act. It goes to VCAT, not the Housing Appeals Office. There is a 30-da
 to challenge the notice early, and even if you miss it, you can still argue the notice is
 not valid at the possession hearing.
 
+### If the time limit has already passed
+
+Missing the date does not always end things. VCAT can be asked to allow a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+
 ## Get free help
 
 Tenants Victoria's Social Housing line is 1800 068 860. Justice Connect Homeless Law

@@ -1,5 +1,5 @@
 {
-  "builtAt": "5414dafdbf481479",
+  "builtAt": "ba784dd079d4c970",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -482,7 +482,7 @@
           "cost": "Court fees apply and there is a risk of paying the other side's costs.",
           "name": "Ask a court to check the decision was made lawfully (judicial review)",
           "body": "Supreme Court of Victoria",
-          "deadline": "Court time limits are strict and shorter than tribunal ones. Asking for reasons does not pause them. Please talk to a free legal service before you file anything.",
+          "deadline": "Court time limits are strict, and they run from the decision rather than from when you finish trying other things. Asking for reasons does not pause them. Please talk to a human legal service before you file anything.",
           "howToStart": "talk to a free legal service first — this is a court process and it is technical",
           "source": "Administrative Law Act 1978 (Vic); Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
         }
@@ -626,7 +626,7 @@
           "cost": "Court fees apply and there is a risk of paying the other side's costs.",
           "name": "Ask a court to check the decision was made lawfully (judicial review)",
           "body": "Supreme Court of Victoria",
-          "deadline": "Court time limits are strict and shorter than tribunal ones. Asking for reasons does not pause them. Please talk to a free legal service before you file anything.",
+          "deadline": "Court time limits are strict, and they run from the decision rather than from when you finish trying other things. Asking for reasons does not pause them. Please talk to a human legal service before you file anything.",
           "howToStart": "talk to a free legal service first — this is a court process and it is technical",
           "source": "Administrative Law Act 1978 (Vic); Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
         }

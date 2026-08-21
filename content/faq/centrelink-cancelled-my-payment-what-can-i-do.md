@@ -52,6 +52,10 @@ Having the right documents can help your review. Useful things to collect includ
 - Letters from a doctor, caseworker, or support service, if relevant
 - Any previous letters or messages from Services Australia about your payment
 
+### If the time limit has already passed
+
+Missing the date does not always end things. The tribunal can be asked to accept a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+
 ## Where to get free help
 
 You do not have to do this alone. Free, independent help is available:

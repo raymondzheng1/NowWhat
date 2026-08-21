@@ -51,6 +51,10 @@ You can dispute a debt if you think:
 - The rules were not applied correctly to your situation
 - Your personal circumstances were not properly taken into account
 
+### If the time limit has already passed
+
+Missing the date does not always end things. The tribunal can be asked to accept a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+
 ## Where can you get free help?
 
 - **Economic Justice Australia (welfare rights centres)** — free, independent help with Centrelink decisions and debts

@@ -69,7 +69,7 @@ pathways:
     source: "Victorian Ombudsman — ombudsman.vic.gov.au"
   - name: "Ask a court to check the decision was made lawfully (judicial review)"
     body: "Supreme Court of Victoria"
-    deadline: "Court time limits are strict and shorter than tribunal ones. Asking for reasons does not pause them. Please talk to a free legal service before you file anything."
+    deadline: "Court time limits are strict, and they run from the decision rather than from when you finish trying other things. Asking for reasons does not pause them. Please talk to a human legal service before you file anything."
     deadlineDays: null
     deadlineVerified: false
     howToStart: "talk to a free legal service first — this is a court process and it is technical"

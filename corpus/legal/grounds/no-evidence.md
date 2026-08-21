@@ -1,38 +1,41 @@
 ---
 id: no-evidence
-name: No evidence / mistake of material fact
+name: No evidence
 plainName: A key finding had no evidence behind it
 oneLine: A finding that mattered was made with no evidence to support it.
 whatItMeans: >-
   A decision can be challenged if a finding on a key fact was made with no
-  evidence at all to support it, or rested on a clear mistake about a fact the
-  decision turned on. It is not enough that the evidence was weak — there must
-  be no evidence, or a clear error on a central point.
+  evidence at all behind it. The finding has to be one the decision turned on.
+  It is not enough that the evidence was thin, or that you disagree with how
+  much weight it was given.
 plainExample: >-
   A debt is raised on the basis you were paid on dates that the records show you
   were not.
 whatRelates:
-  - A key finding was made with nothing to support it.
-  - The decision turned on a fact that is simply wrong.
+  - A key finding was made with nothing at all to support it.
   - >-
     Evidence you gave that contradicts a central finding appears to have been
     overlooked.
 whatItIsNot: >-
-  It does not cover a decision you just think got the facts wrong on balance —
-  the error has to be on a critical point with no support.
+  This is not a way to argue the facts again. A court checking whether a
+  decision was lawful does not decide the facts a second time. Where the problem
+  is that a fact is simply wrong, merits review is usually the process that
+  looks at that. A human service can tell you which one fits your letter.
 usedIn:
   - judicial-review
 test: >-
-  A material finding made with no evidence, or a decision based on a mistake of
-  a material fact, may be reviewable.
+  A finding of fact that was a critical step in the decision, made where there
+  was nothing to support it, may make the decision unlawful. Thin evidence is
+  not the same as no evidence.
 elements:
   - id: no-support
     name: No evidence for a key finding
     layPrompt: Was there an important finding with no evidence at all behind it?
-  - id: material-mistake
-    name: Mistake about a central fact
-    layPrompt: Did the decision rely on a fact that is plainly wrong?
+  - id: critical
+    name: The finding mattered
+    layPrompt: Was that finding a step the decision rested on?
 sources:
+  - Owner's administrative-law knowledge base (judicial review memorandum, 2026-08-22)
   - Victoria Legal Aid — legalaid.vic.gov.au
 status: verified
 leadingCases:
@@ -41,13 +44,39 @@ leadingCases:
     explains: >-
       Findings have to rest on evidence that actually proves something, not on
       nothing.
-  - name: >-
-      Corporation of the City of Enfield v Development Assessment Commission
-      (2000) 199 CLR 135
-    pinpoint: 'at [28]'
-    explains: >-
-      Some facts must actually exist before a power can be used — and a court
-      can check for itself.
 ---
 
-Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (citations + judgment pinpoints) added and approved by the owner on 2026-07-12. They are not yet rendered in the UI; the v2 elements/cases feature may rely on them.
+**Mistake of material fact removed 2026-08-22, on a senior-partner QA finding.** This was the most
+serious defect the review found, and it was published as a `verified` ground.
+
+The entry offered two limbs: no evidence, and mistake of a material fact. **The second is not an
+established ground of judicial review in Australia**, and *Bond* — the case this entry cites — is
+authority for close to the opposite: a finding of fact made within jurisdiction is not reviewable
+merely because it is wrong. What is reviewable is a critical finding made where there was no
+evidence to support it. The English line of authority on mistake of fact has not been adopted here.
+
+The limb appeared **five times**: in the ground's own name, in `whatItMeans`, in `whatRelates`, in
+`test`, and as a standalone element with its own lay prompt. A reader met it from every direction.
+
+That matters more than the average correction because *"they got a fact wrong"* is the single most
+common thing a person believes about their letter. The app was telling them that belief is a ground
+of judicial review. It usually is not — it is a **merits** point, and merits review is where a
+factual error actually gets fixed. So `whatItIsNot` now routes there instead of leaving the reader
+to pursue the wrong process with the limited time they have.
+
+The owner's judicial review memorandum states the surviving ground directly: a decision-maker who
+makes a finding of fact that is a critical step in the decision, where there is no probative
+evidence to support it, commits a reviewable error; the error must concern a material finding, and
+it is not enough that the evidence was merely thin or that the applicant disagrees with the weight
+given.
+
+Two further changes from the same review:
+
+**Enfield was dropped from this entry.** It is authority for jurisdictional fact — that some facts
+must exist before a power arises, and that a court decides those for itself. That proposition
+already has its own entry in `objective-jurisdictional-fact`, where it belongs. Leaving it here
+implied it supported a no-evidence ground, which it does not.
+
+**"No probative evidence" was not used**, despite being the memorandum's phrasing, because it fails
+the grade-11 reading ceiling. The entry's own existing plain rendering of *Bond* — "evidence that
+actually proves something, not nothing" — carries the same idea and was already approved.

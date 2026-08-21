@@ -31,6 +31,10 @@ early. If you miss the 30 days, you can still argue the notice is invalid at the
 where your rental provider asks for a possession order. Even with a valid notice, VCAT
 must decide it is reasonable and proportionate before ordering you to leave.
 
+### If the time limit has already passed
+
+Missing the date does not always end things. VCAT can be asked to allow a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+
 ## Get free help
 
 Tenants Victoria gives free advice to renters on (03) 9416 2577. Victoria Legal Aid's

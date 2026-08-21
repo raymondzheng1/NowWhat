@@ -58,6 +58,10 @@ Yes — time limits can apply to applying to the ART. Missing a deadline can lim
 
 Acting early can also matter if you want any back-payment. This includes the internal review stage.
 
+### If the time limit has already passed
+
+Missing the date does not always end things. The tribunal can be asked to accept a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+
 ## Where can you get free help?
 
 Free services are available to help you understand your options:
