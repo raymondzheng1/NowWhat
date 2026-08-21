@@ -15,6 +15,7 @@ describe("concepts — the mind-map structural layer", () => {
     expect(ids).toEqual([
       "adjr-or-common-law",
       "information-commissioner",
+      "internal-review",
       "justiciability",
       "ombudsman",
       "remedies",
@@ -62,11 +63,43 @@ describe("concepts — the mind-map structural layer", () => {
     expect(blob).toMatch(/substitute|new (one|decision)|decide the matter itself/);
   });
 
-  it("the Ombudsman node says both that it is free and that it cannot change the decision", () => {
+  it("the Ombudsman node says it is free, and that it will not replace the decision", () => {
     const o = getConcept("ombudsman")!;
     const blob = [o.oneLine, o.whatItMeans, o.whatItIsNot, ...o.keyPoints].join(" ").toLowerCase();
     expect(blob).toContain("free");
-    expect(blob).toMatch(/cannot (overturn|change)/);
+    // "will not usually replace" rather than "cannot" — the sourced position is that its powers
+    // are recommendatory, not that it is powerless.
+    expect(blob).toMatch(/not usually replace|recommend/);
+    expect(blob).toContain("not merits review");
+  });
+
+  it("the Ombudsman node carries the sorting contrast a reader can act on", () => {
+    // "Is the decision wrong" vs "was I handled badly" lets someone pick the right door before
+    // learning any vocabulary. It is the most useful sentence in the entry.
+    const o = getConcept("ombudsman")!;
+    const blob = [o.oneLine, ...o.keyPoints].join(" ").toLowerCase();
+    expect(blob).toMatch(/handled (my matter|you) badly/);
+  });
+
+  it("internal review points at the decision letter and states no invented rule", () => {
+    // Internal review is created by each scheme, so there is no general provision or period to
+    // cite. The entry must send people to the letter rather than make one up.
+    const c = getConcept("internal-review")!;
+    const blob = [c.whatItMeans, c.whatItIsNot, ...c.keyPoints].join(" ").toLowerCase();
+    expect(blob).toContain("letter");
+    expect(blob).not.toMatch(/\d+\s*(days?|months?)/);
+    expect(c.order).toBeLessThan(10);
+  });
+
+  it("Information Commissioner review is described as able to change the access decision", () => {
+    // It is a form of external merits review on FOI decisions — affirm, vary, or set aside and
+    // substitute — which is a real difference from the Ombudsman and was previously unstated.
+    const c = getConcept("information-commissioner")!;
+    const blob = [...c.keyPoints, ...c.options.map((o) => o.whatItDoes + " " + o.note)]
+      .join(" ").toLowerCase();
+    expect(blob).toMatch(/change the decision|set it aside/);
+    // ...but scoped to the documents, not the decision that brought them here.
+    expect(blob).toMatch(/does not review the original decision|about your documents/);
   });
 
   it("justiciability reassures rather than gates the ordinary applicant", () => {

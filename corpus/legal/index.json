@@ -1,5 +1,5 @@
 {
-  "builtAt": "b9b65be6cfde886b",
+  "builtAt": "85efe4efec6fe0f8",
   "processes": [
     {
       "id": "judicial-review",
@@ -1335,6 +1335,32 @@
   ],
   "concepts": [
     {
+      "id": "internal-review",
+      "name": "Internal review",
+      "plainName": "Asking the department to look at it again",
+      "oneLine": "Often the first step, and usually the fastest and cheapest one.",
+      "order": 5,
+      "appliesTo": [
+        "any"
+      ],
+      "whatItMeans": "Most departments will look at their own decision again if you ask. Someone who was not involved the first time takes another look. It is usually free, and it is usually much quicker than a tribunal or a court. For many schemes it is also the step you have to take before you can go anywhere else.",
+      "whatItIsNot": "It is not an outside review. The same department is deciding, so it will not suit every situation. It also does not always pause the clock for the next step, so keep track of any other time limit while you wait.",
+      "keyPoints": [
+        "Your decision letter is the place to look. It usually sets out what you can ask for and by when.",
+        "The rules are different for every department, so there is no single answer about how it works.",
+        "It is usually free, and usually faster than any outside review.",
+        "For some schemes you have to do this first before an outside body will look at your case.",
+        "If the letter does not mention it, you can ask the department whether an internal review is available."
+      ],
+      "options": [],
+      "leadingCases": [],
+      "sources": [
+        "Owner's administrative-law knowledge base (Combined MR/JR Framework, 2026-08-22)"
+      ],
+      "status": "verified",
+      "jurisdictions": []
+    },
+    {
       "id": "justiciability",
       "name": "Justiciability",
       "plainName": "Some decisions a court will not look at",
@@ -1566,7 +1592,7 @@
     },
     {
       "id": "information-commissioner",
-      "name": "Reasons and freedom of information",
+      "name": "Reasons, documents and the Information Commissioner",
       "plainName": "Getting the reasons, and getting the documents",
       "oneLine": "Two different requests. One asks why. The other asks to see the file.",
       "order": 50,
@@ -1574,12 +1600,13 @@
         "any"
       ],
       "whatItMeans": "There are two separate things you can ask for, and people often mix them up. You can ask the decision-maker for a written statement of reasons. That tells you why. You can also make a freedom of information request. That asks to see documents. Asking for reasons is usually the more useful first step, and it is free.",
-      "whatItIsNot": "A freedom of information request is not a way to have a decision reviewed. Neither is a request for reasons. They get you information, and information is what tells you whether a review is worth it and what to say.",
+      "whatItIsNot": "A freedom of information request is not a way to have the original decision reviewed. Neither is a request for reasons. They get you information, and information is what tells you whether a review is worth it and what to say. Refusing to give you documents is a different matter — that refusal can itself be reviewed.",
       "keyPoints": [
         "A written statement of reasons tells you what the decision-maker actually relied on.",
         "Asking for reasons is a useful first step on either review path. Whether they must give them depends on the type of decision.",
         "Freedom of information is a separate right. It asks to see documents rather than to be told why.",
-        "If a freedom of information request is refused, that refusal can usually be reviewed.",
+        "If a freedom of information request is refused, there are usually two steps: ask the agency to review it internally, then ask the Information Commissioner.",
+        "On an information request, the Commissioner can go further than the Ombudsman. It can change the decision about your documents.",
         "Time limits apply to both. Check the limit for your decision rather than assuming."
       ],
       "options": [
@@ -1593,15 +1620,27 @@
           "name": "A freedom of information request",
           "plainName": "Asking to see the documents",
           "whatItDoes": "Asks an agency for copies of documents it holds, including documents about you.",
-          "note": "The Freedom of Information Act 1982 applies federally, and Victoria has an Act of the same name. Charges may apply. A refusal can usually be reviewed. The Office of the Australian Information Commissioner and the Office of the Victorian Information Commissioner are common review bodies for FOI decisions."
+          "note": "The Freedom of Information Act 1982 applies federally, and Victoria has an Act of the same name. Charges may apply."
+        },
+        {
+          "name": "Information Commissioner review",
+          "plainName": "If they refuse to give you the documents",
+          "whatItDoes": "Reviews the agency's decision about access. Federally this is the Office of the Australian Information Commissioner. It can agree with the agency, change the decision, or set it aside and make a different one.",
+          "note": "There is usually an internal review step at the agency first. This is review of the decision about your documents. It does not review the original decision that brought you here."
+        },
+        {
+          "name": "Privacy complaints",
+          "plainName": "If an agency mishandled your personal information",
+          "whatItDoes": "The Commissioner also looks into how agencies handle personal information, and can require them to put things right.",
+          "note": "This is a separate job again, under privacy law."
         }
       ],
       "leadingCases": [],
       "sources": [
-        "Owner's administrative-law knowledge base (Combined MR/JR Framework; Venture Concepts, 2026-08-19)",
+        "Office of the Australian Information Commissioner — oaic.gov.au (FOI Guidelines, Part 10, review by the Information Commissioner)",
+        "Office of the Victorian Information Commissioner — ovic.vic.gov.au",
         "Administrative Law Act 1978 (Vic) — legislation.vic.gov.au",
-        "Office of the Australian Information Commissioner — oaic.gov.au",
-        "Office of the Victorian Information Commissioner — ovic.vic.gov.au"
+        "Owner's administrative-law knowledge base (Combined MR/JR Framework; Venture Concepts, 2026-08-19)"
       ],
       "status": "verified",
       "jurisdictions": []
@@ -1610,21 +1649,27 @@
       "id": "ombudsman",
       "name": "The Ombudsman",
       "plainName": "A free complaint about how you were treated",
-      "oneLine": "Complaining is free, but the Ombudsman cannot change your decision.",
+      "oneLine": "Merits review asks if the decision was wrong. The Ombudsman asks if the agency handled you badly.",
       "order": 60,
       "appliesTo": [
         "complaint"
       ],
-      "whatItMeans": "The Ombudsman takes complaints about government departments and agencies. Complaining is free. It can look at how a decision was made, and at how you were treated along the way. What it cannot do is overturn or change the decision. That is the difference between the Ombudsman and a tribunal or a court.",
-      "whatItIsNot": "It is not a review body. Many people expect a complaint to reverse a decision, and it cannot. Even where the Ombudsman agrees with you, the decision itself still stands. A complaint also runs separately from any review, so a review time limit keeps running while you wait.",
+      "whatItMeans": "The Ombudsman takes complaints about government departments and agencies. Complaining is free. It is not a review body. It looks at how your matter was handled rather than whether the decision was the best one. So it is the right place for delay, poor communication, or a process that was not followed.",
+      "whatItIsNot": "It is not merits review. The Ombudsman will not usually replace the decision with a different one. It can recommend that an agency look at something again, or fix how it does things. Those are recommendations, not orders. A complaint also runs separately from any review, so a review time limit keeps running while you wait.",
       "keyPoints": [
-        "Complaining to the Ombudsman is free.",
-        "The Ombudsman cannot overturn or change a decision.",
-        "It can look at how a decision was made, and how you were treated.",
-        "Where no law gives a right to review, this is one of the paths that remains — a court is the other.",
+        "Complaining is free.",
+        "Think of it this way. Merits review is \"I think the decision itself is wrong\". The Ombudsman is \"I think the agency handled my matter badly\".",
+        "It looks into unfair administration, delay, poor communication, procedures that were not followed, unreasonable conduct, and problems that affect lots of people.",
+        "It can recommend that a decision be looked at again. It does not usually make its own decision in place of the agency's.",
         "A complaint is separate from a review. Keep track of any review time limit as well."
       ],
       "options": [
+        {
+          "name": "What the Ombudsman asks",
+          "plainName": "The kind of question it looks at",
+          "whatItDoes": "Take a refused Centrelink claim. The Ombudsman might ask whether the reasons were explained, whether you were treated fairly, whether there was unreasonable delay, and whether proper procedures were followed.",
+          "note": "What it will not ask is whether the payment was owed to you. That is a merits question, and it belongs at the tribunal."
+        },
         {
           "name": "Commonwealth Ombudsman",
           "plainName": "For Australian Government bodies",
@@ -1640,7 +1685,7 @@
       ],
       "leadingCases": [],
       "sources": [
-        "Commonwealth Ombudsman — ombudsman.gov.au",
+        "Commonwealth Ombudsman — ombudsman.gov.au/about/our-role",
         "Victorian Ombudsman — ombudsman.vic.gov.au",
         "Owner's administrative-law knowledge base (Combined MR/JR Framework, 2026-08-19)"
       ],

@@ -2,32 +2,46 @@
 id: ombudsman
 name: The Ombudsman
 plainName: A free complaint about how you were treated
-oneLine: Complaining is free, but the Ombudsman cannot change your decision.
+oneLine: Merits review asks if the decision was wrong. The Ombudsman asks if the agency handled you badly.
 order: 60
 appliesTo:
   - complaint
 whatItMeans: >-
   The Ombudsman takes complaints about government departments and agencies.
-  Complaining is free. It can look at how a decision was made, and at how you
-  were treated along the way. What it cannot do is overturn or change the
-  decision. That is the difference between the Ombudsman and a tribunal or a
-  court.
+  Complaining is free. It is not a review body. It looks at how your matter was
+  handled rather than whether the decision was the best one. So it is the right
+  place for delay, poor communication, or a process that was not followed.
 whatItIsNot: >-
-  It is not a review body. Many people expect a complaint to reverse a decision,
-  and it cannot. Even where the Ombudsman agrees with you, the decision itself
-  still stands. A complaint also runs separately from any review, so a review
-  time limit keeps running while you wait.
+  It is not merits review. The Ombudsman will not usually replace the decision
+  with a different one. It can recommend that an agency look at something again,
+  or fix how it does things. Those are recommendations, not orders. A complaint
+  also runs separately from any review, so a review time limit keeps running
+  while you wait.
 keyPoints:
-  - Complaining to the Ombudsman is free.
-  - The Ombudsman cannot overturn or change a decision.
-  - It can look at how a decision was made, and how you were treated.
+  - Complaining is free.
   - >-
-    Where no law gives a right to review, this is one of the paths that
-    remains — a court is the other.
+    Think of it this way. Merits review is "I think the decision itself is
+    wrong". The Ombudsman is "I think the agency handled my matter badly".
+  - >-
+    It looks into unfair administration, delay, poor communication, procedures
+    that were not followed, unreasonable conduct, and problems that affect lots
+    of people.
+  - >-
+    It can recommend that a decision be looked at again. It does not usually
+    make its own decision in place of the agency's.
   - >-
     A complaint is separate from a review. Keep track of any review time limit
     as well.
 options:
+  - name: What the Ombudsman asks
+    plainName: The kind of question it looks at
+    whatItDoes: >-
+      Take a refused Centrelink claim. The Ombudsman might ask whether the
+      reasons were explained, whether you were treated fairly, whether there was
+      unreasonable delay, and whether proper procedures were followed.
+    note: >-
+      What it will not ask is whether the payment was owed to you. That is a
+      merits question, and it belongs at the tribunal.
   - name: Commonwealth Ombudsman
     plainName: For Australian Government bodies
     whatItDoes: >-
@@ -46,7 +60,7 @@ options:
       through ombudsman.vic.gov.au.
 leadingCases: []
 sources:
-  - Commonwealth Ombudsman — ombudsman.gov.au
+  - Commonwealth Ombudsman — ombudsman.gov.au/about/our-role
   - Victorian Ombudsman — ombudsman.vic.gov.au
   - Owner's administrative-law knowledge base (Combined MR/JR Framework, 2026-08-19)
 status: verified
@@ -54,23 +68,27 @@ status: verified
 
 A top-level avenue in the owner's mind map, a sibling of merits review and judicial review.
 
-**This node is deliberately thin, and it should stay thin.** The four authoritative documents say
-almost nothing about the Ombudsman. They mention it twice, both times only as the avenue that
-remains where no Act confers merits review: "If no enabling Act confers review, MR is unavailable
-and JR (or the Ombudsman) is the only path." There is no case law and no statutory detail to draw
-on. Padding this out from general knowledge is exactly the failure the grounded-or-silent rule
-exists to prevent.
+**Substantially expanded 2026-08-22** from material the owner supplied with sources. The entry
+previously said only that the Ombudsman is free and cannot change the decision. Both are still the
+headline facts, repeated in `oneLine`, `keyPoints` and `whatItIsNot`, because someone arriving here
+after a "no" needs them more than anything else.
 
-The procedural facts come instead from this repo's own lawyer-reviewed pathway entries in
-`corpus/pathways/cth-generic.md` and `vic-generic.md`, which carry Ombudsman routes with official
-sources attached.
+What the owner's material added, and why each earned its place:
 
-Two facts are repeated three times each, in `oneLine`, `keyPoints` and `whatItIsNot`, because
-people arrive at this node after a "no" somewhere else and it often carries the whole weight of
-what happens next: **it is free**, and **it cannot change the decision**. The second one decides
-whether someone complains and waits while a review deadline runs out.
+**The contrast is now the one-liner.** "Merits review is 'I think the decision itself is wrong'.
+The Ombudsman is 'I think the agency handled my matter badly'." That single sentence does more work
+than any description of jurisdiction, because it lets a reader sort their own complaint in one
+step, before they have learned any of the vocabulary.
 
-Not covered here, because the documents do not supply it: what the Ombudsman may investigate, what
-it can recommend, whether an agency must act on a recommendation, and how long a complaint takes.
-Other states and territories are out of scope, as are industry schemes that use the word ombudsman
-but are a different thing entirely.
+**What it actually investigates** is now listed: unfair administration, delay, poor communication,
+failure to follow procedures, unreasonable conduct, systemic issues. Without this the entry told
+people what the Ombudsman could not do without telling them what it could.
+
+**The worked example** puts the Centrelink questions side by side with the question it will not
+ask. A reader recognising their own situation in "was there unreasonable delay" is a reader who has
+found the right door.
+
+**The powers are recommendatory, not determinative.** Kept in `whatItIsNot` rather than buried,
+because "the Ombudsman agreed with me" and "the decision changed" are different outcomes, and
+somebody waiting on the first while a review clock runs is the failure this entry exists to
+prevent.
