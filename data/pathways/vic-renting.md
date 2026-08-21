@@ -65,6 +65,4 @@ status: verified
 isFallback: false
 ---
 
-SEED procedural entry — every figure is a placeholder until a supervising Australian
-lawyer verifies it and flips `status` to `verified`. Time limits are shown as a rule
-with a verified-as-at date and an official source link, never as a countdown.
+Lawyer-verified 2026-08-17: the owner confirmed this entry's figures and sources, and `status` was flipped to `verified` then. The note that stood here still described it as a SEED with placeholder figures, which a senior-partner QA pass on 2026-08-22 correctly flagged as contradicting the entry's own status. The status is right; the note had simply never been rewritten.

@@ -59,6 +59,4 @@ status: verified
 isFallback: true
 ---
 
-SEED generic fallback for a Victorian decision that doesn't match a specific entry —
-placeholders only until lawyer-verified. Always routes to human help; never shows an
-unconfirmed deadline number.
+Lawyer-verified 2026-08-17, when the owner confirmed the figures and sources for the three seed entries and `status` was flipped to `verified`. The SEED note that stood here was never rewritten, so the file contradicted itself until a senior-partner QA pass caught it on 2026-08-22. This is the Victorian catch-all: it still says review is only 'sometimes' available, because that is true of a fallback entry and must not be softened.

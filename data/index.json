@@ -1,5 +1,5 @@
 {
-  "builtAt": "95af33ecbc94aa22",
+  "builtAt": "37332e904b3187b0",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -154,7 +154,7 @@
       ],
       "status": "verified",
       "isFallback": true,
-      "body": "SEED generic fallback for a Commonwealth decision that doesn't match a specific entry —\nplaceholders only until lawyer-verified. Always routes to human help; never shows an\nunconfirmed deadline number.",
+      "body": "Lawyer-verified 2026-08-17, when the owner confirmed the figures and sources for the three seed entries and `status` was flipped to `verified`. The SEED note that stood here was never rewritten, so the file contradicted itself until a senior-partner QA pass caught it on 2026-08-22. This is the Commonwealth catch-all: it still says review is only 'sometimes' available, because that is true of a fallback entry and must not be softened.",
       "examples": []
     },
     {
@@ -310,7 +310,7 @@
       ],
       "status": "verified",
       "isFallback": true,
-      "body": "SEED generic fallback for a Victorian decision that doesn't match a specific entry —\nplaceholders only until lawyer-verified. Always routes to human help; never shows an\nunconfirmed deadline number.",
+      "body": "Lawyer-verified 2026-08-17, when the owner confirmed the figures and sources for the three seed entries and `status` was flipped to `verified`. The SEED note that stood here was never rewritten, so the file contradicted itself until a senior-partner QA pass caught it on 2026-08-22. This is the Victorian catch-all: it still says review is only 'sometimes' available, because that is true of a fallback entry and must not be softened.",
       "examples": []
     },
     {
@@ -470,7 +470,7 @@
       ],
       "status": "verified",
       "isFallback": false,
-      "body": "SEED procedural entry — every figure is a placeholder until a supervising Australian\nlawyer verifies it and flips `status` to `verified`. Time limits are shown as a rule\nwith a verified-as-at date and an official source link, never as a countdown.",
+      "body": "Lawyer-verified 2026-08-17: the owner confirmed this entry's figures and sources, and `status` was flipped to `verified` then. The note that stood here still described it as a SEED with placeholder figures, which a senior-partner QA pass on 2026-08-22 correctly flagged as contradicting the entry's own status. The status is right; the note had simply never been rewritten.",
       "examples": []
     }
   ],
