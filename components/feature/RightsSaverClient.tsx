@@ -34,6 +34,35 @@ import { Icon, type IconName } from "@/components/ui/icons";
 import { ProcessExplainer } from "@/components/feature/learn/ProcessExplainer";
 import { GroundsExplorer } from "@/components/feature/learn/GroundsExplorer";
 
+/**
+ * Did this browsing session already tick the "not legal advice" box?
+ *
+ * The consent gate deliberately refuses to restore the result on a fresh load, so a bookmark,
+ * a shared link or a chat hand-off can never skip it. But following a link out to /learn and
+ * pressing Back IS a fresh load, which dropped people who had already consented back to the
+ * questions and lost their place — the single most annoying thing in the flow.
+ *
+ * A per-tab flag separates the two cases. Same tab, same session, already consented: restore.
+ * Anyone else opening the same URL has no flag and still lands on the questions. It holds one
+ * boolean, never an answer, and dies with the tab.
+ */
+const CONSENT_KEY = "wn-consented";
+function sessionConsented(): boolean {
+  try {
+    return window.sessionStorage.getItem(CONSENT_KEY) === "1";
+  } catch {
+    return false; // private mode, storage disabled — fall back to asking again
+  }
+}
+function rememberConsent(on: boolean): void {
+  try {
+    if (on) window.sessionStorage.setItem(CONSENT_KEY, "1");
+    else window.sessionStorage.removeItem(CONSENT_KEY);
+  } catch {
+    /* storage unavailable — the gate simply asks again, which is the safe direction */
+  }
+}
+
 type Step = "who" | "what" | "result";
 
 const AREA_ICON: Record<string, IconName> = {
@@ -134,7 +163,15 @@ export function RightsSaverClient({
     // "not legal advice" consent box never ticked. A bookmark, a shared link, a chat
     // hand-off or the Back button was enough to bypass both. We still WRITE step=result
     // so Back works inside a session; we just never trust it on the way in.
-    if (area && getDataEntry(area)) setStep("what");
+    if (area && getDataEntry(area)) {
+      const wantsResult = p.get("step") === "result";
+      if (wantsResult && sessionConsented()) {
+        setConsent(true);
+        setStep("result");
+      } else {
+        setStep("what");
+      }
+    }
   }, []);
 
   // Mirror the answers into the URL, and give the browser real history to walk.
@@ -216,6 +253,7 @@ export function RightsSaverClient({
     setDecisionDate("");
     setFlags({});
     setConsent(false);
+    rememberConsent(false);
     setRelatedGrounds([]);
   }
 
@@ -577,6 +615,7 @@ function WhatStep({
             checked={consent}
             onChange={(e) => {
               setConsent(e.target.checked);
+              rememberConsent(e.target.checked);
               if (e.target.checked) setBlocked(null);
             }}
             className="mt-0.5 h-5 w-5 shrink-0 accent-ink"

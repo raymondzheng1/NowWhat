@@ -67,7 +67,7 @@ test("tripwire: a sensitive matter leads with a person, and still shows the opti
   await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
   await page.getByRole("button", { name: /see my next steps/i }).click();
 
-  await expect(page.getByRole("heading", { name: /talk to a free legal service/i })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("heading", { name: /some extra rules apply/i })).toBeVisible({ timeout: 15_000 });
   // The hand-over LEADS, but it no longer replaces the analysis: the person picked a
   // decision type, and their circumstances are extra context rather than a reason to
   // withhold everything we know about that decision.
@@ -90,7 +90,7 @@ test("urgent timing does NOT dead-end: the person still gets their options", asy
   await page.getByRole("button", { name: /see my next steps/i }).click();
 
   // Urgent banner AND the full result.
-  await expect(page.getByRole("heading", { name: /call a free service today/i })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("heading", { name: /call a human service today/i })).toBeVisible({ timeout: 15_000 });
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
   await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible();
 });
@@ -107,6 +107,37 @@ test("a deep link cannot skip the tripwire or the consent gate", async ({ page }
     page.getByRole("checkbox", { name: /general information, not legal advice/i }),
   ).not.toBeChecked();
   // …and the result is definitely not on screen.
+  await expect(page.getByRole("heading", { name: /what this means for you/i })).toHaveCount(0);
+});
+
+test("leaving to read a Learn page and coming back keeps your place", async ({ page }) => {
+  // The consent gate refuses to restore the result on a fresh load, so a shared link can never
+  // skip it. But following "Read more about how review works" and pressing Back IS a fresh
+  // load, which used to dump people who had already consented back to the questions.
+  await page.goto("/start?jur=Vic&area=vic-public-housing");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible({
+    timeout: 15_000,
+  });
+
+  await page.goto("/learn");
+  await expect(page).toHaveURL(/\/learn/);
+  await page.goBack();
+
+  // Back on the result, not back at question two.
+  await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible({
+    timeout: 15_000,
+  });
+});
+
+test("the returning-user restore does not let a shared link skip consent", async ({ page }) => {
+  // The other half of the same mechanism. The per-tab flag is what separates "this person
+  // already consented here" from "someone opened their link"; without a flag the gate holds.
+  await page.goto("/start?jur=Vic&area=vic-public-housing&step=result");
+  await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({
+    timeout: 15_000,
+  });
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toHaveCount(0);
 });
 
@@ -145,7 +176,7 @@ test("a ticked tripwire flag no longer withholds the analysis", async ({ page })
   await page.getByRole("button", { name: /see my next steps/i }).click();
 
   // The hand-over leads…
-  await expect(page.getByRole("heading", { name: /talk to a free legal service/i })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("heading", { name: /some extra rules apply/i })).toBeVisible({ timeout: 15_000 });
   // …and the analysis and pathway still follow it.
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
   await expect(page.getByRole("heading", { name: /putting it together/i })).toBeVisible();
