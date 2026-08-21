@@ -13,6 +13,13 @@ export interface ModelCall {
   maxTokens: number;
   /** When set, use the user's own key (BYO-key bypass). */
   byoKeyValue?: string;
+  /**
+   * Which product surface is spending. Lets one surface bill to its own Anthropic key so its
+   * cost can be read straight off the Anthropic console instead of being inferred from our own
+   * meters. Falls back to the main key whenever the per-surface variable is unset, so nothing
+   * breaks by leaving it out.
+   */
+  surface?: "chat" | "default";
 }
 
 export interface ModelResult {
@@ -37,22 +44,38 @@ export function __setModelForTests(fn: ModelFn | null): void {
  * closed on the cost guard — there is no spend to meter if we never call the model.
  */
 export function isModelConfigured(): boolean {
-  return injected !== null || Boolean(process.env.ANTHROPIC_API_KEY);
+  return injected !== null || Boolean(process.env.ANTHROPIC_API_KEY || process.env.ANTHROPIC_API_KEY_CHAT);
 }
 
-let defaultClient: Anthropic | null = null;
-function client(byoKeyValue?: string): Anthropic {
-  if (byoKeyValue) return new Anthropic({ apiKey: byoKeyValue });
-  if (!defaultClient) {
-    defaultClient = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY ?? "" });
+/**
+ * The key a surface spends against. `chat` is the "Work it out with us" panel, which is
+ * open-ended and the hardest surface to cost-forecast, so it gets its own key when one is
+ * configured. Everything else uses the main key.
+ */
+export function keyForSurface(surface: ModelCall["surface"]): string {
+  if (surface === "chat" && process.env.ANTHROPIC_API_KEY_CHAT) {
+    return process.env.ANTHROPIC_API_KEY_CHAT;
   }
-  return defaultClient;
+  return process.env.ANTHROPIC_API_KEY ?? "";
+}
+
+// One cached client per key, so a second key does not mean a new client on every call.
+const clients = new Map<string, Anthropic>();
+function client(byoKeyValue: string | undefined, surface: ModelCall["surface"]): Anthropic {
+  if (byoKeyValue) return new Anthropic({ apiKey: byoKeyValue });
+  const key = keyForSurface(surface);
+  let c = clients.get(key);
+  if (!c) {
+    c = new Anthropic({ apiKey: key });
+    clients.set(key, c);
+  }
+  return c;
 }
 
 export const callModel: ModelFn = async (call) => {
   if (injected) return injected(call);
 
-  const anthropic = client(call.byoKeyValue);
+  const anthropic = client(call.byoKeyValue, call.surface);
   const res = await anthropic.messages.create({
     model: call.model,
     max_tokens: call.maxTokens,
@@ -100,7 +123,7 @@ const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/gif", "image/webp
 export const callVision: VisionFn = async (call) => {
   if (injectedVision) return injectedVision(call);
 
-  const anthropic = client();
+  const anthropic = client(undefined, "default");
   const data = Buffer.from(call.bytes).toString("base64");
   let block: Anthropic.ContentBlockParam;
   if (call.mediaType === "application/pdf") {

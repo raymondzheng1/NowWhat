@@ -13,9 +13,8 @@ export function GroundExplainer({ ground: g, level = "h2" }: { ground: Ground; l
         {/* .eyebrow's own tan is 3.61:1 on paper — AA-safe ink-faint, per components/ui/Eyebrow. */}
         <p className="eyebrow text-ink-faint">Ground of review</p>
         <Heading className={`mt-2.5 font-display font-black text-ink ${level === "h1" ? "text-[32px] sm:text-[42px] leading-[1.04] tracking-[-0.025em]" : "text-[24px] leading-[1.12]"}`}>
-          {g.plainName}
+          <span className="text-red-ink">{g.name}:</span> {g.plainName}
         </Heading>
-        <p className="mt-1.5 font-mono text-[12.5px] uppercase tracking-[0.06em] text-ink-faint">{g.name}</p>
         <p className="mt-3.5 font-display text-[19px] leading-snug text-ink-soft">{g.oneLine}</p>
       </div>
 

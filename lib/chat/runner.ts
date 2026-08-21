@@ -83,6 +83,7 @@ export async function runChatTurn(args: {
     model: MODELS.primary,
     maxTokens: 600,
     byoKeyValue: args.byoKeyValue,
+    surface: "chat",
   });
   await record(args.guard, estimateCostUsd(res.model, res.inputTokens, res.outputTokens));
 

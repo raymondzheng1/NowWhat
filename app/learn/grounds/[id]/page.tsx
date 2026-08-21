@@ -57,7 +57,7 @@ export default async function GroundPage({ params }: { params: Promise<{ id: str
           <Link href="/learn/merits-review" className="link">merits review</Link>.
         </p>
       </div>
-      <LearnTrust sources={g.sources} />
+      <LearnTrust />
     </LearnContainer>
   );
 }

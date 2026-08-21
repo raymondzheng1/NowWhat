@@ -67,10 +67,12 @@ export function GroundsExplorer({
                       href={`${linkBase}/${g.id}`}
                       className="font-display text-[19px] font-black leading-[1.2] text-ink underline decoration-transparent underline-offset-[3px] hover:decoration-red-ink"
                     >
-                      {g.plainName}
+                      <span className="text-red-ink">{g.name}:</span> {g.plainName}
                     </Link>
                   ) : (
-                    <h3 className="font-display text-[19px] font-black leading-[1.2] text-ink">{g.plainName}</h3>
+                    <h3 className="font-display text-[19px] font-black leading-[1.2] text-ink">
+                      <span className="text-red-ink">{g.name}:</span> {g.plainName}
+                    </h3>
                   )}
                   <button
                     type="button"

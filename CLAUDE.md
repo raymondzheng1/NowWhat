@@ -37,7 +37,7 @@ Next.js (App Router) + TS strict · Vercel Pro `syd1` · localStorage (only clie
 - Don't mention AI/LLM/Claude in customer copy.
 
 ## Env vars
-`ANTHROPIC_API_KEY`, `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `SESSION_CAP_USD` (=5), `GLOBAL_DAILY_BUDGET_USD`, `OCR_*` (provider keys), `APP_BASE_URL`, `RESEND_API_KEY` (optional reminders/alerts), `CRON_SECRET` (if used).
+`ANTHROPIC_API_KEY`, `ANTHROPIC_API_KEY_CHAT` (optional — bills the chat panel separately), `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN`, `SESSION_CAP_USD` (=5), `GLOBAL_DAILY_BUDGET_USD`, `OCR_*` (provider keys), `APP_BASE_URL`, `RESEND_API_KEY` (optional reminders/alerts), `CRON_SECRET` (if used).
 
 ## Launch gates
 `verify` green (incl. `corpus-check`, `no-advice`, `reading-level`, `seo:check`, `links:check`, `launch:check`) · verifier rejects out-of-corpus citation AND advice/prediction (integration tests) · cost guard blocks at \$5 / fails closed · "not covered → get help" path works · no letter ever persisted/logged (verified) · mobile 375×812 + screen-reader pass · every FAQ page grounded + disclaimer + sources + "get help" CTA.
