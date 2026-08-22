@@ -22,6 +22,7 @@ import {
   type TripwireFlags,
 } from "@/lib/tripwire";
 import { buildHandoff } from "@/lib/handoff";
+import { composeMemo } from "@/lib/memo/compose";
 import { Disclaimer } from "@/components/ui/Disclaimer";
 import { AutoTextarea } from "@/components/ui/AutoTextarea";
 import { GetHelp } from "@/components/ui/GetHelp";
@@ -899,6 +900,21 @@ function ResultStep({
   });
 
   const groundNameById = new Map(shownGrounds.map((g) => [g.id, g.plainName] as const));
+  const [memoCopied, setMemoCopied] = useState(false);
+  const memoProcess = (plan.primary?.id ?? "merits-review") === "judicial-review"
+    ? judicialReview
+    : meritsReview;
+  const memo = composeMemo({
+    entry,
+    process: memoProcess,
+    grounds: shownGrounds.filter((g) => relatedGrounds.includes(g.id)),
+    story: account["q-story"] ?? "",
+    goals: goals.map((g) => t(`goal_${g}`)),
+    goalOther,
+    decisionDate: decisionDate || undefined,
+    forum: plan.primary?.body ?? memoProcess.plainName,
+    t: (k) => t(k),
+  });
 
   function downloadHandoff() {
     const text = buildHandoff({
@@ -1617,6 +1633,42 @@ function ResultStep({
             {t("viewBackOptions")}
           </button>
         </div>
+      )}
+
+      {/* The memo. IRAC, argued both ways, no prediction and no ranking — the owner's two
+          worked memoranda minus the two things this app must never do. */}
+      {view === "path" && (
+        <section id="r-memo" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("memoSectionTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("memoSectionLead")}</p>
+          <textarea
+            readOnly
+            value={memo.body}
+            rows={18}
+            className="input mt-4 font-mono text-[13.5px] leading-relaxed"
+            aria-label={t("memoSectionTitle")}
+          />
+          <div className="mt-4 flex flex-wrap gap-3">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(memo.body);
+                  setMemoCopied(true);
+                  setTimeout(() => setMemoCopied(false), 2000);
+                } catch {
+                  /* clipboard unavailable — the text is selectable */
+                }
+              }}
+            >
+              {memoCopied ? t("memoCopied") : t("memoCopy")}
+            </button>
+            <button type="button" className="btn btn-secondary" onClick={() => window.print()}>
+              {t("handoffPrint")}
+            </button>
+          </div>
+        </section>
       )}
 
       {/* The one foil on this screen (max one per page): the recommended next action is to
