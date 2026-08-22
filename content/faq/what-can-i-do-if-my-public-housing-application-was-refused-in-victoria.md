@@ -39,6 +39,10 @@ process first. If you are not happy with the outcome, you can ask the Victorian 
 Registrar to look at it. An eviction is a different path again — a notice to vacate
 goes to VCAT, with a 30-day window to challenge it early.
 
+### If the time limit has already passed
+
+Missing the date does not always end things. A tribunal can be asked to allow a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+
 ## Get free help
 
 Tenants Victoria's Social Housing line is 1800 068 860. Victoria Legal Aid's Legal Help

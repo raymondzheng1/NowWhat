@@ -33,7 +33,7 @@ You ask for a **review** of your fine. You choose the ground that says you were 
 
 You will need to provide **proof** that you were not the driver or owner at the time. For example, this could be a document or record showing someone else was using the vehicle.
 
-You can only ask for **one review per fine**, so it helps to gather your evidence before you apply.
+It helps to gather your evidence before you apply.
 
 ## When should you act?
 
@@ -51,3 +51,19 @@ You do not have to handle this alone. Free help is available:
 - **National Debt Helpline** — free financial counselling: **1800 007 007**
 
 You can also [start here to understand your options](/start).
+
+<!--
+UNPUBLISHED 2026-08-23 on the owner's QA decision. Files in content/faq/_drafts/ are never served.
+
+A senior-partner QA pass found the page describes a different statutory process from the one its
+title promises. Nominating another driver for an owner-onus offence is not the mistake-of-identity
+internal-review ground under the Infringements Act; the reviewer's understanding is that it is a
+separate nomination by statutory declaration under the Road Safety Act 1986 (Vic), carrying its own
+short window from service of the notice.
+
+That correction rests on the reviewer's own knowledge, not on the owner's materials, so it cannot
+be published either. With neither the original nor the correction validated, the page comes down.
+
+To restore it: source the nomination process and its time limit, rewrite the body, and move the
+file back to content/faq/.
+-->

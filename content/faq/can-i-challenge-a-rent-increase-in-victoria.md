@@ -35,6 +35,10 @@ if it came less than 12 months after the last one, or if the notice was too shor
 Keep the rent-increase notice, your rental agreement, your rent records, and any photos of
 the condition of the place. These help show whether the increase is fair.
 
+### If the time limit has already passed
+
+Missing the date does not always end things. A tribunal can be asked to allow a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+
 ## Get free help
 
 [Work out your options](/start) in a few steps, or talk to a free service. Tenants Victoria

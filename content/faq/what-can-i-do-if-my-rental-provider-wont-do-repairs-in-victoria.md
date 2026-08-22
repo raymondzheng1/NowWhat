@@ -32,7 +32,7 @@ As a renter in Victoria, you can raise a repairs dispute formally. A rental prov
 
 You can take a repairs dispute to **Rental Dispute Resolution Victoria (RDRV)** for free. RDRV can also refer your case to VCAT if needed. You can [start the process here](/start).
 
-If you get a rent assessment report, there is a time limit to act after you receive it. So it helps to move quickly.
+It helps to move quickly.
 
 ## Gather your evidence first
 
@@ -44,6 +44,10 @@ Before you contact anyone, collect:
 - Records of when you asked for repairs
 
 This information will help support your case.
+
+### If the time limit has already passed
+
+Missing the date does not always end things. A tribunal can be asked to allow a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
 
 ## Where to get free help
 

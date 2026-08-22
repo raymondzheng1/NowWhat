@@ -47,6 +47,10 @@ You can argue that the housing department did not apply its own policies and pro
 - Any letters between you and the housing office
 - Evidence of family violence or serious hardship
 
+### If the time limit has already passed
+
+Missing the date does not always end things. A tribunal can be asked to allow a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+
 ## Where can I get free help?
 
 You do not have to deal with this alone. These free services can help:

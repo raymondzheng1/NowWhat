@@ -56,6 +56,20 @@ Having the right documents can help your review. Useful things to collect includ
 
 Missing the date does not always end things. The tribunal can be asked to accept a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
 
+## If the tribunal decides against you
+
+There are usually more steps, and each has its own time limit.
+
+- The tribunal itself may be able to look at the decision a second time. Ask what applies to
+  your kind of decision.
+- A court can hear an appeal on a question of law. That is about the law being applied wrongly,
+  not about the facts.
+- Judicial review asks whether the decision was made lawfully. It is a different question again,
+  and it is technical.
+
+The Commonwealth Ombudsman is separate from all of these. It is free, it looks at how you were
+treated rather than whether the decision was right, and it cannot change the decision.
+
 ## Where to get free help
 
 You do not have to do this alone. Free, independent help is available:

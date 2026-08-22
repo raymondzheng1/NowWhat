@@ -29,7 +29,7 @@ Special circumstances means that at the time you got the fine, one of these thin
 - You were **homeless**
 - You were affected by **family violence**
 
-The situation also needs to have affected your behaviour at the time.
+The law also requires a link between that situation and the offence. What that link has to be is set out in the legislation. Check the current requirement with Fines Victoria or a human legal service. It is the part applications most often leave out.
 
 ## What evidence might help?
 
@@ -45,7 +45,6 @@ Acting early is important — what you can do depends on the stage your fine has
 
 You apply to the agency that issued the fine, or to **Fines Victoria**. After a review, the agency must tell you the outcome in writing.
 
-Note: you can only ask for **one review per fine**.
 
 ## Where can I get free help?
 

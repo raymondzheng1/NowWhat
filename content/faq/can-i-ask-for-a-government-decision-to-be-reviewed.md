@@ -54,6 +54,15 @@ decision for you. This path is more formal than VCAT, there are court fees, and 
 order you to pay the other side's costs. The time limits are strict, and they run from the
 decision rather than from when you finish trying other things. Talk to a free legal service before you file anything.
 
+Victoria has two ways into the Supreme Court, and they are not the same. One is the court's own
+supervisory jurisdiction, used through its rules. The other comes from the Administrative Law Act
+1978 (Vic), which is narrower and also gives a right to written reasons. They have different time
+limits and they cannot be joined, so which one fits is a question for a human legal service.
+
+One thing worth knowing: if a tribunal time limit has passed, that does not by itself close the
+court pathways. They run on their own clocks, from the decision rather than from the end of
+anything else.
+
 ## If a decision can't be reviewed
 
 If your decision can't go to VCAT, you can still complain to the Victorian Ombudsman

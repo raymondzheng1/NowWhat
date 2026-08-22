@@ -1,13 +1,11 @@
 ---
 title: >-
-  How much notice does my rental provider have to give me to move out in
-  Victoria?
+  How do I check whether a notice to vacate is valid in Victoria?
 description: >-
   Learn what makes a notice to vacate valid in Victoria, what to check on yours,
   and how to get free help if something looks wrong.
 question: >-
-  How much notice does my rental provider have to give me to move out in
-  Victoria?
+  How do I check whether a notice to vacate is valid in Victoria?
 answer: >-
   In Victoria, a notice to vacate must use the correct form, give a valid legal
   reason, and include the right notice period for that reason. If the notice
@@ -60,6 +58,10 @@ Gather these things and look them over carefully:
 - Photos of the condition of the place.
 - The envelope or postmark showing when the notice arrived.
 
+### If the time limit has already passed
+
+Missing the date does not always end things. A tribunal can be asked to allow a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+
 ## How to get free help
 
 There are time limits involved, so it helps to act early. You can [start by finding out about your options here](/start).
@@ -72,3 +74,16 @@ Free help is available from:
 - **Consumer Affairs Victoria** — free renting information
 
 You can also apply to **VCAT** to challenge a notice to vacate. If you miss the early deadline, you may still be able to argue the notice is not valid at a possession hearing, or ask for more time.
+
+<!--
+Retitled 2026-08-23 on the owner's QA decision. The page was called "How much notice does my rental
+provider have to give me to move out in Victoria?" and never stated a single period for a single
+reason — it says four times that the period must match the reason on the notice.
+
+The owner's options were to publish sourced notice periods or retitle. The periods are not in the
+app's sourced material, so the title now describes what the page actually does. The slug is
+deliberately unchanged: it carries the search traffic, and breaking it would cost more than the
+mismatch does.
+
+If notice periods are sourced later, restore the original title and answer the question directly.
+-->

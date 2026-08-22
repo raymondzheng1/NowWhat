@@ -4,7 +4,7 @@ description: 'What a statement of reasons is, how to ask for one, and why it can
 question: 'What is a statement of reasons, and how do I ask for one?'
 answer: >-
   A statement of reasons is a written explanation from a government agency about
-  why it made a decision. You can ask for one in writing within 28 days of the
+  why it made a decision. You can ask for one in writing, and a time limit applies to the
   decision. Getting it in writing can help you understand your options for what
   to do next.
 entryId: vic-generic
@@ -25,9 +25,21 @@ updated: '2026-06-30'
 
 When a Victorian government agency or council makes a decision, it does not always explain its thinking straight away. A **statement of reasons** is a written document that sets out why the decision-maker reached their decision. It explains the facts they relied on and the reasoning they used.
 
+## Which law gives you the right?
+
+There is more than one, and which applies depends on your decision.
+
+If your decision can go to VCAT, the VCAT Act gives you a right to ask for written reasons. That
+right comes with the review right. It is not a general right against every Victorian agency or
+council.
+
+Separately, the Administrative Law Act 1978 (Vic) s 8 lets a person affected by a decision ask for
+a statement of reasons. That does not reach every decision-maker either. Which one applies to you
+is worth checking with a human legal service.
+
 ## How do I ask for one?
 
-You can write to the agency that made the decision and ask for a statement of reasons. Your request needs to be made **within 28 days of the decision**. Once you ask, the decision-maker usually has 28 days to provide the written reasons.
+You can write to the agency that made the decision and ask for a statement of reasons. A time limit applies to the request. Check the limit for your own decision, and which date it runs from. That is not the same for every decision, and the date printed on a letter is not always the date that counts.
 
 Your request does not need to be complicated. Simply write to the agency, state the decision you are asking about, and ask for a written statement of reasons under section 45 of the VCAT Act.
 
@@ -40,6 +52,10 @@ Asking for reasons can help you in a few ways:
 - It may help you decide whether to take any further steps, such as applying to VCAT for a review.
 
 Your decision letter should also say whether you have the right to apply to VCAT and what time limit applies — so check that letter carefully.
+
+### If the time limit has already passed
+
+Missing the date does not always end things. A tribunal can be asked to allow a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
 
 ## Where can I get help?
 

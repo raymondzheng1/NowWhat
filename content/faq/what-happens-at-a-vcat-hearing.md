@@ -49,6 +49,10 @@ Useful things to have ready include:
 - Photos of the condition of the place and any repairs needed
 - The envelope or postmark showing when the notice arrived
 
+### If the time limit has already passed
+
+Missing the date does not always end things. A tribunal can be asked to allow a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+
 ## Where can I get help?
 
 Free help is available before and during a VCAT hearing:

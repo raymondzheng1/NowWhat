@@ -31,7 +31,7 @@
   "home": {
     "heroEyebrow": "Understand · Know your options · Get help",
     "heroTitle": "They said no.",
-    "heroLead": "Most government decisions can be reviewed. We cover decisions by the Australian Government (Commonwealth) and the State of Victoria. What Now? turns your letter into plain English, your options into a numbered list, and your next step into a letter — free, no account, nothing stored.",
+    "heroLead": "Many government decisions can be reviewed, depending on the law the decision was made under. We cover decisions by the Australian Government (Commonwealth) and the State of Victoria. What Now? turns your letter into plain English, your options into a numbered list, and your next step into a letter — free, no account, nothing stored.",
     "ctaStart": "Start now",
     "ctaScan": "Scan or paste the letter",
     "ctaAsk": "Ask a question",
@@ -466,7 +466,7 @@
   "about": {
     "kicker": "About",
     "title": "About this service",
-    "intro": "This is a human service that helps people understand and respond to government decisions.",
+    "intro": "This is a free self-help tool that helps people understand and respond to government decisions.",
     "infoNotAdvice": "This service gives general information, not legal advice, and cannot tell you what will happen in your case. For advice about your own situation, talk to a human legal service.",
     "groundedTitle": "Grounded in the rules",
     "groundedBody": "Every answer is grounded in a checked set of rules and points to where it comes from. When something isn't covered, the service says so and points you to a person who can help — it never guesses.",
