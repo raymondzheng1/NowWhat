@@ -4,10 +4,11 @@ name: Procedural fairness — the hearing rule
 plainName: You never got to have your say
 oneLine: You usually get told what is coming, and a real chance to reply.
 whatItMeans: >-
-  A decision-maker usually has to tell you what is being decided. You usually
-  get a real chance to reply before it happens. If something important counts
-  against you, and it is the sort of thing a decision-maker would rely on, you
-  usually get to see it first.
+  Where a decision affects something that matters to you, the law usually starts
+  from the position that a fair hearing is owed to you. That means being told
+  what is being decided, and getting a real chance to reply before it happens.
+  If something important counts against you, and it is the sort of thing a
+  decision-maker would rely on, you usually get to see it first.
 plainExample: >-
   Centrelink raises a debt using a report you were never shown. Nobody asked
   you to explain.
@@ -28,8 +29,11 @@ whatItIsNot: >-
 usedIn:
   - judicial-review
 test: >-
-  First, does a fair hearing duty apply to this power? Second, what did that
-  duty require in that situation? Both come from the Act and the facts.
+  First, does a fair hearing duty apply to this power? It is usually taken to
+  apply where a decision affects your rights, your interests, your home, or a
+  payment you rely on. Parliament can cut it back or take it away, but only by
+  saying so clearly. Second, what did the duty require in that situation? That
+  comes from the Act and the facts.
 elements:
   - id: applies
     name: The duty applies
@@ -81,3 +85,20 @@ attaches to adverse information that is "credible, relevant and significant" (Ki
 everything on the file; and the content of the duty "can range from requiring a full trial to
 nothingness" (Badari; Brennan J in Kioa), which is the honest thing to tell someone before they
 conclude that any shortfall in process is a breach.
+
+Threshold stated as a rule, 2026-08-23, on the owner's QA decision. The test set out the two stages
+correctly but gave the first one only as a question — "does a fair hearing duty apply to this
+power?" — with nothing a reader could use to answer it. The presumption is that answer, and for the
+decisions this app's readers bring it is the reassuring half: a decision about a payment, a home or
+a licence will usually attract it.
+
+The other half is stated in the same breath, because a presumption that cannot be displaced would
+be its own kind of overstatement: Parliament can modify or remove procedural fairness, but only
+where the legislation clearly says so. Per the JR Hypo the threshold is a "process of statutory
+construction (Badari; Brennan J, Kioa; Saeed; WZARH)" and the question is whether there is "a clear
+parliamentary intention to displace procedural fairness (Badari; Saeed)".
+
+On the owner's third instruction — no migration-specific discussion was added, and none was there
+to remove. The entry's customer copy has never discussed visas or migration; Saeed, Kioa, WZARH and
+Nathanson appear only as case names, cited for propositions of general application, which is how
+the owner's own materials cite them.

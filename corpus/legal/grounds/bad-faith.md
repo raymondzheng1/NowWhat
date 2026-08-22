@@ -30,7 +30,7 @@ leadingCases:
   - name: >-
       SBBS v Minister for Immigration and Multicultural and Indigenous Affairs
       (2002) 194 ALR 749
-    pinpoint: 'at [43]-[48]'
+    pinpoint: ''
     explains: >-
       What bad faith requires — a serious allegation of dishonesty that is
       rarely made out.

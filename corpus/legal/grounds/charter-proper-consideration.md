@@ -5,8 +5,8 @@ plainName: They did not properly think about your human rights
 oneLine: In Victoria, a public authority has to give real thought to your human rights.
 whatItMeans: >-
   Victoria has a Charter of human rights. It binds public authorities in
-  Victoria. It asks two things of them. They must not act in a way that is not
-  compatible with your human rights. They must also give proper consideration to
+  Victoria. It asks two things of them. What they do must fit with your human
+  rights. They must also give proper consideration to
   any human right the decision affects. Proper consideration means real thought,
   not a box ticked.
 plainExample: >-
@@ -89,3 +89,8 @@ rise to charter invalidity and in relation to a decision, does not constitute ju
 error". Someone reading only the name of this ground would reasonably assume the opposite.
 
 Ground and authorities taken from our own verified administrative-law materials.
+
+Double negative removed 2026-08-23 on the owner's QA decision. "They must not act in a way that is
+not compatible with your human rights" is two negatives in the sentence that states the first of the
+two duties — the kind a distressed reader on a phone reads twice and still mis-parses. Now: "What
+they do must fit with your human rights."

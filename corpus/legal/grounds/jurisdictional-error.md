@@ -35,17 +35,17 @@ sources:
 status: verified
 leadingCases:
   - name: Craig v South Australia (1995) 184 CLR 163
-    pinpoint: at 179
+    pinpoint: ''
     explains: >-
       Sets out the classic errors. Asking the wrong question. Ignoring
       material it had to consider. Misunderstanding the power it was given.
   - name: Kirk v Industrial Court (NSW) (2010) 239 CLR 531
-    pinpoint: 'at [96]-[100]'
+    pinpoint: ''
     explains: >-
       A State Supreme Court can always check for this kind of error.
       Parliament cannot take that away.
   - name: Plaintiff S157/2002 v Commonwealth (2003) 211 CLR 476
-    pinpoint: 'at [76]'
+    pinpoint: ''
     explains: >-
       A law can say a decision is final. That still does not protect a
       decision made outside the power.

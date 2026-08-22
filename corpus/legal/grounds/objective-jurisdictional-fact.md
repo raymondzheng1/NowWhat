@@ -49,7 +49,7 @@ leadingCases:
       conditions to be really met.
   - name: >-
       City of Enfield v Development Assessment Commission (2000) 199 CLR 135
-    pinpoint: 'at [22]'
+    pinpoint: ''
     explains: >-
       A court can decide such a fact for itself, not just review the view taken.
 ---

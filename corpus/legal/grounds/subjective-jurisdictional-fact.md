@@ -18,6 +18,9 @@ whatRelates:
   - Two parts of the letter cannot both be true.
   - The letter accepts something and then decides the opposite.
   - The material in front of them pointed the other way.
+  - >-
+    They were satisfied of something the Act does not actually ask about, or
+    read the test as asking something different.
 whatItIsNot: >-
   This is not about disagreeing with the outcome, and it is not a way to
   re-argue the facts. Not every lapse in logic is enough. Where the evidence
@@ -27,10 +30,13 @@ whatItIsNot: >-
 usedIn:
   - judicial-review
 test: >-
-  Where a power depends on the decision-maker being satisfied of something, that
-  state of satisfaction must be reached on a rational basis. The threshold is
-  whether no rational decision-maker could have reached that conclusion on that
-  evidence. A court should be slow, though not unwilling, to step in.
+  Where a power depends on the decision-maker being satisfied of something, they
+  must be satisfied of the thing the Act actually names. A view formed on a
+  misunderstanding of what the Act requires may not be the state of mind the
+  power needs. That state of satisfaction must also be reached on a rational
+  basis. The threshold is whether no rational decision-maker could have reached
+  that conclusion on that evidence, and a court should be slow, though not
+  unwilling, to step in.
 elements:
   - id: was-satisfied
     name: The thing they had to be satisfied of
@@ -38,6 +44,9 @@ elements:
   - id: any-path
     name: A path to that view
     layPrompt: Do the reasons show how they got to that view?
+  - id: right-question
+    name: Whether it was the right thing to be satisfied of
+    layPrompt: Does the Act ask the question the letter says they answered?
   - id: open-on-material
     name: Whether that view was open to them
     layPrompt: >-
@@ -63,7 +72,7 @@ leadingCases:
       state of mind is itself the thing the power depends on.
   - name: >-
       Minister for Immigration and Citizenship v Li (2013) 249 CLR 332
-    pinpoint: 'at 367 [76]'
+    pinpoint: ''
     explains: A decision needs a reason you can see and follow.
 ---
 
@@ -95,3 +104,13 @@ same way:
 That last point is the one a lay reader most needs. "The reasons do not follow" is a natural way to
 describe a decision you disagree with, and without it the ground reads as an invitation to re-argue
 the facts.
+
+**Misconstruction limb added 2026-08-23** on the owner's QA decision. The entry had the rationality
+limb only. Per French CJ in M70: "The requisite opinion or belief is a jurisdictional fact. If based
+upon a misconstruction of one or more of the matters, the opinion or belief is not that which the
+subsection requires in order that the power be enlivened."
+
+That is the more accessible of the two for a lay reader, because it does not require arguing about
+rationality at all — it asks whether the decision-maker was satisfied of the thing the Act names, or
+of something else. A reader whose letter answers a question the Act never asked can see that from
+the letter itself.

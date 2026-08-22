@@ -34,7 +34,7 @@ keyPoints:
 options: []
 leadingCases:
   - name: Council of Civil Service Unions v Minister for the Civil Service
-    pinpoint: 'at 421'
+    pinpoint: ''
     explains: >-
       What decides this is the subject matter of the power, not the source it
       came from.

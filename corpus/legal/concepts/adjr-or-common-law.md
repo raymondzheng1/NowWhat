@@ -55,7 +55,7 @@ leadingCases:
       The decision must be one an Act required or allowed. It must also affect
       legal rights or duties, and get that power from the Act itself.
   - name: >-
-      Australian Broadcasting Tribunal v Bond
+      Australian Broadcasting Tribunal v Bond (1990) 170 CLR 321
     pinpoint: ''
     explains: >-
       The decision is usually one that settles something, rather than a step

@@ -18,7 +18,9 @@ whatRelates:
   - The letter decides something you thought only a court could decide.
 whatItIsNot: >-
   This is not about whether the decision was harsh or unfair. It asks a
-  narrower question. Did the power exist at all?
+  narrower question. Did the power exist at all? If it did exist but was used on
+  the wrong legal basis, that is an error of law instead. The two can overlap,
+  but they are different questions.
 usedIn:
   - judicial-review
 test: >-
@@ -47,7 +49,7 @@ leadingCases:
   - name: >-
       Hossain v Minister for Immigration and Border Protection (2018) 264 CLR
       123
-    pinpoint: 'at [23]'
+    pinpoint: ''
     explains: An Act sets the limits of the power it gives out.
   - name: Craig v South Australia (1995) 184 CLR 163
     pinpoint: ''
@@ -55,7 +57,7 @@ leadingCases:
   - name: >-
       Minister for Immigration and Multicultural Affairs v Bhardwaj (2002) 209
       CLR 597
-    pinpoint: 'at [53]'
+    pinpoint: ''
     explains: A decision made outside the power counts in law as no decision.
   - name: Attorney-General (NSW) v Quin (1990) 170 CLR 1
     pinpoint: ''
@@ -65,3 +67,7 @@ leadingCases:
 General information, not advice. Two things on the letter matter for this ground. The law it names, and the office that sent it. It asks a narrow question about power, not about fairness.
 
 Provenance. This ground is drawn from our own verified judicial review materials. The cases it cites come from the same source. Verified on 2026-08-16. A supervising lawyer sign-off is tracked separately.
+
+Cross-reference added 2026-08-23, the other half of the pair with error-of-law. Without authority
+asks whether the power existed; error of law asks whether an existing power was exercised on the
+right legal basis.

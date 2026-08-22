@@ -1,5 +1,5 @@
 {
-  "builtAt": "05a5d138cc30e919",
+  "builtAt": "7ea7b948355ac251",
   "processes": [
     {
       "id": "judicial-review",
@@ -253,7 +253,7 @@
       "leadingCases": [
         {
           "name": "SBBS v Minister for Immigration and Multicultural and Indigenous Affairs (2002) 194 ALR 749",
-          "pinpoint": "at [43]-[48]",
+          "pinpoint": "",
           "explains": "What bad faith requires — a serious allegation of dishonesty that is rarely made out."
         }
       ],
@@ -296,7 +296,7 @@
       "leadingCases": [
         {
           "name": "Project Blue Sky Inc v Australian Broadcasting Authority (1998) 194 CLR 355",
-          "pinpoint": "at [91]",
+          "pinpoint": "",
           "explains": "Whether breaking a rule makes an act invalid depends on what the Act intended."
         },
         {
@@ -306,7 +306,7 @@
         },
         {
           "name": "Hossain v Minister for Immigration and Border Protection (2018) 264 CLR 123",
-          "pinpoint": "at [29]",
+          "pinpoint": "",
           "explains": "A mistake usually has to be able to change the outcome to matter."
         },
         {
@@ -322,7 +322,7 @@
       "name": "Human rights were not properly considered (Victoria)",
       "plainName": "They did not properly think about your human rights",
       "oneLine": "In Victoria, a public authority has to give real thought to your human rights.",
-      "whatItMeans": "Victoria has a Charter of human rights. It binds public authorities in Victoria. It asks two things of them. They must not act in a way that is not compatible with your human rights. They must also give proper consideration to any human right the decision affects. Proper consideration means real thought, not a box ticked.",
+      "whatItMeans": "Victoria has a Charter of human rights. It binds public authorities in Victoria. It asks two things of them. What they do must fit with your human rights. They must also give proper consideration to any human right the decision affects. Proper consideration means real thought, not a box ticked.",
       "plainExample": "A public body decides where you will live. Nothing in the reasons shows anyone thought about what that would mean for your family.",
       "whatRelates": [
         "A Victorian public authority made the decision.",
@@ -464,7 +464,7 @@
         "The written reasons misstate what the law requires.",
         "A legal word or requirement looks like it was misunderstood."
       ],
-      "whatItIsNot": "It does not cover a disagreement about the facts — it is about the law being applied wrongly.",
+      "whatItIsNot": "It does not cover a disagreement about the facts — it is about the law being applied wrongly. It is also not the same as acting without authority. Here the power existed and was used on the wrong legal basis. There, the power did not exist at all. The two can overlap, but they are different questions.",
       "usedIn": [
         "judicial-review"
       ],
@@ -488,7 +488,7 @@
       "leadingCases": [
         {
           "name": "Craig v South Australia (1995) 184 CLR 163",
-          "pinpoint": "at 175-180",
+          "pinpoint": "",
           "explains": "Distinguishes errors of law within power from errors that take a decision-maker outside it."
         },
         {
@@ -498,7 +498,7 @@
         },
         {
           "name": "Collector of Customs v Agfa-Gevaert Ltd (1996) 186 CLR 389",
-          "pinpoint": "at 394-397",
+          "pinpoint": "",
           "explains": "Where the line runs between a question of fact and a question of law."
         }
       ],
@@ -577,7 +577,7 @@
         "Your written reasons repeat a general rule and stop there.",
         "You had something new to say, and nobody would hear it."
       ],
-      "whatItIsNot": "It does not mean policies are banned. It means a policy cannot leave your own case unheard.",
+      "whatItIsNot": "It does not mean policies are banned, or that following one is wrong. A decision-maker may apply a lawful policy, and usually will. It means a policy cannot be applied so rigidly that your own case is never considered.",
       "usedIn": [
         "judicial-review"
       ],
@@ -602,12 +602,12 @@
         {
           "name": "Re Drake (No 2)",
           "pinpoint": "",
-          "explains": "A policy may guide a decision. It may not replace it."
+          "explains": "A policy that is appropriate guides decision-making. It does not control it. It tells you the standards and values usually applied."
         },
         {
           "name": "Green v Daniels (1977) 13 ALR 1",
-          "pinpoint": "Stephen J at 9-10",
-          "explains": "A rule was applied so rigidly that the person was never considered."
+          "pinpoint": "Stephen J",
+          "explains": "A general rule was applied so rigidly that it stopped the person from being considered at all."
         }
       ],
       "jurisdictions": []
@@ -745,17 +745,17 @@
       "leadingCases": [
         {
           "name": "Craig v South Australia (1995) 184 CLR 163",
-          "pinpoint": "at 179",
+          "pinpoint": "",
           "explains": "Sets out the classic errors. Asking the wrong question. Ignoring material it had to consider. Misunderstanding the power it was given."
         },
         {
           "name": "Kirk v Industrial Court (NSW) (2010) 239 CLR 531",
-          "pinpoint": "at [96]-[100]",
+          "pinpoint": "",
           "explains": "A State Supreme Court can always check for this kind of error. Parliament cannot take that away."
         },
         {
           "name": "Plaintiff S157/2002 v Commonwealth (2003) 211 CLR 476",
-          "pinpoint": "at [76]",
+          "pinpoint": "",
           "explains": "A law can say a decision is final. That still does not protect a decision made outside the power."
         }
       ],
@@ -797,7 +797,7 @@
       "leadingCases": [
         {
           "name": "Australian Broadcasting Tribunal v Bond (1990) 170 CLR 321",
-          "pinpoint": "Mason CJ at 355-356",
+          "pinpoint": "Mason CJ",
           "explains": "Findings have to rest on evidence that actually proves something, not on nothing."
         }
       ],
@@ -845,7 +845,7 @@
         },
         {
           "name": "City of Enfield v Development Assessment Commission (2000) 199 CLR 135",
-          "pinpoint": "at [22]",
+          "pinpoint": "",
           "explains": "A court can decide such a fact for itself, not just review the view taken."
         }
       ],
@@ -910,7 +910,7 @@
       "name": "Procedural fairness — the hearing rule",
       "plainName": "You never got to have your say",
       "oneLine": "You usually get told what is coming, and a real chance to reply.",
-      "whatItMeans": "A decision-maker usually has to tell you what is being decided. You usually get a real chance to reply before it happens. If something important counts against you, and it is the sort of thing a decision-maker would rely on, you usually get to see it first.",
+      "whatItMeans": "Where a decision affects something that matters to you, the law usually starts from the position that a fair hearing is owed to you. That means being told what is being decided, and getting a real chance to reply before it happens. If something important counts against you, and it is the sort of thing a decision-maker would rely on, you usually get to see it first.",
       "plainExample": "Centrelink raises a debt using a report you were never shown. Nobody asked you to explain.",
       "whatRelates": [
         "You did not know a decision about you was coming.",
@@ -924,7 +924,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "First, does a fair hearing duty apply to this power? Second, what did that duty require in that situation? Both come from the Act and the facts.",
+      "test": "First, does a fair hearing duty apply to this power? It is usually taken to apply where a decision affects your rights, your interests, your home, or a payment you rely on. Parliament can cut it back or take it away, but only by saying so clearly. Second, what did the duty require in that situation? That comes from the Act and the facts.",
       "elements": [
         {
           "id": "applies",
@@ -1028,7 +1028,7 @@
         },
         {
           "name": "Minister for Aboriginal Affairs v Peko-Wallsend Ltd (1986) 162 CLR 24",
-          "pinpoint": "Mason J at 39-41",
+          "pinpoint": "Mason J",
           "explains": "The Act decides which matters a decision-maker must take into account."
         },
         {
@@ -1061,13 +1061,14 @@
         "The reasons skip straight to the answer.",
         "Two parts of the letter cannot both be true.",
         "The letter accepts something and then decides the opposite.",
-        "The material in front of them pointed the other way."
+        "The material in front of them pointed the other way.",
+        "They were satisfied of something the Act does not actually ask about, or read the test as asking something different."
       ],
       "whatItIsNot": "This is not about disagreeing with the outcome, and it is not a way to re-argue the facts. Not every lapse in logic is enough. Where the evidence could support more than one sensible conclusion, the decision is not invalid just because another one was open. Where reasonable minds might differ, a court cannot step in only because it prefers a different answer.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "Where a power depends on the decision-maker being satisfied of something, that state of satisfaction must be reached on a rational basis. The threshold is whether no rational decision-maker could have reached that conclusion on that evidence. A court should be slow, though not unwilling, to step in.",
+      "test": "Where a power depends on the decision-maker being satisfied of something, they must be satisfied of the thing the Act actually names. A view formed on a misunderstanding of what the Act requires may not be the state of mind the power needs. That state of satisfaction must also be reached on a rational basis. The threshold is whether no rational decision-maker could have reached that conclusion on that evidence, and a court should be slow, though not unwilling, to step in.",
       "elements": [
         {
           "id": "was-satisfied",
@@ -1078,6 +1079,11 @@
           "id": "any-path",
           "name": "A path to that view",
           "layPrompt": "Do the reasons show how they got to that view?"
+        },
+        {
+          "id": "right-question",
+          "name": "Whether it was the right thing to be satisfied of",
+          "layPrompt": "Does the Act ask the question the letter says they answered?"
         },
         {
           "id": "open-on-material",
@@ -1102,7 +1108,7 @@
         },
         {
           "name": "Minister for Immigration and Citizenship v Li (2013) 249 CLR 332",
-          "pinpoint": "at 367 [76]",
+          "pinpoint": "",
           "explains": "A decision needs a reason you can see and follow."
         }
       ],
@@ -1203,12 +1209,12 @@
         },
         {
           "name": "Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1 KB 223",
-          "pinpoint": "at 230",
+          "pinpoint": "",
           "explains": "Where this ground began. A decision can be so unreasonable that no reasonable body could have made it."
         },
         {
           "name": "Minister for Immigration and Citizenship v Li (2013) 249 CLR 332",
-          "pinpoint": "at [76]",
+          "pinpoint": "",
           "explains": "The test used in Australia now. A decision needs a reason you can see and follow."
         },
         {
@@ -1233,7 +1239,7 @@
         "You cannot find the power the letter says it is using.",
         "The letter decides something you thought only a court could decide."
       ],
-      "whatItIsNot": "This is not about whether the decision was harsh or unfair. It asks a narrower question. Did the power exist at all?",
+      "whatItIsNot": "This is not about whether the decision was harsh or unfair. It asks a narrower question. Did the power exist at all? If it did exist but was used on the wrong legal basis, that is an error of law instead. The two can overlap, but they are different questions.",
       "usedIn": [
         "judicial-review"
       ],
@@ -1267,7 +1273,7 @@
         },
         {
           "name": "Hossain v Minister for Immigration and Border Protection (2018) 264 CLR 123",
-          "pinpoint": "at [23]",
+          "pinpoint": "",
           "explains": "An Act sets the limits of the power it gives out."
         },
         {
@@ -1277,7 +1283,7 @@
         },
         {
           "name": "Minister for Immigration and Multicultural Affairs v Bhardwaj (2002) 209 CLR 597",
-          "pinpoint": "at [53]",
+          "pinpoint": "",
           "explains": "A decision made outside the power counts in law as no decision."
         },
         {
@@ -1338,7 +1344,7 @@
       "leadingCases": [
         {
           "name": "Council of Civil Service Unions v Minister for the Civil Service",
-          "pinpoint": "at 421",
+          "pinpoint": "",
           "explains": "What decides this is the subject matter of the power, not the source it came from."
         },
         {
@@ -1395,7 +1401,7 @@
           "explains": "The decision must be one an Act required or allowed. It must also affect legal rights or duties, and get that power from the Act itself."
         },
         {
-          "name": "Australian Broadcasting Tribunal v Bond",
+          "name": "Australian Broadcasting Tribunal v Bond (1990) 170 CLR 321",
           "pinpoint": "",
           "explains": "The decision is usually one that settles something, rather than a step along the way."
         }

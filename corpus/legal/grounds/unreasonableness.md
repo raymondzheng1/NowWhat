@@ -49,12 +49,12 @@ leadingCases:
   - name: >-
       Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1
       KB 223
-    pinpoint: at 230
+    pinpoint: ''
     explains: >-
       Where this ground began. A decision can be so unreasonable that no
       reasonable body could have made it.
   - name: Minister for Immigration and Citizenship v Li (2013) 249 CLR 332
-    pinpoint: 'at [76]'
+    pinpoint: ''
     explains: >-
       The test used in Australia now. A decision needs a reason you can see
       and follow.

@@ -40,7 +40,7 @@ leadingCases:
   - name: >-
       Project Blue Sky Inc v Australian Broadcasting Authority (1998) 194 CLR
       355
-    pinpoint: 'at [91]'
+    pinpoint: ''
     explains: >-
       Whether breaking a rule makes an act invalid depends on what the Act
       intended.
@@ -54,7 +54,7 @@ leadingCases:
   - name: >-
       Hossain v Minister for Immigration and Border Protection (2018) 264 CLR
       123
-    pinpoint: 'at [29]'
+    pinpoint: ''
     explains: A mistake usually has to be able to change the outcome to matter.
   - name: >-
       Minister for Immigration and Multicultural Affairs v Bhardwaj (2002) 209

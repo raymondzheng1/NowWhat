@@ -17,7 +17,9 @@ whatRelates:
   - A legal word or requirement looks like it was misunderstood.
 whatItIsNot: >-
   It does not cover a disagreement about the facts — it is about the law being
-  applied wrongly.
+  applied wrongly. It is also not the same as acting without authority. Here the
+  power existed and was used on the wrong legal basis. There, the power did not
+  exist at all. The two can overlap, but they are different questions.
 usedIn:
   - judicial-review
 test: >-
@@ -37,7 +39,7 @@ sources:
 status: verified
 leadingCases:
   - name: Craig v South Australia (1995) 184 CLR 163
-    pinpoint: at 175-180
+    pinpoint: ''
     explains: >-
       Distinguishes errors of law within power from errors that take a
       decision-maker outside it.
@@ -47,7 +49,7 @@ leadingCases:
       An error that shows on the face of the record can be corrected, even where
       it did not go to the power itself.
   - name: Collector of Customs v Agfa-Gevaert Ltd (1996) 186 CLR 389
-    pinpoint: at 394-397
+    pinpoint: ''
     explains: Where the line runs between a question of fact and a question of law.
 ---
 
@@ -59,3 +61,9 @@ materials describe it as a decision-maker who "has power to act, but has exercis
 erroneous legal basis", typically "by misconstruing a statutory term, applying the wrong legal
 test, or misunderstanding the legal limits of their power". Kirk added alongside Craig for the
 record point.
+
+Cross-reference added 2026-08-23 on the owner's QA decision. These are the two most similar entries
+in the set, and neither told a reader how they relate. Our materials draw the line in a sentence:
+error of law is where a decision-maker "has power to act, but has exercised it on an erroneous
+legal basis", as distinct from acting outside the scope conferred. They can overlap; they are
+conceptually distinct.

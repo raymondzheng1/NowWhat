@@ -52,7 +52,7 @@ leadingCases:
       In Victoria, Charter rights can be part of what a decision-maker must
       weigh.
   - name: Minister for Aboriginal Affairs v Peko-Wallsend Ltd (1986) 162 CLR 24
-    pinpoint: Mason J at 39-41
+    pinpoint: 'Mason J'
     explains: >-
       The Act decides which matters a decision-maker must take into account.
   - name: Tickner v Chapman (1995) 57 FCR 451

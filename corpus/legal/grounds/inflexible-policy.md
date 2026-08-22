@@ -17,8 +17,9 @@ whatRelates:
   - Your written reasons repeat a general rule and stop there.
   - You had something new to say, and nobody would hear it.
 whatItIsNot: >-
-  It does not mean policies are banned. It means a policy cannot leave your own
-  case unheard.
+  It does not mean policies are banned, or that following one is wrong. A
+  decision-maker may apply a lawful policy, and usually will. It means a policy
+  cannot be applied so rigidly that your own case is never considered.
 usedIn:
   - judicial-review
 test: >-
@@ -38,11 +39,13 @@ leadingCases:
   - name: Re Drake (No 2)
     pinpoint: ''
     explains: >-
-      A policy may guide a decision. It may not replace it.
+      A policy that is appropriate guides decision-making. It does not control
+      it. It tells you the standards and values usually applied.
   - name: Green v Daniels (1977) 13 ALR 1
-    pinpoint: Stephen J at 9-10
+    pinpoint: 'Stephen J'
     explains: >-
-      A rule was applied so rigidly that the person was never considered.
+      A general rule was applied so rigidly that it stopped the person from
+      being considered at all.
 ---
 
 Here the policy may be perfectly lawful. The problem can be how it was used. Nobody looks at the person's own situation. Compare unlawful policy, where the policy itself does not match the Act. That is a question about the rule. This one is a question about how the rule was used.
@@ -51,3 +54,22 @@ Provenance. This ground is drawn from our own verified judicial review materials
 
 Case corrected 2026-08-19, same swap as unlawful-policy: our materials give this proposition as
 "Appropriate policy guides, but does not control, decision-making (Drake [No 2]/Green v Daniel)".
+
+**Authorities supplied by the owner, 2026-08-23.** A QA finding flagged that acting under dictation
+was published as half this ground with no supporting authority. The owner confirmed the doctrine is
+valid and stays — the gap was authority, not doctrine — and supplied the sources for the
+inflexible-policy limb:
+
+- "The application of the general rule to the plaintiff contained no suggestion of anything other
+  than an inflexible rule, a rule which prevented her from being considered." (Green v Daniels)
+- "Appropriate policy guides, but does not control, decision-making." (Drake [No 2]/Green v Daniels)
+- "An appropriate policy is one which guides but does not control decision-making, and which is
+  informative of the standards and values which the minister usually applies." (Drake [No 2])
+
+`whatItIsNot` now carries the other half of that rule, which the entry had dropped: applying a
+lawful policy is the ordinary case, not the problem. The problem is applying it so rigidly that the
+person is never considered.
+
+**Still outstanding:** the authority for acting under dictation specifically. The sources above
+cover inflexible application of policy. Dictation remains in the ground's name and test at the
+owner's direction, and needs its own citation before this entry is complete.

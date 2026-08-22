@@ -40,7 +40,7 @@ sources:
 status: verified
 leadingCases:
   - name: Australian Broadcasting Tribunal v Bond (1990) 170 CLR 321
-    pinpoint: Mason CJ at 355-356
+    pinpoint: 'Mason CJ'
     explains: >-
       Findings have to rest on evidence that actually proves something, not on
       nothing.
