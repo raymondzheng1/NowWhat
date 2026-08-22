@@ -1,7 +1,7 @@
 ---
 id: no-evidence
-name: No evidence
-plainName: A key finding had no evidence behind it
+name: No evidence for a key finding
+plainName: The finding had nothing behind it
 oneLine: A finding that mattered was made with no evidence to support it.
 whatItMeans: >-
   A decision can be challenged if a finding on a key fact was made with no
@@ -80,3 +80,8 @@ implied it supported a no-evidence ground, which it does not.
 **"No probative evidence" was not used**, despite being the memorandum's phrasing, because it fails
 the grade-11 reading ceiling. The entry's own existing plain rendering of *Bond* — "evidence that
 actually proves something, not nothing" — carries the same idea and was already approved.
+
+Renamed 2026-08-23 on the owner's QA decision. The ground was "No evidence"; it is now "No evidence
+for a key finding", which carries the materiality limit in the name itself rather than leaving it
+to the test. `plainName` shortened to "The finding had nothing behind it" so the card, which renders
+"{name}: {plainName}", does not say key finding twice.

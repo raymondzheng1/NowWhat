@@ -1,5 +1,5 @@
 {
-  "builtAt": "a12b49f9a2d0bbb4",
+  "builtAt": "335df94637c33766",
   "processes": [
     {
       "id": "judicial-review",
@@ -668,15 +668,12 @@
       "whatItMeans": "An Act names who holds a power. Often that person can act through their staff. Sometimes the Act means they have to decide it themselves. If someone else decides, the decision can be unlawful.",
       "plainExample": "Your payment is cancelled by a team leader. The Act gives that decision to the Secretary.",
       "whatRelates": [
-        "The power is one the Act gave to a named person by name.",
-        "The department is large, and the power is used very often.",
-        "The letter is signed by someone with a different job title.",
-        "The letter names no person at all, only a team.",
+        "The Act gives this decision to one named person, in terms.",
         "The rules name one office, but a different office wrote to you.",
         "You were told a senior officer decided, but someone else signed.",
-        "Nothing in the letter shows the signer was allowed to decide."
+        "The decision is one the Act seems to want that person to make themselves, such as a decision that can only be made once."
       ],
-      "whatItIsNot": "It does not mean staff can never act for a minister. Many powers are used that way every day. The question is what the Act requires.",
+      "whatItIsNot": "It does not mean staff can never act for a minister. Many powers are used that way every day, and a large department dealing with the same decision often is the ordinary case, not a problem. A signature you do not recognise is not a sign of anything by itself. The authority to sign does not have to appear in the letter, or in any formal document — it can come from the Act, from a delegation, or simply from the way the department is set up. The question is what the Act requires, not what the letter shows.",
       "usedIn": [
         "judicial-review"
       ],
@@ -693,9 +690,9 @@
           "layPrompt": "Does the letter say the named person decided it themselves?"
         },
         {
-          "id": "authority-to-sign",
-          "name": "Whether the signer was authorised",
-          "layPrompt": "Does anything show the signer was allowed to decide?"
+          "id": "must-be-personal",
+          "name": "Whether the Act wanted that person to decide it",
+          "layPrompt": "Does the Act point to this being a decision the named person makes themselves?"
         }
       ],
       "sources": [
@@ -814,8 +811,8 @@
     },
     {
       "id": "no-evidence",
-      "name": "No evidence",
-      "plainName": "A key finding had no evidence behind it",
+      "name": "No evidence for a key finding",
+      "plainName": "The finding had nothing behind it",
       "oneLine": "A finding that mattered was made with no evidence to support it.",
       "whatItMeans": "A decision can be challenged if a finding on a key fact was made with no evidence at all behind it. The finding has to be one the decision turned on. It is not enough that the evidence was thin, or that you disagree with how much weight it was given.",
       "plainExample": "A debt is raised on the basis you were paid on dates that the records show you were not.",
@@ -859,7 +856,7 @@
       "name": "A fact the power depended on",
       "plainName": "A fact the law required was not there",
       "oneLine": "Some powers only exist if a certain fact is true.",
-      "whatItMeans": "Sometimes an Act says a decision can only be made if a particular thing is true. That thing has to really be true. It is not enough that the decision-maker believed it. A court can look at that fact for itself.",
+      "whatItMeans": "Sometimes an Act says a decision can only be made if a particular thing is true. Where that is so, the thing has to really be true. It is not enough that the decision-maker believed it, and a court can look at that fact for itself. The first question is whether the Act works that way at all. Most facts a decision-maker finds are not of this kind.",
       "plainExample": "A rule lets an office act only if you live in a certain area. You do not live there. They acted anyway.",
       "whatRelates": [
         "The letter relies on a fact about you that is simply not true.",
@@ -867,11 +864,11 @@
         "The rule you were given applies to a group you are not part of.",
         "The letter says you were somewhere, or held something, that you did not."
       ],
-      "whatItIsNot": "This is not about a judgement call, like whether something was reasonable. It is about a plain fact that is either true or not.",
+      "whatItIsNot": "This is not about a judgement call, like whether something was reasonable. It is about a plain fact that is either true or not. Most facts in a decision are not of this kind, and a court will not usually put its own view in place of the decision-maker's on something the Act left to them to weigh up.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "Where a power depends on a fact existing, that fact must exist. A court can decide it for itself.",
+      "test": "Whether a fact is one the power depends on comes from reading the Act. Where it is, that fact must exist, and a court can decide it for itself. Where the Act instead leaves an assessment or a value judgement to the decision-maker, it is difficult to treat the criterion this way.",
       "elements": [
         {
           "id": "required-fact",
