@@ -39,8 +39,8 @@ canApply:
     was made.
   - You usually need to be a person affected by the decision (standing).
   - >-
-    There are strict time limits, and they are usually NOT paused by asking for
-    reasons.
+    There are strict time limits. Check the one that applies to your decision
+    rather than assuming what does or does not move it.
 whatHappens:
   - You start a proceeding in the court.
   - You argue that one or more grounds of review apply.
@@ -122,3 +122,12 @@ irreversible.
 **Remittal with directions and the bare declaration** added to the remedies. Both appear in our
 materials and both change what a person can usefully ask for: sending a decision back with
 directions is materially different from sending it back at large.
+
+Unsupported claim removed 2026-08-23 on the owner's ruling. The page said time limits "are usually
+NOT paused by asking for reasons". A Fable QA pass could find no line in the owner's materials
+supporting it, and the owner directed that it go rather than be softened into a different
+assertion.
+
+What remains is the part that is both true and useful: the limits are strict, and a reader should
+check the one that applies rather than assume anything about what moves it. This matches the
+reasons clock warning, which was corrected the same way.

@@ -49,8 +49,9 @@ options:
     whatItDoes: >-
       Orders a public official to carry out a duty they owe, according to law.
     note: >-
-      It works where a duty has been left undone. It does not work where the law
-      leaves the choice to them.
+      It cannot force a particular answer where the law leaves the choice to
+      them. It can make them decide. Where an Act gives someone a discretion,
+      they still have a duty to deal with an application made under it.
   - name: Prohibition
     plainName: Stopping them
     whatItDoes: >-
@@ -110,3 +111,14 @@ leaving it out was not neutral.
 **Remittal with directions** and **the bare declaration** added. **Certiorari's ancillary note
 corrected**: it issues alongside the constitutional writs and the injunction, which are the three
 remedies s 75(v) names — not alongside a declaration, which is not one of them.
+
+Mandamus note corrected 2026-08-23 on a Fable QA finding. It read: "It works where a duty has been
+left undone. It does not work where the law leaves the choice to them." Our own Review Notes say
+the opposite for the situation almost every reader is in: "If a statute confers a discretionary
+power on a decision-maker, the decision-maker will still be under a duty to determine an
+application that is made for the power to be exercised."
+
+Nearly every decision this app's readers face is discretionary, so as written the note told them
+mandamus could never reach their situation — and it contradicted the judicial-review page, which
+already says a failure to decide can count. The distinction that actually matters is between
+forcing an ANSWER and forcing a DECISION, and that is what it now draws.

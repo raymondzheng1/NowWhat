@@ -44,7 +44,9 @@ leadingCases:
       A policy must leave the decision-maker's discretion intact.
   - name: Green v Daniels (1977) 13 ALR 1
     pinpoint: ''
-    explains: A policy cannot override what the Act says.
+    explains: >-
+      A policy that is appropriate guides decision-making. It does not control
+      it.
 ---
 
 A policy can go wrong in two different ways. The policy itself may not match the Act. That is this ground. Or a lawful policy may be applied without looking at the person. That is the inflexible policy ground instead.
@@ -56,3 +58,13 @@ materials is attributed to Drake (No 2) — "It must not apply a policy that is 
 inconsistent with the statute, or leads to an improper exercise of discretion. (Drake No 2)" and
 "Lawful policy 'leaves the range of discretion intact while guiding the exercise of the power'
 (Drake No 2)". Drake (No 1) is the authority for the nature of merits review, a different point.
+
+Attribution corrected 2026-08-23 on a Fable QA finding. Green carried "A policy cannot override
+what the Act says" — a proposition our materials attribute to Drake (No 2): "It must not apply a
+policy that is unlawful, inconsistent with the statute, or leads to an improper exercise of
+discretion." Green now carries the one the materials attribute to it jointly with Drake:
+"Appropriate policy guides, but does not control, decision-making (Drake [No 2]/Green v Daniel)."
+
+The line was not bad law — Green's own holding did involve statutory inconsistency — but the
+attribution was unsourced, and this entry's own note already conceded that every policy
+proposition in our materials belongs to Drake (No 2).

@@ -6,13 +6,14 @@ oneLine: Some decisions are made without the power the law requires.
 whatItMeans: >-
   Every government power comes from an Act of Parliament. The Act sets the
   limits of that power. A decision outside those limits has no legal authority
-  behind it. The letter should tell you which law it relies on.
+  behind it. The question is what the Act allows, not what the letter shows.
 plainExample: >-
   A letter raises a debt against you. The Act gives that office no power to
   raise debts.
 whatRelates:
-  - The letter does not name the law it was made under.
-  - The letter comes from an office you have never dealt with.
+  - >-
+    The letter does not name the law it was made under. That is a place to start
+    asking, not a problem by itself.
   - The decision covers something the rules you were given do not mention.
   - You cannot find the power the letter says it is using.
   - The letter decides something you thought only a court could decide.
@@ -35,7 +36,7 @@ elements:
     layPrompt: Is the decision about something the rules you were given never mention?
   - id: right-office
     name: The office the law names
-    layPrompt: Does the office named in the letter match the one that wrote to you?
+    layPrompt: Does the Act give this kind of decision to the office that made it?
 sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
@@ -71,3 +72,16 @@ Provenance. This ground is drawn from our own verified judicial review materials
 Cross-reference added 2026-08-23, the other half of the pair with error-of-law. Without authority
 asks whether the power existed; error of law asks whether an existing power was exercised on the
 right legal basis.
+
+Face-of-the-letter inferences removed 2026-08-23, on a Fable QA finding. Three reader-facing lines
+invited exactly the inference this corpus excised from invalid-delegation the same week: that what
+the letter shows is evidence about the power behind it.
+
+"The letter should tell you which law it relies on" made naming the Act a marker of authority; no
+owner material says that. "The letter comes from an office you have never dealt with" treats an
+unfamiliar sender as a signal, when it is ordinary and proves nothing. And the office element asked
+whether the office named matches the one that wrote, which tests the letter rather than the Act.
+
+Invalid-delegation's own `whatItIsNot` states the governing principle, grounded in Pattenden:
+the question is what the Act requires, not what the letter shows. This entry now says the same, and
+keeps "the letter does not name the law" only as a place to start asking.

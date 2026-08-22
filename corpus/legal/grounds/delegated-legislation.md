@@ -19,8 +19,6 @@ whatRelates:
   - The letter relies on a regulation or a by-law, not an Act.
   - The rule you were quoted is not in the law the letter names.
   - You were told the rule and the law say different things.
-  - You were told a rule required this, and nobody could explain why.
-  - Nobody could tell you what the rule was made for.
 whatItIsNot: >-
   It does not mean regulations and by-laws are not real law. Most of them are
   valid. Courts set a high bar before setting one aside. Showing a rule is
@@ -35,16 +33,16 @@ test: >-
 elements:
   - id: within-subject
     name: Inside the subject the Act allows
-    layPrompt: Does the letter name both a rule and the Act behind it?
+    layPrompt: Is the rule about something the Act actually covers?
   - id: not-inconsistent
     name: Not inconsistent with the Act
     layPrompt: Were you told the rule and the Act say different things?
   - id: made-for-purpose
     name: Made for the Act's purpose
-    layPrompt: Could anyone tell you what the rule was made for?
+    layPrompt: Does the rule go further than the Act it was made under?
   - id: proportionate
     name: Appropriate and adapted
-    layPrompt: Were you told why such a strict rule applied to you?
+    layPrompt: Does the rule cover something the Act does not reach?
 sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
@@ -59,12 +57,6 @@ leadingCases:
     pinpoint: Weinberg J
     explains: >-
       Such a rule has to be appropriate and adapted to the Act's purpose.
-  - name: >-
-      Project Blue Sky Inc v Australian Broadcasting Authority (1998) 194 CLR
-      355
-    pinpoint: ''
-    explains: >-
-      Whether a breach makes an act invalid depends on what the Act intended.
 ---
 
 General information, not advice. The rule number printed on the letter is what this ground looks at. It keeps four elements, because a rule can fail in four separate ways.
@@ -85,3 +77,17 @@ outside the power; exceeding the prescribed limits; being inconsistent with or r
 empowering Act or another Act; being made for an impermissible purpose; and an effect so
 unreasonable it cannot fall within the legislature's contemplation. The entry previously carried
 only the first.
+
+Three Fable QA findings applied 2026-08-23.
+
+**Absence of an explanation is not a signal.** Two `whatRelates` lines and two lay prompts asked
+whether anyone could explain what a rule was for. Front-line staff being unable to explain a rule
+is ordinary, and proves nothing under a test our materials call satisfied "only in an extreme
+case". This is the same pattern excised from invalid-delegation and without-authority.
+
+**The within-subject element was probing the wrong thing.** It asked whether the letter names both
+a rule and the Act behind it, which tests whether a rule is involved at all. It now asks whether
+the rule is about something the Act actually covers.
+
+**Project Blue Sky was removed from this entry.** Our materials assign this ground Toohey and
+Vanstone, and home PBS in the breach-consequences analysis, where the corpus already cites it.

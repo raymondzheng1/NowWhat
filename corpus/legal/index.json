@@ -1,5 +1,5 @@
 {
-  "builtAt": "2fbf08f185a06cda",
+  "builtAt": "c02ee06bb0f547bb",
   "processes": [
     {
       "id": "judicial-review",
@@ -28,7 +28,7 @@
       "canApply": [
         "You need a 'ground of review' — a specific legal error in how the decision was made.",
         "You usually need to be a person affected by the decision (standing).",
-        "There are strict time limits, and they are usually NOT paused by asking for reasons."
+        "There are strict time limits. Check the one that applies to your decision rather than assuming what does or does not move it."
       ],
       "whatHappens": [
         "You start a proceeding in the court.",
@@ -402,9 +402,7 @@
         "The rule goes so far that the Act cannot have meant to allow it.",
         "The letter relies on a regulation or a by-law, not an Act.",
         "The rule you were quoted is not in the law the letter names.",
-        "You were told the rule and the law say different things.",
-        "You were told a rule required this, and nobody could explain why.",
-        "Nobody could tell you what the rule was made for."
+        "You were told the rule and the law say different things."
       ],
       "whatItIsNot": "It does not mean regulations and by-laws are not real law. Most of them are valid. Courts set a high bar before setting one aside. Showing a rule is invalid is also only the first step. You then have to show what that meant for your own decision.",
       "usedIn": [
@@ -415,7 +413,7 @@
         {
           "id": "within-subject",
           "name": "Inside the subject the Act allows",
-          "layPrompt": "Does the letter name both a rule and the Act behind it?"
+          "layPrompt": "Is the rule about something the Act actually covers?"
         },
         {
           "id": "not-inconsistent",
@@ -425,12 +423,12 @@
         {
           "id": "made-for-purpose",
           "name": "Made for the Act's purpose",
-          "layPrompt": "Could anyone tell you what the rule was made for?"
+          "layPrompt": "Does the rule go further than the Act it was made under?"
         },
         {
           "id": "proportionate",
           "name": "Appropriate and adapted",
-          "layPrompt": "Were you told why such a strict rule applied to you?"
+          "layPrompt": "Does the rule cover something the Act does not reach?"
         }
       ],
       "sources": [
@@ -447,11 +445,6 @@
           "name": "Vanstone v Clark (2005) 147 FCR 299",
           "pinpoint": "Weinberg J",
           "explains": "Such a rule has to be appropriate and adapted to the Act's purpose."
-        },
-        {
-          "name": "Project Blue Sky Inc v Australian Broadcasting Authority (1998) 194 CLR 355",
-          "pinpoint": "",
-          "explains": "Whether a breach makes an act invalid depends on what the Act intended."
         }
       ],
       "jurisdictions": []
@@ -989,14 +982,13 @@
       "name": "Relevant considerations",
       "plainName": "They ignored something they had to take into account",
       "oneLine": "The law can name things a decision-maker must take into account.",
-      "whatItMeans": "Some Acts say what a decision-maker must take into account. Missing one of those matters can make a decision unlawful. In Victoria, public bodies must also think about your human rights.",
+      "whatItMeans": "Some Acts say what a decision-maker must take into account. Missing one of those matters can make a decision unlawful.",
       "plainExample": "You send Centrelink medical reports about your illness. The debt decision never mentions them.",
       "whatRelates": [
         "You gave them information that the decision never mentions.",
         "Something the rules say must be weighed appears to have been left out.",
         "Your reasons letter skips a matter you raised in writing.",
-        "A report or assessment you sent in is not discussed anywhere.",
-        "You are in Victoria and a human right may be affected."
+        "A report or assessment you sent in is not discussed anywhere."
       ],
       "whatItIsNot": "It does not mean every point you raised had to be accepted. The required matters only had to be genuinely considered. How much weight to give something is generally for the decision-maker, so thinking they gave your evidence too little weight is usually not something a court will look at. A document also does not have to be discussed at length to have been considered.",
       "usedIn": [
@@ -1013,11 +1005,6 @@
           "id": "not-considered",
           "name": "That matter was not considered",
           "layPrompt": "Does the decision look like it left that matter out?"
-        },
-        {
-          "id": "charter-proper-consideration",
-          "name": "Proper consideration of a human right (Victoria)",
-          "layPrompt": "Are you in Victoria? Did this affect your home, family or privacy?"
         }
       ],
       "sources": [
@@ -1167,7 +1154,7 @@
         {
           "name": "Green v Daniels (1977) 13 ALR 1",
           "pinpoint": "",
-          "explains": "A policy cannot override what the Act says."
+          "explains": "A policy that is appropriate guides decision-making. It does not control it."
         }
       ],
       "jurisdictions": []
@@ -1234,11 +1221,10 @@
       "name": "Acting without legal authority",
       "plainName": "They never had the power to do this",
       "oneLine": "Some decisions are made without the power the law requires.",
-      "whatItMeans": "Every government power comes from an Act of Parliament. The Act sets the limits of that power. A decision outside those limits has no legal authority behind it. The letter should tell you which law it relies on.",
+      "whatItMeans": "Every government power comes from an Act of Parliament. The Act sets the limits of that power. A decision outside those limits has no legal authority behind it. The question is what the Act allows, not what the letter shows.",
       "plainExample": "A letter raises a debt against you. The Act gives that office no power to raise debts.",
       "whatRelates": [
-        "The letter does not name the law it was made under.",
-        "The letter comes from an office you have never dealt with.",
+        "The letter does not name the law it was made under. That is a place to start asking, not a problem by itself.",
         "The decision covers something the rules you were given do not mention.",
         "You cannot find the power the letter says it is using.",
         "The letter decides something you thought only a court could decide."
@@ -1262,7 +1248,7 @@
         {
           "id": "right-office",
           "name": "The office the law names",
-          "layPrompt": "Does the office named in the letter match the one that wrote to you?"
+          "layPrompt": "Does the Act give this kind of decision to the office that made it?"
         }
       ],
       "sources": [
@@ -1447,7 +1433,7 @@
           "name": "Mandamus",
           "plainName": "Making them do their job",
           "whatItDoes": "Orders a public official to carry out a duty they owe, according to law.",
-          "note": "It works where a duty has been left undone. It does not work where the law leaves the choice to them."
+          "note": "It cannot force a particular answer where the law leaves the choice to them. It can make them decide. Where an Act gives someone a discretion, they still have a duty to deal with an application made under it."
         },
         {
           "name": "Prohibition",

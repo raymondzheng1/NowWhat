@@ -5,8 +5,7 @@ plainName: They ignored something they had to take into account
 oneLine: The law can name things a decision-maker must take into account.
 whatItMeans: >-
   Some Acts say what a decision-maker must take into account. Missing one of
-  those matters can make a decision unlawful. In Victoria, public bodies must
-  also think about your human rights.
+  those matters can make a decision unlawful.
 plainExample: >-
   You send Centrelink medical reports about your illness. The debt decision
   never mentions them.
@@ -16,7 +15,6 @@ whatRelates:
     Something the rules say must be weighed appears to have been left out.
   - Your reasons letter skips a matter you raised in writing.
   - A report or assessment you sent in is not discussed anywhere.
-  - You are in Victoria and a human right may be affected.
 whatItIsNot: >-
   It does not mean every point you raised had to be accepted. The required
   matters only had to be genuinely considered. How much weight to give something
@@ -37,9 +35,6 @@ elements:
   - id: not-considered
     name: That matter was not considered
     layPrompt: Does the decision look like it left that matter out?
-  - id: charter-proper-consideration
-    name: Proper consideration of a human right (Victoria)
-    layPrompt: Are you in Victoria? Did this affect your home, family or privacy?
 sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
@@ -94,3 +89,17 @@ half that is not reviewable, and the entry gave them no way to tell.
 The related point that a document need not be discussed at length to have been considered matters
 for the same reason: a short set of reasons is not, by itself, evidence that something was
 overlooked.
+
+**Charter material moved out 2026-08-23**, on a Fable QA finding both passes reached. This entry
+carried a third element, "Proper consideration of a human right (Victoria)", and a line in
+`whatItMeans` saying Victorian public bodies must also think about your human rights. Read with
+this ground's own test — "Failing to consider a required matter can make the decision invalid" —
+that told a Victorian reader a proper-consideration failure can invalidate the decision.
+
+It cannot. Per *Certain Children*, breach of the s 38(1) duty "does not of itself give rise to
+charter invalidity and in relation to a decision, does not constitute jurisdictional error".
+
+The qualifying explanation existed only in this file's markdown body, which the build strips —
+`GroundExplainer` renders frontmatter fields, so nothing on the page carried it. The Charter now
+lives solely in `charter-proper-consideration`, which states the consequence rule in its own
+`whatItIsNot`.

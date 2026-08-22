@@ -6,9 +6,11 @@ description: >-
 question: Can I get a fine reviewed for special circumstances in Victoria?
 answer: >-
   Yes. In Victoria you can ask for a review of a fine on 'special circumstances'
-  grounds. This applies if, at the time of the fine, you had a mental illness or
-  disability, a serious addiction, were homeless, or were affected by family
-  violence, and that situation affected your behaviour.
+  grounds. These include having a mental illness or disability, a serious
+  addiction, being homeless, or being affected by family violence at the time.
+  The law also requires a link between that situation and the offence, and it
+  sets out what that link has to be — check the current requirement before you
+  apply.
 entryId: vic-fines
 category: Fines
 sources:
@@ -22,14 +24,14 @@ updated: '2026-06-30'
 
 ## What counts as special circumstances?
 
-Special circumstances means that at the time you got the fine, one of these things was true for you:
+The grounds include these. At the time you got the fine, one of them was true for you:
 
 - You had a **mental illness or disability**
 - You had a **serious addiction**
 - You were **homeless**
 - You were affected by **family violence**
 
-The law also requires a link between that situation and the offence. What that link has to be is set out in the legislation. Check the current requirement with Fines Victoria or a human legal service. It is the part applications most often leave out.
+The law also requires a link between that situation and the offence. What that link has to be is set out in the legislation. This list is not the whole of the ground either, so check the current wording with Fines Victoria or a human legal service. The link is the part applications most often leave out.
 
 ## What evidence might help?
 
