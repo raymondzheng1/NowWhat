@@ -16,6 +16,7 @@ sources:
   - Social Security (Administration) Act 1999 (Cth) — legislation.gov.au
   - Administrative Review Tribunal — art.gov.au
   - Economic Justice Australia — ejaustralia.org.au
+  - Commonwealth Ombudsman — ombudsman.gov.au
 related:
   - how-do-i-dispute-a-centrelink-debt
   - appeal-a-centrelink-decision-to-the-art

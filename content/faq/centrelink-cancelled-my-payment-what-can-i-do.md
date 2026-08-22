@@ -18,6 +18,7 @@ sources:
   - Social Security (Administration) Act 1999 (Cth) — legislation.gov.au
   - Administrative Review Tribunal — art.gov.au
   - Economic Justice Australia — ejaustralia.org.au
+  - Commonwealth Ombudsman — ombudsman.gov.au
 related:
   - ask-centrelink-to-review-a-decision
 updated: '2026-06-30'

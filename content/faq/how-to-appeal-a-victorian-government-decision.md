@@ -2,7 +2,7 @@
 title: "How do I appeal a Victorian government decision?"
 description: "Many Victorian government decisions can be reviewed at VCAT, but not all. Your decision letter is the best guide. Here are the steps, in plain English."
 question: "How do I appeal a Victorian government decision?"
-answer: "It depends on the law your decision was made under. Many Victorian government decisions can be reviewed at VCAT, but not all. Your decision letter should say if you can apply, and by when. You can also ask for written reasons within 28 days. If VCAT cannot review it, the Victorian Ombudsman takes free complaints, and a court can be asked to check whether the decision was made lawfully. Free legal help can confirm what applies to you."
+answer: "It depends on the law your decision was made under. Many Victorian government decisions can be reviewed at VCAT, but not all. Your decision letter should say if you can apply, and by when. You can also ask for written reasons, and a time limit applies to that request. If VCAT cannot review it, the Victorian Ombudsman takes free complaints, and a court can be asked to check whether the decision was made lawfully. Free legal help can confirm what applies to you."
 entryId: vic-generic
 category: "Government decisions"
 sources:
@@ -28,8 +28,9 @@ to VCAT — the Act has to allow it.
 
 ## Ask for the reasons in writing
 
-You can ask the decision-maker for a written statement of reasons. Ask within 28 days
-of the decision. The decision-maker then usually has 28 days to reply. This is free.
+You can ask the decision-maker for a written statement of reasons. A time limit applies
+to the request, and which date it runs from is worth checking. They then have a set
+time to reply. This is free.
 Written reasons explain what was decided and why, which makes the next step clearer.
 
 ## Apply to VCAT, if the law allows it

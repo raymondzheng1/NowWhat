@@ -41,7 +41,7 @@ is worth checking with a human legal service.
 
 You can write to the agency that made the decision and ask for a statement of reasons. A time limit applies to the request. Check the limit for your own decision, and which date it runs from. That is not the same for every decision, and the date printed on a letter is not always the date that counts.
 
-Your request does not need to be complicated. Simply write to the agency, state the decision you are asking about, and ask for a written statement of reasons under section 45 of the VCAT Act.
+Your request does not need to be complicated. Simply write to the agency, state the decision you are asking about, and ask for a written statement of reasons. If you know which law gives you the right, name it. If you do not, you can simply ask for the reasons for the decision — the request still stands.
 
 ## Why does it matter?
 

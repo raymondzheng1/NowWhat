@@ -2,7 +2,7 @@
 title: "Can I get a Victorian government decision reviewed?"
 description: "Many Victorian government decisions can be reviewed at VCAT, but not all. Here's how to check, how to get the reasons, and where to get free help."
 question: "Can I get a Victorian government decision reviewed?"
-answer: "Often, yes — but it depends on the law the decision was made under. Many Victorian government decisions can be reviewed by VCAT, and your decision letter should say if you can apply and by when. A good early step is to ask for the reasons in writing within 28 days, which also helps protect your time to apply. If a decision can't go to VCAT, there are still two options: the Victorian Ombudsman can look into unfair treatment, and a court can be asked to check whether the decision was made lawfully. Free legal help can tell you what applies to you."
+answer: "Often, yes — but it depends on the law the decision was made under. Many Victorian government decisions can be reviewed by VCAT, and your decision letter should say if you can apply and by when. A good early step is to ask for the reasons in writing. A time limit applies to that request, so check which date it runs from. If a decision can't go to VCAT, there are still two options: the Victorian Ombudsman can look into unfair treatment, and a court can be asked to check whether the decision was made lawfully. Free legal help can tell you what applies to you."
 entryId: vic-generic
 category: "Getting started"
 sources:
@@ -29,7 +29,7 @@ one VCAT can hear — get advice rather than assume.
 
 ## Ask for the reasons in writing
 
-You can ask the decision-maker for a written statement of reasons. Ask within 28 days of
+You can ask the decision-maker for a written statement of reasons. A time limit applies to
 the decision. This helps you understand the decision, and it can also move the start of
 your time to apply to VCAT to when you get the reasons.
 
