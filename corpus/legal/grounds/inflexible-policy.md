@@ -1,12 +1,14 @@
 ---
 id: inflexible-policy
-name: Inflexible application of policy / acting under dictation
+name: Inflexible application of policy
 plainName: They followed a rule or an order instead of deciding your case
 oneLine: A rule can be applied so rigidly that a person is never considered.
 whatItMeans: >-
-  A decision-maker who has a discretion must actually use it. Applying a policy
-  with no room for your circumstances can be unlawful. So can simply doing what
-  another person told them to do.
+  A decision-maker who has a choice must actually make it. Applying a policy with
+  no room for your circumstances can be unlawful, because your case is never
+  really considered. Simply doing what someone else told them to do is the same
+  failing in another form — the person with the power never brought their own
+  mind to it.
 plainExample: >-
   You ask for more time to pay a fine. You are told 'we never do that', with no
   questions asked.
@@ -23,15 +25,19 @@ whatItIsNot: >-
 usedIn:
   - judicial-review
 test: >-
-  A decision-maker with a choice must really make it. A policy cannot be
-  applied as a fixed rule. They also cannot just do what someone else says.
+  A decision-maker with a choice must really make it. A policy guides that
+  choice; it cannot control it, and it cannot be applied as a fixed rule that
+  leaves your case unconsidered. Doing what another person directs is one way
+  that happens.
 elements:
   - id: rigid-policy
-    name: Inflexible application of policy
+    name: A rule applied without looking at your case
     layPrompt: Was a general rule applied without looking at your situation?
-  - id: dictation
-    name: Acting under dictation
-    layPrompt: Did the decision-maker simply do what someone else told them?
+  - id: own-mind
+    name: Whether the decision-maker used their own judgement
+    layPrompt: >-
+      Did the person with the power decide it themselves, or just pass on a
+      rule or someone else's instruction?
 sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
@@ -70,6 +76,13 @@ inflexible-policy limb:
 lawful policy is the ordinary case, not the problem. The problem is applying it so rigidly that the
 person is never considered.
 
-**Still outstanding:** the authority for acting under dictation specifically. The sources above
-cover inflexible application of policy. Dictation remains in the ground's name and test at the
-owner's direction, and needs its own citation before this entry is complete.
+**Acting under dictation is an example, not a second doctrine** (owner, 2026-08-23). An earlier
+note here recorded dictation as needing its own authority. It does not. A decision-maker who does
+what someone else directs has failed in the same way as one who applies a policy as a fixed rule:
+the person holding the power never brought their own mind to the case. Green v Daniels and
+Drake (No 2) cover both.
+
+The entry was shaped as though they were parallel — a slash in the name, "they also cannot" in the
+test, and two co-equal elements. That is now one ground with one principle, and dictation appears
+as the recognisable form it usually takes: "my manager decided", or a rule repeated back with no
+questions asked.
