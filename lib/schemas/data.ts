@@ -19,6 +19,13 @@ export type Jurisdiction = z.infer<typeof Jurisdiction>;
 
 export const AvenueMRSchema = z.object({
   available: z.boolean(),
+  /**
+   * True where merits review exists ONLY if the enabling Act provides it — the catch-all
+   * entries, which cover decisions we have no specific guide for. The path still shows, with
+   * the condition attached. Setting `available: false` instead would hide the cheaper and more
+   * useful route from the people least able to work out that it might exist.
+   */
+  conditional: z.boolean().default(false),
   /** Merits-review body, e.g. "VCAT" (Vic) or "ART" (Cth). */
   body: z.string(),
   source: z.string(),

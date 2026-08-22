@@ -20,7 +20,8 @@ keywords:
   - decision
 avenue:
   mr:
-    available: false
+    available: true
+    conditional: true
     body: ART (where the enabling Act provides)
     source: 'art.gov.au — apply for a review; and the Act your decision was made under'
   jr:

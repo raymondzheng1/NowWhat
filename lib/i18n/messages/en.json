@@ -239,6 +239,7 @@
     "analysisLeadJudicial": "Merits review does not appear to be available for this decision. Judicial review asks a court to check that the decision was made lawfully.",
     "analysisLeadNone": "A formal review may not be available for this decision. A human service can check that with you, and there may still be other options.",
     "pathAsks": "The question it decides",
+    "pathConditional": "Only if the law for your decision allows it",
     "pathCriteria": "What they decide for a decision like yours",
     "pathCanDo": "What it can do",
     "pathCannot": "What it cannot do",

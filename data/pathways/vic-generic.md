@@ -19,7 +19,8 @@ keywords:
   - review
 avenue:
   mr:
-    available: false
+    available: true
+    conditional: true
     body: VCAT (where the enabling Act provides)
     source: 'vcat.vic.gov.au — review of a decision; and the Act your decision was made under'
   jr:

@@ -12,6 +12,7 @@ const plan = (avenue: Parameters<typeof planFor>[0]["avenue"]) =>
 
 const AV = {
   mrAvailable: true,
+  mrConditional: false,
   mrBody: "ART",
   jrAvailable: true,
   jrForum: "Federal Court",
@@ -184,5 +185,36 @@ describe("merits-review criteria (what the tribunal decides for THIS decision)",
 
   it("the heading that introduces them is customer copy and exists", () => {
     expect(messages.rights.pathCriteria).toBeTruthy();
+  });
+});
+
+describe("conditional merits review (the catch-all entries)", () => {
+  it("a conditional path is still SHOWN, not dropped", () => {
+    // Setting available:false would have removed the merits path from the analysis entirely,
+    // so a person using a catch-all entry would see only judicial review — hiding the cheaper
+    // route from exactly the people least able to work out it might exist.
+    const p = planFor({
+      avenue: { ...AV, mrConditional: true },
+      meritsReview: merits,
+      judicialReview: judicial,
+    });
+    const mr = p.paths.find((x) => x.id === "merits-review");
+    expect(mr, "merits path must survive").toBeDefined();
+    expect(mr!.conditional).toBe(true);
+    expect(p.primary?.id).toBe("merits-review");
+  });
+
+  it("both catch-all entries are marked conditional, and the specific ones are not", () => {
+    for (const id of ["cth-generic", "vic-generic"]) {
+      expect(getDataEntry(id)!.avenue.mr.conditional, id).toBe(true);
+      expect(getDataEntry(id)!.avenue.mr.available, id).toBe(true);
+    }
+    for (const id of ["cth-centrelink", "vic-fines", "vic-public-housing", "vic-renting"]) {
+      expect(getDataEntry(id)!.avenue.mr.conditional, id).toBe(false);
+    }
+  });
+
+  it("the condition has customer copy to render", () => {
+    expect(messages.rights.pathConditional).toBeTruthy();
   });
 });

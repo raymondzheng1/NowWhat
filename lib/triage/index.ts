@@ -19,6 +19,8 @@ export interface TriageInput {
 
 export interface AvenueView {
   mrAvailable: boolean;
+  /** Exists only where the enabling Act provides it (catch-all entries). */
+  mrConditional: boolean;
   mrBody: string;
   jrAvailable: boolean;
   jrForum: string;
@@ -49,6 +51,7 @@ function cleanEndpoint(s: string | null): string | null {
 export function avenueView(entry: DataPathway): AvenueView {
   return {
     mrAvailable: entry.avenue.mr.available,
+    mrConditional: entry.avenue.mr.conditional ?? false,
     mrBody: cleanForDisplay(entry.avenue.mr.body),
     jrAvailable: entry.avenue.jr.available,
     jrForum: cleanForDisplay(entry.avenue.jr.forum),
@@ -74,6 +77,7 @@ export function triage(input: TriageInput): TriageResult {
     jurisdiction: input.jurisdiction,
     avenue: {
       mrAvailable: entry.avenue.mr.available,
+    mrConditional: entry.avenue.mr.conditional ?? false,
       mrBody: cleanForDisplay(entry.avenue.mr.body),
       jrAvailable: entry.avenue.jr.available,
       jrForum: cleanForDisplay(entry.avenue.jr.forum),

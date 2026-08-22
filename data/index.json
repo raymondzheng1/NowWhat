@@ -1,5 +1,5 @@
 {
-  "builtAt": "7e178168a4f3e568",
+  "builtAt": "fdf9a1db37e29d13",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -109,7 +109,8 @@
       ],
       "avenue": {
         "mr": {
-          "available": false,
+          "available": true,
+          "conditional": true,
           "body": "ART (where the enabling Act provides)",
           "source": "art.gov.au — apply for a review; and the Act your decision was made under"
         },
@@ -264,7 +265,8 @@
       ],
       "avenue": {
         "mr": {
-          "available": false,
+          "available": true,
+          "conditional": true,
           "body": "VCAT (where the enabling Act provides)",
           "source": "vcat.vic.gov.au — review of a decision; and the Act your decision was made under"
         },

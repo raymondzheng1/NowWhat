@@ -74,6 +74,15 @@ export function AnalysisPanel({
                 {p.order === 1 ? t("pathOrderFirst") : t("pathOrderNext")}
               </span>
               <span className="mono text-ink-faint">{t("pathVia", { body: midSentence(p.body) })}</span>
+              {/* The catch-all entries cover decisions we have no specific guide for, where
+                  merits review exists only if the enabling Act provides it. The path still
+                  shows — hiding it would keep the cheaper route from the people least able to
+                  work out it might exist — but the condition travels with it. */}
+              {p.conditional && (
+                <span className="rounded-pill border-2 border-amber-border bg-amber-bg px-2.5 py-0.5 text-[13px] font-semibold text-ink-soft">
+                  {t("pathConditional")}
+                </span>
+              )}
             </div>
             <h3 className="mt-1.5 font-display text-[19px] font-black text-ink">
               {p.id === "merits-review" ? meritsReview.name : judicialReview.name}

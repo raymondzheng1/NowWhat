@@ -46,6 +46,8 @@ export interface PathPlan {
   criteria: string[];
   /** i18n key for the "what carries weight here" paragraph. */
   focusKey: "focusMerits" | "focusJudicial";
+  /** Shown with a condition attached: this route exists only if the enabling Act provides it. */
+  conditional: boolean;
 }
 
 export interface ResultPlan {
@@ -124,6 +126,7 @@ export function planFor({
       canDo: meritsReview.remedies,
       cannotDo: meritsReview.limits,
       criteria,
+      conditional: avenue.mrConditional ?? false,
       focusKey: "focusMerits",
     });
   }
@@ -136,6 +139,7 @@ export function planFor({
       canDo: judicialReview.remedies,
       cannotDo: judicialReview.limits,
       criteria: [],
+      conditional: false,
       focusKey: "focusJudicial",
     });
   }
