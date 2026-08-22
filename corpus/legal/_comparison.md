@@ -26,7 +26,7 @@ faq:
   - q: "If both are open, which one comes first?"
     a: "Where a law gives a right to merits review, that is usually the step people take first. It costs less, it can change the outcome, and a fresh decision may settle the matter without a court. Judicial review does not disappear in the meantime — it stays open for the legality questions."
   - q: "What if the tribunal decides against me too?"
-    a: "A tribunal's decision is itself a decision made under a law. That means it can be judicially reviewed as well, on the same legality grounds — for example if the tribunal applied the wrong test or did not give you a fair hearing. This is technical, so it is worth free legal help."
+    a: "Two different things may be open, and each has its own short time limit. One is an appeal to a court on a question of law, which the law setting up the tribunal gives you. The other is judicial review, which asks whether the tribunal kept within its legal power — for example if it applied the wrong test or did not give you a fair hearing. An appeal sometimes needs the court's permission first. Which one fits is technical, so ask a human legal service quickly."
   - q: "Is there one first step that helps either way?"
     a: "Asking for the reasons in writing helps with both. It is usually free, and it shows you what the decision-maker actually relied on. That is what tells you whether your complaint is about the outcome or about how the decision was made."
   - q: "Can I give them new information?"

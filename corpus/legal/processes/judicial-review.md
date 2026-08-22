@@ -64,8 +64,11 @@ goodToKnow:
     A failure to decide can count too, where they had a duty to decide and did
     not.
   - >-
-    A tribunal's own decision can be judicially reviewed. The tribunal acts
-    under a law too, so a court can check that it kept within the law.
+    If a tribunal decides against you, two different things may be open. One is
+    an appeal to a court on a question of law. The other is judicial review.
+  - >-
+    Each has its own short time limit, and an appeal sometimes needs the court's
+    permission first. This is worth asking about quickly.
   - >-
     A court will not simply disagree with the result. It looks at whether the
     decision was made lawfully.
@@ -85,3 +88,13 @@ decision to include "a refusal or failure to perform a duty or to exercise a pow
 decision", and the ADJR Act reaches a failure to decide where there was a duty to (s 7). People
 routinely assume that being told no, or being left waiting, is not the kind of thing review is
 for. It is.
+
+Statutory appeal added 2026-08-22, on a QA finding the owner approved. The entry said only that a
+tribunal's decision can be judicially reviewed. True, but the ordinary route from a tribunal is the
+appeal on a question of law that the enabling Act separately confers — ART Act s 172, with time and
+manner at s 174; VCAT Act s 148, which requires the leave of the Court of Appeal. Naming only
+judicial review pointed a reader at the harder path and away from the one with its own clock
+already running.
+
+No period is stated here. Figures live in the lawyer-verified data layer, and this is the concept
+layer — the same choice already made for the two Victorian judicial-review routes.

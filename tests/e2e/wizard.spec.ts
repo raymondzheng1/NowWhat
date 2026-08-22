@@ -10,6 +10,27 @@ test.beforeEach(async ({ context }) => {
 });
 
 
+
+/**
+ * The result is four steps now — what happened, what you want, your options, next steps —
+ * so a test that wants the analysis has to walk to it. Continue is never disabled, so this
+ * clicks straight through without filling anything in.
+ */
+async function toOptions(page: import("@playwright/test").Page) {
+  const next = page.getByRole("button", { name: /next: what you want/i });
+  await expect(next).toBeVisible({ timeout: 15_000 });
+  await next.click();
+  const opts = page.getByRole("button", { name: /see my options/i });
+  await expect(opts).toBeVisible({ timeout: 15_000 });
+  await opts.click();
+}
+async function toNextSteps(page: import("@playwright/test").Page) {
+  await toOptions(page);
+  const nx = page.getByRole("button", { name: /^next steps/i });
+  await expect(nx).toBeVisible({ timeout: 15_000 });
+  await nx.click();
+}
+
 /**
  * The core, keyless M-Lean "Rights Saver" flow: landing → who → what → result.
  * Fully deterministic (no model/keys, nothing sent to the server) and exercises the
@@ -43,14 +64,19 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
 
   // Step 3 — the result + load-bearing trust surfaces.
   await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  // Step "your options" — the analysis, the time-limit note and the in-flow explainer.
+  await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
   await expect(page.getByText(/time limits:/i)).toBeVisible(); // brief generic note, not a headline
-  await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /understand these options/i })).toBeVisible();
   await expect(page.getByText(/not legal advice/i)).toBeVisible(); // disclaimer
   await expect(page.getByText(/free help/i).first()).toBeVisible();
 
-  // In-flow Learn: the options are explained and the grounds can be marked (→ hand-off).
-  await expect(page.getByRole("heading", { name: /understand these options/i })).toBeVisible();
+  // Step "next steps" — the reasons draft and the grounds people raise.
+  await page.getByRole("button", { name: /^next steps/i }).click();
+  await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible({
+    timeout: 15_000,
+  });
   await expect(page.getByRole("heading", { name: /grounds people raise/i })).toBeVisible();
 });
 
@@ -71,6 +97,7 @@ test("tripwire: a sensitive matter leads with a person, and still shows the opti
   // The hand-over LEADS, but it no longer replaces the analysis: the person picked a
   // decision type, and their circumstances are extra context rather than a reason to
   // withhold everything we know about that decision.
+  await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
 });
 
@@ -91,8 +118,12 @@ test("urgent timing does NOT dead-end: the person still gets their options", asy
 
   // Urgent banner AND the full result.
   await expect(page.getByRole("heading", { name: /call a human service today/i })).toBeVisible({ timeout: 15_000 });
+  await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
-  await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible();
+  await page.getByRole("button", { name: /^next steps/i }).click();
+  await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible({
+    timeout: 15_000,
+  });
 });
 
 test("a deep link cannot skip the tripwire or the consent gate", async ({ page }) => {
@@ -117,6 +148,7 @@ test("leaving to read a Learn page and coming back keeps your place", async ({ p
   await page.goto("/start?jur=Vic&area=vic-public-housing");
   await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
   await page.getByRole("button", { name: /see my next steps/i }).click();
+  await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible({
     timeout: 15_000,
   });
@@ -126,6 +158,7 @@ test("leaving to read a Learn page and coming back keeps your place", async ({ p
   await page.goBack();
 
   // Back on the result, not back at question two.
+  await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible({
     timeout: 15_000,
   });
@@ -178,6 +211,7 @@ test("a ticked tripwire flag no longer withholds the analysis", async ({ page })
   // The hand-over leads…
   await expect(page.getByRole("heading", { name: /some extra rules apply/i })).toBeVisible({ timeout: 15_000 });
   // …and the analysis and pathway still follow it.
+  await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
   await expect(page.getByRole("heading", { name: /putting it together/i })).toBeVisible();
 });

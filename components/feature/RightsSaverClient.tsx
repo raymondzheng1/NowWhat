@@ -65,6 +65,38 @@ function rememberConsent(on: boolean): void {
 
 type Step = "who" | "what" | "result";
 
+/**
+ * The result used to be one very long page: analysis, reasons, grounds, a free-text box, a
+ * draft and a hand-off, all stacked. People told us it was overwhelming, and the order was
+ * wrong — it asked for their story two thirds of the way down, after showing them options
+ * chosen without it.
+ *
+ * It is now four steps, in the order a person actually thinks:
+ *   story   what happened, in their words
+ *   goal    what they are hoping for
+ *   options every route open to them, ordered by that answer
+ *   path    the analysis and the memo for the route they pick
+ *
+ * Each pushes a history entry, so Back walks the steps instead of leaving the flow.
+ */
+type ResultView = "story" | "goal" | "options" | "path";
+const RESULT_VIEWS: ResultView[] = ["story", "goal", "options", "path"];
+
+/**
+ * What someone wants out of this. Multi-select, because people arrive with more than one —
+ * "I want the debt gone AND they never told me". Each maps to the routes that can deliver
+ * it, and the mapping ORDERS the options rather than filtering them: hiding a path someone
+ * did not think to ask for is how an app decides for them.
+ */
+export const GOALS = [
+  { id: "outcome", routes: ["merits-review", "internal-review"] },
+  { id: "lawful", routes: ["judicial-review"] },
+  { id: "information", routes: ["information-commissioner"] },
+  { id: "treatment", routes: ["ombudsman"] },
+  { id: "unsure", routes: [] },
+] as const;
+export type GoalId = (typeof GOALS)[number]["id"];
+
 const AREA_ICON: Record<string, IconName> = {
   "vic-renting": "House",
   "vic-fines": "Receipt",
@@ -694,6 +726,35 @@ function ResultStep({
     () => jrGrounds.filter((g) => groundAppliesIn(g, jurisdiction)),
     [jrGrounds, jurisdiction],
   );
+  // Which of the four result steps is on screen, and what they told us on the way.
+  const [view, setView] = useState<ResultView>("story");
+  const [goals, setGoals] = useState<GoalId[]>([]);
+  const [goalOther, setGoalOther] = useState("");
+  const viewIdx = RESULT_VIEWS.indexOf(view);
+  const topRef = useRef<HTMLDivElement | null>(null);
+
+  // Moving between result steps pushes history, so Back walks them. Scroll to the top too:
+  // without it a step change looks like nothing happened on a long page.
+  function goView(next: ResultView) {
+    setView(next);
+    try {
+      const u = new URL(window.location.href);
+      u.searchParams.set("view", next);
+      window.history.pushState({ view: next }, "", u);
+    } catch {
+      /* history unavailable — the step still changes */
+    }
+    topRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  useEffect(() => {
+    function onPop() {
+      const v = new URLSearchParams(window.location.search).get("view");
+      setView(RESULT_VIEWS.includes(v as ResultView) ? (v as ResultView) : "story");
+    }
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
   // Same jurisdiction rule as the grounds: an unscoped concept applies everywhere, and a
   // scoped one only where it exists. The two federal routes must not surface in Victoria.
   const shownConcepts = useMemo(
@@ -870,12 +931,57 @@ function ResultStep({
     }
   }
 
+  // Only the paths that exist for this decision, ordered by what the person said they want.
+  // Goals ORDER, never filter — see the GOALS comment.
+  const wantedRoutes = new Set(
+    goals.flatMap((g) => (GOALS.find((x) => x.id === g)?.routes ?? []) as readonly string[]),
+  );
+  const orderedPaths = [...plan.paths].sort(
+    (a, b) => Number(wantedRoutes.has(b.id)) - Number(wantedRoutes.has(a.id)) || a.order - b.order,
+  );
+  const orderedConcepts = [...shownConcepts].sort(
+    (a, b) => Number(wantedRoutes.has(b.id)) - Number(wantedRoutes.has(a.id)) || a.order - b.order,
+  );
+
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" ref={topRef}>
       <div>
         <p className="eyebrow text-red-ink">{t("resultEyebrow")}</p>
         <h1 className="mt-2 font-display text-[30px] font-black leading-[1.05] text-ink sm:text-[38px]">{entry.title}</h1>
       </div>
+
+      {/* Where they are in the four steps. A plain ordered list, not a decorative bar: it is
+          read by a screen reader as "step 2 of 4" and it is how someone jumps back. */}
+      <nav aria-label={t("stepsNavLabel")} className="rounded-card border-2 border-line bg-cream px-4 py-3">
+        <ol className="flex flex-wrap gap-x-2 gap-y-1.5 text-[14.5px]">
+          {RESULT_VIEWS.map((v, i) => {
+            const done = i < viewIdx;
+            const here = v === view;
+            return (
+              <li key={v} className="flex items-center gap-2">
+                {i > 0 && <span aria-hidden="true" className="text-ink-faint">›</span>}
+                {done ? (
+                  <button
+                    type="button"
+                    onClick={() => goView(v)}
+                    className="link-text min-h-[44px] font-semibold"
+                  >
+                    {t(`view_${v}`)}
+                  </button>
+                ) : (
+                  <span
+                    aria-current={here ? "step" : undefined}
+                    className={here ? "font-display font-black text-ink" : "text-ink-faint"}
+                  >
+                    {t(`view_${v}`)}
+                  </span>
+                )}
+              </li>
+            );
+          })}
+        </ol>
+      </nav>
+
       <Disclaimer />
 
       {/* Leads when a flag was ticked; the analysis below is unchanged. */}
@@ -1051,17 +1157,75 @@ function ResultStep({
            it can and cannot do). We order the paths — merits review first where it exists,
            because only a tribunal can substitute a different decision — and describe what
            each forum weighs. We never rate the person's prospects or tell them what to do. */}
+      {view === "goal" && (
+        <section id="r-goal" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("goalTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("goalLead")}</p>
+
+          <fieldset className="mt-5 space-y-2.5">
+            <legend className="sr-only">{t("goalTitle")}</legend>
+            {GOALS.map((g) => {
+              const on = goals.includes(g.id);
+              return (
+                <label
+                  key={g.id}
+                  className={`flex cursor-pointer items-start gap-3 rounded-card border-2 px-4 py-3 transition ${
+                    on ? "border-red-cta bg-cream" : "border-line bg-paper hover:border-ink-faint"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    className="mt-[3px] h-5 w-5 flex-none accent-red-cta"
+                    checked={on}
+                    onChange={() =>
+                      setGoals((cur) =>
+                        cur.includes(g.id) ? cur.filter((x) => x !== g.id) : [...cur, g.id],
+                      )
+                    }
+                  />
+                  <span>
+                    <span className="block font-display text-[16.5px] font-black leading-snug text-ink">
+                      {t(`goal_${g.id}`)}
+                    </span>
+                    <span className="mt-0.5 block text-[15px] leading-snug text-ink-soft">
+                      {t(`goal_${g.id}_desc`)}
+                    </span>
+                  </span>
+                </label>
+              );
+            })}
+          </fieldset>
+
+          <label className="mt-5 block">
+            <span className="mb-1.5 block font-display text-[15.5px] font-extrabold text-ink">
+              {t("goalOtherLabel")}
+            </span>
+            <textarea
+              value={goalOther}
+              onChange={(e) => setGoalOther(e.target.value)}
+              rows={3}
+              className="input leading-relaxed"
+              placeholder={t("goalOtherPlaceholder")}
+            />
+          </label>
+
+          <p className="mt-4 text-[14.5px] leading-snug text-ink-faint">{t("goalNote")}</p>
+        </section>
+      )}
+
+      {view === "options" && (
       <AnalysisPanel
-        plan={plan}
+        plan={{ ...plan, paths: orderedPaths, primary: orderedPaths[0] ?? null }}
         avenue={av}
         meritsReview={meritsReview}
         judicialReview={judicialReview}
         deadline={dl}
         tour
       />
+      )}
 
       {/* Understand these options — in-flow Learn (progressive disclosure) */}
-      {(av.mrAvailable || av.jrAvailable) && (
+      {view === "options" && (av.mrAvailable || av.jrAvailable) && (
         <section id="r-learn" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("learnTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("learnLead")}</p>
@@ -1094,6 +1258,7 @@ function ResultStep({
       )}
 
       {/* Ask for the reasons */}
+      {view === "path" && (
       <section id="r-reasons" data-tour="reasons" className="card">
         <h2 className="font-display text-[21px] font-black text-ink">{t("reasonsTitle")}</h2>
         <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("reasonsLead")}</p>
@@ -1115,9 +1280,10 @@ function ResultStep({
           {copied ? t("reasonsCopied") : t("reasonsCopy")}
         </button>
       </section>
+      )}
 
       {/* Grounds people raise — in-flow, neutral; selection flows into the hand-off */}
-      {(av.mrAvailable || av.jrAvailable) && shownGrounds.length > 0 && (
+      {view === "path" && (av.mrAvailable || av.jrAvailable) && shownGrounds.length > 0 && (
         <section id="r-grounds" data-tour="grounds" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("groundsTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("groundsLead")}</p>
@@ -1141,12 +1307,12 @@ function ResultStep({
           right person to ask, and the free routes that exist alongside review. Kept as links
           rather than expanded inline: a result screen is already long, and someone who needs
           these will follow them. */}
-      {shownConcepts.length > 0 && (
+      {view === "options" && shownConcepts.length > 0 && (
         <section id="r-concepts" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("conceptsTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("conceptsLead")}</p>
           <ul className="mt-4 grid gap-2.5">
-            {shownConcepts.map((c) => (
+            {orderedConcepts.map((c) => (
               <li key={c.id}>
                 <Link
                   href={`/learn/how-review-fits-together/${c.id}`}
@@ -1167,7 +1333,7 @@ function ResultStep({
           The grounds they ticked above are the lead indicator: they decide which headings the
           letter is organised under. This text never leaves the device until they press the
           button below it. */}
-      {applyDraft && (
+      {view === "story" && (
         <section id="r-account" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("accountTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("accountLead")}</p>
@@ -1329,7 +1495,7 @@ function ResultStep({
 
       {/* Apply for review — one draft per path, chosen by the person. Built on-device from
           the corpus entry (pure function, no request), so the no-network promise holds. */}
-      {applyDraft && activeApply && (
+      {view === "path" && applyDraft && activeApply && (
         <section id="r-apply" data-tour="apply" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("applyTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("applyLead")}</p>
@@ -1390,7 +1556,7 @@ function ResultStep({
       {/* Questions other people asked about THIS decision. Every FAQ article names the
           pathway it was written for, so this is a real join rather than a generic list —
           the guided flow and the answer library finally point at each other. */}
-      {faqs.length > 0 && (
+      {view === "path" && faqs.length > 0 && (
         <section id="r-faq" className="card sticker" style={{ "--rot": "0.6deg" } as React.CSSProperties}>
           <h2 className="font-display text-[21px] font-black text-ink">{t("faqTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("faqLead")}</p>
@@ -1416,8 +1582,45 @@ function ResultStep({
       )}
 
       {/* Hand-off + help */}
+      {/* Move between the four steps. Continue is never disabled: the story box can be left
+          empty and the goals unticked, because someone who just wants to see their options
+          should not be made to write an essay first. */}
+      {view !== "path" && (
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          {viewIdx > 0 ? (
+            <button
+              type="button"
+              onClick={() => goView(RESULT_VIEWS[viewIdx - 1]!)}
+              className="btn btn-secondary"
+            >
+              {t("viewBack")}
+            </button>
+          ) : (
+            <span />
+          )}
+          <button
+            type="button"
+            onClick={() => goView(RESULT_VIEWS[viewIdx + 1]!)}
+            className="btn btn-primary"
+          >
+            {t(`viewNext_${view}`)}
+          </button>
+        </div>
+      )}
+      {view === "path" && (
+        <div>
+          <button
+            type="button"
+            onClick={() => goView("options")}
+            className="btn btn-secondary"
+          >
+            {t("viewBackOptions")}
+          </button>
+        </div>
+      )}
+
       {/* The one foil on this screen (max one per page): the recommended next action is to
-          take the summary to a free service. */}
+          take the summary to a human service. */}
       <section
         id="r-handoff"
         data-tour="handoff"
