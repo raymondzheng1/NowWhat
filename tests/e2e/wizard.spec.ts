@@ -24,12 +24,6 @@ async function toOptions(page: import("@playwright/test").Page) {
   await expect(opts).toBeVisible({ timeout: 15_000 });
   await opts.click();
 }
-async function toNextSteps(page: import("@playwright/test").Page) {
-  await toOptions(page);
-  const nx = page.getByRole("button", { name: /^next steps/i });
-  await expect(nx).toBeVisible({ timeout: 15_000 });
-  await nx.click();
-}
 
 /**
  * The core, keyless M-Lean "Rights Saver" flow: landing → who → what → result.
