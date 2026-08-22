@@ -16,7 +16,7 @@ export interface ReasonsView {
 
 /** The single corrected clock warning, shown wherever reasons are discussed. */
 export const REASONS_CLOCK_WARNING =
-  "Asking for the reasons can help you understand the decision. Be careful with time limits, though: asking for reasons may extend the time limit for a tribunal (merits) review only if the law for your decision says so — do not assume it does. It does not pause the time limit for going to court (judicial review). To protect your right to go to court, act within the time limit even while you wait for the reasons.";
+  "Asking for the reasons can help you understand the decision. Be careful with time limits, though: asking for reasons may extend the time limit for a tribunal (merits) review only if the law for your decision says so — do not assume it does. Do not assume it buys you time in a court either. Check the limit that applies to your decision, and act within it even while you wait for the reasons.";
 
 export function reasonsView(e: DataPathway): ReasonsView {
   const how = isVerifyMarker(e.reasonsRequest.how)

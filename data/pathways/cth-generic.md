@@ -20,7 +20,7 @@ keywords:
   - decision
 avenue:
   mr:
-    available: true
+    available: false
     body: ART (where the enabling Act provides)
     source: 'art.gov.au — apply for a review; and the Act your decision was made under'
   jr:
@@ -37,8 +37,8 @@ verifiedAsAt: '2026-08-17'
 sourceUrl: 'https://www.ombudsman.gov.au'
 reviewCadenceDays: 90
 reasonsRequest:
-  how: ask the decision-maker for a written statement of reasons
-  provision: 'Administrative Review Tribunal Act 2024 (Cth) s 268'
+  how: 'ask the decision-maker in writing for a statement of reasons. The tribunal right only exists where your decision can go to the tribunal; the judicial review right is separate'
+  provision: 'Administrative Review Tribunal Act 2024 (Cth) ss 268-269, where the decision is reviewable; and Administrative Decisions (Judicial Review) Act 1977 (Cth) s 13'
   extendsMR: 'depends on the Act your decision was made under — confirm before relying on it'
   extendsJR: false
 privativeClause: false

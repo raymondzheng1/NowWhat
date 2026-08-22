@@ -67,9 +67,15 @@ describe("time-limit note (brief + generic; no countdown, no VERIFY)", () => {
 });
 
 describe("reasons (corrected clock warning)", () => {
-  it("the clock warning says reasons never pause judicial review", () => {
-    expect(REASONS_CLOCK_WARNING.toLowerCase()).toContain("does not pause");
-    expect(REASONS_CLOCK_WARNING.toLowerCase()).toContain("judicial review");
+  it("the clock warning tells people not to assume a reasons request buys time", () => {
+    // It used to say flatly that a reasons request "does not pause" a court limit. The owner's
+    // QA decision was that this is too absolute to publish unsourced — so it now warns without
+    // asserting the rule, which is the safe direction: a reader who assumes nothing and checks
+    // loses nothing, and a reader who was told the wrong absolute could lose a right.
+    const w = REASONS_CLOCK_WARNING.toLowerCase();
+    expect(w).toContain("do not assume");
+    expect(w).toContain("check the limit");
+    expect(w).not.toContain("does not pause");
   });
 
   it("no entry ever leaks a VERIFY placeholder as a provision", () => {

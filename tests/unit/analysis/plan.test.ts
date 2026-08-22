@@ -170,10 +170,16 @@ describe("merits-review criteria (what the tribunal decides for THIS decision)",
     // The draft put to the lawyer said the reviewer checks "its own policies and procedures".
     // They replaced it: policy guides a statutory decision, it does not supply the test — which
     // is also what our own unlawful-policy and inflexible-policy grounds hold.
+    // Asserted over the whole set, not mrCriteria[0]: the housing entry now leads with the
+    // routing split (Housing Appeals Office for a housing decision, VCAT for a notice to
+    // vacate), so pinning this to an index made it break for the right reason.
     const housing = getDataEntry("vic-public-housing")!;
-    const first = housing.mrCriteria[0]!.toLowerCase();
-    expect(first).toContain("legislation");
-    expect(first).not.toMatch(/its own polic/);
+    const all = housing.mrCriteria.join(" ").toLowerCase();
+    expect(all).toContain("legislation");
+    expect(all).not.toMatch(/its own polic/);
+    // And the routing split itself, which is what displaced it.
+    expect(all).toMatch(/housing appeals office/);
+    expect(all).toMatch(/notice to vacate/);
   });
 
   it("the heading that introduces them is customer copy and exists", () => {

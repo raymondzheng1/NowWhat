@@ -38,7 +38,7 @@ sourceUrl: 'https://www.servicesaustralia.gov.au/reviews-and-appeals'
 reviewCadenceDays: 90
 reasonsRequest:
   how: ask Services Australia for a written statement of reasons
-  provision: 'Social Security (Administration) Act 1999 (Cth)'
+  provision: 'Social Security (Administration) Act 1999 (Cth); Administrative Review Tribunal Act 2024 (Cth) ss 268-269; Administrative Decisions (Judicial Review) Act 1977 (Cth) s 13'
   extendsMR: 'depends — confirm with Services Australia or a free service before relying on it'
   extendsJR: false
 privativeClause: false

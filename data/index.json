@@ -1,5 +1,5 @@
 {
-  "builtAt": "37332e904b3187b0",
+  "builtAt": "7e178168a4f3e568",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -44,7 +44,7 @@
       "reviewCadenceDays": 90,
       "reasonsRequest": {
         "how": "ask Services Australia for a written statement of reasons",
-        "provision": "Social Security (Administration) Act 1999 (Cth)",
+        "provision": "Social Security (Administration) Act 1999 (Cth); Administrative Review Tribunal Act 2024 (Cth) ss 268-269; Administrative Decisions (Judicial Review) Act 1977 (Cth) s 13",
         "extendsMR": "depends — confirm with Services Australia or a free service before relying on it",
         "extendsJR": false
       },
@@ -109,7 +109,7 @@
       ],
       "avenue": {
         "mr": {
-          "available": true,
+          "available": false,
           "body": "ART (where the enabling Act provides)",
           "source": "art.gov.au — apply for a review; and the Act your decision was made under"
         },
@@ -125,8 +125,8 @@
       "sourceUrl": "https://www.ombudsman.gov.au",
       "reviewCadenceDays": 90,
       "reasonsRequest": {
-        "how": "ask the decision-maker for a written statement of reasons",
-        "provision": "Administrative Review Tribunal Act 2024 (Cth) s 268",
+        "how": "ask the decision-maker in writing for a statement of reasons. The tribunal right only exists where your decision can go to the tribunal; the judicial review right is separate",
+        "provision": "Administrative Review Tribunal Act 2024 (Cth) ss 268-269, where the decision is reviewable; and Administrative Decisions (Judicial Review) Act 1977 (Cth) s 13",
         "extendsMR": "depends on the Act your decision was made under — confirm before relying on it",
         "extendsJR": false
       },
@@ -264,7 +264,7 @@
       ],
       "avenue": {
         "mr": {
-          "available": true,
+          "available": false,
           "body": "VCAT (where the enabling Act provides)",
           "source": "vcat.vic.gov.au — review of a decision; and the Act your decision was made under"
         },
@@ -275,13 +275,13 @@
         },
         "noReviewEndpoint": "If no review right exists, the Victorian Ombudsman can look at how the decision was made, and a free legal service can explain your options."
       },
-      "deadlineRule": "Most reviews have a strict time limit, set by the law for your decision. Check it with the official body or a free service.",
+      "deadlineRule": "Most reviews have a strict time limit, set by the law for your decision. Check it with the official body or a free service. If you are looking at the Supreme Court instead, Victoria has two separate ways in and they cannot be joined. Order 56 runs 60 days from when the grounds first arose. The Administrative Law Act 1978 (Vic) runs 30 days. Court time runs from the decision, not from the end of anything else you try first.",
       "verifiedAsAt": "2026-08-17",
       "sourceUrl": "https://www.ombudsman.vic.gov.au",
       "reviewCadenceDays": 90,
       "reasonsRequest": {
-        "how": "ask the decision-maker in writing for a statement of reasons",
-        "provision": "Administrative Law Act 1978 (Vic) s 8",
+        "how": "ask the decision-maker in writing for a statement of reasons. Whether you have a right to them depends on the kind of decision, so check which law applies to yours",
+        "provision": "Victorian Civil and Administrative Tribunal Act 1998 (Vic) ss 45-46, where the decision can go to VCAT; and Administrative Law Act 1978 (Vic) s 8",
         "extendsMR": "depends on the Act your decision was made under — confirm before relying on it",
         "extendsJR": false
       },
@@ -338,7 +338,7 @@
       "avenue": {
         "mr": {
           "available": true,
-          "body": "Housing Appeals Office, then VCAT where applicable",
+          "body": "Housing Appeals Office for a housing decision; VCAT for a notice to vacate",
           "source": "housing.vic.gov.au — appeal a decision; Housing Act 1983 (Vic)"
         },
         "jr": {
@@ -348,7 +348,7 @@
         },
         "noReviewEndpoint": null
       },
-      "deadlineRule": "A housing review can have a time limit, set by the relevant housing law or policy. Check the limit with the Housing Appeals Office or a free service.",
+      "deadlineRule": "A housing review can have a time limit, set by the relevant housing law or policy. Check the limit with the Housing Appeals Office or a free service. If you are looking at the Supreme Court instead, Victoria has two separate ways in and they cannot be joined. Order 56 runs 60 days from when the grounds first arose. The Administrative Law Act 1978 (Vic) runs 30 days. Court time runs from the decision, not from the end of anything else you try first.",
       "verifiedAsAt": "2026-06-30",
       "sourceUrl": "https://www.housing.vic.gov.au",
       "reviewCadenceDays": 90,
@@ -361,7 +361,9 @@
       "privativeClause": false,
       "forms": [],
       "mrCriteria": [
-        "The reviewer considers whether the department correctly applied the relevant legislation, policies and procedures.",
+        "These are two different paths, and which one applies depends on the decision.",
+        "For a housing decision — an application, a transfer, a priority category — the Housing Appeals Office reviews it. The reviewer considers whether the department correctly applied the relevant legislation, policies and procedures.",
+        "For a notice to vacate, the Housing Appeals Office is not the path. That goes to VCAT.",
         "For an eviction, VCAT decides whether the notice to vacate is valid.",
         "For an eviction, VCAT also decides whether it is reasonable and proportionate to make you leave. It weighs the impact on you and your household."
       ],
@@ -393,7 +395,7 @@
       ],
       "status": "verified",
       "isFallback": false,
-      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` was settled by the supervising lawyer on 2026-08-19. The draft put to them said the reviewer checks whether the department applied \"its own policies and procedures\"; they replaced it with the relevant legislation, policies and procedures, because policy guides a statutory decision rather than supplying the test. The same overstatement was corrected in the decode entry, where it was user-facing."
+      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` was settled by the supervising lawyer on 2026-08-19. The draft put to them said the reviewer checks whether the department applied \"its own policies and procedures\"; they replaced it with the relevant legislation, policies and procedures, because policy guides a statutory decision rather than supplying the test. The same overstatement was corrected in the decode entry, where it was user-facing.\n\nRouting split 2026-08-23 on the owner's QA decision. This entry's own decisionTypes include\nhousing termination, and its corpus counterpart already records that public housing splits into two\nseparate paths with different bodies. The procedural layer blended them into one — \"Housing Appeals\nOffice, then VCAT where applicable\" — which reads as a sequence when they are alternatives chosen by\nthe kind of decision.\n\nSomeone facing a notice to vacate who is sent to the Housing Appeals Office first loses time they\nmay not have."
     },
     {
       "id": "vic-renting",
@@ -434,7 +436,7 @@
         },
         "noReviewEndpoint": null
       },
-      "deadlineRule": "Renting reviews have a strict time limit, set by the Residential Tenancies Act 1997 (Vic). Check the exact limit for your situation with VCAT or a free service.",
+      "deadlineRule": "Renting reviews have a strict time limit, set by the Residential Tenancies Act 1997 (Vic). Check the exact limit for your situation with VCAT or a free service. If you are looking at the Supreme Court instead, Victoria has two separate ways in and they cannot be joined. Order 56 runs 60 days from when the grounds first arose. The Administrative Law Act 1978 (Vic) runs 30 days. Court time runs from the decision, not from the end of anything else you try first.",
       "verifiedAsAt": "2026-08-17",
       "sourceUrl": "https://www.vcat.vic.gov.au",
       "reviewCadenceDays": 90,

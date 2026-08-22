@@ -32,9 +32,13 @@ avenue:
     source: 'Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au'
   noReviewEndpoint: null
 deadlineRule: >-
-  Renting reviews have a strict time limit, set by the Residential Tenancies Act
-  1997 (Vic). Check the exact limit for your situation with VCAT or a free
-  service.
+  Renting reviews have a strict time limit, set by the Residential Tenancies
+  Act 1997 (Vic). Check the exact limit for your situation with VCAT or a
+  free service. If you are looking at the Supreme Court instead, Victoria has
+  two separate ways in and they cannot be joined. Order 56 runs 60 days from
+  when the grounds first arose. The Administrative Law Act 1978 (Vic) runs 30
+  days. Court time runs from the decision, not from the end of anything else
+  you try first.
 verifiedAsAt: '2026-08-17'
 sourceUrl: 'https://www.vcat.vic.gov.au'
 reviewCadenceDays: 90

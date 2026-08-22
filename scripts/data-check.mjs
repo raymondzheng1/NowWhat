@@ -5,12 +5,13 @@
 // entries staler than their own reviewCadenceDays (the staleness gate). This whole layer
 // is a release gate: a supervising lawyer signs off before any entry flips to `verified`.
 
-import { readFileSync } from "node:fs";
+import { readFileSync, readdirSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const INDEX = resolve(ROOT, "data/index.json");
+const SRC = resolve(ROOT, "data/pathways");
 
 const hard = [];
 const warn = [];
@@ -25,6 +26,37 @@ function daysSince(iso) {
   return (Date.now() - then) / (1000 * 60 * 60 * 24);
 }
 
+/**
+ * Release control: a file must never claim `status: verified` while its own prose says it is
+ * not. Three entries shipped that way — "verified" in the field, "SEED … every figure is a
+ * placeholder until a supervising lawyer verifies it" in the note — and each half looked right
+ * on its own, which is exactly why it survived review until a QA pass read both.
+ *
+ * Matches PRESENT-TENSE claims of unverified status only. A historical note ("this WAS a seed
+ * and was verified on …") is the correct way to record provenance and must keep passing.
+ */
+const UNVERIFIED_CLAIMS = [
+  /is still a VERIFY placeholder/i,
+  /placeholders only until/i,
+  /every figure is a placeholder/i,
+  /not yet (?:signed off|verified)/i,
+  /^SEED\b/im,
+];
+
+function checkStatusHonesty(id, status, body) {
+  if (status !== "verified") return;
+  for (const re of UNVERIFIED_CLAIMS) {
+    const m = body.match(re);
+    if (m) {
+      hard.push(
+        `${id}: status is "verified" but the file says "${m[0].trim()}". ` +
+          `A file must not claim verified and unverified at once — reconcile before launch.`,
+      );
+      return;
+    }
+  }
+}
+
 function main() {
   let index;
   try {
@@ -36,6 +68,21 @@ function main() {
 
   const entries = index.entries ?? [];
   if (entries.length === 0) hard.push("data layer has no entries");
+
+  // Status honesty runs over the SOURCE files: the built index carries frontmatter only, and
+  // the contradiction we are guarding against lives in the prose underneath it.
+  if (existsSync(SRC)) {
+    for (const file of readdirSync(SRC).filter((f) => f.endsWith(".md"))) {
+      const raw = readFileSync(resolve(SRC, file), "utf8");
+      const lines = raw.split(/\r?\n/);
+      const fences = [];
+      lines.forEach((l, i) => { if (l.trim() === "---") fences.push(i); });
+      const front = fences.length >= 2 ? lines.slice(fences[0] + 1, fences[1]).join("\n") : "";
+      const body = fences.length >= 2 ? lines.slice(fences[1] + 1).join("\n") : raw;
+      const m = front.match(/^status:[ \t]*(\S+)/m);
+      checkStatusHonesty(`data/pathways/${file}`, m ? m[1] : "", body);
+    }
+  }
 
   const classified = new Set((index.classification ?? []).map((t) => `${t.entryId}:${t.token}`));
   let verifyMarkers = 0;
