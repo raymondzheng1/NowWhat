@@ -1,5 +1,5 @@
 {
-  "builtAt": "335df94637c33766",
+  "builtAt": "05a5d138cc30e919",
   "processes": [
     {
       "id": "judicial-review",
@@ -505,54 +505,6 @@
       "jurisdictions": []
     },
     {
-      "id": "illogicality",
-      "name": "Illogical or irrational reasoning",
-      "plainName": "The reasons do not follow",
-      "oneLine": "A conclusion has to follow from what the decision-maker had.",
-      "whatItMeans": "A decision can be wrong in the way it reasons. Not merely arguable, but with no sensible path from the material to the answer. This is close to unreasonableness. It looks at the steps rather than the outcome.",
-      "plainExample": "The letter accepts your doctor's report. It then says you have no health problem.",
-      "whatRelates": [
-        "Two things the letter says cannot both be true.",
-        "The letter accepts something and then decides the opposite.",
-        "A conclusion appears with no step in between.",
-        "The reasons rely on something the letter itself rules out."
-      ],
-      "whatItIsNot": "This is not about the decision being harsh, or about you disagreeing. It is about reasoning that does not hold together. Not every slip in logic counts. Where reasonable people could draw different conclusions from the same evidence, preferring one of them is not illogical.",
-      "usedIn": [
-        "judicial-review"
-      ],
-      "test": "A conclusion reached with no logical or rational path from the material is not a proper exercise of the power. The threshold is whether no rational decision-maker could have reached that conclusion on that evidence.",
-      "elements": [
-        {
-          "id": "contradiction",
-          "name": "A step that does not follow",
-          "layPrompt": "Do two parts of the letter contradict each other?"
-        },
-        {
-          "id": "no-path",
-          "name": "A missing step",
-          "layPrompt": "Does the letter jump to a conclusion with nothing in between?"
-        }
-      ],
-      "sources": [
-        "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-17)"
-      ],
-      "status": "verified",
-      "leadingCases": [
-        {
-          "name": "Minister for Immigration and Citizenship v SZMDS (2010) 240 CLR 611",
-          "pinpoint": "",
-          "explains": "Reasoning with no logical path to its conclusion can make a decision invalid."
-        },
-        {
-          "name": "Minister for Immigration and Citizenship v Li (2013) 249 CLR 332",
-          "pinpoint": "at 367 [76]",
-          "explains": "A decision needs a reason you can see and follow."
-        }
-      ],
-      "jurisdictions": []
-    },
-    {
       "id": "improper-purpose",
       "name": "Improper purpose",
       "plainName": "The power was used for the wrong reason",
@@ -1042,11 +994,11 @@
         "A report or assessment you sent in is not discussed anywhere.",
         "You are in Victoria and a human right may be affected."
       ],
-      "whatItIsNot": "It does not mean every point you raised had to be accepted. The required matters only had to be genuinely considered.",
+      "whatItIsNot": "It does not mean every point you raised had to be accepted. The required matters only had to be genuinely considered. How much weight to give something is generally for the decision-maker, so thinking they gave your evidence too little weight is usually not something a court will look at. A document also does not have to be discussed at length to have been considered.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "An Act may require certain matters to be taken into account. It can say so outright, or it can be implied from what the Act is for. Failing to consider a required matter can make the decision invalid.",
+      "test": "An Act may require certain matters to be taken into account. It can say so outright, or it can be implied from what the Act is for. Failing to consider a required matter can make the decision invalid. How much attention a matter needs depends on how relevant and how important it is.",
       "elements": [
         {
           "id": "required-matter",
@@ -1102,19 +1054,20 @@
       "name": "A state of mind the power depended on",
       "plainName": "They had to be satisfied of something first",
       "oneLine": "Some powers only exist once the decision-maker is satisfied of something.",
-      "whatItMeans": "Sometimes an Act says a decision can be made if the decision-maker is satisfied of something. Courts describe this in two ways. One looks at whether the reasoning holds together. The other asks whether the conclusion was open to them on the material they had. The bar is a high one either way.",
-      "plainExample": "A rule lets an office act if it is satisfied you were told. Nobody looked at whether you were told.",
+      "whatItMeans": "Sometimes an Act says a decision can be made if the decision-maker is satisfied of something. Where it does, the law asks whether they really reached that view, and whether the reasoning behind it holds together. This is where illogical or irrational reasoning is raised. The bar is high, and a court will not step in simply because it would have decided differently.",
+      "plainExample": "The letter accepts your doctor's report. It then says you have no health problem, and nothing in between explains how it got there.",
       "whatRelates": [
         "The letter states a conclusion about you with nothing behind it.",
         "The reasons skip straight to the answer.",
-        "The material in front of them pointed the other way.",
-        "Two parts of the letter cannot both be true."
+        "Two parts of the letter cannot both be true.",
+        "The letter accepts something and then decides the opposite.",
+        "The material in front of them pointed the other way."
       ],
-      "whatItIsNot": "This is not about disagreeing with the outcome. It is about whether they really formed the view the law asked them to form. Not every slip in logic counts, and a court will be slow to step in.",
+      "whatItIsNot": "This is not about disagreeing with the outcome, and it is not a way to re-argue the facts. Not every lapse in logic is enough. Where the evidence could support more than one sensible conclusion, the decision is not invalid just because another one was open. Where reasonable minds might differ, a court cannot step in only because it prefers a different answer.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "Where a power depends on the decision-maker being satisfied of something, that state of satisfaction must be reached on a rational basis. The threshold is whether no rational decision-maker could have reached that conclusion on that evidence.",
+      "test": "Where a power depends on the decision-maker being satisfied of something, that state of satisfaction must be reached on a rational basis. The threshold is whether no rational decision-maker could have reached that conclusion on that evidence. A court should be slow, though not unwilling, to step in.",
       "elements": [
         {
           "id": "was-satisfied",
@@ -1125,22 +1078,32 @@
           "id": "any-path",
           "name": "A path to that view",
           "layPrompt": "Do the reasons show how they got to that view?"
+        },
+        {
+          "id": "open-on-material",
+          "name": "Whether that view was open to them",
+          "layPrompt": "Could anyone reasonably have reached that conclusion on what they had in front of them?"
         }
       ],
       "sources": [
-        "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-17)"
+        "Owner's administrative-law knowledge base (JR Hypo; Review Notes, 2026-08-23)"
       ],
       "status": "verified",
       "leadingCases": [
         {
           "name": "Minister for Immigration and Citizenship v SZMDS (2010) 240 CLR 611",
           "pinpoint": "",
-          "explains": "A view held with no logical path to it is not the state of mind the law asked for."
+          "explains": "Courts have described this in two ways. One looks at whether the reasoning and the assumptions behind it hold together. The other asks whether it was open to the decision-maker to reason as it did on the material it had."
         },
         {
           "name": "Plaintiff M70/2011 v Minister for Immigration and Citizenship (2011) 244 CLR 144",
           "pinpoint": "French CJ",
           "explains": "Where a power depends on the decision-maker forming a state of mind, that state of mind is itself the thing the power depends on."
+        },
+        {
+          "name": "Minister for Immigration and Citizenship v Li (2013) 249 CLR 332",
+          "pinpoint": "at 367 [76]",
+          "explains": "A decision needs a reason you can see and follow."
         }
       ],
       "jurisdictions": []

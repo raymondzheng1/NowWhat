@@ -19,13 +19,17 @@ whatRelates:
   - You are in Victoria and a human right may be affected.
 whatItIsNot: >-
   It does not mean every point you raised had to be accepted. The required
-  matters only had to be genuinely considered.
+  matters only had to be genuinely considered. How much weight to give something
+  is generally for the decision-maker, so thinking they gave your evidence too
+  little weight is usually not something a court will look at. A document also
+  does not have to be discussed at length to have been considered.
 usedIn:
   - judicial-review
 test: >-
   An Act may require certain matters to be taken into account. It can say so
   outright, or it can be implied from what the Act is for. Failing to consider a
-  required matter can make the decision invalid.
+  required matter can make the decision invalid. How much attention a matter
+  needs depends on how relevant and how important it is.
 elements:
   - id: required-matter
     name: A matter the law required them to consider
@@ -76,3 +80,17 @@ Sharpened 2026-08-19: per Mason J in Peko-Wallsend the subject matter, scope and
 "may either expressly state, or necessarily imply, that a certain consideration must (or must not)
 be taken into account". The entry implied a required matter had to be written down, which would
 lead someone to drop a real complaint after failing to find it listed.
+
+Weight principle added 2026-08-23 on the owner's QA decision. Per Mason J in Peko-Wallsend, "It is
+generally for the decision-maker to determine what the appropriate weight to afford a consideration
+is", and per Tickner the degree of effort a consideration requires "will vary according to the
+length, content, and degree of relevance".
+
+This is the answer to the complaint the entry attracts most often — "they had my report and
+ignored it". Failing to consider a required matter is reviewable; giving it less weight than you
+would have is generally not. A reader who cannot tell those apart will spend their time on the
+half that is not reviewable, and the entry gave them no way to tell.
+
+The related point that a document need not be discussed at length to have been considered matters
+for the same reason: a short set of reasons is not, by itself, evidence that something was
+overlooked.

@@ -5,28 +5,32 @@ plainName: They had to be satisfied of something first
 oneLine: Some powers only exist once the decision-maker is satisfied of something.
 whatItMeans: >-
   Sometimes an Act says a decision can be made if the decision-maker is
-  satisfied of something. Courts describe this in two ways. One looks at
-  whether the reasoning holds together. The other asks whether the conclusion
-  was open to them on the material they had. The bar is a high one either way.
+  satisfied of something. Where it does, the law asks whether they really
+  reached that view, and whether the reasoning behind it holds together. This is
+  where illogical or irrational reasoning is raised. The bar is high, and a
+  court will not step in simply because it would have decided differently.
 plainExample: >-
-  A rule lets an office act if it is satisfied you were told. Nobody looked at
-  whether you were told.
+  The letter accepts your doctor's report. It then says you have no health
+  problem, and nothing in between explains how it got there.
 whatRelates:
   - The letter states a conclusion about you with nothing behind it.
   - The reasons skip straight to the answer.
-  - The material in front of them pointed the other way.
   - Two parts of the letter cannot both be true.
+  - The letter accepts something and then decides the opposite.
+  - The material in front of them pointed the other way.
 whatItIsNot: >-
-  This is not about disagreeing with the outcome. It is about whether they
-  really formed the view the law asked them to form. Not every slip in logic
-  counts, and a court will be slow to step in.
+  This is not about disagreeing with the outcome, and it is not a way to
+  re-argue the facts. Not every lapse in logic is enough. Where the evidence
+  could support more than one sensible conclusion, the decision is not invalid
+  just because another one was open. Where reasonable minds might differ, a
+  court cannot step in only because it prefers a different answer.
 usedIn:
   - judicial-review
 test: >-
   Where a power depends on the decision-maker being satisfied of something, that
   state of satisfaction must be reached on a rational basis. The threshold is
   whether no rational decision-maker could have reached that conclusion on that
-  evidence.
+  evidence. A court should be slow, though not unwilling, to step in.
 elements:
   - id: was-satisfied
     name: The thing they had to be satisfied of
@@ -34,16 +38,22 @@ elements:
   - id: any-path
     name: A path to that view
     layPrompt: Do the reasons show how they got to that view?
+  - id: open-on-material
+    name: Whether that view was open to them
+    layPrompt: >-
+      Could anyone reasonably have reached that conclusion on what they had in
+      front of them?
 sources:
-  - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-17)
+  - Owner's administrative-law knowledge base (JR Hypo; Review Notes, 2026-08-23)
 status: verified
 leadingCases:
   - name: >-
       Minister for Immigration and Citizenship v SZMDS (2010) 240 CLR 611
     pinpoint: ''
     explains: >-
-      A view held with no logical path to it is not the state of mind the law
-      asked for.
+      Courts have described this in two ways. One looks at whether the reasoning
+      and the assumptions behind it hold together. The other asks whether it was
+      open to the decision-maker to reason as it did on the material it had.
   - name: >-
       Plaintiff M70/2011 v Minister for Immigration and Citizenship (2011) 244
       CLR 144
@@ -51,24 +61,37 @@ leadingCases:
     explains: >-
       Where a power depends on the decision-maker forming a state of mind, that
       state of mind is itself the thing the power depends on.
+  - name: >-
+      Minister for Immigration and Citizenship v Li (2013) 249 CLR 332
+    pinpoint: 'at 367 [76]'
+    explains: A decision needs a reason you can see and follow.
 ---
 
-Many powers turn on someone being satisfied of something. The law does not ask whether
-they were right. It asks whether they really got there.
+**illogicality.md was removed and merged into this entry on 2026-08-23**, on the owner's QA
+decision. Illogicality and irrationality in Australia are not a general licence to attack a
+decision-maker's reasoning; they are argued where a power turns on a state of satisfaction, which
+is this ground. Publishing them separately implied a free-standing ground that does not exist, and
+left two entries describing one case — SZMDS — differently.
 
-Ground and authorities taken from our own verified judicial review materials.
+The two approaches in SZMDS are now both stated, neutrally and without attribution in the customer
+copy. Gummow and Kiefel JJ focused on the logicality and rationality of the reasoning and the
+assumptions behind it; Crennan and Bell JJ asked whether it was open to the decision-maker to
+engage in the process of reasoning it did, and to make the findings it did on the material before
+it. **The judges are named here and not on the page**: naming a majority and a dissent in copy read
+by a self-represented person invites them to weigh which line of authority is stronger, which is
+exactly what this app must not encourage.
 
-Corrected 2026-08-19. The entry stated only one of the two formulations SZMDS produced — the one
-our materials mark as the dissent, focused on the logicality of the reasoning — and stated it
-without the threshold. The other approach asks "whether it was open to the decision-maker to
-engage in this process of reasoning that it did", with the threshold "whether no rational
-decision-maker could have arrived at the same conclusion on the same evidence".
+Four limits carried into `test` and `whatItIsNot`, all from the same source and all pulling the
+same way:
 
-Both are now stated neutrally and without judge attribution: naming a dissent in customer copy
-invites a reader to weigh which line of authority is stronger, which is exactly what this app must
-not do. The case names stay in `leadingCases`.
+- the threshold is whether **no rational decision-maker** could have arrived at the same conclusion
+  on the same evidence;
+- **not every lapse in logic** gives rise to jurisdictional error;
+- a court should be **slow, although not unwilling**, to interfere;
+- where probative evidence can give rise to different processes of reasoning, and reasonable minds
+  might differ, a decision **cannot be called illogical simply because one conclusion was preferred
+  to another** that was open.
 
-M70 added. Our materials cite it four times under the subjective limb (French CJ) and the app
-carried it only under the objective ground. The caution "A court should be slow, although not
-unwilling, to interfere" is now in `whatItIsNot`; the same SZMDS threshold already sits in the
-illogicality entry, and the two grounds were describing one case inconsistently.
+That last point is the one a lay reader most needs. "The reasons do not follow" is a natural way to
+describe a decision you disagree with, and without it the ground reads as an invitation to re-argue
+the facts.
