@@ -53,8 +53,8 @@
       "status": "published"
     },
     {
-      "slug": "how-much-notice-to-move-out-of-a-rental-in-victoria",
-      "question": "How much notice does my rental provider have to give me to move out in Victoria?",
+      "slug": "is-my-notice-to-vacate-valid-in-victoria",
+      "question": "How do I check whether a notice to vacate is valid in Victoria?",
       "entryId": "vic-renting",
       "category": "Renting",
       "related": [
@@ -74,6 +74,7 @@
       "status": "published"
     },
     {
+      "_note": "Unpublished 2026-08-23 — moved to content/faq/_drafts/. Needs the nomination process and its time limit sourced before it can return.",
       "slug": "how-do-i-nominate-another-driver-for-a-fine-in-victoria",
       "question": "How do I nominate someone else as the driver for a fine in Victoria?",
       "entryId": "vic-fines",
@@ -82,7 +83,7 @@
         "dispute-a-fine-in-victoria",
         "i-did-not-know-about-my-fine-what-can-i-do"
       ],
-      "status": "published"
+      "status": "draft"
     },
     {
       "slug": "can-i-get-a-fine-reviewed-for-special-circumstances-in-victoria",

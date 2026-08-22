@@ -26,8 +26,12 @@ keyPoints:
     also covers some conduct leading up to a decision, and a failure to decide
     when there was a duty to.
   - >-
-    Some decisions are carved out of it, including decisions of the
-    Governor-General.
+    Some decisions are carved out of it. Decisions of the Governor-General are
+    excluded, a schedule to the Act lists whole classes of decision that are
+    out, and regulations can take more out again.
+  - >-
+    Being outside that Act does not mean no court can look at the decision. The
+    wider route is still there.
   - >-
     The wider route reaches things the statutory one does not, such as powers
     that do not come from an Act, and the validity of rules and regulations.
@@ -79,3 +83,11 @@ legislation", and "is not limited to matters involving 'an officer of the Common
 Scoped to `Cth`. The Victorian equivalent — Order 56 versus the Administrative Law Act 1978, which
 also cannot be joined — is carried on the judicial-review process page instead, where the Victorian
 bodies already live.
+
+Exclusions expanded 2026-08-23 on the owner's QA decision. The entry named the exclusion least
+likely to affect anyone — decisions of the Governor-General — and omitted the two that actually
+catch ordinary applicants: the Schedule 1 classes and the regulation-making power in s 19.
+
+The more important addition is the sentence after them. Being excluded from the statutory route
+does not mean no court can look at the decision, and a reader who met a list of exclusions without
+that would reasonably conclude the door was shut.

@@ -27,6 +27,10 @@ canApply:
     standing).
   - There is almost always a time limit — this is the part people miss most.
   - >-
+    The law that sets up the tribunal usually gives you a right to ask the
+    decision-maker for written reasons. If the reasons never come, or say very
+    little, the tribunal can be asked to order them.
+  - >-
     If the time limit has passed, the tribunal can still be asked to allow a
     late application. It does not have to say yes, but it can be asked.
 whatHappens:
@@ -46,12 +50,17 @@ limits:
     Merits review is only available where a law provides it — not every decision
     can be reviewed on the merits.
   - >-
+    The tribunal makes the decision again from the start, standing in the shoes
+    of the original decision-maker. So the new decision can be better for you,
+    the same, or worse. It is not limited to the part you disagree with.
+  - >-
     A tribunal is not a court. It sits inside government, and it is doing
     administration rather than deciding a legal dispute between you and the
     state.
   - >-
     Government policy can guide the tribunal, but it cannot decide the matter
-    for it.
+    for it. A tribunal will usually follow a lawful policy, and needs a good
+    reason in your case to depart from it.
 goodToKnow:
   - >-
     Because the tribunal can change the outcome, merits review is usually what
@@ -70,3 +79,21 @@ status: verified
 ---
 
 Explainer reviewed and confirmed by a supervising lawyer (2026-06-30). General information, not advice.
+
+Three QA decisions applied 2026-08-23.
+
+**The fresh decision can be worse** (CRITICAL). Nothing on this page, or in the comparison table,
+told a reader that. The tribunal stands in the shoes of the original decision-maker and remakes the
+decision on the best and most current evidence; it is not confined to the part the applicant
+objects to. Someone deciding whether to apply was missing the one downside that matters.
+
+**Policy: half the rule was published.** The entry said policy cannot decide the matter for the
+tribunal, and stopped. Our materials pair that with the other half — lawful policy should be
+applied unless there are cogent reasons to the contrary, because consistency matters. As written a
+reader whose complaint is "the policy is unfair" was left thinking the tribunal is free to set it
+aside.
+
+**Tribunal reasons rights added.** The app's discussion of reasons leaned on the judicial review
+provisions (ADJR s 13, ALA s 8). The rights our readers will actually use are the tribunal ones —
+VCAT Act ss 45-47 and ART Act ss 268-271 — including that the tribunal can be asked to ORDER
+reasons, or better reasons, when what arrives says very little.

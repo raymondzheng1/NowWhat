@@ -66,17 +66,17 @@ options:
       A purely emotional or intellectual concern is not enough on its own. An
       order to do or stop something needs a legal right.
 leadingCases:
-  - name: Australian Conservation Foundation v Commonwealth
+  - name: Australian Conservation Foundation Inc v Commonwealth (1980) 146 CLR 493
     pinpoint: ''
     explains: >-
       A special interest is needed. Caring about an issue, without more, is not
       enough.
-  - name: Onus v Alcoa
+  - name: Onus v Alcoa of Australia Ltd (1981) 149 CLR 27
     pinpoint: ''
     explains: >-
       A cultural or religious connection to what is at stake can be a special
       interest.
-  - name: Argos Pty Ltd v Corbell
+  - name: Argos Pty Ltd v Corbell (2014) 254 CLR 394
     pinpoint: ''
     explains: Harm to your economic interests can make you a person aggrieved.
 sources:

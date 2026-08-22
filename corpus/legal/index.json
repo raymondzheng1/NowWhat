@@ -1,5 +1,5 @@
 {
-  "builtAt": "6793714db47b050d",
+  "builtAt": "2fbf08f185a06cda",
   "processes": [
     {
       "id": "judicial-review",
@@ -22,7 +22,7 @@
         {
           "jurisdiction": "Vic",
           "name": "The Supreme Court of Victoria",
-          "note": "the Victorian equivalent, for state government decisions. There are two ways in, and they have different time limits, so this is worth asking a free legal service about early."
+          "note": "the Victorian equivalent, for state government decisions. There are two separate ways in — the court's own supervisory jurisdiction through its rules, and the Administrative Law Act 1978 (Vic), which is narrower and also gives a right to written reasons. They run to different time limits and they cannot be joined, so picking one rules the other out. Ask a human legal service early."
         }
       ],
       "canApply": [
@@ -40,7 +40,8 @@
         "Set aside (quash) the decision.",
         "Send it back (remit) to be decided again, lawfully.",
         "Orders to require or stop action, in some cases.",
-        "A declaration — a formal statement of what the legal position is, without ordering anyone to do anything."
+        "A declaration — a formal statement of what the legal position is, without ordering anyone to do anything. It can be given on its own.",
+        "Send it back with directions about how it must be decided, not just an instruction to decide it again."
       ],
       "limits": [
         "The court cannot substitute its own decision — it cannot simply give you the outcome you want, only require a lawful re-decision.",
@@ -49,8 +50,9 @@
       "goodToKnow": [
         "A refusal counts as a decision. Being told no is something you can ask about.",
         "A failure to decide can count too, where they had a duty to decide and did not.",
-        "If a tribunal decides against you, two different things may be open. One is an appeal to a court on a question of law. The other is judicial review.",
-        "Each has its own short time limit, and an appeal sometimes needs the court's permission first. This is worth asking about quickly.",
+        "If a tribunal decides against you, judicial review is not the only route. The law that set the tribunal up usually gives a right of appeal to a court on a question of law as well.",
+        "Federally that appeal is under the Administrative Review Tribunal Act. In Victoria it is under the VCAT Act, and it needs the court's permission first.",
+        "Appeal time limits are short, and shorter than people expect. Ask about them the week the decision arrives, not the month after.",
         "A court will not simply disagree with the result. It looks at whether the decision was made lawfully.",
         "Judicial review can be technical and the time limits are tight — getting free legal help early really matters."
       ],
@@ -83,6 +85,7 @@
         "There must be a law that gives a right of review for this kind of decision.",
         "You usually need to be a person affected by the decision (this is called standing).",
         "There is almost always a time limit — this is the part people miss most.",
+        "The law that sets up the tribunal usually gives you a right to ask the decision-maker for written reasons. If the reasons never come, or say very little, the tribunal can be asked to order them.",
         "If the time limit has passed, the tribunal can still be asked to allow a late application. It does not have to say yes, but it can be asked."
       ],
       "whatHappens": [
@@ -99,8 +102,9 @@
       ],
       "limits": [
         "Merits review is only available where a law provides it — not every decision can be reviewed on the merits.",
+        "The tribunal makes the decision again from the start, standing in the shoes of the original decision-maker. So the new decision can be better for you, the same, or worse. It is not limited to the part you disagree with.",
         "A tribunal is not a court. It sits inside government, and it is doing administration rather than deciding a legal dispute between you and the state.",
-        "Government policy can guide the tribunal, but it cannot decide the matter for it."
+        "Government policy can guide the tribunal, but it cannot decide the matter for it. A tribunal will usually follow a lawful policy, and needs a good reason in your case to depart from it."
       ],
       "goodToKnow": [
         "Because the tribunal can change the outcome, merits review is usually what people want when they disagree with the result.",
@@ -140,7 +144,7 @@
       {
         "aspect": "The evidence they look at",
         "mr": "The best and most current evidence. You can give them new information.",
-        "jr": "Usually only what was in front of the original decision-maker."
+        "jr": "Usually only what was in front of the original decision-maker. Where the complaint is about the process itself — what you were told, or whether you got a chance to reply — a court can look at evidence about what actually happened."
       },
       {
         "aspect": "Who can apply",
@@ -160,7 +164,7 @@
       {
         "aspect": "When it is available",
         "mr": "Only where a law gives a review right for that decision",
-        "jr": "Generally available. Whether there was a legal error is the question a court decides, not a condition for asking. A law cannot take that power away from the court."
+        "jr": "Generally available. Whether there was a legal error is the question a court decides, not a condition for asking. A law cannot take away the court's power to check that a decision-maker stayed inside their legal limits. Narrower kinds of review can be restricted, and time limits still apply."
       }
     ],
     "chooser": {
@@ -198,7 +202,7 @@
       },
       {
         "q": "If both are open, which one comes first?",
-        "a": "Where a law gives a right to merits review, that is usually the step people take first. It costs less, it can change the outcome, and a fresh decision may settle the matter without a court. Judicial review does not disappear in the meantime — it stays open for the legality questions."
+        "a": "Where a law gives a right to merits review, that is usually the step people take first. It costs less, it can change the outcome, and a fresh decision may settle the matter without a court. One thing to know before you choose: going to a tribunal does not pause the court clock for the original decision. That time limit keeps running while the review happens, and it can pass. What is usually left afterwards is a challenge to the tribunal's own decision, which is a different thing. If you think there is also a legality problem, raise it with a human legal service early rather than after the tribunal finishes."
       },
       {
         "q": "What if the tribunal decides against me too?",
@@ -1343,7 +1347,7 @@
       "options": [],
       "leadingCases": [
         {
-          "name": "Council of Civil Service Unions v Minister for the Civil Service",
+          "name": "Council of Civil Service Unions v Minister for the Civil Service [1985] AC 374",
           "pinpoint": "",
           "explains": "What decides this is the subject matter of the power, not the source it came from."
         },
@@ -1377,7 +1381,8 @@
         "There is more than one way to bring a Commonwealth decision to a court.",
         "The statutory route is described as the more straightforward one.",
         "It covers a decision of an administrative character made under an Act. It also covers some conduct leading up to a decision, and a failure to decide when there was a duty to.",
-        "Some decisions are carved out of it, including decisions of the Governor-General.",
+        "Some decisions are carved out of it. Decisions of the Governor-General are excluded, a schedule to the Act lists whole classes of decision that are out, and regulations can take more out again.",
+        "Being outside that Act does not mean no court can look at the decision. The wider route is still there.",
         "The wider route reaches things the statutory one does not, such as powers that do not come from an Act, and the validity of rules and regulations."
       ],
       "options": [
@@ -1427,14 +1432,16 @@
         "It cannot substitute its own decision for the decision-maker's.",
         "The same body usually decides again. It may reach the same answer, lawfully this time.",
         "Which remedy you ask for shapes which court you go to, and who is allowed to ask.",
-        "Remedies are discretionary, though a court starts from the position of granting relief where a case is made out."
+        "Remedies are discretionary, though a court starts from the position of granting relief where a case is made out.",
+        "Even where an error is proved, a court can still decline to give a remedy. Leaving it too late, a remedy that would make no practical difference, harm to someone else who relied on the decision, and not using a review right that was available first are all reasons it may say no.",
+        "A court can also send a decision back with directions about how it must be decided, rather than just an instruction to decide it again."
       ],
       "options": [
         {
           "name": "Certiorari",
           "plainName": "Wiping out the decision",
           "whatItDoes": "Cancels the legal effect of a decision that was not made lawfully.",
-          "note": "In the High Court this is asked for alongside one of the orders below, rather than on its own."
+          "note": "In the High Court this is asked for alongside an order making them do their job, an order stopping them, or an injunction — rather than on its own."
         },
         {
           "name": "Mandamus",
@@ -1458,12 +1465,12 @@
           "name": "Declaration",
           "plainName": "A statement of where you stand",
           "whatItDoes": "A formal statement of what the legal position is, without ordering anyone to do anything.",
-          "note": "There has to be a real dispute. A court will not answer a hypothetical question."
+          "note": "There has to be a real dispute. A court will not answer a hypothetical question. A declaration can be the only thing you ask for."
         }
       ],
       "leadingCases": [
         {
-          "name": "Ainsworth v Criminal Justice Commission",
+          "name": "Ainsworth v Criminal Justice Commission (1992) 175 CLR 564",
           "pinpoint": "",
           "explains": "Wiping out a decision is about its legal effect. A declaration states where the parties stand."
         },
@@ -1531,17 +1538,17 @@
       ],
       "leadingCases": [
         {
-          "name": "Australian Conservation Foundation v Commonwealth",
+          "name": "Australian Conservation Foundation Inc v Commonwealth (1980) 146 CLR 493",
           "pinpoint": "",
           "explains": "A special interest is needed. Caring about an issue, without more, is not enough."
         },
         {
-          "name": "Onus v Alcoa",
+          "name": "Onus v Alcoa of Australia Ltd (1981) 149 CLR 27",
           "pinpoint": "",
           "explains": "A cultural or religious connection to what is at stake can be a special interest."
         },
         {
-          "name": "Argos Pty Ltd v Corbell",
+          "name": "Argos Pty Ltd v Corbell (2014) 254 CLR 394",
           "pinpoint": "",
           "explains": "Harm to your economic interests can make you a person aggrieved."
         }
@@ -1576,7 +1583,7 @@
           "name": "A statement of reasons",
           "plainName": "Asking why",
           "whatItDoes": "In many cases you can ask the decision-maker for written reasons. Whether there is a legal duty to give them depends on the type of decision.",
-          "note": "For an Australian Government decision this right comes from the Administrative Decisions (Judicial Review) Act 1977 (Cth) s 13. In Victoria it comes from the Administrative Law Act 1978 (Vic) s 8."
+          "note": "If your decision can go to a tribunal, the law that sets the tribunal up usually gives you a right to ask the decision-maker for written reasons — and lets you ask the tribunal to order them, or to order better ones, if what arrives says very little. Separately, there are rights tied to going to court: the Administrative Decisions (Judicial Review) Act 1977 (Cth) s 13 federally, and the Administrative Law Act 1978 (Vic) s 8 in Victoria."
         },
         {
           "name": "A freedom of information request",

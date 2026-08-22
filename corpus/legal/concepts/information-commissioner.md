@@ -45,9 +45,12 @@ options:
       In many cases you can ask the decision-maker for written reasons. Whether
       there is a legal duty to give them depends on the type of decision.
     note: >-
-      For an Australian Government decision this right comes from the
-      Administrative Decisions (Judicial Review) Act 1977 (Cth) s 13. In
-      Victoria it comes from the Administrative Law Act 1978 (Vic) s 8.
+      If your decision can go to a tribunal, the law that sets the tribunal up
+      usually gives you a right to ask the decision-maker for written reasons —
+      and lets you ask the tribunal to order them, or to order better ones, if
+      what arrives says very little. Separately, there are rights tied to going
+      to court: the Administrative Decisions (Judicial Review) Act 1977 (Cth)
+      s 13 federally, and the Administrative Law Act 1978 (Vic) s 8 in Victoria.
   - name: A freedom of information request
     plainName: Asking to see the documents
     whatItDoes: >-
@@ -119,3 +122,12 @@ bodies without characterising their place in every sequence; the Acts may be nam
 mentioned in general terms; and the qualification about who owes a duty to give reasons sits inside
 the core statement rather than trailing after it, because a reader takes the first sentence and
 stops.
+
+**Tribunal reasons rights added 2026-08-23** on the owner's QA decision. The note named only the
+judicial-review provisions — ADJR s 13 and ALA s 8 — which are the rights a person uses on the way
+to court. The rights this app's readers will actually use are the tribunal ones: VCAT Act ss 45-47
+and ART Act ss 268-271, which include the power to ask the tribunal to ORDER reasons, or to order
+an adequate statement where what arrived said very little.
+
+That last power is the practically useful one and it was missing entirely. A person who receives
+three sentences of reasons had no idea there was anything to do about it.

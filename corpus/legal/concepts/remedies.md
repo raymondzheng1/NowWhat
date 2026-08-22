@@ -28,13 +28,22 @@ keyPoints:
   - >-
     Remedies are discretionary, though a court starts from the position of
     granting relief where a case is made out.
+  - >-
+    Even where an error is proved, a court can still decline to give a remedy.
+    Leaving it too late, a remedy that would make no practical difference, harm
+    to someone else who relied on the decision, and not using a review right
+    that was available first are all reasons it may say no.
+  - >-
+    A court can also send a decision back with directions about how it must be
+    decided, rather than just an instruction to decide it again.
 options:
   - name: Certiorari
     plainName: Wiping out the decision
     whatItDoes: Cancels the legal effect of a decision that was not made lawfully.
     note: >-
-      In the High Court this is asked for alongside one of the orders below,
-      rather than on its own.
+      In the High Court this is asked for alongside an order making them do
+      their job, an order stopping them, or an injunction — rather than on its
+      own.
   - name: Mandamus
     plainName: Making them do their job
     whatItDoes: >-
@@ -59,9 +68,9 @@ options:
       to do anything.
     note: >-
       There has to be a real dispute. A court will not answer a hypothetical
-      question.
+      question. A declaration can be the only thing you ask for.
 leadingCases:
-  - name: Ainsworth v Criminal Justice Commission
+  - name: Ainsworth v Criminal Justice Commission (1992) 175 CLR 564
     pinpoint: ''
     explains: >-
       Wiping out a decision is about its legal effect. A declaration states
@@ -92,3 +101,12 @@ Deliberately omitted: certiorari for error on the face of the record as a separa
 same remedy on a different footing, and splitting it in the list would read as six-plus-one options
 rather than the five distinct things a person can actually ask for. The distinction lives in the
 error-of-law ground, where the record point belongs.
+
+Three QA decisions applied 2026-08-23. **The discretionary bars are now listed** — delay,
+futility, prejudice to someone who relied on the decision, and failure to use an available review
+right first. That last one bears directly on the sequencing advice this app gives elsewhere, so
+leaving it out was not neutral.
+
+**Remittal with directions** and **the bare declaration** added. **Certiorari's ancillary note
+corrected**: it issues alongside the constitutional writs and the injunction, which are the three
+remedies s 75(v) names — not alongside a declaration, which is not one of them.

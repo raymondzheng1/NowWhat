@@ -33,7 +33,7 @@ keyPoints:
     the public at large.
 options: []
 leadingCases:
-  - name: Council of Civil Service Unions v Minister for the Civil Service
+  - name: Council of Civil Service Unions v Minister for the Civil Service [1985] AC 374
     pinpoint: ''
     explains: >-
       What decides this is the subject matter of the power, not the source it

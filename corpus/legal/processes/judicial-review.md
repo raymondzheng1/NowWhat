@@ -28,8 +28,11 @@ bodies:
     name: The Supreme Court of Victoria
     note: >-
       the Victorian equivalent, for state government decisions. There are two
-      ways in, and they have different time limits, so this is worth asking a
-      free legal service about early.
+      separate ways in — the court's own supervisory jurisdiction through its
+      rules, and the Administrative Law Act 1978 (Vic), which is narrower and
+      also gives a right to written reasons. They run to different time limits
+      and they cannot be joined, so picking one rules the other out. Ask a human
+      legal service early.
 canApply:
   - >-
     You need a 'ground of review' — a specific legal error in how the decision
@@ -49,7 +52,10 @@ remedies:
   - 'Orders to require or stop action, in some cases.'
   - >-
     A declaration — a formal statement of what the legal position is, without
-    ordering anyone to do anything.
+    ordering anyone to do anything. It can be given on its own.
+  - >-
+    Send it back with directions about how it must be decided, not just an
+    instruction to decide it again.
 limits:
   - >-
     The court cannot substitute its own decision — it cannot simply give you the
@@ -64,11 +70,16 @@ goodToKnow:
     A failure to decide can count too, where they had a duty to decide and did
     not.
   - >-
-    If a tribunal decides against you, two different things may be open. One is
-    an appeal to a court on a question of law. The other is judicial review.
+    If a tribunal decides against you, judicial review is not the only route.
+    The law that set the tribunal up usually gives a right of appeal to a court
+    on a question of law as well.
   - >-
-    Each has its own short time limit, and an appeal sometimes needs the court's
-    permission first. This is worth asking about quickly.
+    Federally that appeal is under the Administrative Review Tribunal Act. In
+    Victoria it is under the VCAT Act, and it needs the court's permission
+    first.
+  - >-
+    Appeal time limits are short, and shorter than people expect. Ask about them
+    the week the decision arrives, not the month after.
   - >-
     A court will not simply disagree with the result. It looks at whether the
     decision was made lawfully.
@@ -98,3 +109,16 @@ already running.
 
 No period is stated here. Figures live in the lawyer-verified data layer, and this is the concept
 layer — the same choice already made for the two Victorian judicial-review routes.
+
+Three QA decisions applied 2026-08-23. **Statutory appeals are now named**, not left implied:
+federally under the ART Act, in Victoria under the VCAT Act with the court's permission required,
+and with the warning that appeal windows are short. Judicial review is no longer presented as the
+only post-tribunal route.
+
+**Victoria's two routes are described as separate and mutually exclusive.** The note said they had
+different time limits; it did not say they cannot be joined, which is the part that makes the choice
+irreversible.
+
+**Remittal with directions and the bare declaration** added to the remedies. Both appear in our
+materials and both change what a person can usefully ask for: sending a decision back with
+directions is materially different from sending it back at large.
