@@ -48,9 +48,6 @@ leadingCases:
     explains: >-
       An error that shows on the face of the record can be corrected, even where
       it did not go to the power itself.
-  - name: Collector of Customs v Agfa-Gevaert Ltd (1996) 186 CLR 389
-    pinpoint: ''
-    explains: Where the line runs between a question of fact and a question of law.
 ---
 
 Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (citations + judgment pinpoints) added and approved by the owner on 2026-07-12. They are not yet rendered in the UI; the v2 elements/cases feature may rely on them.
@@ -67,3 +64,10 @@ in the set, and neither told a reader how they relate. Our materials draw the li
 error of law is where a decision-maker "has power to act, but has exercised it on an erroneous
 legal basis", as distinct from acting outside the scope conferred. They can overlap; they are
 conceptually distinct.
+
+**Agfa-Gevaert removed 2026-08-23 on the owner's instruction**: it is not one of the cases in their
+materials. It carried the fact/law boundary — where the line runs between a question of fact and a
+question of law. Craig and Kirk remain, and between them they hold the two propositions this ground
+actually needs: an error within power against one that takes the decision-maker outside it, and an
+error on the face of the record. The fact/law boundary is not stated anywhere in this entry's
+customer copy, so removing the case removes an authority, not a claim left hanging without one.

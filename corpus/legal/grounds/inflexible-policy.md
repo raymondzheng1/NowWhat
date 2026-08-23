@@ -48,7 +48,7 @@ leadingCases:
       A policy that is appropriate guides decision-making. It does not control
       it. It tells you the standards and values usually applied.
   - name: Green v Daniels (1977) 13 ALR 1
-    pinpoint: 'Stephen J'
+    pinpoint: ''
     explains: >-
       A general rule was applied so rigidly that it stopped the person from
       being considered at all.

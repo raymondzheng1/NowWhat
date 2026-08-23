@@ -1,5 +1,5 @@
 {
-  "builtAt": "c02ee06bb0f547bb",
+  "builtAt": "450e8d6819f164d9",
   "processes": [
     {
       "id": "judicial-review",
@@ -254,13 +254,7 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
-      "leadingCases": [
-        {
-          "name": "SBBS v Minister for Immigration and Multicultural and Indigenous Affairs (2002) 194 ALR 749",
-          "pinpoint": "",
-          "explains": "What bad faith requires — a serious allegation of dishonesty that is rarely made out."
-        }
-      ],
+      "leadingCases": [],
       "jurisdictions": []
     },
     {
@@ -492,11 +486,6 @@
           "name": "Kirk v Industrial Court (NSW) (2010) 239 CLR 531",
           "pinpoint": "",
           "explains": "An error that shows on the face of the record can be corrected, even where it did not go to the power itself."
-        },
-        {
-          "name": "Collector of Customs v Agfa-Gevaert Ltd (1996) 186 CLR 389",
-          "pinpoint": "",
-          "explains": "Where the line runs between a question of fact and a question of law."
         }
       ],
       "jurisdictions": []
@@ -603,7 +592,7 @@
         },
         {
           "name": "Green v Daniels (1977) 13 ALR 1",
-          "pinpoint": "Stephen J",
+          "pinpoint": "",
           "explains": "A general rule was applied so rigidly that it stopped the person from being considered at all."
         }
       ],
@@ -1194,24 +1183,24 @@
       "status": "verified",
       "leadingCases": [
         {
-          "name": "Minister for Home Affairs v DUA16 (2020) 271 CLR 550",
-          "pinpoint": "",
-          "explains": "Heard with a second case that went the other way. Whether a failure is unreasonable turns on the statute and on what actually went wrong."
-        },
-        {
           "name": "Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1 KB 223",
           "pinpoint": "",
-          "explains": "Where this ground began. A decision can be so unreasonable that no reasonable body could have made it."
+          "explains": "An old English case, and where this ground began. It asked whether a decision was so unreasonable that no reasonable authority could ever have come to it. Australian law is no longer limited to that question."
         },
         {
           "name": "Minister for Immigration and Citizenship v Li (2013) 249 CLR 332",
           "pinpoint": "",
-          "explains": "The test used in Australia now. A decision needs a reason you can see and follow."
+          "explains": "The case that moved Australian law past that older question. A decision can be unreasonable where nothing in it shows why it was made. How the decision was reached counts, not only what was decided."
         },
         {
           "name": "Minister for Immigration and Border Protection v SZVFW (2018) 264 CLR 541",
           "pinpoint": "Kiefel CJ",
           "explains": "The test is a stringent one. A court will not step in lightly where the law leaves the choice to the decision-maker."
+        },
+        {
+          "name": "Minister for Home Affairs v DUA16 (2020) 271 CLR 550",
+          "pinpoint": "",
+          "explains": "Heard with a second case that went the other way. Whether a failure is unreasonable turns on the statute and on what actually went wrong."
         }
       ],
       "jurisdictions": []

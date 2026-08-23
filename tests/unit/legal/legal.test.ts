@@ -70,11 +70,47 @@ describe("legal-substance corpus (Learn concept layer)", () => {
     }
   });
 
-  it("every ground is citable for v2: verified + owner-approved leading cases (2026-07-12)", () => {
+  it("every ground is signed off, and all but the known gap carry owner-approved cases", () => {
+    // The bar this test defends is `status: verified` — nothing reaches a reader unsigned.
+    //
+    // It used to also demand ≥1 leading case from EVERY ground. That held until 2026-08-23, when
+    // the owner removed SBBS as not being one of their cases; it was bad-faith's only authority.
+    // A test asserting a case exists would then have forced one of two wrong moves: keep a
+    // citation the owner disowns, or invent a replacement. Both are worse than an entry that
+    // openly has no case yet, so the gap is named here instead of hidden.
+    const KNOWN_GAP = new Set(["bad-faith"]);
     for (const g of LegalIndexSchema.parse(raw).grounds) {
-      expect(groundHasCitableAuthority(g.id), `${g.id} should be citable`).toBe(true);
-      expect(g.leadingCases.length).toBeGreaterThan(0);
+      expect(g.status, `${g.id} must be signed off`).toBe("verified");
+      if (KNOWN_GAP.has(g.id)) {
+        expect(g.leadingCases.length, `${g.id}: gap closed — remove it from KNOWN_GAP`).toBe(0);
+      } else {
+        expect(groundHasCitableAuthority(g.id), `${g.id} should be citable`).toBe(true);
+        expect(g.leadingCases.length).toBeGreaterThan(0);
+      }
     }
+  });
+
+  it("cases the owner has disowned cannot come back", () => {
+    // Twice in this project a settled removal drifted back in through a later edit. A citation
+    // is the worst thing to let drift, because it reads as verified by definition. These two
+    // were removed on 2026-08-23 as not being cases in the owner's materials.
+    const json = JSON.stringify(raw);
+    for (const disowned of ["Agfa-Gevaert", "SBBS"]) {
+      expect(json, `${disowned} was removed by the owner and must not return`).not.toContain(
+        disowned,
+      );
+    }
+  });
+
+  it("Wednesbury is published as the origin of the ground, not as the current test", () => {
+    // Kept deliberately: readers meet the name everywhere. But since Li, legal unreasonableness
+    // in Australia is not limited to Wednesbury unreasonableness, and this entry once read as
+    // though it still stated the test.
+    const g = getGround("unreasonableness")!;
+    const w = g.leadingCases.find((c) => c.name.includes("Wednesbury"))!;
+    expect(w, "Wednesbury stays in the entry").toBeTruthy();
+    expect(w.explains).toMatch(/no longer limited/i);
+    expect(g.leadingCases.some((c) => c.name.includes("Li (2013)"))).toBe(true);
   });
 
   it("getGround returns undefined for an unknown id", () => {
