@@ -1,5 +1,5 @@
 {
-  "builtAt": "dfff21f5bf47537d",
+  "builtAt": "8a14562924549776",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -319,13 +319,12 @@
           "source": "fines.vic.gov.au — if you didn't know about your fine"
         },
         {
-          "deadlineDays": 28,
-          "deadlineVerified": true,
+          "deadlineDays": null,
+          "deadlineVerified": false,
           "cost": "no fee to ask. Going to court can lead to a different penalty, so free legal help is available.",
-          "howCounted": "from the date your infringement notice was issued",
           "name": "Ask to have the matter heard in court (excessive speed, drink-driving or drug-driving)",
           "body": "Magistrates' Court of Victoria (Children's Court if you are under 18)",
-          "deadline": "For excessive-speed, drink-driving or drug-driving offences: within 28 days of the notice.",
+          "deadline": "For excessive-speed, drink-driving or drug-driving offences a short time limit runs from the notice. Check it with Fines Victoria or a free service as soon as you can.",
           "howToStart": "ask to have the matter heard in court",
           "source": "fines.vic.gov.au — go to court; Infringements Act 2006 (Vic)"
         },
@@ -416,7 +415,7 @@
         "Victorian Ombudsman — ombudsman.vic.gov.au"
       ],
       "lastVerified": "2026-06-16",
-      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. The owner\nconfirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day\nreview cycle.\n\nThe old note said a lawyer should confirm the figures before launch. That clashed with the\nverified status. The renting twin in the data layer had already recorded the confirmation.\nAnd the note was not inert. This text feeds the chat grounding set and the safety checker.\nSo the app read a pre-launch caveat as verified content.\n\nVictorian fines move through stages: an Infringement Notice, then a Penalty Reminder\nNotice, then a Notice of Final Demand, then enforcement. Some options — like going to\ncourt or nominating another driver — are only available before the fine is registered\n(before the Notice of Final Demand). The exact date to pay is the due date printed on\nyour own notice, so check the notice itself.",
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. The owner\nconfirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day\nreview cycle.\n\nThe old note said a lawyer should confirm the figures before launch. That clashed with the\nverified status. The renting twin in the data layer had already recorded the confirmation.\nAnd the note was not inert. This text feeds the chat grounding set and the safety checker.\nSo the app read a pre-launch caveat as verified content.\n\nVictorian fines move through stages: an Infringement Notice, then a Penalty Reminder\nNotice, then a Notice of Final Demand, then enforcement. Some options — like going to\ncourt or nominating another driver — are only available before the fine is registered\n(before the Notice of Final Demand). The exact date to pay is the due date printed on\nyour own notice, so check the notice itself.\n\n**The court-election figure generalised 2026-08-23 on the owner's instruction.** It carried the\nsame doubt as the 'person unaware' figure removed above — our procedural layer named them\ntogether as unpublishable until we can say which Act carries which stage — and the owner ruled to\nstop stating a period we cannot confirm.\n\nThe DISTINCTION stays, because it is the useful part: the driving offences have their own short\nwindow running from the notice, while other fines run to registration. What goes is the number.\n`deadlineDays` is null on both court pathways now, so no date can be computed for either — which\nalso closes the defect that started this thread, where a verified figure for one class of fine\ncould attach a concrete date to a parking ticket.",
       "isFallback": false
     },
     {
@@ -456,13 +455,12 @@
       },
       "pathways": [
         {
-          "deadlineDays": 28,
-          "deadlineVerified": true,
+          "deadlineDays": null,
+          "deadlineVerified": false,
           "cost": "free",
-          "howCounted": "from the day the decision was made",
           "name": "Ask for the reasons in writing (a statement of reasons)",
           "body": "the decision-maker (the agency that made the decision)",
-          "deadline": "Ask within 28 days of the decision. The decision-maker then usually has 28 days to give you written reasons.",
+          "deadline": "A time limit applies to asking, and the decision-maker then has a set time to reply. Check both for your decision, because they come from the law it was made under.",
           "howToStart": "write to the decision-maker asking for a written statement of reasons under section 45 of the VCAT Act",
           "source": "Victorian Civil and Administrative Tribunal Act 1998 (Vic) ss 45-46; vcat.vic.gov.au"
         },
@@ -473,7 +471,7 @@
           "howCounted": "usually from the decision, or from when you get the statement of reasons",
           "name": "Apply to VCAT to review the decision (if the law allows it)",
           "body": "VCAT (Review and Regulation list)",
-          "deadline": "Often 28 days, counted from the decision or from when you get the reasons — but the law that applies can set a different, sometimes shorter, limit. Check the time limit on your decision letter.",
+          "deadline": "A time limit applies, and the law your decision was made under sets it. It can be short. Check the time limit on your decision letter.",
           "howToStart": "check your decision letter for a review right and the Act it names, then apply to VCAT to review the decision",
           "source": "Victorian Civil and Administrative Tribunal Act 1998 (Vic) ss 42, 48; vcat.vic.gov.au — application for review of a decision"
         },
@@ -539,7 +537,7 @@
           "link": "https://www.vcat.vic.gov.au/case-types/review-and-regulation/application-for-review-of-a-decision"
         }
       ],
-      "plainLanguageExplainer": "If a Victorian government agency or council made a decision you disagree with, your options depend on the law behind the decision. Many decisions can be reviewed by VCAT, but not all. Your decision letter should say if you can apply, and by when. Asking for the reasons in writing within 28 days is one option, and it can help protect your time to apply. If you think an agency acted unfairly, you can also complain to the Victorian Ombudsman. Free legal help can explain what applies to you.",
+      "plainLanguageExplainer": "If a Victorian government agency or council made a decision you disagree with, your options depend on the law behind the decision. Many decisions can be reviewed by VCAT, but not all. Your decision letter should say if you can apply, and by when. Asking for the reasons in writing is one option, and it can help you decide what to do next. If you think an agency acted unfairly, you can also complain to the Victorian Ombudsman. Free legal help can explain what applies to you.",
       "sources": [
         "Victorian Civil and Administrative Tribunal Act 1998 (Vic) — legislation.vic.gov.au",
         "VCAT — Application for review of a decision — vcat.vic.gov.au",
@@ -548,7 +546,7 @@
         "Supreme Court of Victoria — supremecourt.vic.gov.au"
       ],
       "lastVerified": "2026-06-16",
-      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. The owner\nconfirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day\nreview cycle.\n\nThe old note said a lawyer should confirm the figures before launch. That clashed with the\nverified status. The renting twin in the data layer had already recorded the confirmation.\nAnd the note was not inert. This text feeds the chat grounding set and the safety checker.\nSo the app read a pre-launch caveat as verified content.\n\nThis is the general guide for a Victorian state-government decision when there isn't a\nmore specific one. The most important point is honest uncertainty: VCAT can only review\na decision if the Act it was made under gives VCAT that power, so the decision letter\nitself is the best guide to whether review is available and by when. The 28-day VCAT\nreview limit is a common default but can be shorter under a particular Act — so the safe\nstep is to check the letter and get free legal help quickly. The Victorian Ombudsman can\nlook into unfair treatment but cannot overturn or change a decision."
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. The owner\nconfirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day\nreview cycle.\n\nThe old note said a lawyer should confirm the figures before launch. That clashed with the\nverified status. The renting twin in the data layer had already recorded the confirmation.\nAnd the note was not inert. This text feeds the chat grounding set and the safety checker.\nSo the app read a pre-launch caveat as verified content.\n\nThis is the general guide for a Victorian state-government decision when there isn't a\nmore specific one. The most important point is honest uncertainty: VCAT can only review\na decision if the Act it was made under gives VCAT that power, so the decision letter\nitself is the best guide to whether review is available and by when. No period is stated\nhere: the limit comes from the Act the decision was made under, so the safe step is to\ncheck the letter and get free legal help quickly. The Victorian Ombudsman can\nlook into unfair treatment but cannot overturn or change a decision.\n\n**The 28-day figures generalised 2026-08-23**, on the owner's instruction to stay general where a\nperiod is unconfirmed. This entry is the catch-all for EVERY Victorian state decision, so a number\nshown here is a number every reader takes as theirs — and the reviewer's point was exactly that: a\ngeneric figure on a page covering many schemes is a misleading headline, not a helpful default.\n\nThree places carried it: the reasons request, the VCAT application, and the explainer. All three\nnow say a limit applies and where it comes from, without naming a period. The sections stay in\n`source` and in `rightToReasons.provision`, so a reader who wants the law still has it.\n\nThis went further than the owner's instruction named — they flagged the fines figure. The same\nclass of claim sat here, on a wider audience, and their reviewer had separately asked for generic\nnumbers to come off catch-all pages. Flagged rather than assumed: it is easy to put back."
     },
     {
       "id": "vic-public-housing",

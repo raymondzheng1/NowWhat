@@ -32,16 +32,15 @@ reviewable:
 pathways:
   - name: "Ask for the reasons in writing (a statement of reasons)"
     body: "the decision-maker (the agency that made the decision)"
-    deadline: "Ask within 28 days of the decision. The decision-maker then usually has 28 days to give you written reasons."
-    deadlineDays: 28
-    deadlineVerified: true
-    howCounted: "from the day the decision was made"
+    deadline: "A time limit applies to asking, and the decision-maker then has a set time to reply. Check both for your decision, because they come from the law it was made under."
+    deadlineDays: null
+    deadlineVerified: false
     howToStart: "write to the decision-maker asking for a written statement of reasons under section 45 of the VCAT Act"
     cost: "free"
     source: "Victorian Civil and Administrative Tribunal Act 1998 (Vic) ss 45-46; vcat.vic.gov.au"
   - name: "Apply to VCAT to review the decision (if the law allows it)"
     body: "VCAT (Review and Regulation list)"
-    deadline: "Often 28 days, counted from the decision or from when you get the reasons — but the law that applies can set a different, sometimes shorter, limit. Check the time limit on your decision letter."
+    deadline: "A time limit applies, and the law your decision was made under sets it. It can be short. Check the time limit on your decision letter."
     deadlineDays: null
     deadlineVerified: false
     howCounted: "usually from the decision, or from when you get the statement of reasons"
@@ -93,7 +92,7 @@ getHelp:
   - service: "VCAT"
     who: "self-help guides on applying to review a decision"
     link: "https://www.vcat.vic.gov.au/case-types/review-and-regulation/application-for-review-of-a-decision"
-plainLanguageExplainer: "If a Victorian government agency or council made a decision you disagree with, your options depend on the law behind the decision. Many decisions can be reviewed by VCAT, but not all. Your decision letter should say if you can apply, and by when. Asking for the reasons in writing within 28 days is one option, and it can help protect your time to apply. If you think an agency acted unfairly, you can also complain to the Victorian Ombudsman. Free legal help can explain what applies to you."
+plainLanguageExplainer: "If a Victorian government agency or council made a decision you disagree with, your options depend on the law behind the decision. Many decisions can be reviewed by VCAT, but not all. Your decision letter should say if you can apply, and by when. Asking for the reasons in writing is one option, and it can help you decide what to do next. If you think an agency acted unfairly, you can also complain to the Victorian Ombudsman. Free legal help can explain what applies to you."
 sources:
   - "Victorian Civil and Administrative Tribunal Act 1998 (Vic) — legislation.vic.gov.au"
   - "VCAT — Application for review of a decision — vcat.vic.gov.au"
@@ -115,7 +114,20 @@ So the app read a pre-launch caveat as verified content.
 This is the general guide for a Victorian state-government decision when there isn't a
 more specific one. The most important point is honest uncertainty: VCAT can only review
 a decision if the Act it was made under gives VCAT that power, so the decision letter
-itself is the best guide to whether review is available and by when. The 28-day VCAT
-review limit is a common default but can be shorter under a particular Act — so the safe
-step is to check the letter and get free legal help quickly. The Victorian Ombudsman can
+itself is the best guide to whether review is available and by when. No period is stated
+here: the limit comes from the Act the decision was made under, so the safe step is to
+check the letter and get free legal help quickly. The Victorian Ombudsman can
 look into unfair treatment but cannot overturn or change a decision.
+
+**The 28-day figures generalised 2026-08-23**, on the owner's instruction to stay general where a
+period is unconfirmed. This entry is the catch-all for EVERY Victorian state decision, so a number
+shown here is a number every reader takes as theirs — and the reviewer's point was exactly that: a
+generic figure on a page covering many schemes is a misleading headline, not a helpful default.
+
+Three places carried it: the reasons request, the VCAT application, and the explainer. All three
+now say a limit applies and where it comes from, without naming a period. The sections stay in
+`source` and in `rightToReasons.provision`, so a reader who wants the law still has it.
+
+This went further than the owner's instruction named — they flagged the fines figure. The same
+class of claim sat here, on a wider audience, and their reviewer had separately asked for generic
+numbers to come off catch-all pages. Flagged rather than assumed: it is easy to put back.

@@ -51,10 +51,9 @@ pathways:
     source: "fines.vic.gov.au — if you didn't know about your fine"
   - name: "Ask to have the matter heard in court (excessive speed, drink-driving or drug-driving)"
     body: "Magistrates' Court of Victoria (Children's Court if you are under 18)"
-    deadline: "For excessive-speed, drink-driving or drug-driving offences: within 28 days of the notice."
-    deadlineDays: 28
-    deadlineVerified: true
-    howCounted: "from the date your infringement notice was issued"
+    deadline: "For excessive-speed, drink-driving or drug-driving offences a short time limit runs from the notice. Check it with Fines Victoria or a free service as soon as you can."
+    deadlineDays: null
+    deadlineVerified: false
     howToStart: "ask to have the matter heard in court"
     cost: "no fee to ask. Going to court can lead to a different penalty, so free legal help is available."
     source: "fines.vic.gov.au — go to court; Infringements Act 2006 (Vic)"
@@ -141,3 +140,14 @@ Notice, then a Notice of Final Demand, then enforcement. Some options — like g
 court or nominating another driver — are only available before the fine is registered
 (before the Notice of Final Demand). The exact date to pay is the due date printed on
 your own notice, so check the notice itself.
+
+**The court-election figure generalised 2026-08-23 on the owner's instruction.** It carried the
+same doubt as the 'person unaware' figure removed above — our procedural layer named them
+together as unpublishable until we can say which Act carries which stage — and the owner ruled to
+stop stating a period we cannot confirm.
+
+The DISTINCTION stays, because it is the useful part: the driving offences have their own short
+window running from the notice, while other fines run to registration. What goes is the number.
+`deadlineDays` is null on both court pathways now, so no date can be computed for either — which
+also closes the defect that started this thread, where a verified figure for one class of fine
+could attach a concrete date to a parking ticket.
