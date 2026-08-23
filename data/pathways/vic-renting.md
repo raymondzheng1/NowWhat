@@ -35,10 +35,8 @@ deadlineRule: >-
   Renting reviews have a strict time limit, set by the Residential Tenancies
   Act 1997 (Vic). Check the exact limit for your situation with VCAT or a
   free service. Trying something else first does not restart the clock. If
-  VCAT decides against you, that is not always the end. A further step to a
-  court can be open, and there is more than one kind. Which one applies
-  depends on the law that set VCAT up. Those time limits are short, so ask a
-  free service in the week the decision arrives.
+  VCAT decides against you, ask a free service that week about anything
+  further that may be open to you.
 verifiedAsAt: '2026-08-17'
 sourceUrl: 'https://www.vcat.vic.gov.au'
 reviewCadenceDays: 90
@@ -123,3 +121,14 @@ and reusing the term four sentences later would read as a contradiction rather t
 thing it is. And availability is not promised — which route is open, and to which court, depends on
 the law that set VCAT up, so the line says that and sends the person to a free service. Tenants
 Victoria and Victoria Legal Aid are already in `getHelp`.
+
+**Post-VCAT sentences deleted 2026-08-23 on the owner's instruction.** The entry described a
+further step to a court after VCAT, said there was more than one kind, and said which applies
+depends on the Act that set VCAT up. None of that is in either knowledge source. The external
+review was right that a renter should not read "no judicial review" as "nothing after VCAT",
+but the cure was an unsourced statement of procedure, which is the defect this corpus keeps
+removing rather than one it should add.
+
+What survives says the true and useful part without asserting a route: if VCAT decides against
+you, ask a free service that week. The owner ruled not to wait for the supervising lawyer on
+this — the question went to them and the answer is not needed to make the entry safe.

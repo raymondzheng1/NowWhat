@@ -319,3 +319,43 @@ describe("the opening line matches the cards under it", () => {
     expect(r.analysisLeadBothConditional!.toLowerCase()).toContain("may be open");
   });
 });
+
+describe("a body that is not a tribunal does not borrow a tribunal's powers", () => {
+  it("shows no question and no remedies for an internal or mixed body", () => {
+    // The Housing Appeals Office sat in the merits field and inherited the tribunal
+    // explainer whole — "set the decision aside and substitute a new one", which a
+    // departmental reviewer cannot do. The owner ruled on 2026-08-23 to delete the claim
+    // rather than wait for the supervising lawyer to say what the HAO can actually do.
+    for (const character of ["internal", "mixed"] as const) {
+      const p = planFor({
+        avenue: { ...AV, mrCharacter: character },
+        meritsReview: merits,
+        judicialReview: judicial,
+      });
+      const mr = p.paths.find((x) => x.id === "merits-review")!;
+      expect(mr, "the path itself must survive — it is a real, free avenue").toBeDefined();
+      expect(mr.question, `${character}: no borrowed question`).toBe("");
+      expect(mr.canDo, `${character}: no borrowed remedies`).toEqual([]);
+      expect(mr.cannotDo, `${character}: no borrowed limits`).toEqual([]);
+    }
+  });
+
+  it("a real tribunal still carries the corpus question and remedies", () => {
+    const mr = plan(AV).paths.find((x) => x.id === "merits-review")!;
+    expect(mr.question).toBe(merits.question);
+    expect(mr.canDo).toEqual(merits.remedies);
+  });
+
+  it("public housing is the entry this protects, and keeps its criteria", () => {
+    const e = getDataEntry("vic-public-housing")!;
+    expect(e.avenue.mr.character).toBe("mixed");
+    const mr = planFor({
+      avenue: avenueView(e), meritsReview: merits, judicialReview: judicial,
+      jurisdiction: e.jurisdiction, criteria: e.mrCriteria,
+    }).paths.find((x) => x.id === "merits-review")!;
+    expect(mr.canDo).toEqual([]);
+    // What the lawyer supplied per scheme is the part that was always sourced. It stays.
+    expect(mr.criteria.length).toBeGreaterThan(0);
+    expect(mr.criteria.join(" ")).toMatch(/Housing Appeals Office/i);
+  });
+});

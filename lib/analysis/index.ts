@@ -131,13 +131,23 @@ export function planFor({
   // Merits review leads whenever it exists: it is the only path that can produce a
   // different outcome rather than a re-decision.
   if (avenue.mrAvailable) {
+    // A body that is not a tribunal does not have a tribunal's powers, and until the
+    // supervising lawyer says what the Housing Appeals Office can actually do, the app says
+    // nothing about it. The remedies and limits below are the TRIBUNAL's, taken from the
+    // corpus; attaching them to a departmental appeal asserted that an internal reviewer can
+    // set a decision aside and substitute a new one. The owner ruled on 2026-08-23 to delete
+    // the claim rather than wait for it to be confirmed.
+    //
+    // `mrCriteria` still says what the body decides for this decision type — that came from
+    // the lawyer, per scheme, and is the part that was always sourced.
+    const isTribunal = (avenue.mrCharacter ?? "tribunal") === "tribunal";
     paths.push({
       id: "merits-review",
       order: paths.length + 1,
       body: forumName(meritsReview, jurisdiction, avenue.mrBody),
-      question: meritsReview.question,
-      canDo: meritsReview.remedies,
-      cannotDo: meritsReview.limits,
+      question: isTribunal ? meritsReview.question : "",
+      canDo: isTribunal ? meritsReview.remedies : [],
+      cannotDo: isTribunal ? meritsReview.limits : [],
       criteria,
       conditional: avenue.mrConditional ?? false,
       character: avenue.mrCharacter ?? "tribunal",

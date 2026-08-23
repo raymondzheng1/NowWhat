@@ -92,13 +92,20 @@ export function AnalysisPanel({
               {p.id === "merits-review" ? meritsReview.name : judicialReview.name}
             </h3>
 
-            {/* The question the forum decides — the foundation the whole path rests on. */}
-            <p className="mt-3 font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-ink-faint">
-              {t("pathAsks")}
-            </p>
-            <p className="mt-1 font-display text-[18px] font-extrabold italic leading-snug text-ink">
-              “{p.question}”
-            </p>
+            {/* The question the forum decides — the foundation the whole path rests on.
+                Empty for a body that is not a tribunal: the corpus holds the TRIBUNAL's
+                question, and putting it on a departmental appeal says that appeal decides
+                what is correct or preferable, which nobody has confirmed it does. */}
+            {p.question && (
+              <>
+                <p className="mt-3 font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-ink-faint">
+                  {t("pathAsks")}
+                </p>
+                <p className="mt-1 font-display text-[18px] font-extrabold italic leading-snug text-ink">
+                  “{p.question}”
+                </p>
+              </>
+            )}
 
             {/* What that means for the material that matters — the strategy. */}
             <p className="mt-3.5 font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-ink-faint">
@@ -138,6 +145,9 @@ export function AnalysisPanel({
               </p>
             )}
 
+            {/* Powers, where they are known. Suppressed entirely for a non-tribunal body
+                rather than shown as a tribunal's — see planFor. */}
+            {(p.canDo.length > 0 || p.cannotDo.length > 0) && (
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div>
                 <p className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-help-ink">
@@ -168,6 +178,7 @@ export function AnalysisPanel({
                 </div>
               )}
             </div>
+            )}
           </li>
         ))}
       </ol>

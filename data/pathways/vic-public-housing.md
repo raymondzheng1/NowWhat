@@ -146,3 +146,19 @@ The court figures in `deadlineRule` carry the same source mismatch corrected in 
 `housing.vic.gov.au`. It was not repointed here, because unlike the catch-all this entry's primary
 rule is the housing appeal, which that source does carry. Moving it would break the sourcing that
 is right to patch the sourcing that is wrong. It needs the per-stage `{provision, url}` source.
+
+**The tribunal's powers deleted from this path, 2026-08-23, on the owner's instruction.** The
+Housing Appeals Office sat in the merits-review field, so the result card handed it the tribunal
+explainer whole: the question "Is this the correct or preferable decision?" and remedies including
+setting a decision aside and substituting a new one. Those are a tribunal's powers. A departmental
+reviewer does not have them.
+
+The question went to the supervising lawyer — is the Housing Appeals Office merits review, and what
+can it actually do? The owner ruled not to wait for the answer. A non-tribunal path now shows no
+question and no remedies at all; `mrCriteria` still says what the reviewer considers, because that
+came from the lawyer per scheme and was always the sourced part.
+
+**The path itself stays.** The Housing Appeals Office is free, real, and sourced to housing.vic.gov.au
+and the Housing Act 1983 (Vic). What could not be sourced was the claim about its powers, and that is
+what came out. Deleting the route instead would have taken a free avenue from the people this entry
+exists for.
