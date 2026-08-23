@@ -231,6 +231,7 @@
     "urgentBody": "You can still read your options below. Bring them to the call — it makes the conversation faster.",
     "analysisTitle": "What this means for you",
     "analysisLeadBoth": "Two paths are open for this decision. Most people look at merits review first, because a tribunal can change the outcome. A court is different: it checks whether the decision was made lawfully, and it can send the decision back to be made again.",
+    "analysisLeadBothConditional": "Two paths may be open for this decision. One of them depends on the law for your decision, or on who made it — the card below says which. Most people look at merits review first, because a tribunal can change the outcome. A court is different: it checks whether the decision was made lawfully.",
     "analysisLeadMerits": "Merits review is open for this decision. A tribunal can look at your case again and make a different decision.",
     "analysisLeadJudicial": "Merits review does not appear to be available for this decision. Judicial review asks a court to check that the decision was made lawfully.",
     "analysisLeadNone": "A formal review may not be available for this decision. A human service can check that with you, and there may still be other options.",

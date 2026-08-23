@@ -56,7 +56,12 @@ export interface ResultPlan {
   /** The path to lead with, or null when no formal review is available. */
   primary: PathPlan | null;
   /** i18n key for the one-paragraph orientation at the top. */
-  leadKey: "analysisLeadBoth" | "analysisLeadMerits" | "analysisLeadJudicial" | "analysisLeadNone";
+  leadKey:
+    | "analysisLeadBoth"
+    | "analysisLeadBothConditional"
+    | "analysisLeadMerits"
+    | "analysisLeadJudicial"
+    | "analysisLeadNone";
 }
 
 /**
@@ -145,9 +150,17 @@ export function planFor({
     });
   }
 
+  // The opening paragraph must not be more certain than the cards under it. Three entries now
+  // carry a conditional path — both catch-alls, where merits review exists only if the enabling
+  // Act provides it, and public housing, where the court path depends on who made the decision —
+  // and all three landed on "Two paths are open for this decision" with a hedged card beneath.
+  // A reader met the confident sentence first and had to work out which to believe.
+  const anyConditional = paths.some((p) => p.conditional);
   const leadKey: ResultPlan["leadKey"] =
     avenue.mrAvailable && avenue.jrAvailable
-      ? "analysisLeadBoth"
+      ? anyConditional
+        ? "analysisLeadBothConditional"
+        : "analysisLeadBoth"
       : avenue.mrAvailable
         ? "analysisLeadMerits"
         : avenue.jrAvailable

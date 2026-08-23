@@ -1,5 +1,5 @@
 {
-  "builtAt": "4ed7fad0912c23ab",
+  "builtAt": "0571765be114cb9b",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -187,7 +187,7 @@
           "cost": "A fee may apply, and it can often be reduced or waived in cases of financial hardship.",
           "name": "Apply to the Administrative Review Tribunal (ART)",
           "body": "Administrative Review Tribunal (ART)",
-          "deadline": "There is a time limit to apply to the ART, and it is set by the law your decision was made under. Confirm the current period and how it is counted before you apply.",
+          "deadline": "The Tribunal's own Act sets a standard time limit, and the law your decision was made under can set a different one. Confirm the current period and how it is counted before you apply.",
           "howToStart": "check whether the law for your decision allows ART review, then apply through art.gov.au",
           "source": "Administrative Review Tribunal — art.gov.au"
         },
@@ -604,7 +604,7 @@
           "deadlineDays": 30,
           "deadlineVerified": true,
           "cost": "an application fee may apply, but fee waivers and concessions are available",
-          "howCounted": "from the day you receive the notice to vacate",
+          "howCounted": "from the day the notice to vacate was given to you",
           "name": "Challenge a notice to vacate (eviction) at VCAT",
           "body": "VCAT (Residential Tenancies list)",
           "deadline": "Apply within 30 days to challenge the notice early. If you miss that, you can still argue the notice is not valid at the possession hearing.",
@@ -744,7 +744,7 @@
           "deadlineDays": 30,
           "deadlineVerified": true,
           "cost": "an application fee may apply, but fee waivers and concessions are available",
-          "howCounted": "from the day you receive the notice to vacate",
+          "howCounted": "from the day the notice to vacate was given to you",
           "name": "Challenge a notice to vacate at VCAT",
           "body": "VCAT (Residential Tenancies list)",
           "deadline": "Apply within 30 days to challenge the notice early. If you miss that, you can still argue the notice is not valid at the possession hearing, and you can ask for more time.",

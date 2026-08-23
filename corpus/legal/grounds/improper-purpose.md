@@ -64,3 +64,24 @@ Provenance. This ground is drawn from our own verified judicial review materials
 Onus added 2026-08-19: "The onus of establishing that the decision-maker acted for an improper
 purposes lies on the applicant (Toohey)", and our materials list improper purpose among the
 stringent grounds because it "will not be inferred".
+
+**Bad faith was removed from the corpus on 2026-08-23, on the owner's ruling**, and the note lives
+here because the owner's memo names this ground as one of the two that do its work: "bad faith
+carries a very high threshold and is rarely necessary where improper purpose (4.2) and bias (4.7)
+are available".
+
+The sequence was: SBBS was the only case bad faith cited, the owner confirmed it is not one of
+theirs, and it was removed a day earlier. That left a published `verified` ground with no authority
+at all. The choice was to find a replacement case or to stop publishing the ground, and the owner
+chose to stop.
+
+That is the right call for this audience as well as for the corpus. Bad faith imputes dishonesty to
+a named officer; `lib/letter/compose.ts` already refused to let it near a letter for exactly that
+reason, and the memo's own view is that it is rarely necessary when this ground and bias are open.
+A self-represented person who believes they were treated dishonestly is better served by the two
+grounds that ask what the power was used FOR and whether the decision-maker was impartial — both of
+which are argued from what the letter and the file show, rather than from an allegation about
+someone's state of mind.
+
+Nothing here changed. This note exists so the removal is discoverable from the ground a reader
+would land on instead.

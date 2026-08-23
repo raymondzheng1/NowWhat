@@ -27,10 +27,14 @@ import { buildDraft, type Draft, type DraftKind } from "@/lib/draft/build";
  * discuss rather than conclusions. The letter itself says so, in `otherConcerns`, so the
  * agency reading it knows the letter is not the whole picture.
  *
- * Deliberately absent: bad faith, bias and improper purpose. Each imputes a state of mind to
- * a named officer, in a letter to that officer's own office, written by someone who will be
- * dealing with that office for years. The corpus says of bad faith that it is "rare, hard to
- * prove, a serious allegation, a high bar"; that logic applies to all three.
+ * Deliberately absent: bias and improper purpose. Each imputes a state of mind to a named
+ * officer, in a letter to that officer's own office, written by someone who will be dealing
+ * with that office for years.
+ *
+ * Bad faith used to be named here as the third. The owner removed that ground from the corpus
+ * on 2026-08-23 (see grounds/improper-purpose.md), so there is nothing left to exclude — but
+ * the reasoning it supplied is why the other two stay out, and it is kept here rather than
+ * lost with the entry: rare, hard to prove, a serious allegation, a high bar.
  */
 
 /** Ground ids that may appear as a heading, and the i18n key for that heading. */

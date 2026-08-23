@@ -47,7 +47,7 @@ pathways:
     deadline: "Apply within 30 days to challenge the notice early. If you miss that, you can still argue the notice is not valid at the possession hearing."
     deadlineDays: 30
     deadlineVerified: true
-    howCounted: "from the day you receive the notice to vacate"
+    howCounted: "from the day the notice to vacate was given to you"
     howToStart: "apply to VCAT to challenge the notice"
     cost: "an application fee may apply, but fee waivers and concessions are available"
     source: "Residential Tenancies Act 1997 (Vic) s 91ZZS; vcat.vic.gov.au; tenantsvic.org.au"

@@ -264,3 +264,50 @@ describe("conditional judicial review (public housing)", () => {
     expect(getDataEntry("vic-renting")!.avenue.jr.available).toBe(false);
   });
 });
+
+describe("the opening line matches the cards under it", () => {
+  it("a conditional path gets the hedged lead, not the confident one", () => {
+    const both = planFor({ avenue: AV, meritsReview: merits, judicialReview: judicial });
+    expect(both.leadKey).toBe("analysisLeadBoth");
+
+    for (const av of [{ ...AV, mrConditional: true }, { ...AV, jrConditional: true }]) {
+      const p = planFor({ avenue: av, meritsReview: merits, judicialReview: judicial });
+      expect(p.leadKey).toBe("analysisLeadBothConditional");
+    }
+  });
+
+  it("the three entries that carry a condition all get it", () => {
+    // Both catch-alls (merits review only where the enabling Act provides it) and public
+    // housing (the court path, only where a public body decided).
+    for (const id of ["cth-generic", "vic-generic", "vic-public-housing"]) {
+      const e = getDataEntry(id)!;
+      const p = planFor({
+        avenue: avenueView(e),
+        meritsReview: merits,
+        judicialReview: judicial,
+        jurisdiction: e.jurisdiction,
+      });
+      expect(p.leadKey, id).toBe("analysisLeadBothConditional");
+    }
+  });
+
+  it("the specific entries keep the confident lead", () => {
+    for (const id of ["cth-centrelink", "vic-fines"]) {
+      const e = getDataEntry(id)!;
+      const p = planFor({
+        avenue: avenueView(e),
+        meritsReview: merits,
+        judicialReview: judicial,
+        jurisdiction: e.jurisdiction,
+      });
+      expect(p.leadKey, id).toBe("analysisLeadBoth");
+    }
+  });
+
+  it("the hedged lead exists and does not simply repeat the confident one", () => {
+    const r = messages.rights as unknown as Record<string, string>;
+    expect(r.analysisLeadBothConditional).toBeTruthy();
+    expect(r.analysisLeadBothConditional).not.toBe(r.analysisLeadBoth);
+    expect(r.analysisLeadBothConditional!.toLowerCase()).toContain("may be open");
+  });
+});

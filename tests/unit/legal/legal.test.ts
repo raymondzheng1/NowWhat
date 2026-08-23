@@ -70,24 +70,26 @@ describe("legal-substance corpus (Learn concept layer)", () => {
     }
   });
 
-  it("every ground is signed off, and all but the known gap carry owner-approved cases", () => {
-    // The bar this test defends is `status: verified` — nothing reaches a reader unsigned.
-    //
-    // It used to also demand ≥1 leading case from EVERY ground. That held until 2026-08-23, when
-    // the owner removed SBBS as not being one of their cases; it was bad-faith's only authority.
-    // A test asserting a case exists would then have forced one of two wrong moves: keep a
-    // citation the owner disowns, or invent a replacement. Both are worse than an entry that
-    // openly has no case yet, so the gap is named here instead of hidden.
-    const KNOWN_GAP = new Set(["bad-faith"]);
+  it("every published ground is signed off AND carries owner-approved cases", () => {
+    // This briefly allowed one exception. On 2026-08-23 the owner removed SBBS as not being one
+    // of their cases, which left bad faith — its only authority — published as verified with
+    // nothing behind it. The exception lasted until they ruled on it: the ground came out of the
+    // corpus rather than the rule being bent for it. No ground publishes without a case.
     for (const g of LegalIndexSchema.parse(raw).grounds) {
       expect(g.status, `${g.id} must be signed off`).toBe("verified");
-      if (KNOWN_GAP.has(g.id)) {
-        expect(g.leadingCases.length, `${g.id}: gap closed — remove it from KNOWN_GAP`).toBe(0);
-      } else {
-        expect(groundHasCitableAuthority(g.id), `${g.id} should be citable`).toBe(true);
-        expect(g.leadingCases.length).toBeGreaterThan(0);
-      }
+      expect(groundHasCitableAuthority(g.id), `${g.id} should be citable`).toBe(true);
+      expect(g.leadingCases.length).toBeGreaterThan(0);
     }
+  });
+
+  it("bad faith is gone, and stays gone", () => {
+    // Removed 2026-08-23 on the owner's ruling. It imputes dishonesty to a named officer, the
+    // letter composer already refused to carry it, and the owner's memo says it "is rarely
+    // necessary where improper purpose and bias are available" — both of which remain.
+    const ids = LegalIndexSchema.parse(raw).grounds.map((g) => g.id);
+    expect(ids).not.toContain("bad-faith");
+    expect(ids).toContain("improper-purpose");
+    expect(ids).toContain("procedural-fairness-bias");
   });
 
   it("cases the owner has disowned cannot come back", () => {

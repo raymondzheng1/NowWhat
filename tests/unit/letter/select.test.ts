@@ -5,7 +5,7 @@ const ACCOUNT =
   "They cut my payment with no warning. I rang twice and nobody called back. I think it was around the 3rd of March.";
 
 function screen(points: { groundId: string; items: { quote: string; sentences: string[] }[] }[]) {
-  return screenSelection({ points }, ACCOUNT, ["procedural-fairness-hearing", "bad-faith"]);
+  return screenSelection({ points }, ACCOUNT, ["procedural-fairness-hearing", "improper-purpose"]);
 }
 
 describe("screening: a failing point is dropped, never repaired", () => {
@@ -54,7 +54,7 @@ describe("screening: a failing point is dropped, never repaired", () => {
   it("refuses a point the person never marked, or one that carries no heading", () => {
     const r = screen([
       { groundId: "unreasonableness", items: [{ quote: "I rang twice", sentences: ["I rang twice."] }] },
-      { groundId: "bad-faith", items: [{ quote: "I rang twice", sentences: ["I rang twice."] }] },
+      { groundId: "improper-purpose", items: [{ quote: "I rang twice", sentences: ["I rang twice."] }] },
     ]);
     expect(r.points).toHaveLength(0);
     expect(r.droppedGates).toContain("not-marked");

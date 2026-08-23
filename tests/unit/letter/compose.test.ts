@@ -44,7 +44,7 @@ describe("the letter is the person's account, not our argument", () => {
   });
 
   it("tells the agency the letter is not everything, when something was left out", () => {
-    const out = compose({ "g-bad-faith": "ignored" }, ["bad-faith"]);
+    const out = compose({ "g-improper-purpose": "ignored" }, ["improper-purpose"]);
     expect(out.body).toContain(L.otherConcerns);
   });
 
@@ -74,8 +74,9 @@ describe("which grounds may carry a heading", () => {
     );
   });
 
-  it("bias, bad faith and improper purpose never appear — they impute a state of mind", () => {
-    for (const id of ["bad-faith", "procedural-fairness-bias", "improper-purpose"]) {
+  it("bias and improper purpose never appear — they impute a state of mind", () => {
+    // Bad faith was the third of these until the owner removed the ground on 2026-08-23.
+    for (const id of ["procedural-fairness-bias", "improper-purpose"]) {
       expect(LETTER_GROUND_HEADINGS[id]).toBeUndefined();
     }
   });
