@@ -30,13 +30,15 @@ one VCAT can hear — get advice rather than assume.
 ## Ask for the reasons in writing
 
 You can ask the decision-maker for a written statement of reasons. A time limit applies to
-the decision. This helps you understand the decision, and it can also move the start of
-your time to apply to VCAT to when you get the reasons.
+the request. This helps you understand the decision. In some review schemes, asking for
+reasons changes when the clock starts. Do not rely on that. Check the rule for your
+decision, or ask a free legal service.
 
 ## Time limits
 
-The time limit to apply to VCAT is often 28 days, but the Act that applies can set a
-different, sometimes shorter, limit. Check the time limit on your letter and act early.
+There is a time limit to apply to VCAT. It is set by the Act your decision was made
+under, and it can be short. Check your letter, then check with VCAT or a free legal
+service.
 
 ### If the time limit has already passed
 
@@ -51,8 +53,8 @@ power, and gave you a fair process.
 
 A court can set a decision aside and send it back to be made again. It cannot make a new
 decision for you. This path is more formal than VCAT, there are court fees, and a court can
-order you to pay the other side's costs. The time limits are strict, and they run from the
-decision rather than from when you finish trying other things. Talk to a free legal service before you file anything.
+order you to pay the other side's costs. The time limits are strict, and trying another
+path first does not restart them. Talk to a free legal service before you file anything.
 
 Victoria has two ways into the Supreme Court, and they are not the same. One is the court's own
 supervisory jurisdiction, used through its rules. The other comes from the Administrative Law Act
@@ -60,8 +62,8 @@ supervisory jurisdiction, used through its rules. The other comes from the Admin
 limits, and different rules. Which one fits can be technical, so ask a free legal service before you file.
 
 One thing worth knowing: if a tribunal time limit has passed, that does not by itself close the
-court pathways. They run on their own clocks, from the decision rather than from the end of
-anything else.
+court pathways. They run on their own clocks. A free legal service can tell you which one
+applies.
 
 ## If a decision can't be reviewed
 

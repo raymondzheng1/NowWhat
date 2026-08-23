@@ -20,7 +20,7 @@ sources:
   - Tenants Victoria — tenantsvic.org.au
 related:
   - appeal-a-public-housing-decision-in-victoria
-updated: '2026-06-30'
+updated: '2026-06-16'
 ---
 
 ## What is a transfer request?
@@ -34,8 +34,8 @@ If your transfer request is not approved, you have the right to know why. The ho
 Transfer decisions can be appealed for free. Here is how the process works:
 
 1. **Talk to your local housing office first.** Ask them to look at the decision again and explain your reasons.
-2. **Lodge a housing appeal.** You can do this online, by post, or by phone. If the first review does not fix the problem, your case automatically goes to the **Housing Appeals Office** for an independent review.
-3. **Lodge as soon as you can.** There is no strict published deadline. It helps to lodge as soon as you can.
+2. **Lodge a housing appeal.** You can do this online, by post, or by phone. If the first review does not fix the problem, your case automatically goes to the **Housing Appeals Office** — an independent reviewer within the housing department.
+3. **Lodge as soon as you can.** A housing appeal can have a time limit. Check it with the Housing Appeals Office or a free service.
 
 When you appeal, it helps to gather supporting documents such as medical certificates, disability evidence, family violence documentation, or letters showing your circumstances.
 
@@ -51,19 +51,9 @@ You can argue that the housing department did not apply its own policies and pro
 
 You do not have to deal with this alone. These free services can help:
 
-- **Housing Appeals Office** (free, independent reviews) — 1800 807 702
+- **Housing Appeals Office** (free reviews of housing decisions, by a reviewer within the housing department) — 1800 807 702
 - **Tenants Victoria** Social Housing line (free advice for public housing renters) — 1800 068 860
 - **Victoria Legal Aid** (free legal help) — 1300 792 387
 - **Justice Connect – Homeless Law** (free legal help if you are at risk of homelessness) — 1800 606 313
 
 [Find out more about challenging a housing decision →](/start)
-
-<!--
-Late-application block removed 2026-08-23 on a Fable QA finding, agreed by both passes.
-
-I added it to every VCAT and ART page by entry id, which swept in this one. The only deadline here
-belongs to the Housing Appeals Office, which is not a tribunal, and no tribunal application appears on the page. The
-ground for the sentence — VCAT Act s 126(1), extending time for the commencement of a proceeding —
-does not reach a missed step of this kind. A reader past the date would have gone looking for an
-extension that does not exist for it.
--->

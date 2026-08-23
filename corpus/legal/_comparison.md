@@ -9,7 +9,7 @@ rows:
   - { aspect: "Who can apply", mr: "Whoever the law for that decision says can apply", jr: "A person with a real interest in the decision" }
   - { aspect: "Cost and formality", mr: "Usually cheaper and less formal", jr: "More formal, and often needs a lawyer" }
   - { aspect: "The money risk", mr: "Usually free, or a low fee", jr: "Court fees. You may also be ordered to pay the other side's costs." }
-  - { aspect: "When it is available", mr: "Only where a law gives a review right for that decision", jr: "Generally available. Whether there was a legal error is the question a court decides, not a condition for asking. A law cannot take away the court's power to check that a decision-maker stayed inside their legal limits. Narrower kinds of review can be restricted, and time limits still apply." }
+  - { aspect: "When it is available", mr: "Only where a law gives a review right for that decision", jr: "Usually open, but the route depends on the decision and who made it. Whether there was a legal error is the question a court decides, not a condition for asking. A law cannot take away the court's power to check that a decision-maker stayed inside their legal limits. Narrower kinds of review can be restricted, and time limits still apply." }
 chooser:
   question: "What are you hoping for?"
   options:
@@ -26,7 +26,7 @@ faq:
   - q: "If both are open, which one comes first?"
     a: "Where a law gives a right to merits review, that is usually the step people take first. It costs less, it can change the outcome, and a fresh decision may settle the matter without a court. One thing to know before you choose: the court's time limit for the original decision may keep running while the tribunal review happens. Ask a free legal service about that limit before the tribunal starts, rather than after. What is usually left afterwards is a challenge to the tribunal's own decision, which is a different thing. If you think there is also a legality problem, raise it with a human legal service early rather than after the tribunal finishes."
   - q: "What if the tribunal decides against me too?"
-    a: "Two different things may be open, and each has its own short time limit. One is an appeal to a court on a question of law, which the law setting up the tribunal gives you. The other is judicial review, which asks whether the tribunal kept within its legal power — for example if it applied the wrong test or did not give you a fair hearing. An appeal sometimes needs the court's permission first. Which one fits is technical, so ask a human legal service quickly."
+    a: "Two different things may be open, and each has its own short time limit. One may be an appeal to a court on a question of law, where the law setting up the tribunal gives one. The other is judicial review, which asks whether the tribunal kept within its legal power — for example if it applied the wrong test or did not give you a fair hearing. An appeal sometimes needs the court's permission first. Which one fits is technical, so ask a human legal service quickly."
   - q: "Is there one first step that helps either way?"
     a: "Asking for the reasons in writing helps with both. It is usually free, and it shows you what the decision-maker actually relied on. That is what tells you whether your complaint is about the outcome or about how the decision was made."
   - q: "Can I give them new information?"
@@ -77,3 +77,21 @@ warning and referral were settled earlier today.
 five remedy-specific standing tests in `standing.md` into one line, and the "money risk" cell states
 costs exposure flatly. Both are over-general in the same way "Most decisions" was, but tightening
 them needs sourced content this entry does not hold.
+
+Two openings softened 2026-08-23, from a further external review the owner approved. Both are the
+first words of a cell or an answer, which is the part a reader takes away.
+
+**"Generally available" replaced.** The availability cell already carried three qualifying sentences
+after it, so the cell as a whole was not the bare promise the review described. But the two words at
+the front were the only ones that promised rather than qualified, and they read as a general rule
+about who can get into a court. The cell now opens "Usually open, but the route depends on the
+decision and who made it." The three sentences that follow are untouched, including the entrenchment
+sentence — that one is sourced by Kirk and Plaintiff S157, both already cited on
+`/learn/grounds/jurisdictional-error`, and losing it would have cost us sourced content.
+
+**The appeal on a question of law is no longer stated as certain.** The answer opened correctly on
+"may be open" and then undid itself: "which the law setting up the tribunal gives you" asserts the
+right exists. Whether an appeal on a question of law is available, and on what terms, comes from the
+tribunal's own Act — the same point `judicial-review.md` settled earlier today. It now reads "One may
+be an appeal ... where the law setting up the tribunal gives one." The permission caveat and the
+referral to a human legal service were already in the answer and were left alone.

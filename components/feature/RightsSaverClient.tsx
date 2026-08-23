@@ -136,6 +136,7 @@ const FLAG_KEYS: { key: keyof TripwireFlags; label: string; hint?: string }[] = 
   { key: "migration", label: "flagMigration" },
   { key: "hearingBooked", label: "flagHearing" },
   { key: "deadlineImminentOrPassed", label: "flagDeadline" },
+  { key: "tribunalDecision", label: "flagTribunal", hint: "flagTribunalHint" },
 ];
 
 export interface FaqLink {

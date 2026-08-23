@@ -14,9 +14,10 @@ whatItMeans: >-
   and courts do review those.
 whatItIsNot: >-
   This is not a hurdle for ordinary decisions. A Centrelink debt, a fine, a
-  housing refusal or a licence decision is made under an Act, and that is
-  exactly the kind of decision courts review every day. This narrow rule is
-  about things like going to war.
+  housing refusal or a licence decision is usually made under an Act. Courts do
+  review that kind of decision. Whether a court can review yours also depends on
+  who made it and which law applies. This narrow rule is about things like going
+  to war.
 keyPoints:
   - >-
     Decisions made under an Act are the ordinary case. Other rules can still get
@@ -79,3 +80,16 @@ The reassurance is deliberate and stays. This entry exists so somebody with a Ce
 not read a list of what courts refuse to touch and conclude it includes them. `whatItIsNot` still
 names their own situation as the ordinary case, and the new sentence adds a caution without moving
 the emphasis.
+
+**`whatItIsNot` given the same qualification 2026-08-23**, on the external legal review. The
+`keyPoint` above was softened; the field a reader actually meets first was not, so the page carried
+the caution in one place and a flat promise in the other.
+
+Two changes. "Is made under an Act" became "is usually made under an Act", because the four examples
+are decision types, not decision-makers — a housing refusal by a community housing provider is not a
+departmental decision under an Act. And "that is exactly the kind of decision courts review every
+day" became "courts do review that kind of decision", followed by a sentence naming who made it and
+which law applies as things that still matter.
+
+The reassurance survives both. A Centrelink reader still reads that their decision is the ordinary
+case; they no longer read a promise about their own matter that this entry cannot keep.

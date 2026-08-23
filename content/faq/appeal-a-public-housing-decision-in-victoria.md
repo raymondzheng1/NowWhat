@@ -2,7 +2,7 @@
 title: "Can I appeal a public housing decision in Victoria?"
 description: "Public and community housing decisions can usually be challenged in Victoria — but the route depends on the decision. Here's how housing appeals and eviction challenges work."
 question: "Can I appeal a public or community housing decision in Victoria?"
-answer: "Usually yes, but the route depends on the type of decision. Decisions about your housing application, priority, a transfer or your rebate can be appealed for free through the Housing Appeals Office, and there is no strict deadline. An eviction (a notice to vacate) is different — it goes to VCAT, and there is a 30-day window to challenge it early. Free help is available from Tenants Victoria and Justice Connect."
+answer: "Usually yes, but the route depends on the type of decision. Decisions about your housing application, priority, a transfer or your rebate can be appealed for free through the Housing Appeals Office. A housing appeal can have a time limit, so check it and lodge as soon as you can. An eviction (a notice to vacate) is different. It goes to VCAT, and there is a short window to challenge it early. Check the date with a free legal service. Free help is available from Tenants Victoria and Justice Connect."
 entryId: vic-public-housing
 category: "Housing"
 sources:
@@ -22,16 +22,17 @@ matters.
 ## Decisions about your housing application
 
 Decisions about eligibility, priority, a transfer, or your rebate can be appealed for
-free. You talk to your local housing office first, then the Housing Appeals Office gives
-an independent review. There is no strict published deadline, but it helps to lodge as
-soon as you can.
+free. You talk to your local housing office first. Then it goes to the Housing Appeals
+Office — an independent reviewer within the housing department. A housing appeal can
+have a time limit. Check it with the Housing Appeals Office or a free service, and lodge
+as soon as you can.
 
 ## An eviction is different
 
 If you have been given a notice to vacate, that is a tenancy matter under the Residential
-Tenancies Act. It goes to VCAT, not the Housing Appeals Office. There is a 30-day window
-to challenge the notice early, and even if you miss it, you can still argue the notice is
-not valid at the possession hearing.
+Tenancies Act. It goes to VCAT, not the Housing Appeals Office. There is a short window
+to challenge the notice early, so check the date with a free legal service. Even if you
+miss it, you can still argue the notice is not valid at the possession hearing.
 
 ### If the time limit has already passed
 

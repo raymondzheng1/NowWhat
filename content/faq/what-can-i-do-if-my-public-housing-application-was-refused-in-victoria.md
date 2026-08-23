@@ -2,7 +2,7 @@
 title: "What can I do if my public housing application was refused in Victoria?"
 description: "A refused housing application can be reviewed for free in Victoria — your local office first, then the Housing Appeals Office. Here's how it works."
 question: "What can I do if my public housing application was refused in Victoria?"
-answer: "You can ask for the decision to be reviewed, for free. Talk to your local housing office first. If that does not fix it, the Housing Appeals Office gives an independent review. There is no strict published deadline, but it helps to lodge as soon as you can. Free help is available from Tenants Victoria and Victoria Legal Aid."
+answer: "You can ask for the decision to be reviewed, for free. Talk to your local housing office first. If that does not fix it, it goes to the Housing Appeals Office — an independent reviewer within the housing department. A housing appeal can have a time limit. Check it with the Housing Appeals Office or a free service, and lodge as soon as you can. Free help is available from Tenants Victoria and Victoria Legal Aid."
 entryId: vic-public-housing
 category: "Housing"
 sources:
@@ -12,7 +12,7 @@ sources:
 related:
   - appeal-a-public-housing-decision-in-victoria
   - how-do-i-ask-for-a-public-housing-transfer-in-victoria
-updated: "2026-07-12"
+updated: "2026-06-16"
 ---
 
 A refusal is not always the end of it. Housing decisions in Victoria — including
@@ -29,19 +29,17 @@ evidence.
 
 Talk to your local housing office first. If the first review does not fix it, it goes
 to the Housing Appeals Office — an independent reviewer within the housing department.
-You can lodge online, by post or by phone (1800 807 702). There is no strict published
-deadline, but it helps to lodge as soon as you can.
+You can lodge online, by post or by phone (1800 807 702). A housing appeal can have a
+time limit. Check it with the Housing Appeals Office or a free service, and lodge as soon
+as you can.
 
 ## Community housing is slightly different
 
 If a community housing provider made the decision, use the provider's complaints
 process first. If you are not happy with the outcome, you can ask the Victorian Housing
-Registrar to look at it. An eviction is a different path again — a notice to vacate
-goes to VCAT, with a 30-day window to challenge it early.
-
-### If the time limit has already passed
-
-Missing the date does not always end things. A tribunal can be asked to allow a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+Registrar to look at it. An eviction is a different path again. A notice to vacate goes
+to VCAT, and there is a short window to challenge it early. Check the date with a free
+legal service.
 
 ## Get free help
 

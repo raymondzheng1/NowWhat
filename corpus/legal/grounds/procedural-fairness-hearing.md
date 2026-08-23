@@ -16,7 +16,7 @@ plainExample: >-
 whatRelates:
   - You did not know a decision about you was coming.
   - Nobody asked you to explain your side of it.
-  - Something was used against you that you never saw.
+  - Something was used against you that nobody told you about.
   - You had something to say and no way to put it to them.
   - The process changed part way, and nobody told you.
   - >-
@@ -43,8 +43,8 @@ elements:
     name: Notice of what was being decided
     layPrompt: Were you told what was being looked at before it was decided?
   - id: adverse-information
-    name: Information against you was shown to you
-    layPrompt: Was something used against you that you never got to see?
+    name: You were told what counted against you
+    layPrompt: Was something used against you that you were never told about?
   - id: chance-to-respond
     name: A real chance to respond
     layPrompt: Did you get a real chance to reply before the decision?
@@ -63,8 +63,8 @@ leadingCases:
   - name: Kioa v West (1985) 159 CLR 550
     pinpoint: Brennan J
     explains: >-
-      Key information counting against a person should usually be shown to
-      them.
+      A person should usually be told enough about key information counting
+      against them. Enough to reply to it.
   - name: >-
       Minister for Immigration and Border Protection v WZARH (2015) 256 CLR 326
     pinpoint: 'Kiefel, Bell and Keane JJ'
@@ -103,3 +103,16 @@ On the owner's third instruction — no migration-specific discussion was added,
 to remove. The entry's customer copy has never discussed visas or migration; Saeed, Kioa, WZARH and
 Nathanson appear only as case names, cited for propositions of general application, which is how
 the owner's own materials cite them.
+
+**Shown, seen and told, 2026-08-23 (pre-launch review).** `whatItMeans` was fixed on 2026-08-19 to say the
+person must be told enough about adverse information to reply. Four fields around it were not, and they all
+still said shown or seen: the `adverse-information` element name and its prompt, one `whatRelates` bullet,
+and the Kioa note.
+
+That gap is not cosmetic. Fairness can be met by telling someone the substance of what counts against them;
+it does not always require handing over the document. A reader who was told what was in a report, but never
+shown it, would read four of our fields as saying they have a ground. They now match `whatItMeans`, which is
+left as it is.
+
+`plainExample` still says "a report you were never shown". It was not in the accepted change, and it does
+not carry the same risk: it describes one case where nothing was disclosed at all, not the standard.

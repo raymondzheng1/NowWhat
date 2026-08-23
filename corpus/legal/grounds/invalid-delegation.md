@@ -23,9 +23,10 @@ whatItIsNot: >-
   way every day, and a large department dealing with the same decision often is
   the ordinary case, not a problem. A signature you do not recognise is not a
   sign of anything by itself. The authority to sign does not have to appear in
-  the letter, or in any formal document — it can come from the Act, from a
-  delegation, or from the way that decision has long been made in the
-  department. The question is what the Act requires, not what the letter shows.
+  the letter, or in any formal document. It can come from the Act, from a
+  delegation, or — within what the Act allows — from the way that decision has
+  long been made in the department. The question is what the Act requires, not
+  what the letter shows.
 usedIn:
   - judicial-review
 test: >-
@@ -98,3 +99,17 @@ practice — and the field still closes on what the Act requires being the quest
 the two facts sat together as if the mismatch were the answer. It now says the difference is where
 the question starts, not where it ends. That is the same point Pattenden's factors make in the note
 above: in a big agency doing routine work they usually point away from a delegation problem.
+
+**Practice subordinated to the Act, 2026-08-23, on the pre-launch legal review.** `whatItIsNot`
+listed three sources of the authority to sign — the Act, a delegation, and long-standing practice
+in the department — flat and in that order. Practice sitting third in a flat list reads as a source
+of authority in its own right, which it is not. The point is sourced as far as it goes: per
+Pattenden the ability of a subordinate to exercise a power in the Minister's name "need not be
+found in a formal instrument but may be found in departmental practice". Practice is where the
+authority may be found; it is not what creates it, and it cannot carry a decision past what the Act
+requires.
+
+So the limit is now inside the sentence — practice counts "within what the Act allows" — rather
+than left to the sentence after it. Nothing was added or removed: the three sources stand, and the
+field still closes on what the Act requires being the question, which is the sentence the reviewer
+asked for and we already had. The long sentence was also split at the dash, which was overdue.

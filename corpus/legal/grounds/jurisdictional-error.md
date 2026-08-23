@@ -17,7 +17,8 @@ whatRelates:
     decide.
 whatItIsNot: >-
   It does not mean any mistake — it has to be an error that goes to the
-  decision-maker's power.
+  decision-maker's power. The Act itself decides which errors cross the limit of
+  the power. Not every wrong question or missed step crosses it.
 usedIn:
   - judicial-review
 test: >-
@@ -64,3 +65,10 @@ Open item for the next sourcing pass: this entry and `unreasonableness` are the 
 only to "Victoria Legal Aid — legalaid.vic.gov.au". They did not go through the August pass that rebuilt
 their neighbours against the owner's materials, which is why both read thinner than the rest of the set.
 Nothing further was added here, because there is no source in the entry to add it from.
+
+**The construction point reached the page, 2026-08-23 (pre-launch review).** Adding it to `test` earlier the
+same day fixed nothing a reader could see: `test` renders nowhere. So the page still offered "asking the
+wrong question" as a classic error, with nothing to say which mistakes count. `whatItIsNot` now carries that
+sentence in the same words, plus the half that follows from it — not every wrong question or missed step
+crosses the limit. The sentence stays in `test` too. That is the doctrinal field, no reader sees both, and
+reopening it was not the point. Nothing new was asserted, which matters here: the entry still has one source.

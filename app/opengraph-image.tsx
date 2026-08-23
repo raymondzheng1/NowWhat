@@ -23,7 +23,7 @@ export default function OpengraphImage() {
             THEY SAID NO. YOU MAY SAY: LOOK AGAIN.
           </div>
           <div style={{ marginTop: 28, fontFamily: OG.display, fontWeight: 400, fontSize: 30, color: OG.inkSoft, maxWidth: 880, textAlign: "center", lineHeight: 1.4 }}>
-            Free, plain-English help with a government decision. No account, nothing stored.
+            Free, plain-English help with a government decision. No account, your letter is not stored.
           </div>
         </div>
         <div style={{ height: 12, background: OG.ink }} />

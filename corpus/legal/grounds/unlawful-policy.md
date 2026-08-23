@@ -90,3 +90,19 @@ choice the Act gives — which read as though removal of a discretion were requi
 materials is wider: a decision-maker "must not apply a policy that is unlawful, inconsistent with the
 statute, or leads to an improper exercise of discretion". The third limb is now published in plain words,
 as a choice used in a way the Act does not allow.
+
+**Drake short form kept, 2026-08-23, on the pre-launch legal review. No change here either.** The
+reviewer asked for the full authorised citation in this entry and in `inflexible-policy`, or the
+case dropped until independently verified. We did neither, for the reason `inflexible-policy`
+already records against the same request: the full form appears in none of the four KNOWLEDGE
+documents and in none of the captured judgments, so writing one in would add an unsourced citation —
+the defect that removed Agfa-Gevaert and SBBS from this corpus. The reviewer agrees on the
+principle: internal drafting notes are not a bibliographic source.
+
+Dropping the case is worse here than anywhere else in the set. Every policy proposition in our
+materials is attributed to Drake (No 2), as the 19 August note above sets out, and Green carries its
+line jointly with Drake. Removing Drake would leave the entry attributing to Green alone what the
+materials give to both — the exact error corrected on 23 August.
+
+The citation goes to the supervising lawyer with this entry's sign-off, to be supplied from an
+authorised report. `inflexible-policy` carries the matching note, and the two entries move together.

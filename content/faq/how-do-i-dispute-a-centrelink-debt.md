@@ -52,16 +52,10 @@ You can dispute a debt if you think:
 - The rules were not applied correctly to your situation
 - Your personal circumstances were not properly taken into account
 
-### If the time limit has already passed
-
-Missing the date does not always end things. The tribunal can be asked to accept a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
-
 ## If the tribunal decides against you
 
 There are usually more steps, and each has its own time limit.
 
-- The tribunal itself may be able to look at the decision a second time. Ask what applies to
-  your kind of decision.
 - A court can hear an appeal on a question of law. That is about the law being applied wrongly,
   not about the facts.
 - Judicial review asks whether the decision was made lawfully. It is a different question again,

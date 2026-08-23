@@ -2,16 +2,15 @@
 id: internal-review
 name: Internal review
 plainName: Asking the department to look at it again
-oneLine: Often the first step, and usually the fastest and cheapest one.
+oneLine: Often the first step, and usually the cheapest one.
 order: 5
 appliesTo:
   - any
 whatItMeans: >-
   Many schemes let you ask the department to look at its own decision again.
   Often the person who looks again was not involved the first time. It is
-  usually free, and it is usually much quicker than a tribunal or a court. In
-  some schemes it is also the step you have to take before you can go anywhere
-  else.
+  usually free, and it can be quicker than a tribunal or a court. In some
+  schemes it is also the step you have to take before you can go anywhere else.
 whatItIsNot: >-
   It is not an outside review. The same department is deciding, so it will not
   suit every situation. It also does not always pause the clock for the next
@@ -23,7 +22,7 @@ keyPoints:
   - >-
     The rules are different for every department, so there is no single answer
     about how it works.
-  - It is usually free, and usually faster than any outside review.
+  - It is usually free, and it may be quicker than an outside review.
   - >-
     For some schemes you have to do this first before an outside body will look
     at your case.
@@ -73,5 +72,21 @@ original decision-maker, has been set up to trust a step they should be checking
 already said "For some schemes". Two sentences on one page should not put the same fact at two
 different strengths.
 
-The free-and-faster lines are untouched. They already carry "usually", which is the hedge the
-review asked for.
+**The speed claims hedged 2026-08-23**, on the external legal review, reversing the ruling in the
+paragraph above. "Usually much quicker than a tribunal or a court" is now "can be quicker", and the
+`keyPoint` "usually faster than any outside review" is now "may be quicker than an outside review".
+
+"Usually" was thought to be hedge enough. It is not. We hold no comparative timing data for any
+scheme, so a prevalence claim about speed had nothing behind it but the knowledge base.
+
+The `keyPoint` was also the wider of the two. "Any outside review" sweeps in an Ombudsman complaint,
+which this corpus nowhere describes as slow, so the two sentences were also stating the same fact at
+two different strengths.
+
+`oneLine` went with them, beyond what the review asked. It said "usually the fastest and cheapest
+one", which is the same claim again and the strongest version of it, on the string a reader meets
+first. It now says "usually the cheapest one". Hedging two fields and leaving the headline promising
+speed would have put the contradiction where it does the most work.
+
+"Usually free" and "usually the cheapest" stay as they are. Cost was not raised, and it is the half
+of the pair the knowledge base does stand behind.

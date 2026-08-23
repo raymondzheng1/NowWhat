@@ -9,7 +9,9 @@ whatItMeans: >-
   A decision can be challenged where the decision-maker made a legal error. That
   can mean applying the wrong test, misreading what a law requires, or
   misunderstanding a legal word. Some legal errors are reviewable even when they
-  show on the face of the reasons or record.
+  show on the face of the reasons or record. What counts as the record is not the
+  same on every route. It does not always include the reasons. In Victoria, a
+  tribunal's reasons are treated as part of the record.
 plainExample: A decision applies a stricter test than the law actually sets.
 whatRelates:
   - The decision seems to apply the wrong rule or test.
@@ -38,6 +40,7 @@ elements:
     layPrompt: Do the reasons misstate what the law requires?
 sources:
   - Victoria Legal Aid — legalaid.vic.gov.au
+  - Administrative Law Act 1978 (Vic) s 10 — legislation.vic.gov.au
 status: verified
 leadingCases:
   - name: Craig v South Australia (1995) 184 CLR 163
@@ -95,3 +98,16 @@ and it does not always include the reasons. Per Craig the record "will not inclu
 the exhibits or the reasons for decision unless they are incorporated by reference", and reasons
 forming part of the record is a Victorian statutory cure (ALA s 10) rather than the general
 position. This qualifies the restored phrase; it does not reverse the ruling that restored it.
+
+**The caveat now renders, 2026-08-23, on the pre-launch legal review.** It was only ever in `test`,
+and `test` is shown nowhere — `GroundExplainer` renders `whatItMeans`, `plainExample`,
+`whatRelates`, the elements, `whatItIsNot` and the cases. So the note above fixed a field no reader
+meets, and a reader outside Victoria still met the flat sentence. The caveat is now in
+`whatItMeans` in its own words, split into two short sentences rather than one long one. It stays
+in `test` as well.
+
+The Victorian rule is stated once, and narrowly: in Victoria a tribunal's reasons are treated as
+part of the record. Administrative Law Act 1978 (Vic) s 10 ("Reasons to be part of record") reaches
+a tribunal or an inferior court, not every decision-maker, so the sentence says tribunal and stops
+there. The Act is now named in `sources`, which is what lets us publish the point at all — the
+entry's only other source is Victoria Legal Aid.

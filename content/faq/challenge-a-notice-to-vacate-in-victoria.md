@@ -2,7 +2,7 @@
 title: "Can I challenge a notice to vacate in Victoria?"
 description: "A notice to vacate doesn't automatically mean you have to leave. Here's how to challenge one at VCAT in Victoria, the time limit, and where to get free help."
 question: "Can I challenge a notice to vacate in Victoria?"
-answer: "Yes. A notice to vacate does not automatically mean you have to move out. You can ask VCAT to check whether the notice is valid. Apply within 30 days to challenge it early — and even if you miss that, you can still argue the notice is not valid at the possession hearing. Free help is available from Tenants Victoria and Victoria Legal Aid."
+answer: "Yes. A notice to vacate does not automatically mean you have to move out. You can ask VCAT to check whether the notice is valid. Apply within 30 days to challenge it early — and even if you miss that, you can still argue the notice is not valid at the possession hearing. The time can depend on the reason on your notice, so check it with a free service. Free help is available from Tenants Victoria and Victoria Legal Aid."
 entryId: vic-renting
 category: "Renting"
 sources:
@@ -27,7 +27,8 @@ or the notice period is too short, the notice may not be valid.
 ## Challenge it at VCAT
 
 You can apply to VCAT to challenge the notice. Apply within 30 days to challenge it
-early. If you miss the 30 days, you can still argue the notice is invalid at the hearing
+early, and check that window with a free service, because it can depend on the reason on
+your notice. If you miss the 30 days, you can still argue the notice is invalid at the hearing
 where your rental provider asks for a possession order. Even with a valid notice, VCAT
 must decide it is reasonable and proportionate before ordering you to leave.
 

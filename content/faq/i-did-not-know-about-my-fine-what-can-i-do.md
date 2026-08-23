@@ -17,7 +17,7 @@ sources:
   - Victoria Legal Aid — Fines and infringements — legalaid.vic.gov.au
 related:
   - dispute-a-fine-in-victoria
-updated: '2026-06-30'
+updated: '2026-06-16'
 ---
 
 ## There is a review option made for this situation

@@ -29,6 +29,7 @@ export type TripwireReason =
   | "detention"
   | "migration"
   | "hearing-on-foot"
+  | "tribunal-decision"
   | "deadline-imminent-or-passed"
   | "privative-clause";
 
@@ -54,6 +55,17 @@ export interface TripwireFlags {
   hearingBooked?: boolean;
   /** The person says the time limit is very soon or has already passed. */
   deadlineImminentOrPassed?: boolean;
+  /**
+   * The decision under challenge was made by a TRIBUNAL, not by an agency.
+   *
+   * The flow was built around an original agency decision, and /start offered "a state
+   * department, council, tribunal, or housing office" as one answer — so someone whose VCAT
+   * decision went against them was routed as though they could ask a tribunal to look at it
+   * again. What is open after a tribunal is different: an appeal on a question of law that the
+   * constituting Act confers, or judicial review, both on short limits. Raised by an external
+   * accuracy review, 2026-08-23.
+   */
+  tribunalDecision?: boolean;
 }
 
 export interface TripwireInput {
@@ -85,6 +97,7 @@ export function checkTripwire(input: TripwireInput): TripwireResult {
   if (f.criminal) stopReasons.push("criminal");
   if (f.detention) stopReasons.push("detention");
   if (f.migration) stopReasons.push("migration");
+  if (f.tribunalDecision) stopReasons.push("tribunal-decision");
   if (input.entry?.privativeClause) stopReasons.push("privative-clause");
 
   if (f.deadlineImminentOrPassed) urgentReasons.push("deadline-imminent-or-passed");
@@ -113,6 +126,7 @@ export const TRIPWIRE_MESSAGE_KEYS: Record<TripwireReason, string> = {
   criminal: "tripwire.criminal",
   detention: "tripwire.detention",
   migration: "tripwire.migration",
+  "tribunal-decision": "tripwire.tribunalDecision",
   "hearing-on-foot": "tripwire.hearingOnFoot",
   "deadline-imminent-or-passed": "tripwire.deadlineImminentOrPassed",
   "privative-clause": "tripwire.privativeClause",
@@ -203,6 +217,19 @@ export const TRIPWIRE_SERVICES: Record<TripwireReason, HelpService[]> = {
       link: "https://www.fclc.org.au",
     },
   ],
+  "tribunal-decision": [
+    {
+      service: "Victoria Legal Aid",
+      who: "free legal information and advice — Legal Help line",
+      phone: "1300 792 387",
+      link: "https://www.legalaid.vic.gov.au",
+    },
+    {
+      service: "Community legal centres",
+      who: "free local legal help — find your nearest centre",
+      link: "https://www.fclc.org.au",
+    },
+  ],
   // Timing reasons never reach the stop screen (they are URGENT, not STOP), but the record
   // has to be total; the urgent banner uses the decision's own services.
   "hearing-on-foot": [],
@@ -246,6 +273,7 @@ const STOP_CAPABILITIES: Record<TripwireReason, StopCapabilities> = {
   criminal: { urgentPerson: true },
   detention: { urgentPerson: true },
   migration: { urgentPerson: false },
+  "tribunal-decision": { urgentPerson: false },
   "privative-clause": { urgentPerson: false },
   "hearing-on-foot": { urgentPerson: false },
   "deadline-imminent-or-passed": { urgentPerson: false },

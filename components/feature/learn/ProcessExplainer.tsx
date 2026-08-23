@@ -91,9 +91,13 @@ export function ProcessExplainer({
                   </li>
                 ))}
             </ul>
+            {/* "Every state has its own equivalent, and it works the same way" was published
+                here until 2026-08-23. State tribunals differ in jurisdiction, powers, fees and
+                enabling legislation, and nothing in our sources supported the equivalence. This
+                string renders on four surfaces, so the claim reached a reader four ways. */}
             <p className="mt-2.5 text-[14.5px] leading-snug text-ink-faint">
-              We cover Victoria in detail. Every state has its own equivalent, and it works the
-              same way.
+              We cover Victoria in detail. Other states have their own review bodies and their
+              own rules, so check the rules where you live.
             </p>
           </div>
         )}

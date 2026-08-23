@@ -17,7 +17,6 @@ whatRelates:
   - The reasons skip straight to the answer.
   - Two parts of the letter cannot both be true.
   - The letter accepts something and then decides the opposite.
-  - The material in front of them pointed the other way.
   - >-
     They were satisfied of something the Act does not actually ask about, or
     read the test as asking something different.
@@ -133,3 +132,16 @@ The rest of the finding needed no action. Legal unreasonableness is not merged i
 The illogicality merge is the owner's 2026-08-23 decision. The three-way separation asked for already
 exists as the `was-satisfied`, `right-question` and `open-on-material` elements, and "no rational
 decision-maker" is the threshold our source states.
+
+**One prompt deleted 2026-08-23 (pre-launch review).** "The material in front of them pointed the other way"
+is gone, with nothing put in its place.
+
+On its face it is ordinary disagreement with the facts, which is what `whatItIsNot` on this page spends four
+sentences ruling out, and what the `no-evidence` page routes to merits review. Nearly every reader who lost
+thinks the material pointed the other way. Offering that back as a prompt taught them the wrong process to
+spend their time limit on.
+
+The neighbouring bullet stays. "The reasons skip straight to the answer" is the no-path point, which SZMDS
+and Li support and the `any-path` element already asks. The gateway was not repeated across the other
+prompts either: it is in the ground's name, the `oneLine`, the first sentence of `whatItMeans` and the
+`right-question` element, and saying it a fifth time would cost more in reading grade than it bought.

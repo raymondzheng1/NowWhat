@@ -13,7 +13,7 @@ sources:
 related:
   - can-i-ask-for-a-government-decision-to-be-reviewed
   - what-is-a-statement-of-reasons-and-how-do-i-ask-for-one
-updated: "2026-07-12"
+updated: "2026-06-16"
 ---
 
 There is no single appeal path for every Victorian government decision. The path
@@ -32,14 +32,15 @@ You can ask the decision-maker for a written statement of reasons. A time limit 
 to the request, and which date it runs from is worth checking. They then have a set
 time to reply. This is free.
 Written reasons explain what was decided and why, which makes the next step clearer.
+In some review schemes, asking for reasons changes when the clock starts. Do not rely on
+that. Check the rule for your decision, or ask a free legal service.
 
 ## Apply to VCAT, if the law allows it
 
 Where VCAT can review a decision, it takes a fresh look. It can make its own decision
-in place of the original one. The time limit is often 28 days, counted from the
-decision or from when you get the reasons. But the Act that applies can set a
-different, sometimes shorter, limit — the letter is the place to check. A fee usually
-applies, and fee waivers and concessions are available.
+in place of the original one. There is a time limit. It is set by the Act your decision
+was made under, and it can be short. Check your letter, then check with VCAT or a free
+legal service. A fee usually applies, and fee waivers and concessions are available.
 
 ### If the time limit has already passed
 
@@ -54,8 +55,8 @@ power, and gave you a fair process.
 
 A court can set a decision aside and send it back to be made again. It cannot make a new
 decision for you. This path is more formal than VCAT, there are court fees, and a court can
-order you to pay the other side's costs. The time limits are strict, and they run from the
-decision rather than from when you finish trying other things. Talk to a free legal service before you file anything.
+order you to pay the other side's costs. The time limits are strict, and trying another
+path first does not restart them. Talk to a free legal service before you file anything.
 
 Victoria has two ways into the Supreme Court, and they are not the same. One is the court's own
 supervisory jurisdiction, used through its rules. The other comes from the Administrative Law Act
@@ -63,8 +64,8 @@ supervisory jurisdiction, used through its rules. The other comes from the Admin
 limits, and different rules. Which one fits can be technical, so ask a free legal service before you file.
 
 One thing worth knowing: if a tribunal time limit has passed, that does not by itself close the
-court pathways. They run on their own clocks, from the decision rather than from the end of
-anything else.
+court pathways. They run on their own clocks. A free legal service can tell you which one
+applies.
 
 ## Other options, and free help
 

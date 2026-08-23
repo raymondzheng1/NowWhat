@@ -10,8 +10,8 @@ whatItMeans: >-
   situation would look to a fair-minded onlooker. The second one is the more
   usual way it is raised.
 plainExample: >-
-  The council officer who looked into your case also decided your fine. Nobody
-  else took part.
+  The council officer who looked into your case also decided your fine. They had
+  already told you in writing what the answer would be.
 whatRelates:
   - The same person looked into your case and then decided it.
   - The decision-maker had already said what they thought.
@@ -97,3 +97,13 @@ The caveat is extraction, not new law: Ebner is already cited here as a two-step
 element already carries step two. `whatItIsNot` now states the missing half in the same terms — an earlier
 role only matters if it can be linked to this decision. The example is left alone; it is now read against
 a limit that appears on the same page.
+
+**The example was not left alone after all, 2026-08-23 (pre-launch review).** The earlier call assumed the
+caveat would be read with the example. It is not: the example sits at the top of the page and the caveat is
+four sections below it. So the bare overlap of roles still landed first, and on its own it is the shape of
+almost every small council and agency.
+
+The example now carries the second step itself. The officer had already told the person in writing what the
+answer would be — a fact, on the page, that a reader can look for in their own letter. Nothing is added
+about what it proves. That is Ebner's connection step, which this entry already cites and already carries as
+the `connection` element, so it is extraction rather than new law. `whatItIsNot` is unchanged.

@@ -25,7 +25,8 @@ whatItIsNot: >-
   It does not mean you simply disagree with the decision — it has to lack a
   sensible basis. Most decisions leave the decision-maker room to choose. A
   decision inside that room is not unlawful just because someone else would
-  have chosen differently.
+  have chosen differently. What counts as unreasonable comes from the Act the
+  power sits in, and from what that Act is for.
 usedIn:
   - judicial-review
 test: >-
@@ -50,7 +51,9 @@ sources:
   - Victoria Legal Aid — legalaid.vic.gov.au
 status: verified
 leadingCases:
-  - name: Associated Provincial Picture Houses Ltd v Wednesbury Corporation
+  - name: >-
+      Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1
+      KB 223
     pinpoint: ''
     explains: >-
       An old English case, and where this ground began. It asked whether a
@@ -59,9 +62,8 @@ leadingCases:
   - name: Minister for Immigration and Citizenship v Li (2013) 249 CLR 332
     pinpoint: ''
     explains: >-
-      Australian law is no longer limited to that older question. A decision
-      can be unreasonable where nothing in it shows why it was made. How the
-      decision was reached counts, not only what was decided.
+      A decision can be unreasonable where nothing in it shows why it was made.
+      How the decision was reached counts, not only what was decided.
   - name: >-
       Minister for Immigration and Border Protection v SZVFW (2018) 264 CLR 541
     pinpoint: 'Kiefel CJ'
@@ -133,3 +135,20 @@ unreasonable and no longer the boundary.
 Still open: this entry and `jurisdictional-error` are the two grounds sourced only to Victoria Legal Aid.
 Everything added here comes from propositions the corpus already holds; the sourcing pass their neighbours
 had is still owed.
+
+**Three fixes 2026-08-23 (pre-launch review).**
+
+*Wednesbury now carries its citation.* It was the only case on the page with none, which reads as though we
+could not find one. `[1948] 1 KB 223` is not new research: it is in the High Court's own reasons in Li, the
+case in the note directly below. So nothing was written in from outside the materials. A citation we cannot
+source does not get written in — that rule has already cost this corpus cases.
+
+*The supersession sentence ran twice.* Wednesbury's note and Li's note both said Australian law is no longer
+limited to the older question, one directly after the other. It stays on Wednesbury, where the owner's
+superseded marker belongs. Li's note keeps its own two sentences, which say what Li adds.
+
+*Statutory context reached the page.* "What counts as unreasonable comes from the Act the power sits in" went
+into `test` earlier the same day, and `test` renders nowhere — so the page still read as a free-standing test of
+whether an outcome was too harsh. `whatItIsNot` now carries it, at the end, where the reader has just been
+told that disagreement is not enough. The sentence stays in `test` as well; it is the doctrinal field, and
+no reader sees both.

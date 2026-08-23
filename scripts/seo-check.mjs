@@ -44,19 +44,51 @@ if (existsSync(groundsIndex) && !/definedTermSetLd|DefinedTermSet/.test(readFile
   fails.push("Learn grounds index: no DefinedTermSet structured data");
 }
 
+// The built decode corpus supplies each FAQ page's facts; a page's check date is only
+// meaningful relative to the entry behind it.
+const corpusEntries = existsSync(resolve(ROOT, "corpus/index.json"))
+  ? JSON.parse(readFileSync(resolve(ROOT, "corpus/index.json"), "utf8")).entries ?? []
+  : [];
+
 // 3. Every published FAQ page has the required frontmatter.
 const faqDir = resolve(ROOT, "content/faq");
 let faqCount = 0;
 if (existsSync(faqDir)) {
   for (const f of readdirSync(faqDir).filter((x) => /\.(md|mdx)$/.test(x))) {
     faqCount++;
-    const { data } = matter(readFileSync(resolve(faqDir, f), "utf8"));
+    const { data, content } = matter(readFileSync(resolve(faqDir, f), "utf8"));
     for (const key of ["title", "description", "question", "answer", "entryId"]) {
       if (!data[key] || String(data[key]).trim() === "")
         fails.push(`content/faq/${f}: frontmatter missing "${key}"`);
     }
     if (!Array.isArray(data.sources) || data.sources.length === 0)
       fails.push(`content/faq/${f}: must list ≥1 source (grounded)`);
+    // An FAQ body is RENDERED, and react-markdown ESCAPES an HTML comment rather than
+    // dropping it — so `<!-- ... -->` reaches the page as literal text. Three published
+    // pages carried maintainer rationale this way, dates and all, in front of people
+    // reading about a rent increase or a housing transfer. The draft gate in
+    // lib/faq/validate.ts catches new drafts; this catches anything already published,
+    // which is where the three that leaked were sitting.
+    if (/<!--|-->/.test(content)) {
+      fails.push(
+        `content/faq/${f}: body contains an HTML comment — these RENDER as visible text`,
+      );
+    }
+    // A "Last checked" date must not outrun the entry it rests on.
+    //
+    // Nine pages showed a check date LATER than the corpus entry that supplies their facts,
+    // which tells a reader the page was reverified against current law when only the page
+    // furniture had been touched. The honest direction is to lower the page's date, never to
+    // raise the entry's — an entry's date moves when a human rechecks it against the source.
+    if (data.entryId && data.updated) {
+      const entry = corpusEntries.find((e) => e.id === data.entryId);
+      if (entry && entry.lastVerified && String(data.updated) > String(entry.lastVerified)) {
+        fails.push(
+          `content/faq/${f}: "updated" ${data.updated} is later than ${data.entryId}'s ` +
+            `lastVerified ${entry.lastVerified} — the page cannot be fresher than its source`,
+        );
+      }
+    }
   }
 }
 

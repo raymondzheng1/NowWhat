@@ -39,13 +39,3 @@ the condition of the place. These help show whether the increase is fair.
 
 [Work out your options](/start) in a few steps, or talk to a free service. Tenants Victoria
 gives free advice to renters, and Victoria Legal Aid can help too.
-
-<!--
-Late-application block removed 2026-08-23 on a Fable QA finding, agreed by both passes.
-
-I added it to every VCAT and ART page by entry id, which swept in this one. The only deadline here
-belongs to Consumer Affairs Victoria, which is not a tribunal, and no tribunal application appears on the page. The
-ground for the sentence — VCAT Act s 126(1), extending time for the commencement of a proceeding —
-does not reach a missed step of this kind. A reader past the date would have gone looking for an
-extension that does not exist for it.
--->

@@ -9,8 +9,8 @@ whatItMeans: >-
   It is not enough that the evidence was thin, or that you disagree with how
   much weight it was given.
 plainExample: >-
-  A debt is raised on the basis you were paid on dates that the records show you
-  were not.
+  A debt says you were paid on certain dates. The letter points to nothing that
+  shows it.
 whatRelates:
   - A key finding was made with nothing at all to support it.
   - The letter states a key fact about you and points to nothing behind it.
@@ -89,3 +89,10 @@ Mason CJ. Our memo cites Bond for it with no judge named, and the only place the
 Mason CJ to Bond is the separate ADJR "decision"/"conduct" point. The attribution was not wrong law,
 but it came from outside the owner's documents, and it now renders on a public Learn page. Craig,
 Kirk and Peko-Wallsend already carry no pinpoint; this entry now matches them.
+
+**The example was fixed 2026-08-23 (pre-launch review).** It read: a debt raised on dates "that the records
+show you were not" paid. That is contrary evidence, not no evidence, and it is a merits point — the exact
+belief the August rewrite of this entry set out to stop reinforcing. The example was teaching the reader the
+thing `whatItIsNot` then had to talk them out of. It now shows a letter that points to nothing at all, which
+is the ground, and it matches the second `whatRelates` bullet. `whatItIsNot` and its route to merits review
+are untouched.

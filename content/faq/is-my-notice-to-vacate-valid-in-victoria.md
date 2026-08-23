@@ -23,7 +23,7 @@ sources:
 related:
   - challenge-a-notice-to-vacate-in-victoria
   - what-happens-at-a-vcat-hearing
-updated: '2026-06-30'
+updated: '2026-06-16'
 ---
 
 ## What the law requires
@@ -74,16 +74,3 @@ Free help is available from:
 - **Consumer Affairs Victoria** — free renting information
 
 You can also apply to **VCAT** to challenge a notice to vacate. If you miss the early deadline, you may still be able to argue the notice is not valid at a possession hearing, or ask for more time.
-
-<!--
-Retitled 2026-08-23 on the owner's QA decision. The page was called "How much notice does my rental
-provider have to give me to move out in Victoria?" and never stated a single period for a single
-reason — it says four times that the period must match the reason on the notice.
-
-The owner's options were to publish sourced notice periods or retitle. The periods are not in the
-app's sourced material, so the title now describes what the page actually does. The slug is
-deliberately unchanged: it carries the search traffic, and breaking it would cost more than the
-mismatch does.
-
-If notice periods are sourced later, restore the original title and answer the question directly.
--->

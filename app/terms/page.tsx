@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 export const metadata: Metadata = {
   title: "Terms of use",
   description:
-    "What Now? gives general information about Victorian government decisions — not legal advice. Here are the terms of using this free service.",
+    "What Now? gives general information about Australian Government and Victorian government decisions — not legal advice. Here are the terms of using this free service.",
   alternates: { canonical: "/terms" },
 };
 
@@ -24,7 +24,7 @@ export default function TermsPage() {
       <PageHeader
         kicker="Terms"
         title="Terms of use"
-        lead="What Now? is a free service that gives general information to help you understand a Victorian government decision. Using it means you agree to these terms."
+        lead="What Now? is a free service that gives general information to help you understand an Australian Government or Victorian government decision. Using it means you agree to these terms."
       />
 
       <Disclaimer className="mt-6" />

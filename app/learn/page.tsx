@@ -53,9 +53,9 @@ export default function LearnHubPage() {
           How review <span className="marker">works</span>
         </h1>
         <p className="mt-5 max-w-[60ch] text-[19px] leading-[1.6] text-ink-soft">
-          If a government decision has gone against you, there are usually two ways to challenge it.
-          Here is each one in plain English — what it is, who hears it, and what it can do — plus the
-          grounds people raise.
+          Some government decisions can be challenged through merits review, judicial review, or
+          another process. Here is each one in plain English — what it is, who hears it, and what it
+          can do — plus the grounds people raise.
         </p>
         <p className="note mt-4" style={{ transform: "rotate(-1.2deg)" }}>
           Read what you need; you don’t have to take it all in at once.

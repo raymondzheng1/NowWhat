@@ -66,10 +66,11 @@ limits:
     or wrong on the facts.
 goodToKnow:
   - >-
-    A refusal counts as a decision. Being told no is something you can ask about.
+    On some routes a refusal counts as a decision, so being told no is something
+    you can ask about.
   - >-
     A failure to decide can count too, where they had a duty to decide and did
-    not.
+    not. Whether it counts depends on the law and the route.
   - >-
     If a tribunal decides against you, judicial review is not the only route.
     An appeal to a court on a question of law may also be open. Whether there is
@@ -79,8 +80,8 @@ goodToKnow:
     Victoria it is under the VCAT Act, and it needs the court's permission
     first.
   - >-
-    Appeal time limits are short, and shorter than people expect. Ask about them
-    the week the decision arrives, not the month after.
+    Appeal time limits can be very short. Check the time limit in your letter as
+    soon as it arrives, and get help straight away.
   - >-
     A court will not simply disagree with the result. It looks at whether the
     decision was made lawfully.
@@ -148,3 +149,22 @@ that the Act decides. The next bullet still names the ART Act, the VCAT Act and 
 requirement, so nothing concrete was lost — only the implied default that an appeal is there. This
 is the same treatment "usually NOT paused by asking for reasons" got above: the useful half stays,
 the assumed rule goes.
+
+Three more bullets reworded 2026-08-23, on a further external review the owner approved.
+
+**Refusals and failures now carry their route.** The propositions themselves are sourced — the note
+above records them against Administrative Law Act 1978 (Vic) s 2 and ADJR Act s 7 — but both of
+those provisions are route-specific by their own terms, and the bullets were published route-blind.
+A reader met "a refusal counts as a decision" as though every refusal, on every path, is reviewable.
+The refusal bullet now opens on "some routes"; the failure bullet keeps its duty condition and adds
+that whether it counts depends on the law and the route. The Act names were deliberately not moved
+into the bullets: this entry's sources are two court websites, and naming statutes there would
+assert citations the sources field does not carry.
+
+**"The week the decision arrives" removed** (CRITICAL). One bullet carried two unsourced claims:
+that limits are "shorter than people expect", which is an empirical claim about readers, and that
+asking within the week rather than the month after is enough, which names a safe window we never
+verified. It now says appeal time limits can be very short, and sends the reader to the limit in
+their own letter and to help straight away. No period was added. This is the third timing claim this
+entry has lost the same way, and it matches the canApply bullet that was always the right model —
+check the limit that applies, rather than assume anything about it.

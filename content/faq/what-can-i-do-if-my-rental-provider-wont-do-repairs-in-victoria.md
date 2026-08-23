@@ -14,14 +14,14 @@ category: Renting
 sources:
   - Residential Tenancies Act 1997 (Vic) — legislation.vic.gov.au
   - >-
-    Consumer Affairs Victoria — Challenging a notice to vacate; Challenging rent
-    increases or high rent — consumer.vic.gov.au
+    Consumer Affairs Victoria — Repairs in rental properties —
+    consumer.vic.gov.au
   - VCAT — Residential tenancies — vcat.vic.gov.au
   - Rental Dispute Resolution Victoria — rdrv.vic.gov.au
   - Tenants Victoria — tenantsvic.org.au
 related:
   - what-happens-at-a-vcat-hearing
-updated: '2026-06-30'
+updated: '2026-06-16'
 ---
 
 ## Your right to repairs
@@ -45,14 +45,10 @@ Before you contact anyone, collect:
 
 This information will help support your case.
 
-### If the time limit has already passed
-
-Missing the date does not always end things. A tribunal can be asked to allow a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
-
 ## Where to get free help
 
-- **Rental Dispute Resolution Victoria (RDRV):** Free help to resolve repairs disputes — call **1300 017 378**
-- **Tenants Victoria:** Free advice for Victorian renters — call the Rental Support Line on **(03) 9416 2577**
-- **Victoria Legal Aid:** Free legal help and duty lawyers — call the Legal Help line on **1300 792 387**
-- **Consumer Affairs Victoria:** Free renting information
+- **Rental Dispute Resolution Victoria (RDRV):** Free help to resolve repairs disputes — call **1300 017 378**.
+- **Tenants Victoria:** Free advice for Victorian renters — call the Rental Support Line on **(03) 9416 2577**.
+- **Victoria Legal Aid:** Free legal help and duty lawyers — call the Legal Help line on **1300 792 387**.
+- **Consumer Affairs Victoria:** Free renting information.
 

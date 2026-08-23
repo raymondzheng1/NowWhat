@@ -63,8 +63,8 @@ options:
       Asks for a special interest in the subject matter — more than an ordinary
       member of the public has.
     note: >-
-      A purely emotional or intellectual concern is not enough on its own. An
-      order to do or stop something needs a legal right.
+      A purely emotional or intellectual concern is not enough on its own. Who
+      can ask for one is technical, so free legal help matters here.
 leadingCases:
   - name: Australian Conservation Foundation Inc v Commonwealth (1980) 146 CLR 493
     pinpoint: ''
@@ -105,9 +105,20 @@ opening the node was written to give is intact. It matters because "almost never
 promise about the reader's own case, and standing is one of the things a free legal service will
 actually check.
 
-**Open for sign-off: the five option-level tests.** The review's second point — that remedy-specific
-standing is more nuanced than these five notes allow — is not fixed here, and should not be. Each
-note compresses real doctrine into one sentence, and "An order to do or stop something needs a
-legal right" is the flattest of them. Rewriting them accurately means choosing which qualification
-to publish, which is a decision for the supervising lawyer against the source, not an editorial
-one. Carried to the sign-off list as it stands.
+**Open for sign-off: the remaining option-level tests.** The review's second point — that
+remedy-specific standing is more nuanced than these notes allow — is not fixed here, and should not
+be. Each note compresses real doctrine into one sentence. Rewriting them accurately means choosing
+which qualification to publish, which is a decision for the supervising lawyer against the source,
+not an editorial one. Carried to the sign-off list as it stands.
+
+**The flattest of them deleted 2026-08-23**, on the external legal review. "An order to do or stop
+something needs a legal right" is gone from the last option's note.
+
+It was over-broad, and it argued with two things on our own pages. The option it sat inside says the
+test is a special interest — more than an ordinary member of the public has. The remedies entry says
+only that who can ask is technical. So the sentence stated a requirement that neither of them does.
+
+Nothing was put in its place, because a correct statement of who may seek an injunction in public
+law is exactly the sign-off decision described above. The note now points at free legal help instead,
+reusing the wording already published beside the injunction on the remedies page. That is the
+removing half only, which is what grounded-or-silent leaves available here.

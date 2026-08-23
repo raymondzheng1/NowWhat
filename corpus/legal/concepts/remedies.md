@@ -10,8 +10,8 @@ whatItMeans: >-
   This is the part people are most often surprised by. If a court finds the
   decision was not made lawfully, it can wipe it out. It can order the
   decision-maker to do their job. It can stop them acting unlawfully. What it
-  cannot do is decide the matter itself. The file goes back, and the same body
-  decides it again, this time properly.
+  cannot do is decide the matter itself. The file goes back for a new, lawful
+  decision. That is usually the same body.
 whatItIsNot: >-
   It is not a way to get the answer you wanted. A court will not grant your
   payment, cancel your debt, or give you the licence. If that is what you need,
@@ -124,3 +124,16 @@ Nearly every decision this app's readers face is discretionary, so as written th
 mandamus could never reach their situation — and it contradicted the judicial-review page, which
 already says a failure to decide can count. The distinction that actually matters is between
 forcing an ANSWER and forcing a DECISION, and that is what it now draws.
+
+**Remittal hedged in `whatItMeans` 2026-08-23**, on the external legal review. It read "The file
+goes back, and the same body decides it again, this time properly". It now reads "The file goes back
+for a new, lawful decision. That is usually the same body."
+
+The fix removes an internal contradiction rather than adding anything. `keyPoints` already said "The
+same body usually decides again", and the seventh already covers remittal with directions — so the
+page stated one fact at two strengths, and the flat version was the one in the opening explanation
+that most readers stop at. Where a matter goes back, and on what terms, comes from the order and
+from the law the power sits in.
+
+What the sentence must not lose is the point the whole entry turns on: the court does not decide the
+matter. That is still the sentence before it.

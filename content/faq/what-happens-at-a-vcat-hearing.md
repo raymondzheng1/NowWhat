@@ -1,13 +1,14 @@
 ---
-title: What happens at a VCAT hearing?
+title: What happens at a VCAT renting hearing?
 description: >-
-  Find out how VCAT handles renting disputes in Victoria, including notices to
-  vacate, and where to get free help before your hearing.
-question: What happens at a VCAT hearing?
+  What to expect at a VCAT renting hearing in Victoria, including a notice to
+  vacate. What VCAT can look at, what to bring, and where to get free help.
+question: What happens at a VCAT renting hearing?
 answer: >-
-  VCAT is the tribunal that hears renting disputes in Victoria. If you challenge
-  a notice to vacate, VCAT can decide whether the notice is valid. Free help is
-  available to prepare for a hearing.
+  VCAT is Victoria's tribunal. It has a Residential Tenancies list for renting
+  cases, and this page covers a renting hearing. If you challenge a notice to
+  vacate, VCAT can decide whether the notice is valid. Free help is available to
+  prepare for a hearing.
 entryId: vic-renting
 category: Renting
 sources:
@@ -20,7 +21,7 @@ sources:
   - Tenants Victoria — tenantsvic.org.au
 related:
   - challenge-a-notice-to-vacate-in-victoria
-updated: '2026-06-30'
+updated: '2026-06-16'
 ---
 
 ## What is VCAT?

@@ -27,12 +27,14 @@ canApply:
     standing).
   - There is almost always a time limit — this is the part people miss most.
   - >-
-    The law that sets up the tribunal usually gives you a right to ask the
-    decision-maker for written reasons. If the reasons never come, or say very
-    little, the tribunal can be asked to order them.
+    Where the decision can go to the tribunal, the law often gives you a right
+    to ask for written reasons. If the reasons never come, or say very little,
+    the tribunal can sometimes be asked to order them. Check the law for your
+    decision.
   - >-
-    If the time limit has passed, the tribunal can still be asked to allow a
-    late application. It does not have to say yes, but it can be asked.
+    Some tribunals can accept a late application, but not every time limit can
+    be extended. If your time has passed, check the rule for your decision
+    straight away.
 whatHappens:
   - You lodge an application with the tribunal.
   - Often there is an informal stage that tries to sort it out first.
@@ -50,9 +52,10 @@ limits:
     Merits review is only available where a law provides it — not every decision
     can be reviewed on the merits.
   - >-
-    The tribunal makes the decision again from the start, standing in the shoes
-    of the original decision-maker. So the new decision can be better for you,
-    the same, or worse. It is not limited to the part you disagree with.
+    The tribunal often makes the decision again from the start. Where it does,
+    the new decision can be better for you, the same, or worse. It is not
+    limited to the part you disagree with. What the tribunal can do comes from
+    the law for your decision.
   - >-
     A tribunal is not a court. It is independent of the department that made the
     decision. But it is still doing administration, not settling a legal dispute
@@ -113,3 +116,29 @@ about how a tribunal is constituted; the over-claim was removed, not replaced.
 Commonwealth-wide, and it does not travel cleanly to VCAT. No jurisdiction-specific rule was added,
 because we hold no source for one. A single hedge was added instead, so the general position is not
 read as the rule for every tribunal.
+
+Three bullets conditioned 2026-08-23, on an external review the owner approved. Each said as a
+general rule what our own lawyer-verified data layer says conditionally, so the concept layer was
+running ahead of the layer that was signed off.
+
+**Written reasons.** The bullet gave a right to ask the decision-maker for reasons, and said the
+tribunal can be asked to order them. The rights are real, but `data/pathways/cth-generic.md` carries
+ART Act ss 268-269 "where the decision is reviewable" and `data/pathways/vic-generic.md` carries
+VCAT Act ss 45-46 "where the decision can go to VCAT". The condition is now carried across, and the
+reader is told to check the law for their own decision. No section numbers were added here — this
+entry's sources are two tribunal websites, and naming Acts would assert citations the sources field
+does not hold.
+
+**Late applications.** "The tribunal can still be asked" was stated for every tribunal and every
+limit, while every pathway file records extension as depending on the Act. The bullet now says some
+tribunals can accept a late application and not every limit can be extended. The reassurance that
+asking is sometimes possible stays; the universal framing goes.
+
+**The fresh decision can be worse.** Kept, and tied to the tribunal's powers rather than asserted
+for every scheme. Deleting the warning was the other option offered, and it was refused: this line
+was added earlier today as the entry's own CRITICAL finding, because a person deciding whether to
+apply was never told the one downside. The bullet now says the tribunal often remakes the decision
+from the start, that where it does the outcome can be better, the same or worse, and that what the
+tribunal can do comes from the law for the decision. Nothing was added about notice obligations —
+we hold no source for that, so only the qualifying half shipped. `_comparison.md` was checked and
+carries no flatter version of this claim.

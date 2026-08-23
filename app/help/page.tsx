@@ -73,7 +73,11 @@ function HelpBody({ lead, other }: { lead: "Cth" | "Vic"; other: "Cth" | "Vic" }
         <LawyerSearch term="government decisions" />
       </div>
 
-      <PrivacyNote className="mt-10 text-ink-faint" />
+      {/* Same content-scoped line as /privacy — the component default still reads
+          "NOTHING STORED", which is broader than we can stand behind. */}
+      <PrivacyNote className="mt-10 text-ink-faint">
+        FREE / NO ACCOUNT / YOUR LETTER IS NOT STORED
+      </PrivacyNote>
     </div>
   );
 }

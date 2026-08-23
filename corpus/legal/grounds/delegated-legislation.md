@@ -6,7 +6,8 @@ oneLine: The decision rests on a rule the Act may not allow.
 whatItMeans: >-
   Parliament passes Acts. It also lets others make rules under those Acts.
   These rules are called regulations, determinations or by-laws. A rule like
-  that has to stay inside the Act. A rule outside the Act can be invalid.
+  that has to stay inside the Act. So the first question is what the Act
+  allows. A rule outside the Act can be invalid.
 plainExample: >-
   You get a fine under a council by-law. The by-law bans something the Act
   never let it ban.
@@ -42,8 +43,8 @@ elements:
     name: Made for the Act's purpose
     layPrompt: Does the rule go further than the Act it was made under?
   - id: proportionate
-    name: Appropriate and adapted
-    layPrompt: Does the rule cover something the Act does not reach?
+    name: Within the power the Act gives
+    layPrompt: Does the rule go beyond what the Act lets the rule-maker do?
 sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
@@ -103,3 +104,21 @@ Nothing was swapped out to make room. The suggested replacement would have dropp
 being reasonably considered", which is the whole of the deference point, and it scored above the
 reading ceiling. `whatRelates` already carried Vanstone's five routes to invalidity, so the entry
 never presented one formulation as the only way in; the field that states the rule now matches.
+
+**Pre-launch legal review applied 2026-08-23.** The 23 August edit above fixed `test`, but `test`
+renders nowhere, so on the page "Appropriate and adapted" was still a heading in its own right —
+one of four co-equal validity requirements. The governing question is what the empowering Act
+allows, on the construction of that Act. Two changes follow.
+
+The element is now "Within the power the Act gives", and it asks whether the rule goes beyond what
+the Act lets the rule-maker do. That also repairs a mismatch the reviewer did not reach: under the
+old heading the prompt asked whether the rule "covers something the Act does not reach", which is
+the within-subject question element 1 already asks. Two elements were putting the same question.
+
+And the construction sentence from `test` — "So the first question is what the Act allows" — now
+sits in `whatItMeans` too, straight after the sentence it follows there. It stays in `test` as
+well; the field is the whole statement of the rule and the 23 August ordering is deliberate.
+
+Vanstone's formulation is untouched. On the page it now appears in one place only — the case note,
+which is where a formulation from a judgment belongs. It stays in `test` as well, unrendered. The
+`proportionate` id is left alone: ids are internal, and renaming one changes nothing a reader sees.

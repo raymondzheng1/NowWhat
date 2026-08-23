@@ -38,7 +38,10 @@ export const VIC_HELP_DIRECTORY: DirectoryService[] = [
   },
   {
     service: "Housing Appeals Office",
-    who: "free, independent reviews of public-housing decisions",
+    // "independent" overstated its institutional standing: it is a reviewer within the
+    // housing department, not a body outside it. Corrected 2026-08-23 on the go-live review,
+    // to match the FAQ pages and the result card, which had already been brought into line.
+    who: "free review of eligible housing decisions, by a reviewer in the housing department",
     phone: "1800 807 702",
     link: "https://www.housing.vic.gov.au/appeal-decision",
     tier: "government",

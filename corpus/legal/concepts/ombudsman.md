@@ -48,8 +48,7 @@ options:
       Takes free complaints about Australian Government departments and
       agencies, including Services Australia.
     note: >-
-      There is no strict time limit on complaining, but sooner is usually
-      better. Complaints go through ombudsman.gov.au.
+      Complain as soon as you can. Complaints go through ombudsman.gov.au.
   - name: Victorian Ombudsman
     plainName: For Victorian government bodies
     whatItDoes: >-
@@ -126,3 +125,26 @@ review would have re-hedged it. The owner ruled on 2026-08-23 that this sentence
 for the reason recorded above: a hedge here invites someone to wait on an outcome that is not coming
 while a review clock runs out. The two sentences fixed here were over-flat about the Ombudsman's
 reach. This one is exact about its powers, and it stays.
+
+**"No strict time limit" removed 2026-08-23**, on the external legal review, closing one of the
+items the paragraph above carried to sign-off. The Commonwealth note read "There is no strict time
+limit on complaining, but sooner is usually better". It now reads "Complain as soon as you can."
+
+The old sentence asserted the absence of a limit, which is a claim about the Ombudsman's own
+practice that neither cited website nor any owner document establishes. The advantage of the new
+wording is that it says the only thing we actually needed the reader to do, and says it in five
+words.
+
+Only the removing half shipped. The review also asked us to add that the Ombudsman may decline older
+matters and will often expect a complaint to the agency first. Both may well be right, and the
+natural pinpoint is the discretion not to investigate in the Ombudsman Act 1976 (Cth), but neither
+proposition is in our sources today. Adding them would swap one unsourced sentence for two.
+
+That leaves the page still uneven — the Victorian note says "The usual step is to complain to the
+organisation first" and the Commonwealth note says nothing equivalent. It is the same gap, now
+recorded rather than papered over, and it is the first thing to fix once the Commonwealth position
+is sourced.
+
+The same "no strict time limit" sentence is published in four legacy pathway entries
+(`corpus/pathways/cth-centrelink.md`, `cth-generic.md`, `vic-fines.md`, `vic-public-housing.md`).
+They are outside this entry and were not touched here; they need the same edit.

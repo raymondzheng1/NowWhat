@@ -34,9 +34,9 @@ export function LearnTour({
         <div className="max-w-[60ch]">
           <h2 className="font-display text-[30px] font-black leading-[1.08] text-ink">Two ways to challenge a decision</h2>
           <p className="mt-4 text-[17px] leading-[1.7] text-ink-soft">
-            When a government decision goes against you, there are usually two paths. They ask different
-            questions and lead to different places. This quick tour walks through each one — take it at
-            your own pace, and stop whenever you have what you need.
+            Some government decisions can be challenged in more than one way. Two paths come up most
+            often, and they ask different questions and lead to different places. This quick tour walks
+            through each one — take it at your own pace, and stop whenever you have what you need.
           </p>
         </div>
       ),

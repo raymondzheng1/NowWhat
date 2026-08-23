@@ -8,7 +8,8 @@ whatItMeans: >-
   Victoria. It asks two things of them. What they do must fit with your human
   rights. They must also give proper consideration to
   any human right the decision affects. Proper consideration means real thought,
-  not a box ticked.
+  not a box ticked. The duty does not apply where another law leaves the
+  authority no real choice.
 plainExample: >-
   A public body decides where you will live. Nothing in the reasons shows anyone
   thought about what that would mean for your family.
@@ -19,7 +20,7 @@ whatRelates:
     privacy, or how you were treated.
   - The reasons never mention your rights at all.
   - The reasons mention your rights, but only as a heading.
-  - A right was limited, and the reasons do not explain why that was needed.
+  - A right was limited, and the reasons say nothing about why.
 whatItIsNot: >-
   This is not a case you win on its own. Breaking this duty is unlawful, but by
   itself it does not automatically make the decision invalid. It usually runs
@@ -49,9 +50,7 @@ elements:
     layPrompt: Do the reasons show they thought about what this would mean for you?
   - id: justified
     name: Whether limiting the right was justified
-    layPrompt: >-
-      If a right was limited, do the reasons explain why that limit was
-      necessary?
+    layPrompt: If a right was limited, do the reasons say why?
 sources:
   - Owner's administrative-law knowledge base (Combined MR/JR Framework; JR Hypo, 2026-08-19)
 status: verified
@@ -66,11 +65,11 @@ leadingCases:
     explains: >-
       Both sides of the duty must be met. A breach is unlawful, but on its own
       it is not jurisdictional error.
-  - name: Thompson v Minogue
+  - name: Certain Children; Thompson v Minogue
     pinpoint: ''
     explains: >-
-      Once a right is limited, it is for the state to show the limit is
-      demonstrably justified.
+      If a right is limited, the Charter has its own test for whether the limit
+      is justified. It is for the state to show that.
 ---
 
 The Combined MR/JR Framework lists "(Vic) Charter s 38" among the grounds of review, and the JR
@@ -96,3 +95,29 @@ Double negative removed 2026-08-23 on the owner's QA decision. "They must not ac
 not compatible with your human rights" is two negatives in the sentence that states the first of the
 two duties — the kind a distressed reader on a phone reads twice and still mis-parses. Now: "What
 they do must fit with your human rights."
+
+**Pre-launch legal review applied 2026-08-23.** Three changes, each extraction from what the entry
+already held.
+
+**The exception to the duty now renders.** It was already in `test` — the duty does not apply where
+another law leaves the authority no real choice — but `test` is shown nowhere. `GroundExplainer`
+renders `whatItMeans`, `plainExample`, `whatRelates`, the elements, `whatItIsNot` and the cases, so
+the one qualification on the duty was visible only to us. The sentence now sits in `whatItMeans` as
+well, in the words it was already written in. It stays in `test` too, so the internal statement of
+the rule remains whole.
+
+**Two lines read silence in the reasons as proof.** The element prompt asked whether the reasons
+"explain why that limit was necessary", and `whatRelates` said the reasons "do not explain why that
+was needed". Both suggest reasons must always work through the justification in terms. They now ask
+whether the reasons say why, and note that the reasons say nothing about why — an indicator, which
+is all this page is for.
+
+**Thompson kept, with its anchor put back.** The case note stated the burden as a free-standing
+rule. Our materials state it as a step in the Charter's own limits test, and attribute it jointly:
+burden is on the state to show the limitation is "demonstrably justified" consistently with s 7(2)
+a to e (Certain Children; Thompson). The note now names the Charter's own test and carries the joint
+attribution. The section number is left out of the customer copy; the plain anchor does the work.
+
+Not done, deliberately: Charter s 38(2) was NOT added to `sources`. The provision text is in none of
+the four KNOWLEDGE documents, and writing in a citation we cannot check is the defect that removed
+Agfa-Gevaert and SBBS from this corpus. It goes to the Charter specialist with the sign-off.

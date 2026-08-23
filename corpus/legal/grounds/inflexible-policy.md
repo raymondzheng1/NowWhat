@@ -98,3 +98,21 @@ point the same QA pass raised for the lawyer: the memo runs acting under dictati
 authority head, without a Green or Drake attribution, whereas this entry publishes it as an example
 of the inflexible application of policy on the owner's 2026-08-23 decision. That placement is what
 the renewal needs to confirm.
+
+**The pre-launch legal review raised the Drake citation again, 2026-08-23. No change.** The
+reviewer asked us to insert the full authorised citation in both policy entries, or drop the case
+until it is independently verified. The answer is the one recorded just above, and rechecking has
+not moved it: the full form is in none of the four KNOWLEDGE documents and in none of the captured
+judgments, so writing one in would be synthesising a citation rather than sourcing one. The
+reviewer's own closing sentence says the same — internal drafting notes are not a bibliographic
+source.
+
+We did not take the other branch either. Our materials attribute these propositions to
+"Drake [No 2]/Green v Daniels", so dropping Drake would leave Green carrying an attribution the
+materials give to both. Nothing on the page over-claims: the case renders as a short name with an
+empty pinpoint, which the explainer omits cleanly.
+
+So the citation waits for the supervising lawyer to supply it from an authorised report, on the
+sign-off renewal this entry already asks for. The same note now sits in `unlawful-policy`. Whichever
+way the lawyer goes, the two entries move together — that was the reviewer's condition and it is
+also ours.

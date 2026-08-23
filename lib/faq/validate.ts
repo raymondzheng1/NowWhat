@@ -82,6 +82,23 @@ export function validateFaqDraft(args: {
   if (!/\n##\s/.test(`\n${draft.body}`)) fails.push({ gate: "structure", detail: "body has no '## ' section heading" });
   if (!draft.body.includes("/start")) fails.push({ gate: "cta", detail: "body has no link to /start" });
 
+  // 5b. No internal notes in a published body.
+  //
+  // An FAQ body is RENDERED. `react-markdown` escapes an HTML comment instead of dropping it,
+  // so `<!-- ... -->` reaches the page as literal text. Three published pages carried maintainer
+  // rationale this way — the reason a paragraph had been removed, with dates — shown to people
+  // reading about a rent increase or a housing transfer. Caught by an external reviewer reading
+  // the extracted public surface, not by any gate here.
+  //
+  // The corpus convention of keeping notes in the markdown body is safe for corpus entries,
+  // whose bodies are internal. It is not safe here, and the difference was easy to miss.
+  if (/<!--|-->/.test(draft.body)) {
+    fails.push({
+      gate: "no-internal-notes",
+      detail: "body contains an HTML comment — these RENDER as visible text on the page",
+    });
+  }
+
   // 6. Sanity lengths.
   if (draft.answer.length < 40 || draft.answer.length > 700) fails.push({ gate: "answer-length", detail: `${draft.answer.length} chars (want 40–700)` });
   if (draft.body.length < 300) fails.push({ gate: "body-length", detail: `${draft.body.length} chars (want ≥300)` });

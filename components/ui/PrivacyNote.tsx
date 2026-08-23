@@ -28,7 +28,11 @@ export function Lock({ size = 12 }: { size?: number }) {
  * line. Appears in the hero, the tool footers, and the result.
  */
 export function PrivacyNote({
-  children = "FREE / NO ACCOUNT / NOTHING STORED",
+  // Was "NOTHING STORED", which is not true of the whole service — a session cookie, usage
+  // counters and analytics all exist, and the privacy page says so. The claim we can stand
+  // behind is about the letter and the answers. No call site relies on this default today,
+  // but a default is what the next one will get.
+  children = "FREE / NO ACCOUNT / YOUR LETTER IS NOT STORED",
   className = "",
   center = false,
 }: {
