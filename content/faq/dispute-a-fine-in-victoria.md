@@ -2,7 +2,7 @@
 title: "How do I dispute a fine in Victoria?"
 description: "If you disagree with a Victorian fine or can't pay it, you have options: ask for a review, nominate the driver, go to court, or get help to pay. Here's how, and the time limits."
 question: "How do I dispute a fine or infringement notice in Victoria?"
-answer: "You have several options: ask for a review on set grounds, nominate the real driver, ask to have it heard in court, or get help to pay. What you can do depends on the stage your fine has reached, so it helps to act early — before it becomes a 'Notice of Final Demand'. If you only just found out about a fine, ask for a review within 14 days of finding out. Free help is available from Victoria Legal Aid and financial counsellors."
+answer: "You have several options: ask for a review on set grounds, nominate the real driver, ask to have it heard in court, or get help to pay. What you can do depends on the stage your fine has reached, so it helps to act early — before it becomes a 'Notice of Final Demand'. If you only just found out about a fine, ask for a review as soon as you can — a short time limit applies. Free help is available from Victoria Legal Aid and financial counsellors."
 entryId: vic-fines
 category: "Fines"
 sources:
@@ -31,7 +31,8 @@ You can ask for a review on one of five grounds. These are: you did not know abo
 fine; the decision was against the law; it was a case of mistaken identity; there were
 exceptional circumstances; or there were special circumstances. Special circumstances
 include a mental illness or disability, a serious addiction, homelessness, or family
-violence. If you only just found out about the fine, ask within 14 days of finding out.
+violence. If you only just found out about the fine, ask as soon as you can, because a
+short time limit applies to that ground.
 
 ## Other options
 

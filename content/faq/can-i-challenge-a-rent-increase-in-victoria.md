@@ -2,7 +2,7 @@
 title: "Can I challenge a rent increase in Victoria?"
 description: "If your rent increase seems too high, you can ask Consumer Affairs Victoria for a free check, then take it further. Here's how, the time limit, and where to get free help."
 question: "Can I challenge a rent increase in Victoria?"
-answer: "Yes. If you think a rent increase is too high, you can ask Consumer Affairs Victoria for a free check within 30 days of the written notice. If you still disagree, you can take it to Rental Dispute Resolution Victoria, which is also free. There is a time limit, so it helps to act early — and free advice is available from Tenants Victoria."
+answer: "Yes. If you think a rent increase is too high, you can ask Consumer Affairs Victoria for a free check within 30 days of the written notice. There is a time limit, so it helps to act early — and free advice is available from Tenants Victoria."
 entryId: vic-renting
 category: "Renting"
 sources:
@@ -26,7 +26,7 @@ condition of the place and the rent for similar nearby homes.
 
 ## Take it further
 
-If you still disagree after the check, you can take it to Rental Dispute Resolution
+If you still disagree after the check, ask Consumer Affairs Victoria or Tenants Victoria
 Victoria, which is free and can refer it on if needed. A rent increase can also be checked
 if it came less than 12 months after the last one, or if the notice was too short.
 

@@ -1,5 +1,5 @@
 {
-  "builtAt": "fb2d4b55fc2b651c",
+  "builtAt": "dfff21f5bf47537d",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -766,12 +766,11 @@
           "deadlineDays": null,
           "deadlineVerified": false,
           "cost": "free",
-          "howCounted": "from the day you get the rent assessment report",
-          "name": "Take a rent, bond, repairs or compensation dispute to Rental Dispute Resolution Victoria",
-          "body": "Rental Dispute Resolution Victoria (RDRV), which can refer it to VCAT",
-          "deadline": "If you got a rent assessment report, apply within 30 days of getting the report. Bond, repairs and compensation disputes can also be brought here.",
-          "howToStart": "apply to RDRV (free)",
-          "source": "consumer.vic.gov.au — challenging rent increases or high rent; rdrv.vic.gov.au"
+          "name": "Get free help with a rent, bond, repairs or compensation dispute",
+          "body": "Consumer Affairs Victoria, or Tenants Victoria",
+          "deadline": "Time limits can apply. Ask them early rather than later.",
+          "howToStart": "contact Consumer Affairs Victoria or Tenants Victoria and describe the dispute",
+          "source": "consumer.vic.gov.au — renting; tenantsvic.org.au"
         }
       ],
       "rightToReasons": {
@@ -822,7 +821,7 @@
           "link": "https://www.consumer.vic.gov.au/housing/renting"
         }
       ],
-      "plainLanguageExplainer": "If you rent in Victoria and you got a notice to vacate or a rent increase you think is unfair, you have options. You can ask VCAT to check whether a notice to vacate is valid. You can ask Consumer Affairs Victoria for a free check of a rent increase. Bond, repairs and rent disputes can be sorted out for free through Rental Dispute Resolution Victoria. There are time limits, so it helps to act early, and free help is available.",
+      "plainLanguageExplainer": "If you rent in Victoria and you got a notice to vacate or a rent increase you think is unfair, you have options. You can ask VCAT to check whether a notice to vacate is valid. You can ask Consumer Affairs Victoria for a free check of a rent increase. Free help with bond, repairs and rent disputes is available too. There are time limits, so it helps to act early.",
       "sources": [
         "Residential Tenancies Act 1997 (Vic) — legislation.vic.gov.au",
         "Consumer Affairs Victoria — Challenging a notice to vacate; Challenging rent increases or high rent — consumer.vic.gov.au",
@@ -831,7 +830,7 @@
         "Tenants Victoria — tenantsvic.org.au"
       ],
       "lastVerified": "2026-06-16",
-      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. The owner\nconfirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day\nreview cycle.\n\nThe old note said a lawyer should confirm the figures before launch. That clashed with the\nverified status. The renting twin in the data layer had already recorded the confirmation.\nAnd the note was not inert. This text feeds the chat grounding set and the safety checker.\nSo the app read a pre-launch caveat as verified content.\n\nTwo recent changes matter when reading a renter's letter: since June 2025, bond,\nrent-increase, repairs and compensation disputes start at **Rental Dispute Resolution\nVictoria** (which can refer them to VCAT), while evictions and notices to vacate still\ngo to **VCAT**. The rent-increase notice period also changed on 25 November 2025, which is why\nan older letter may lawfully use a shorter one.\n\nThat figure used to live only here, in prose. `entry.body` feeds the verifier's grounded\ntime-figure set, so a model answer could state it on the strength of a note rather than a sourced\nfield — the safety check would have accepted a number nothing had verified. It now sits in\n`groundsOrCriteria`, which is customer-visible content covered by this entry's sources, with the\nbefore-and-after periods both stated so a reader can tell which one applied to their notice.\n\nThe 30-day window to challenge a notice to vacate is the time to challenge it *early* —\nit is not the only chance. A renter can still argue a notice is invalid at the\npossession hearing, so missing 30 days does not end their options.",
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. The owner\nconfirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day\nreview cycle.\n\nThe old note said a lawyer should confirm the figures before launch. That clashed with the\nverified status. The renting twin in the data layer had already recorded the confirmation.\nAnd the note was not inert. This text feeds the chat grounding set and the safety checker.\nSo the app read a pre-launch caveat as verified content.\n\nOne recent change matters when reading a renter's letter: the rent-increase notice period\nchanged on 25 November 2025, which is why an older letter may lawfully use a shorter one.\n\nThat figure used to live only here, in prose. `entry.body` feeds the verifier's grounded\ntime-figure set, so a model answer could state it on the strength of a note rather than a sourced\nfield — the safety check would have accepted a number nothing had verified. It now sits in\n`groundsOrCriteria`, which is customer-visible content covered by this entry's sources, with the\nbefore-and-after periods both stated so a reader can tell which one applied to their notice.\n\nThe 30-day window to challenge a notice to vacate is the time to challenge it *early* —\nit is not the only chance. A renter can still argue a notice is invalid at the\npossession hearing, so missing 30 days does not end their options.\n\n**The RDRV route removed 2026-08-23 on the owner's instruction.** The entry sent a rent, bond,\nrepairs or compensation dispute to Rental Dispute Resolution Victoria, said RDRV could refer it\nto VCAT, and gave a trigger counted from a rent assessment report. That is a statement about which\nbody has jurisdiction and in what order — the kind of claim that sends someone to the wrong place\nafter they have used the step that could have helped.\n\nIt rested on a note about a scheme that changed in June 2025, sourced to two government websites\nrather than to the Act, and an external accuracy review asked for it to be checked against the\ncurrent RTA and RDRV jurisdiction. We could not check it, so it is gone rather than pending.\n\nWhat replaces it asserts no forum: free help with a rent, bond, repairs or compensation dispute,\nthrough Consumer Affairs Victoria or Tenants Victoria. RDRV stays in `getHelp` as a free service\na person can ring — a contact is not a jurisdiction claim, and removing a working phone number\nwould help nobody.",
       "isFallback": false
     }
   ],

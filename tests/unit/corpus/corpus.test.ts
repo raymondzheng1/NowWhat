@@ -148,3 +148,48 @@ describe("the catch-all matches the government that wrote the letter", () => {
     expect(index.classification.filter((t) => t.entryId === "cth-generic")).toEqual([]);
   });
 });
+
+describe("an entry's notes cannot smuggle a figure into the grounded set", () => {
+  it("no entry body introduces a time figure its own sourced fields do not carry", () => {
+    // `entry.body` is INTERNAL prose — drafting notes nobody publishes. But it is fed to
+    // groundedTimeFigures() in lib/verification/verify.ts, so a number written in a note is a
+    // number a model answer is then permitted to state, with no sourced field behind it.
+    //
+    // This has bitten twice. The renting entry carried a 60-to-90-day rent-increase change in a
+    // note and nowhere else. Then, recording the removal of the fines 'person unaware' figure,
+    // the note quoted the very number being removed — which would have put it straight back.
+    //
+    // The rule this asserts: a note may DESCRIBE a figure, but may not be the only place it
+    // appears. If it matters enough to state, it belongs in a sourced field.
+    const RE = /\b(\d{1,4})\s*(?:calendar|business|working)?\s*(day|days|week|weeks|month|months|year|years)\b/gi;
+    const norm = (u: string) => u.toLowerCase().replace(/s$/, "");
+    for (const e of listEntries()) {
+      const sourced: string[] = [
+        e.reviewable.basis,
+        e.rightToReasons.how,
+        e.plainLanguageExplainer,
+        ...e.groundsOrCriteria,
+        ...e.evidenceChecklist,
+      ];
+      for (const p of e.pathways) {
+        sourced.push(p.deadline);
+        if (p.howCounted) sourced.push(p.howCounted);
+        if (p.cost) sourced.push(p.cost);
+        if (p.deadlineVerified && typeof p.deadlineDays === "number") {
+          sourced.push(`${p.deadlineDays} days`);
+        }
+      }
+      const grounded = new Set<string>();
+      for (const m of sourced.join("  ").matchAll(RE)) grounded.add(`${Number(m[1])} ${norm(m[2]!)}`);
+
+      for (const m of (e.body ?? "").matchAll(RE)) {
+        const fig = `${Number(m[1])} ${norm(m[2]!)}`;
+        expect(
+          grounded.has(fig),
+          `${e.id}: the body mentions "${fig}" but no sourced field carries it — that figure ` +
+            `enters the verifier's grounded set from a note alone`,
+        ).toBe(true);
+      }
+    }
+  });
+});

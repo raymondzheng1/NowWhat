@@ -30,7 +30,7 @@ As a renter in Victoria, you can raise a repairs dispute formally. A rental prov
 
 ## How to raise a repairs dispute
 
-You can take a repairs dispute to **Rental Dispute Resolution Victoria (RDRV)** for free. RDRV can also refer your case to VCAT if needed. You can [start the process here](/start).
+Free help with a repairs dispute is available, and it is worth asking early. You can [start the process here](/start).
 
 It helps to move quickly.
 

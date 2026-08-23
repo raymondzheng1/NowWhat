@@ -2,13 +2,13 @@
 title: I didn't know about my fine until now — what can I do?
 description: >-
   Found out about a Victorian fine late? You may be able to ask for a review on
-  the 'unaware' ground. Act within 14 days of finding out.
+  the 'unaware' ground. A short time limit applies, so act quickly.
 question: I didn't know about my fine until now — what can I do?
 answer: >-
   If you only just found out about a Victorian fine, there is a specific review
-  ground called 'person was unaware'. You need to apply within 14 days of
-  finding out about the fine. Free help is available to guide you through the
-  process.
+  ground called 'person was unaware'. A short time limit applies to it, so check
+  the limit with Fines Victoria or a free service straight away. Free help is
+  available to guide you through the process.
 entryId: vic-fines
 category: Fines
 sources:
@@ -24,7 +24,7 @@ updated: '2026-06-16'
 
 In Victoria, one ground for a review is that **you did not know about the fine**. This is called the 'person was unaware' ground.
 
-You need to **act within 14 days of the day you found out** about the fine. Acting quickly matters. Your options can change as the fine moves through its stages.
+**A short time limit applies to this ground**, so check it with Fines Victoria or a free service straight away. Acting quickly matters. Your options can change as the fine moves through its stages.
 
 ## What you will likely need
 

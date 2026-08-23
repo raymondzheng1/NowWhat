@@ -52,15 +52,14 @@ pathways:
     howToStart: "ask Consumer Affairs Victoria for a free rent assessment"
     cost: "free"
     source: "consumer.vic.gov.au — challenging rent increases or high rent"
-  - name: "Take a rent, bond, repairs or compensation dispute to Rental Dispute Resolution Victoria"
-    body: "Rental Dispute Resolution Victoria (RDRV), which can refer it to VCAT"
-    deadline: "If you got a rent assessment report, apply within 30 days of getting the report. Bond, repairs and compensation disputes can also be brought here."
+  - name: "Get free help with a rent, bond, repairs or compensation dispute"
+    body: "Consumer Affairs Victoria, or Tenants Victoria"
+    deadline: "Time limits can apply. Ask them early rather than later."
     deadlineDays: null
     deadlineVerified: false
-    howCounted: "from the day you get the rent assessment report"
-    howToStart: "apply to RDRV (free)"
+    howToStart: "contact Consumer Affairs Victoria or Tenants Victoria and describe the dispute"
     cost: "free"
-    source: "consumer.vic.gov.au — challenging rent increases or high rent; rdrv.vic.gov.au"
+    source: "consumer.vic.gov.au — renting; tenantsvic.org.au"
 rightToReasons:
   available: "sometimes"
   how: "a notice to vacate must be on the correct form and give a valid reason — if it isn't, it may not be valid, and a rent increase must use the correct form"
@@ -97,7 +96,7 @@ getHelp:
   - service: "Consumer Affairs Victoria"
     who: "free renting information and rent assessments"
     link: "https://www.consumer.vic.gov.au/housing/renting"
-plainLanguageExplainer: "If you rent in Victoria and you got a notice to vacate or a rent increase you think is unfair, you have options. You can ask VCAT to check whether a notice to vacate is valid. You can ask Consumer Affairs Victoria for a free check of a rent increase. Bond, repairs and rent disputes can be sorted out for free through Rental Dispute Resolution Victoria. There are time limits, so it helps to act early, and free help is available."
+plainLanguageExplainer: "If you rent in Victoria and you got a notice to vacate or a rent increase you think is unfair, you have options. You can ask VCAT to check whether a notice to vacate is valid. You can ask Consumer Affairs Victoria for a free check of a rent increase. Free help with bond, repairs and rent disputes is available too. There are time limits, so it helps to act early."
 sources:
   - "Residential Tenancies Act 1997 (Vic) — legislation.vic.gov.au"
   - "Consumer Affairs Victoria — Challenging a notice to vacate; Challenging rent increases or high rent — consumer.vic.gov.au"
@@ -116,11 +115,8 @@ verified status. The renting twin in the data layer had already recorded the con
 And the note was not inert. This text feeds the chat grounding set and the safety checker.
 So the app read a pre-launch caveat as verified content.
 
-Two recent changes matter when reading a renter's letter: since June 2025, bond,
-rent-increase, repairs and compensation disputes start at **Rental Dispute Resolution
-Victoria** (which can refer them to VCAT), while evictions and notices to vacate still
-go to **VCAT**. The rent-increase notice period also changed on 25 November 2025, which is why
-an older letter may lawfully use a shorter one.
+One recent change matters when reading a renter's letter: the rent-increase notice period
+changed on 25 November 2025, which is why an older letter may lawfully use a shorter one.
 
 That figure used to live only here, in prose. `entry.body` feeds the verifier's grounded
 time-figure set, so a model answer could state it on the strength of a note rather than a sourced
@@ -131,3 +127,18 @@ before-and-after periods both stated so a reader can tell which one applied to t
 The 30-day window to challenge a notice to vacate is the time to challenge it *early* —
 it is not the only chance. A renter can still argue a notice is invalid at the
 possession hearing, so missing 30 days does not end their options.
+
+**The RDRV route removed 2026-08-23 on the owner's instruction.** The entry sent a rent, bond,
+repairs or compensation dispute to Rental Dispute Resolution Victoria, said RDRV could refer it
+to VCAT, and gave a trigger counted from a rent assessment report. That is a statement about which
+body has jurisdiction and in what order — the kind of claim that sends someone to the wrong place
+after they have used the step that could have helped.
+
+It rested on a note about a scheme that changed in June 2025, sourced to two government websites
+rather than to the Act, and an external accuracy review asked for it to be checked against the
+current RTA and RDRV jurisdiction. We could not check it, so it is gone rather than pending.
+
+What replaces it asserts no forum: free help with a rent, bond, repairs or compensation dispute,
+through Consumer Affairs Victoria or Tenants Victoria. RDRV stays in `getHelp` as a free service
+a person can ring — a contact is not a jurisdiction claim, and removing a working phone number
+would help nobody.
