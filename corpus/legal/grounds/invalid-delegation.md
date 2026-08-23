@@ -9,7 +9,8 @@ whatItMeans: >-
   else decides, the decision can be unlawful.
 plainExample: >-
   Your payment is cancelled by a team leader. The Act gives that decision to
-  the Secretary.
+  the Secretary. That difference is where the question starts, not where it
+  ends.
 whatRelates:
   - The Act gives this decision to one named person, in terms.
   - The rules name one office, but a different office wrote to you.
@@ -23,8 +24,8 @@ whatItIsNot: >-
   the ordinary case, not a problem. A signature you do not recognise is not a
   sign of anything by itself. The authority to sign does not have to appear in
   the letter, or in any formal document — it can come from the Act, from a
-  delegation, or simply from the way the department is set up. The question is
-  what the Act requires, not what the letter shows.
+  delegation, or from the way that decision has long been made in the
+  department. The question is what the Act requires, not what the letter shows.
 usedIn:
   - judicial-review
 test: >-
@@ -85,3 +86,15 @@ substance has moved to `whatItIsNot`, where it belongs.
 
 What the entry now asks instead is the question the law actually asks: does the Act point to this
 being a decision the named person must make themselves.
+
+**Two tightenings 2026-08-23.** `whatItIsNot` said the authority to sign can come "simply from the
+way the department is set up". That renders Pattenden's departmental practice as an org-chart fact a
+reader might think they can go and check, and "simply" invites them to treat it as automatic. It now
+reads "from the way that decision has long been made in the department". The three sources of
+authority are unchanged — the Act, an instrument of delegation, and long-standing departmental
+practice — and the field still closes on what the Act requires being the question.
+
+`plainExample` paired a team leader with a power the Act gives the Secretary and stopped there, so
+the two facts sat together as if the mismatch were the answer. It now says the difference is where
+the question starts, not where it ends. That is the same point Pattenden's factors make in the note
+above: in a big agency doing routine work they usually point away from a delegation problem.

@@ -31,7 +31,11 @@ avenue:
   noReviewEndpoint: null
 deadlineRule: >-
   Centrelink reviews have a time limit, set by the Social Security
-  (Administration) Act 1999 (Cth). Check the exact limit with Services Australia
+  (Administration) Act 1999 (Cth). The first step is an internal review by
+  Services Australia. Asking sooner can also matter for any back payment. That
+  is a different thing from the limit for asking. The tribunal is a separate
+  step, with its own limit. A court limit is separate again, and court limits
+  are strict. Check each limit, and how it is counted, with Services Australia
   or a free service.
 verifiedAsAt: '2026-06-30'
 sourceUrl: 'https://www.servicesaustralia.gov.au/reviews-and-appeals'
@@ -88,3 +92,18 @@ statement arrives, so that was a rule the app could not source. It now takes the
 shape as `extendsMR` and says it depends, naming who to ask. The old value erred in the safe
 direction — a reader acting earlier — but an unsourceable rule on a deadline is the thing this
 corpus exists to prevent.
+
+**The time-limit rule now separates the steps, 2026-08-23, from the external legal review.** One
+sentence covered the internal review, the tribunal and a court alike, and said nothing about back
+payment. Two different clocks were reading as one: the limit for asking for a review, and the effect
+the date of asking has on what you are paid for the period behind you.
+
+The replacement is lifted from this app's own lawyer-confirmed decode entry, which already separates
+them — "You can usually ask for an internal review, but asking sooner can matter for any
+back-payment" on the ARO step, its own limit on the ART step, and "Court time limits are strict" on
+the court step. Nothing new is asserted: no period for any stage, and no back-payment rule, because
+we hold no source for either. The Act stays named on the review steps, where this entry's own
+`avenue.mr.source` cites it, and is not stretched across the court step.
+
+The stage-by-stage periods the reviewer asked for cannot follow until the supervising lawyer
+confirms which provision sets each one. That is the open item for this entry at the next cadence.

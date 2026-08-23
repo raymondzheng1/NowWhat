@@ -1,5 +1,5 @@
 ---
-intro: "Most decisions can be challenged in one of two ways. They ask different questions, so the right one depends on what you are hoping for."
+intro: "Some government decisions can be challenged in one of two ways. They ask different questions, so the right one depends on what you are hoping for. This table is a general guide only — the rules differ from one decision to another."
 rows:
   - { aspect: "The question it asks", mr: "Is this the correct or preferable decision?", jr: "Was the decision made lawfully?" }
   - { aspect: "Who decides", mr: "A tribunal (VCAT or the ART)", jr: "A court (Supreme Court or Federal Court)" }
@@ -13,14 +13,14 @@ rows:
 chooser:
   question: "What are you hoping for?"
   options:
-    - { prompt: "A different outcome — I think the decision is wrong", leadsTo: "merits-review", because: "If you want the decision changed, merits review (where it is available) is usually the path, because a tribunal can replace the decision." }
+    - { prompt: "A different outcome — I think the decision is wrong", leadsTo: "merits-review", because: "Where a law gives a right to merits review, a tribunal can look at the decision again. A tribunal can replace the decision; a court cannot." }
     - { prompt: "The decision was made unfairly or without power", leadsTo: "judicial-review", because: "If the problem is how the decision was made, judicial review asks a court to check that it was lawful." }
     - { prompt: "Both might apply, or I am not sure", leadsTo: "both", because: "Sometimes both are possible, and the time limits are different. A free legal service can help you choose — and quickly, because of the time limits." }
 faq:
   - q: "What is the difference between merits review and judicial review?"
     a: "Merits review asks whether the decision is the correct or preferable one — a tribunal looks at it again and can change or replace it. Judicial review asks whether the decision was made lawfully — a court checks how it was made and can set it aside, but cannot make a new decision for you."
   - q: "Which one should I use?"
-    a: "If you want a different outcome, merits review (where a law provides it) is usually the path. If the problem is how the decision was made, judicial review checks its legality. The time limits are different, so a free legal service can help you choose quickly."
+    a: "It depends on what the problem is. If the problem is the outcome, merits review asks whether the decision is the correct or preferable one. That path is open where a law provides it. If the problem is how the decision was made, judicial review checks its legality. The time limits are different, so a free legal service can help you choose quickly."
   - q: "Can I use both merits review and judicial review?"
     a: "Sometimes both are possible. They have different time limits, so it is worth getting free legal advice early so you do not miss one."
   - q: "If both are open, which one comes first?"
@@ -52,3 +52,28 @@ unsourceable rule does not.
 **The process-evidence exception deleted.** The evidence row added that a court can look at evidence
 about what actually happened where the complaint is about the process. The framework says only
 "Generally the record before the decision-maker". The sourced half stands alone.
+
+Two more corrections applied 2026-08-23, from an external review the owner approved.
+
+**"Most decisions" was a prevalence claim we cannot source**, and it contradicted our own pages. The
+availability row says merits review exists "only where a law gives a review right for that
+decision", and `merits-review.md` says the same. The intro now opens on "Some government decisions"
+and carries a general-guide caveat, because several cells state a common position rather than a
+universal rule.
+
+The caveat sits at the end of `intro` rather than under the table. It belongs under the table, but
+that needs a new field on `ComparisonSchema` and a change to `MrVsJr.tsx`, neither of which is this
+entry's to make. `intro` renders immediately above the table on both `/learn/compare` and the tour,
+so the caveat is read before the rows.
+
+**Directional wording removed from the chooser.** "Merits review ... is usually the path" told a
+reader which way to go, which is the behaviour the no-advice gate exists to catch even though no
+listed pattern matches that phrasing. Both the chooser option and the "Which one should I use?"
+answer now compare the two routes instead of pointing at one. The "which comes first" answer was
+left alone: it describes what people do rather than recommending a step, and its parallel-clock
+warning and referral were settled earlier today.
+
+**Flagged for the supervising lawyer, not changed here.** The "Who can apply" cell compresses the
+five remedy-specific standing tests in `standing.md` into one line, and the "money risk" cell states
+costs exposure flatly. Both are over-general in the same way "Most decisions" was, but tightening
+them needs sourced content this entry does not hold.

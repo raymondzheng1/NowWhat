@@ -54,13 +54,14 @@ limits:
     of the original decision-maker. So the new decision can be better for you,
     the same, or worse. It is not limited to the part you disagree with.
   - >-
-    A tribunal is not a court. It sits inside government, and it is doing
-    administration rather than deciding a legal dispute between you and the
-    state.
+    A tribunal is not a court. It is independent of the department that made the
+    decision. But it is still doing administration, not settling a legal dispute
+    between you and the state.
   - >-
     Government policy can guide the tribunal, but it cannot decide the matter
     for it. A tribunal will usually follow a lawful policy, and needs a good
-    reason in your case to depart from it.
+    reason in your case to depart from it. Tribunals do not all treat policy the
+    same way.
 goodToKnow:
   - >-
     Because the tribunal can change the outcome, merits review is usually what
@@ -97,3 +98,18 @@ aside.
 provisions (ADJR s 13, ALA s 8). The rights our readers will actually use are the tribunal ones —
 VCAT Act ss 45-47 and ART Act ss 268-271 — including that the tribunal can be asked to ORDER
 reasons, or better reasons, when what arrives says very little.
+
+Two limits reworded 2026-08-23 on an external review finding the owner approved.
+
+**The page contradicted itself about independence.** `whatItIs` opened with "an independent
+tribunal" and the limits then said the tribunal "sits inside government". Both were reaching for
+the same idea, but a reader met them as a plain contradiction, and the second one reads as though
+the tribunal answers to the department that made the decision. The limit now says what the
+independence actually is — independent of that department — and keeps the real point, which is
+that the tribunal is doing administration rather than settling a legal dispute. Nothing was added
+about how a tribunal is constituted; the over-claim was removed, not replaced.
+
+**The policy rule was published as though it were uniform.** It is Drake (No 2) framing and reads
+Commonwealth-wide, and it does not travel cleanly to VCAT. No jurisdiction-specific rule was added,
+because we hold no source for one. A single hedge was added instead, so the general position is not
+read as the rule for every tribunal.

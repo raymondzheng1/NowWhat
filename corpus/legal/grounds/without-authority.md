@@ -59,7 +59,9 @@ leadingCases:
       Minister for Immigration and Multicultural Affairs v Bhardwaj (2002) 209
       CLR 597
     pinpoint: ''
-    explains: A decision made outside the power counts in law as no decision.
+    explains: >-
+      Where the error goes to the power itself, the law treats what happened as
+      no decision at all.
   - name: Attorney-General (NSW) v Quin (1990) 170 CLR 1
     pinpoint: ''
     explains: A court checks whether a decision was lawful, not whether it was right.
@@ -85,3 +87,16 @@ whether the office named matches the one that wrote, which tests the letter rath
 Invalid-delegation's own `whatItIsNot` states the governing principle, grounded in Pattenden:
 the question is what the Act requires, not what the letter shows. This entry now says the same, and
 keeps "the letter does not name the law" only as a place to start asking.
+
+**Bhardwaj hedged 2026-08-23, to match breach-consequences.** The note read "A decision made outside the
+power counts in law as no decision" — flat, and stated as a general rule about any decision made outside
+power. `breach-consequences` carries the same case correctly, conditioned on the kind of error: "Where the
+error goes to the power itself, the law treats what happened as no decision at all." That is the wording
+now used here.
+
+Two entries were giving one case two different readings, and the looser one sat in the entry a reader reaches
+first — this ground is where someone who suspects there was no power at all starts. The proposition is the
+owner's own, so this is alignment inside the corpus, not new law.
+
+No change on the overlap point in the same finding. The cross-reference added earlier today already says
+the two grounds can overlap while asking different questions, and it is mirrored in error-of-law.

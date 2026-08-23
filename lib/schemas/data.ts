@@ -26,6 +26,19 @@ export const AvenueMRSchema = z.object({
    * useful route from the people least able to work out that it might exist.
    */
   conditional: z.boolean().default(false),
+  /**
+   * What KIND of body this actually is.
+   *
+   * The merits avenue was typed only as "merits review", so the Housing Appeals Office — a
+   * departmental appeal — inherited the tribunal card wholesale, including remedies a
+   * tribunal has and an internal reviewer does not. An external review put it plainly:
+   * calling it merits review overstates its independence and statutory status.
+   *
+   * "mixed" is the common case here: fines go to internal review OR the Magistrates' Court,
+   * housing to the Housing Appeals Office for a housing decision and VCAT for a notice to
+   * vacate. Nothing is hidden on a mixed path; a caution travels with it instead.
+   */
+  character: z.enum(["tribunal", "internal", "mixed"]).default("tribunal"),
   /** Merits-review body, e.g. "VCAT" (Vic) or "ART" (Cth). */
   body: z.string(),
   source: z.string(),
@@ -84,6 +97,58 @@ export const HelpRefSchema = z.object({
   phone: z.string().optional(),
 });
 
+/**
+ * One procedural STAGE of a matter — an internal review, a tribunal application, an election
+ * to go to court, an appeal.
+ *
+ * The layer used to hold ONE `deadlineRule` string per decision type, and that is why the
+ * Victorian fines 28-day court election could attach a concrete date to a parking ticket: one
+ * field was serving every stage of a matter with different rules. An external review set out
+ * the fields a stage actually needs, and this is that list.
+ *
+ * NOTHING HERE MAY BE FILLED IN BY INFERENCE. Every field is a statement about procedure that
+ * a person acts on, so a stage record is only worth having if a supervising lawyer confirmed
+ * it against the provision. `stages` is therefore empty on every entry until that happens, and
+ * `deadlineRule` remains the published prose in the meantime. data-check enforces that a stage,
+ * once present, is complete — a half-filled stage is more dangerous than none.
+ */
+export const StageSchema = z.object({
+  /** What this stage IS, in the words a person would use. */
+  name: z.string().min(1),
+  /** The body, and what kind of body it is — an internal reviewer is not a tribunal. */
+  body: z.string().min(1),
+  character: z.enum(["internal", "tribunal", "court", "complaint", "appeal"]),
+  /** The event the clock runs from: the decision, notice of it, service, reasons received. */
+  trigger: z.string().min(1),
+  /** The period itself. `basis` records calendar or business days — they are not the same. */
+  period: z.object({
+    value: z.number().int().positive(),
+    unit: z.enum(["day", "month", "year"]),
+    basis: z.enum(["calendar", "business"]),
+  }),
+  /** Who may extend it and on what test, where an extension power exists. */
+  extension: z.string().default(""),
+  /** Who may apply at this stage, with its provision. */
+  whoMayApply: z.string().default(""),
+  /** PROVISION-level, not a site front page: the section that carries this rule. */
+  source: z.object({
+    provision: z.string().min(1),
+    url: z.string().min(1),
+    /** The compilation date of the instrument this was read from. */
+    effectiveDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  }),
+});
+export type Stage = z.infer<typeof StageSchema>;
+
+/** Who maintains an entry, and who signed it. Separate people, separate acts. */
+export const ApprovalSchema = z.object({
+  /** Who keeps the entry current. Operational, not legal. */
+  contentOwner: z.string().default(""),
+  /** The supervising lawyer who approved it, and when. Empty means NOT approved. */
+  lawyerApprover: z.string().default(""),
+  lawyerApprovedAt: z.string().default(""),
+});
+
 export const DataPathwaySchema = z.object({
   id: z.string().min(1),
   title: z.string().min(1),
@@ -120,6 +185,13 @@ export const DataPathwaySchema = z.object({
   examples: z.array(z.string()).max(8).default([]),
   getHelp: z.array(HelpRefSchema).min(1),
   status: z.enum(["seed", "verified"]).default("seed"),
+  /**
+   * Structured, provision-level procedure. EMPTY until a lawyer supplies it — see
+   * StageSchema. `deadlineRule` is what publishes today; this is what will replace it.
+   */
+  stages: z.array(StageSchema).default([]),
+  /** Who maintains this entry and who signed it off. */
+  approval: ApprovalSchema.default({ contentOwner: "", lawyerApprover: "", lawyerApprovedAt: "" }),
   /** True for the generic per-jurisdiction fallback entries. */
   isFallback: z.boolean().default(false),
 });

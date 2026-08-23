@@ -72,8 +72,8 @@ goodToKnow:
     not.
   - >-
     If a tribunal decides against you, judicial review is not the only route.
-    The law that set the tribunal up usually gives a right of appeal to a court
-    on a question of law as well.
+    An appeal to a court on a question of law may also be open. Whether there is
+    one, and which court hears it, depends on the law that set the tribunal up.
   - >-
     Federally that appeal is under the Administrative Review Tribunal Act. In
     Victoria it is under the VCAT Act, and it needs the court's permission
@@ -139,3 +139,12 @@ error "is the question a court decides, not a condition for asking". Both are tr
 ground, the court decides whether it is made out — but a first-time reader met two of our own pages
 appearing to disagree about whether they were allowed through the door. The line now carries the
 distinction itself.
+
+**Appeal availability reworded 2026-08-23**, on an external review finding the owner approved. The
+line said the law that set the tribunal up "usually gives a right of appeal to a court on a question
+of law". That asserts availability we cannot assert: whether an appeal exists, and to which court,
+is controlled by the constituting Act, and it varies. The line now says the appeal may be open, and
+that the Act decides. The next bullet still names the ART Act, the VCAT Act and the Victorian leave
+requirement, so nothing concrete was lost — only the implied default that an appeal is there. This
+is the same treatment "usually NOT paused by asking for reasons" got above: the useful half stays,
+the assumed rule goes.

@@ -15,16 +15,26 @@ plainExample: >-
   explanation.
 whatRelates:
   - The outcome seems to make no sense on the facts the decision-maker had.
-  - The result is far harsher than the situation called for.
-  - There is no intelligible reason given for the decision.
+  - >-
+    The result is far harsher than the situation called for, and nothing
+    explains why.
+  - >-
+    Nothing in the decision shows why that result was reached. On its own,
+    short reasons do not show this.
 whatItIsNot: >-
   It does not mean you simply disagree with the decision — it has to lack a
-  sensible basis.
+  sensible basis. Most decisions leave the decision-maker room to choose. A
+  decision inside that room is not unlawful just because someone else would
+  have chosen differently.
 usedIn:
   - judicial-review
 test: >-
   A decision may be unlawful if it lacks an evident and intelligible
   justification, or is one no reasonable decision-maker could have reached.
+  What counts as unreasonable comes from the Act the power sits in, and from
+  what that Act is for. The bar is a high one. Most powers leave room for more
+  than one answer, and a court will not step in just because it would have
+  chosen another.
 elements:
   - id: justification
     name: No intelligible justification
@@ -34,8 +44,8 @@ elements:
   - id: disproportionate
     name: Disproportionate or arbitrary
     layPrompt: >-
-      Was the result far harsher than the situation called for, or seemingly
-      arbitrary?
+      Was the result so far out of step with the situation that nothing
+      explains it?
 sources:
   - Victoria Legal Aid — legalaid.vic.gov.au
 status: verified
@@ -49,7 +59,7 @@ leadingCases:
   - name: Minister for Immigration and Citizenship v Li (2013) 249 CLR 332
     pinpoint: ''
     explains: >-
-      The case that moved Australian law past that older question. A decision
+      Australian law is no longer limited to that older question. A decision
       can be unreasonable where nothing in it shows why it was made. How the
       decision was reached counts, not only what was decided.
   - name: >-
@@ -91,3 +101,35 @@ that the ground reaches how a decision is made, not only what was decided.
 naming judgments in copy read by a self-represented person invites them to weigh which line of
 authority is stronger. The SZVFW pinpoint predates that decision and is left alone; it attributes
 a stringency warning, which pushes the opposite way.
+
+**Statutory context and decisional freedom published, 2026-08-23.** Both were in our materials and neither
+reached the page. Li holds that the standard and its indicia "will need to be found in the scope, subject
+and purpose of the particular statutory provision", and that "there is generally an area of decisional
+freedom within which reasonable minds may reach different conclusions". Stringency appeared only inside
+SZVFW's case note, which the grid does not show.
+
+Without them the ground read as a free-standing test of whether an outcome was too harsh — which is a
+merits question, and the one this app must not invite. `test` now says where the standard comes from and
+that most powers leave room for more than one answer; `whatItIsNot` says the same in the reader's own
+terms.
+
+The three reader-facing lines that carried the merits framing are qualified rather than removed. "Far
+harsher than the situation called for" now ends "and nothing explains why", and the `disproportionate`
+prompt asks whether the result is so far out of step that nothing explains it. Severity was the signal;
+severity with nothing behind it is the ground.
+
+**Absence of reasons no longer stands alone.** "There is no intelligible reason given for the decision"
+put a failure to give reasons forward as the ground itself. It now asks whether anything in the decision
+shows why that result was reached, and says short reasons do not settle it. Nothing was added about when
+silence supports an inference: the proposition is not in this entry's source, and under grounded-or-silent
+the over-claim comes out without a replacement going in.
+
+**Li's note aligned with Wednesbury's.** Li read as a clean break ("the case that moved Australian law
+past that older question"), while Wednesbury three lines above already published the owner's own
+formulation — "Australian law is no longer limited to that question". Li now uses it too. This follows the
+2026-08-23 ruling rather than reopening it: Wednesbury stays, as one way a decision can be legally
+unreasonable and no longer the boundary.
+
+Still open: this entry and `jurisdictional-error` are the two grounds sourced only to Victoria Legal Aid.
+Everything added here comes from propositions the corpus already holds; the sourcing pass their neighbours
+had is still owed.

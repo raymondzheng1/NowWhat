@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { listDataEntries, getDataEntry } from "@/lib/data";
+import { listDataEntries, getDataEntry, getDataIndex } from "@/lib/data";
 import type { DataPathway, Jurisdiction } from "@/lib/schemas/data";
 import { groundAppliesIn, type Process, type Ground, type Concept } from "@/lib/schemas/legal";
 import { avenueView } from "@/lib/triage";
@@ -913,6 +913,9 @@ function ResultStep({
     goalOther,
     decisionDate: decisionDate || undefined,
     forum: plan.primary?.body ?? memoProcess.plainName,
+    // Provenance: which build of the procedural layer produced the rule and the source
+    // printed in this memo. It is already in the client bundle, so this costs nothing.
+    corpusVersion: getDataIndex().builtAt,
     t: (k) => t(k),
   });
 
@@ -1239,6 +1242,15 @@ function ResultStep({
         tour
       />
       )}
+
+      {/* Free help, before the reading.
+          External legal review (2026-08-23): on a time-sensitive route, the official body AND a
+          free service belong above optional educational content. The panel above already names
+          the official body, the rule and its source; the free services only appeared at the foot
+          of the page, below an explainer nobody has to read. Every route here has a time limit,
+          so this is not gated on the urgency tripwire — it shows on every options view. The full
+          block still closes the page. */}
+      {view === "options" && <HelpList t={t} entry={entry} compact />}
 
       {/* Understand these options — in-flow Learn (progressive disclosure) */}
       {view === "options" && (av.mrAvailable || av.jrAvailable) && (
@@ -1698,13 +1710,35 @@ function ResultStep({
   );
 }
 
-function HelpList({ t, entry }: { t: ReturnType<typeof useTranslations>; entry: DataPathway }) {
+/**
+ * The escalation block. `compact` is the same services in a quieter frame, used high on the
+ * options view so a person reaches a phone number before an explainer; the full block still
+ * closes the page. Compact drops the sticker tilt and takes its own heading, so the two are
+ * not two identical landmarks on one screen.
+ */
+function HelpList({
+  t,
+  entry,
+  compact = false,
+}: {
+  t: ReturnType<typeof useTranslations>;
+  entry: DataPathway;
+  compact?: boolean;
+}) {
   return (
     <section
-      className="sticker rounded-card border-2 border-help bg-help-soft p-5 sm:p-6"
-      style={{ "--rot": "-0.7deg" } as React.CSSProperties}
+      className={
+        compact
+          ? "rounded-card border-2 border-help bg-help-soft p-5"
+          : "sticker rounded-card border-2 border-help bg-help-soft p-5 sm:p-6"
+      }
+      style={compact ? undefined : ({ "--rot": "-0.7deg" } as React.CSSProperties)}
     >
-      <h2 className="font-display text-[21px] font-black text-help-ink">{t("helpTitle")}</h2>
+      <h2
+        className={`font-display font-black text-help-ink ${compact ? "text-[19px]" : "text-[21px]"}`}
+      >
+        {compact ? t("helpFirstTitle") : t("helpTitle")}
+      </h2>
       <ul className="mt-4 space-y-2.5">
         {entry.getHelp.map((h) => (
           <li key={h.service}>

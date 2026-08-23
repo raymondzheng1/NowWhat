@@ -21,6 +21,8 @@ export interface AvenueView {
   mrAvailable: boolean;
   /** Exists only where the enabling Act provides it (catch-all entries). */
   mrConditional: boolean;
+  /** What kind of body the merits path actually is. */
+  mrCharacter: "tribunal" | "internal" | "mixed";
   mrBody: string;
   jrAvailable: boolean;
   /** Set where the entry covers decision-makers this path may not reach. */
@@ -54,6 +56,7 @@ export function avenueView(entry: DataPathway): AvenueView {
   return {
     mrAvailable: entry.avenue.mr.available,
     mrConditional: entry.avenue.mr.conditional ?? false,
+    mrCharacter: entry.avenue.mr.character ?? "tribunal",
     mrBody: cleanForDisplay(entry.avenue.mr.body),
     jrAvailable: entry.avenue.jr.available,
     jrConditional: entry.avenue.jr.conditional ?? false,
@@ -78,14 +81,10 @@ export function triage(input: TriageInput): TriageResult {
     entry,
     isFallback: c.isFallback,
     jurisdiction: input.jurisdiction,
-    avenue: {
-      mrAvailable: entry.avenue.mr.available,
-    mrConditional: entry.avenue.mr.conditional ?? false,
-      mrBody: cleanForDisplay(entry.avenue.mr.body),
-      jrAvailable: entry.avenue.jr.available,
-      jrConditional: entry.avenue.jr.conditional ?? false,
-      jrForum: cleanForDisplay(entry.avenue.jr.forum),
-      noReviewEndpoint: cleanEndpoint(entry.avenue.noReviewEndpoint),
-    },
+    // One builder, not two. This block used to repeat avenueView() field for field, and every
+    // field added since had to be added twice — `mrConditional` drifted, then `jrConditional`,
+    // then `mrCharacter`, each caught only by the type checker. There is nothing this needs
+    // that avenueView does not already do.
+    avenue: avenueView(entry),
   };
 }

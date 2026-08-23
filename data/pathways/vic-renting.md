@@ -29,12 +29,16 @@ avenue:
   jr:
     available: false
     forum: ''
-    source: 'Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au'
+    source: ''
   noReviewEndpoint: null
 deadlineRule: >-
   Renting reviews have a strict time limit, set by the Residential Tenancies
   Act 1997 (Vic). Check the exact limit for your situation with VCAT or a
-  free service. Trying something else first does not restart the clock.
+  free service. Trying something else first does not restart the clock. If
+  VCAT decides against you, that is not always the end. A further step to a
+  court can be open, and there is more than one kind. Which one applies
+  depends on the law that set VCAT up. Those time limits are short, so ask a
+  free service in the week the decision arrives.
 verifiedAsAt: '2026-08-17'
 sourceUrl: 'https://www.vcat.vic.gov.au'
 reviewCadenceDays: 90
@@ -96,3 +100,26 @@ plainly with no section number in it.
 **The Supreme Court sentences are gone from the deadline rule.** They were left behind when `jr` was
 set to unavailable, so the entry warned about Order 56 and Administrative Law Act clocks for a path
 it no longer offers.
+
+**Two further corrections the same day, 2026-08-23, from the external review the owner accepted.**
+
+**The last of the judicial-review residue is gone.** `jr.source` still held the Order 56 citation
+for a path this entry stopped offering the day before — dead metadata, and the kind that gets read
+back out as a source. Cleared, matching `forum`, which was emptied at the same time.
+
+**A renter who loses at VCAT is no longer left at a dead end.** With one path on the result and
+nothing said about what follows it, the entry read as though VCAT was the end of the road. It is
+not, and the gap sat in the worst possible place: the routes that follow a tribunal have their own
+clocks, and they are short.
+
+The substance comes from `corpus/legal/processes/judicial-review.md`, which is lawyer-verified and
+already publishes it — a tribunal decision can be appealed to a court on a question of law, that is
+separate from judicial review of the tribunal's own decision, and the windows are shorter than
+people expect. Nothing new is asserted here.
+
+Two things were done deliberately. The phrase "judicial review" is kept out: this entry says
+judicial review is unavailable, because a private rental provider's notice is not a public decision,
+and reusing the term four sentences later would read as a contradiction rather than the different
+thing it is. And availability is not promised — which route is open, and to which court, depends on
+the law that set VCAT up, so the line says that and sends the person to a free service. Tenants
+Victoria and Victoria Legal Aid are already in `getHelp`.

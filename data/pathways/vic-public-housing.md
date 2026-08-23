@@ -20,6 +20,7 @@ keywords:
 avenue:
   mr:
     available: true
+    character: mixed
     body: 'Housing Appeals Office for a housing decision; VCAT for a notice to vacate'
     source: 'housing.vic.gov.au — appeal a decision; Housing Act 1983 (Vic)'
   jr:
@@ -113,3 +114,35 @@ same entry serves every decision-maker in it. There is no signal to gate on with
 question. So the path takes the shape the owner already approved for conditional merits review: it
 still shows, because hiding it would keep a real route from the people who do have it, and the
 condition travels with it on the card — "Only where a public body made the decision".
+
+**Three findings from the external review land on this entry, 2026-08-23, and none of them is a
+copy change. Recorded here so the next pass does not re-open them looking for one.**
+
+**The Housing Appeals Office inherits the wrong remedies, and the fault is not in this file.**
+Because the HAO occupies the `avenue.mr` slot, `planFor` hands its card the merits-review process
+entry wholesale — the question "Is this the correct or preferable decision?" and remedies that
+include setting aside and substituting the decision. That asserts substitution powers for a
+departmental reviewer. This file is already the careful one: `mrCriteria` says only that the
+reviewer considers whether the department correctly applied the relevant legislation, policies and
+procedures. The looser layer drives the card, so the fix is a third avenue kind — an internal or
+administrative appeal with its own question and remedies — or an override of `canDo`/`cannotDo`
+from `mrCriteria`, plus the `covVicBody` relabel in `en.json`.
+
+A partial cure was considered and rejected: adding "not a tribunal" to `mrCriteria` would leave one
+card saying both things at once, three lines apart. That is a worse defect than the one it patches.
+
+**Director and community provider in one entry** stays as it is. Splitting them is not a content
+edit — the intake asks for an AREA, not a decision-maker, so there is no signal to select between
+two entries without a new question in the flow. That is the product call the owner already made,
+in favour of the travelling condition.
+
+**The HAO and VCAT being typed alike** is the same structural gap seen from the other side. An
+administrative appeal inside the housing system and a tribunal exercising tenancy jurisdiction both
+sit in `avenue.mr` and are typed identically. The user-facing routing was split on 2026-08-23 and
+is correct; what is missing is the legal character in the data, which belongs to the schema.
+
+The court figures in `deadlineRule` carry the same source mismatch corrected in `vic-generic` on
+2026-08-23 — Order 56 and the Administrative Law Act stated on an entry whose `sourceUrl` is
+`housing.vic.gov.au`. It was not repointed here, because unlike the catch-all this entry's primary
+rule is the housing appeal, which that source does carry. Moving it would break the sourcing that
+is right to patch the sourcing that is wrong. It needs the per-stage `{provision, url}` source.

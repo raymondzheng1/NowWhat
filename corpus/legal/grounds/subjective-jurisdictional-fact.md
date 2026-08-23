@@ -73,7 +73,10 @@ leadingCases:
   - name: >-
       Minister for Immigration and Citizenship v Li (2013) 249 CLR 332
     pinpoint: ''
-    explains: A decision needs a reason you can see and follow.
+    explains: >-
+      How the decision-maker got to their view can be looked at, not only what
+      they decided. A view with nothing to show how it was reached can be
+      questioned.
 ---
 
 **illogicality.md was removed and merged into this entry on 2026-08-23**, on the owner's QA
@@ -114,3 +117,19 @@ That is the more accessible of the two for a lay reader, because it does not req
 rationality at all — it asks whether the decision-maker was satisfied of the thing the Act names, or
 of something else. A reader whose letter answers a question the Act never asked can see that from
 the letter itself.
+
+**Li's note rewritten 2026-08-23.** It read "A decision needs a reason you can see and follow" — a lay
+rendering of "evident and intelligible justification", which is a legal unreasonableness proposition, and
+the identical sentence anchored Li in `unreasonableness` too. One case carried one gloss across two
+grounds, and on this page the gloss was borrowed from the other one.
+
+Li's note here now says what Li adds to a satisfaction ground: the route to the state of mind can be
+looked at, not only the outcome. That sits with M70 directly above it, which makes the state of mind the
+thing the power depends on, and with SZMDS, which asks whether the reasoning holds together. Nothing was
+added about what makes reasoning inadequate — the four limits in `test` and `whatItIsNot` already carry
+that, from the same source.
+
+The rest of the finding needed no action. Legal unreasonableness is not merged in; it has its own entry.
+The illogicality merge is the owner's 2026-08-23 decision. The three-way separation asked for already
+exists as the `was-satisfied`, `right-question` and `open-on-material` elements, and "no rational
+decision-maker" is the threshold our source states.

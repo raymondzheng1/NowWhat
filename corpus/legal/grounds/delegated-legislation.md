@@ -27,9 +27,10 @@ whatItIsNot: >-
 usedIn:
   - judicial-review
 test: >-
-  A rule made under an Act has to stay within that Act. The court asks whether
-  the rule can reasonably be seen as appropriate and adapted to the purpose the
-  Act set. That leaves real room for the rule-maker.
+  A rule made under an Act has to stay within that Act. So the first question is
+  what the Act allows. One way the court asks that is whether the rule can
+  reasonably be seen as appropriate and adapted to the purpose the Act set. That
+  leaves real room for the rule-maker.
 elements:
   - id: within-subject
     name: Inside the subject the Act allows
@@ -91,3 +92,14 @@ the rule is about something the Act actually covers.
 
 **Project Blue Sky was removed from this entry.** Our materials assign this ground Toohey and
 Vanstone, and home PBS in the breach-consequences analysis, where the corpus already cites it.
+
+**Construction put first in `test` 2026-08-23.** The field stated the Vanstone formulation as THE
+test for every rule. What the empowering Act allows is the prior question, and the answer to it
+depends on that Act rather than on a single form of words. `test` now opens on construction — "the
+first question is what the Act allows" — and then keeps Vanstone as one way the court asks it,
+along with the deference clause the 19 August edit deliberately restored.
+
+Nothing was swapped out to make room. The suggested replacement would have dropped "capable of
+being reasonably considered", which is the whole of the deference point, and it scored above the
+reading ceiling. `whatRelates` already carried Vanstone's five routes to invalidity, so the entry
+never presented one formulation as the only way in; the field that states the rule now matches.

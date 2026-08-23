@@ -39,6 +39,12 @@ export interface MemoInput {
   decisionDate?: string;
   /** The forum name for this decision, from the lawyer-verified data layer. */
   forum: string;
+  /**
+   * Build fingerprint of the knowledge layer this memo was composed from. Optional, because
+   * the memo must still compose without it — a missing version is a missing line, never a
+   * missing memo.
+   */
+  corpusVersion?: string;
   /** Section headings, so all customer prose stays in the i18n layer. */
   t: (key: string) => string;
 }
@@ -62,7 +68,18 @@ function quoted(story: string): string[] {
 }
 
 export function composeMemo(input: MemoInput): Memo {
-  const { entry, process: proc, grounds, story, goals, goalOther, decisionDate, forum, t } = input;
+  const {
+    entry,
+    process: proc,
+    grounds,
+    story,
+    goals,
+    goalOther,
+    decisionDate,
+    forum,
+    corpusVersion,
+    t,
+  } = input;
   const L: string[] = [];
   const h = (s: string) => {
     L.push("");
@@ -160,6 +177,19 @@ export function composeMemo(input: MemoInput): Memo {
   // ---- Close -----------------------------------------------------------------------
   h(t("memoNext"));
   L.push(t("memoNextBody"));
+
+  // ---- Where this came from --------------------------------------------------------
+  // Added 2026-08-23 after external legal review. The memo stamped the day it was prepared
+  // but never said what it was built from, so a lawyer reading it could not tell which
+  // source was used or how old the check was — and neither could we, if someone brought a
+  // printout back months later. The source URL and the check date are the entry's own; the
+  // version is a build fingerprint, so a memo can always be tied back to the exact content
+  // that produced it. Nothing here is about the person.
+  h(t("memoSourceTitle"));
+  L.push(`${t("memoSourceOfficial")}: ${entry.sourceUrl}`);
+  L.push(`${t("memoSourceChecked")}: ${entry.verifiedAsAt}`);
+  if (corpusVersion) L.push(`${t("memoSourceVersion")}: ${corpusVersion}`);
+
   L.push("");
   L.push(t("memoNotAdvice"));
 

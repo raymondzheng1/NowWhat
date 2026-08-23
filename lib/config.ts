@@ -60,9 +60,20 @@ export function siteUrl(): string {
 /**
  * The disclaimer that must appear on every customer-facing answer surface and
  * FAQ page (harness §9.3 — a product constant that can never be removed).
+ *
+ * Widened on 2026-08-23 after external legal review. The old sentence covered advice and
+ * prediction; it said nothing about the two things that actually cost people a right — that
+ * we never choose between the options we show them, and that a time limit is running while
+ * they read. Both are now stated here, so the promise travels with the constant rather than
+ * depending on which surface the person happens to be on. The reviewer's wording used
+ * "obtain help" and "promptly"; both are swapped for plainer words. Short sentences on
+ * purpose: this renders to someone in distress, on a phone.
+ *
+ * The footer keeps its own shorter variant — this one is four sentences and does not fit
+ * there. Do not merge them.
  */
 export const DISCLAIMER =
-  "This is general information, not legal advice, and we cannot tell you what will happen in your case. For advice about your situation, talk to a free legal service.";
+  "This is general information, not legal advice. It does not tell you what will happen in your case, and it does not choose an option for you. Time limits depend on your decision and can be short. Check your letter, and get help from the official body or a free legal service as soon as you can.";
 
 /** Product name SoT (no AI/LLM mentions in customer copy — harness §11). */
 export const PRODUCT_NAME = "What Now?";

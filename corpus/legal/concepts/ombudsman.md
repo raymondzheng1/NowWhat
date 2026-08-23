@@ -8,7 +8,7 @@ appliesTo:
   - complaint
 whatItMeans: >-
   The Ombudsman takes complaints about government departments and agencies.
-  Complaining is free. It is not a review body. It looks at how your matter was
+  Complaining is free. It is not merits review. It looks at how your matter was
   handled rather than whether the decision was the best one. So it is the right
   place for delay, poor communication, or a process that was not followed.
 whatItIsNot: >-
@@ -40,7 +40,7 @@ options:
       reasons were explained, whether you were treated fairly, whether there was
       unreasonable delay, and whether proper procedures were followed.
     note: >-
-      What it will not ask is whether the payment was owed to you. That is a
+      What it will not decide is whether the payment was owed to you. That is a
       merits question, and it belongs at the tribunal.
   - name: Commonwealth Ombudsman
     plainName: For Australian Government bodies
@@ -105,3 +105,24 @@ investigates-list, "There is no strict time limit on complaining, but sooner is 
 the Victorian "The usual step is to complain to the organisation first" rest on the two cited
 websites rather than on any of the owner's four documents. They are consistent with those sites and
 are left as they stand, to be confirmed at sign-off.
+
+**Two over-flat sentences fixed 2026-08-23**, on the external legal review.
+
+**"It is not a review body" became "It is not merits review".** The old line was simply wrong about
+what an Ombudsman does. It does review administrative action, and it can look at whether a decision
+was defective — what it cannot do is remake it. The replacement is the entry's own framing, already
+used in `whatItIsNot` and in the `oneLine` contrast, so the page now draws the line in the same
+place three times instead of two places and one overshoot. A reader who was told "not a review body"
+and then met "it can recommend that a decision be looked at again" had to reconcile them alone.
+
+**"What it will not ask" became "What it will not decide".** The Ombudsman may well ask about the
+substance of a decision in the course of looking at how a matter was handled; what it will not do is
+settle whether the payment was owed. Naming the limit as a limit on the outcome, not on the
+questions, is both accurate and more useful — someone whose complaint touches the merits should not
+think it disqualifies them from complaining.
+
+**Unchanged, deliberately: "The Ombudsman will not replace the decision with a different one."** The
+review would have re-hedged it. The owner ruled on 2026-08-23 that this sentence is stated flatly,
+for the reason recorded above: a hedge here invites someone to wait on an outcome that is not coming
+while a review clock runs out. The two sentences fixed here were over-flat about the Ombudsman's
+reach. This one is exact about its powers, and it stays.

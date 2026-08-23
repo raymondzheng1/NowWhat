@@ -48,6 +48,13 @@ export interface PathPlan {
   focusKey: "focusMerits" | "focusJudicial";
   /** Shown with a condition attached: this route exists only if the enabling Act provides it. */
   conditional: boolean;
+  /**
+   * What kind of body this is. Only the merits path varies: "tribunal" is the ordinary
+   * case, "internal" is a reviewer inside the agency, and "mixed" is an entry covering
+   * both. A non-tribunal body does NOT have a tribunal's remedies, and the card says so
+   * rather than inheriting claims that are not true of it.
+   */
+  character: "tribunal" | "internal" | "mixed" | "court";
 }
 
 export interface ResultPlan {
@@ -133,6 +140,7 @@ export function planFor({
       cannotDo: meritsReview.limits,
       criteria,
       conditional: avenue.mrConditional ?? false,
+      character: avenue.mrCharacter ?? "tribunal",
       focusKey: "focusMerits",
     });
   }
@@ -146,6 +154,7 @@ export function planFor({
       cannotDo: judicialReview.limits,
       criteria: [],
       conditional: avenue.jrConditional ?? false,
+      character: "court",
       focusKey: "focusJudicial",
     });
   }

@@ -22,6 +22,8 @@ whatItIsNot: >-
   It does not mean the decision-maker must have no views. A firm view is not
   the same as a closed mind. Showing what was really in someone's mind is a
   high bar, so the fair-minded-onlooker version is the one usually relied on.
+  The law often lets the same office look into a matter and then decide it. So
+  an earlier role only matters if it can be linked to this decision.
 usedIn:
   - judicial-review
 test: >-
@@ -84,3 +86,14 @@ needing to cite anything.
 The "high bar" line in `whatItIsNot` is a statement about the legal test, not about anyone's case.
 The Hypo lists actual bias among the stringent grounds; saying so steers a reader towards the
 version of the rule that does not require proving someone's private state of mind.
+
+**Combined roles qualified 2026-08-23.** Two `whatRelates` bullets and the `plainExample` all rest on the
+same fact — one person looked into the matter and then decided it — and `whatItIsNot` answered only the
+firm-view point. So the page said, three times over, that combined roles are a signal, and never said that
+the law routinely allows them. Someone reading the grid would take the ordinary shape of a small council
+or agency as a ground.
+
+The caveat is extraction, not new law: Ebner is already cited here as a two-step test, and the `connection`
+element already carries step two. `whatItIsNot` now states the missing half in the same terms — an earlier
+role only matters if it can be linked to this decision. The example is left alone; it is now read against
+a limit that appears on the same page.

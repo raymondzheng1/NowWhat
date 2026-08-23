@@ -13,6 +13,7 @@ const plan = (avenue: Parameters<typeof planFor>[0]["avenue"]) =>
 const AV = {
   mrAvailable: true,
   mrConditional: false,
+  mrCharacter: "tribunal" as const,
   mrBody: "ART",
   jrAvailable: true,
   jrConditional: false,
@@ -111,10 +112,17 @@ describe("the merits-review body is the one the lawyer verified for THAT decisio
     }).paths.find((p) => p.id === "merits-review")?.body;
   }
 
-  it("Victorian fines go to internal review then the Magistrates' Court, NOT VCAT", () => {
-    const body = meritsBody("vic-fines");
-    expect(body).toBe("internal review then Magistrates' Court");
+  it("Victorian fines offer internal review OR the Magistrates' Court, and never VCAT", () => {
+    // Two corrections live in this one assertion. The forum is not VCAT — that was the
+    // original defect, and naming the wrong forum is the most damaging thing this product
+    // can do. And the two paths are alternatives, not a sequence: the wording said "internal
+    // review then Magistrates' Court", which told someone they had to exhaust the first
+    // before electing to go to court. Corrected 2026-08-23 on the external legal review.
+    const body = meritsBody("vic-fines")!;
     expect(body).not.toMatch(/VCAT/i);
+    expect(body).toMatch(/internal review/i);
+    expect(body).toMatch(/Magistrates' Court/);
+    expect(body, "the two paths are alternatives, not a sequence").not.toMatch(/\bthen\b/);
   });
 
   it("public housing keeps the Housing Appeals Office step", () => {

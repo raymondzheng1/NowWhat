@@ -1,5 +1,5 @@
 {
-  "builtAt": "ebc18f0034dfef46",
+  "builtAt": "c7caaeae3e3edf6d",
   "processes": [
     {
       "id": "judicial-review",
@@ -50,7 +50,7 @@
       "goodToKnow": [
         "A refusal counts as a decision. Being told no is something you can ask about.",
         "A failure to decide can count too, where they had a duty to decide and did not.",
-        "If a tribunal decides against you, judicial review is not the only route. The law that set the tribunal up usually gives a right of appeal to a court on a question of law as well.",
+        "If a tribunal decides against you, judicial review is not the only route. An appeal to a court on a question of law may also be open. Whether there is one, and which court hears it, depends on the law that set the tribunal up.",
         "Federally that appeal is under the Administrative Review Tribunal Act. In Victoria it is under the VCAT Act, and it needs the court's permission first.",
         "Appeal time limits are short, and shorter than people expect. Ask about them the week the decision arrives, not the month after.",
         "A court will not simply disagree with the result. It looks at whether the decision was made lawfully.",
@@ -104,8 +104,8 @@
       "limits": [
         "Merits review is only available where a law provides it — not every decision can be reviewed on the merits.",
         "The tribunal makes the decision again from the start, standing in the shoes of the original decision-maker. So the new decision can be better for you, the same, or worse. It is not limited to the part you disagree with.",
-        "A tribunal is not a court. It sits inside government, and it is doing administration rather than deciding a legal dispute between you and the state.",
-        "Government policy can guide the tribunal, but it cannot decide the matter for it. A tribunal will usually follow a lawful policy, and needs a good reason in your case to depart from it."
+        "A tribunal is not a court. It is independent of the department that made the decision. But it is still doing administration, not settling a legal dispute between you and the state.",
+        "Government policy can guide the tribunal, but it cannot decide the matter for it. A tribunal will usually follow a lawful policy, and needs a good reason in your case to depart from it. Tribunals do not all treat policy the same way."
       ],
       "goodToKnow": [
         "Because the tribunal can change the outcome, merits review is usually what people want when they disagree with the result.",
@@ -121,7 +121,7 @@
     }
   ],
   "comparison": {
-    "intro": "Most decisions can be challenged in one of two ways. They ask different questions, so the right one depends on what you are hoping for.",
+    "intro": "Some government decisions can be challenged in one of two ways. They ask different questions, so the right one depends on what you are hoping for. This table is a general guide only — the rules differ from one decision to another.",
     "rows": [
       {
         "aspect": "The question it asks",
@@ -175,7 +175,7 @@
         {
           "prompt": "A different outcome — I think the decision is wrong",
           "leadsTo": "merits-review",
-          "because": "If you want the decision changed, merits review (where it is available) is usually the path, because a tribunal can replace the decision."
+          "because": "Where a law gives a right to merits review, a tribunal can look at the decision again. A tribunal can replace the decision; a court cannot."
         },
         {
           "prompt": "The decision was made unfairly or without power",
@@ -196,7 +196,7 @@
       },
       {
         "q": "Which one should I use?",
-        "a": "If you want a different outcome, merits review (where a law provides it) is usually the path. If the problem is how the decision was made, judicial review checks its legality. The time limits are different, so a free legal service can help you choose quickly."
+        "a": "It depends on what the problem is. If the problem is the outcome, merits review asks whether the decision is the correct or preferable one. That path is open where a law provides it. If the problem is how the decision was made, judicial review checks its legality. The time limits are different, so a free legal service can help you choose quickly."
       },
       {
         "q": "Can I use both merits review and judicial review?",
@@ -246,7 +246,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "Whether a mistake makes a decision invalid depends on the purpose of the Act, and on whether the mistake could have made a difference. Some problems do not need that second step. Bias and unreasonableness count on their own.",
+      "test": "Whether a mistake makes a decision invalid depends on the purpose of the Act, and on whether the mistake could have made a difference. Some problems can count on their own, without that second step. Bias and unreasonableness can fall into that group.",
       "elements": [
         {
           "id": "what-was-missed",
@@ -376,7 +376,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A rule made under an Act has to stay within that Act. The court asks whether the rule can reasonably be seen as appropriate and adapted to the purpose the Act set. That leaves real room for the rule-maker.",
+      "test": "A rule made under an Act has to stay within that Act. So the first question is what the Act allows. One way the court asks that is whether the rule can reasonably be seen as appropriate and adapted to the purpose the Act set. That leaves real room for the rule-maker.",
       "elements": [
         {
           "id": "within-subject",
@@ -423,7 +423,7 @@
       "name": "Error of law",
       "plainName": "They got the law wrong",
       "oneLine": "The decision-maker applied the wrong legal test, or misread what the law requires.",
-      "whatItMeans": "A decision can be challenged where the decision-maker made a legal error — for example, applying the wrong test, misreading what a law requires, or misunderstanding a legal word. Some legal errors are reviewable even when they appear on the face of the written decision.",
+      "whatItMeans": "A decision can be challenged where the decision-maker made a legal error. That can mean applying the wrong test, misreading what a law requires, or misunderstanding a legal word. Some legal errors are reviewable even when they show on the face of the reasons or record.",
       "plainExample": "A decision applies a stricter test than the law actually sets.",
       "whatRelates": [
         "The decision seems to apply the wrong rule or test.",
@@ -434,7 +434,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "An error of law happens where the decision-maker had the power but got the law wrong. That can mean misreading a word in the Act, using the wrong test, or misunderstanding the limits of the power. Some of these errors go to the power itself. Others show on the face of the decision-maker's reasons or record, and may still be corrected.",
+      "test": "An error of law happens where the decision-maker had the power but got the law wrong. That can mean misreading a word in the Act, using the wrong test, or misunderstanding the limits of the power. Some of these errors go to the power itself. Others show on the face of the decision-maker's reasons or record, and may still be corrected. What counts as the record is not the same on every route, and it does not always include the reasons.",
       "elements": [
         {
           "id": "wrong-test",
@@ -480,7 +480,7 @@
         "The reason you were given changed when you asked about it.",
         "The decision seems aimed at something the rules never mention."
       ],
-      "whatItIsNot": "It does not mean the decision-maker is a bad person. A well-meant decision can still use a power the wrong way. Courts do not assume this lightly.",
+      "whatItIsNot": "It does not mean the decision-maker is a bad person. A well-meant decision can still use a power the wrong way. Courts do not assume this lightly. They start from the position that the power was used properly. Timing on its own does not show the reason — a decision that came soon after a complaint may have had nothing to do with it.",
       "usedIn": [
         "judicial-review"
       ],
@@ -582,14 +582,14 @@
       "plainName": "The wrong person made the decision",
       "oneLine": "The law named one person to decide, and someone else decided.",
       "whatItMeans": "An Act names who holds a power. Often that person can act through their staff. Sometimes the Act means they have to decide it themselves. If someone else decides, the decision can be unlawful.",
-      "plainExample": "Your payment is cancelled by a team leader. The Act gives that decision to the Secretary.",
+      "plainExample": "Your payment is cancelled by a team leader. The Act gives that decision to the Secretary. That difference is where the question starts, not where it ends.",
       "whatRelates": [
         "The Act gives this decision to one named person, in terms.",
         "The rules name one office, but a different office wrote to you.",
         "You were told a senior officer decided, but someone else signed.",
         "The decision is one the Act seems to want that person to make themselves, such as a decision that can only be made once."
       ],
-      "whatItIsNot": "It does not mean staff can never act for a minister. Many powers are used that way every day, and a large department dealing with the same decision often is the ordinary case, not a problem. A signature you do not recognise is not a sign of anything by itself. The authority to sign does not have to appear in the letter, or in any formal document — it can come from the Act, from a delegation, or simply from the way the department is set up. The question is what the Act requires, not what the letter shows.",
+      "whatItIsNot": "It does not mean staff can never act for a minister. Many powers are used that way every day, and a large department dealing with the same decision often is the ordinary case, not a problem. A signature you do not recognise is not a sign of anything by itself. The authority to sign does not have to appear in the letter, or in any formal document — it can come from the Act, from a delegation, or from the way that decision has long been made in the department. The question is what the Act requires, not what the letter shows.",
       "usedIn": [
         "judicial-review"
       ],
@@ -635,7 +635,7 @@
       "name": "Irrelevant considerations",
       "plainName": "They relied on something that should not have mattered",
       "oneLine": "The law can also name things a decision-maker must leave out.",
-      "whatItMeans": "Some Acts say what a decision-maker may not take into account. Relying on a forbidden matter can make a decision unlawful. This point often travels with a claim about the wrong purpose.",
+      "whatItMeans": "Some Acts say what a decision-maker may not take into account. An Act does not always spell that out — it can also follow from what the Act is for. Relying on a forbidden matter can make a decision unlawful. This point often travels with a claim about the wrong purpose.",
       "plainExample": "A fine is upheld partly because you complained about the officer. Your complaint had nothing to do with the fine.",
       "whatRelates": [
         "The reasons mention something that has nothing to do with the rules.",
@@ -647,7 +647,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "An Act may forbid certain matters from being taken into account. Relying on a forbidden matter can make the decision invalid.",
+      "test": "An Act may forbid certain matters from being taken into account. It can say so outright, or it can be implied from what the Act is for. Relying on a forbidden matter can make the decision invalid.",
       "elements": [
         {
           "id": "forbidden-matter",
@@ -657,7 +657,7 @@
         {
           "id": "was-relied-on",
           "name": "The decision-maker relied on it",
-          "layPrompt": "Does that topic appear in the reasons you were given?"
+          "layPrompt": "Does that topic look like it counted towards the decision?"
         }
       ],
       "sources": [
@@ -690,7 +690,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "An error going to the existence or exercise of power (a jurisdictional error) may make a decision invalid.",
+      "test": "An error going to the existence or exercise of power (a jurisdictional error) may make a decision invalid. The Act itself decides which errors cross the limit of the power.",
       "elements": [
         {
           "id": "beyond-power",
@@ -837,7 +837,7 @@
         "You were told the answer before you finished explaining.",
         "The decision-maker had a role at an earlier stage."
       ],
-      "whatItIsNot": "It does not mean the decision-maker must have no views. A firm view is not the same as a closed mind. Showing what was really in someone's mind is a high bar, so the fair-minded-onlooker version is the one usually relied on.",
+      "whatItIsNot": "It does not mean the decision-maker must have no views. A firm view is not the same as a closed mind. Showing what was really in someone's mind is a high bar, so the fair-minded-onlooker version is the one usually relied on. The law often lets the same office look into a matter and then decide it. So an earlier role only matters if it can be linked to this decision.",
       "usedIn": [
         "judicial-review"
       ],
@@ -960,12 +960,12 @@
       "plainName": "They ignored something they had to take into account",
       "oneLine": "The law can name things a decision-maker must take into account.",
       "whatItMeans": "Some Acts say what a decision-maker must take into account. Missing one of those matters can make a decision unlawful.",
-      "plainExample": "You send Centrelink medical reports about your illness. The debt decision never mentions them.",
+      "plainExample": "The rules for your payment may require your health to be taken into account. You send in medical reports about your illness. The decision does not deal with your health at all.",
       "whatRelates": [
-        "You gave them information that the decision never mentions.",
+        "You gave them information on a matter the rules say must be weighed.",
         "Something the rules say must be weighed appears to have been left out.",
         "Your reasons letter skips a matter you raised in writing.",
-        "A report or assessment you sent in is not discussed anywhere."
+        "A report you sent in is not dealt with anywhere. On its own that does not settle it."
       ],
       "whatItIsNot": "It does not mean every point you raised had to be accepted. The required matters only had to be genuinely considered. How much weight to give something is generally for the decision-maker, so thinking they gave your evidence too little weight is usually not something a court will look at. A document also does not have to be discussed at length to have been considered.",
       "usedIn": [
@@ -1078,7 +1078,7 @@
         {
           "name": "Minister for Immigration and Citizenship v Li (2013) 249 CLR 332",
           "pinpoint": "",
-          "explains": "A decision needs a reason you can see and follow."
+          "explains": "How the decision-maker got to their view can be looked at, not only what they decided. A view with nothing to show how it was reached can be questioned."
         }
       ],
       "jurisdictions": [],
@@ -1089,7 +1089,7 @@
       "name": "Unlawful policy",
       "plainName": "The policy itself does not match the law",
       "oneLine": "A policy cannot cut down what the Act allows.",
-      "whatItMeans": "Departments write policies to guide their staff. A policy must fit inside the Act it sits under. A policy cannot contradict the Act. It also cannot remove a choice the Act gives.",
+      "whatItMeans": "Departments write policies to guide their staff. A policy must fit inside the Act it sits under. A policy cannot contradict the Act. It also cannot remove a choice the Act gives, or lead to that choice being used in a way the Act does not allow.",
       "plainExample": "An Act lets Centrelink waive a debt in special cases. A policy tells staff to never waive a debt.",
       "whatRelates": [
         "You were quoted a policy rule that the Act does not contain.",
@@ -1098,7 +1098,7 @@
         "Staff say they have no choice, but the Act gives one.",
         "The policy and the wording of the law seem to disagree."
       ],
-      "whatItIsNot": "Policies are allowed, and they are useful. The question is whether this policy fits the Act.",
+      "whatItIsNot": "Policies are allowed, and they are useful. The question is whether this policy fits the Act. A policy can go wrong in two ways. The policy itself may not match the Act, and that is this ground. Or a lawful policy may be applied without looking at the person, and that is the inflexible policy ground instead.",
       "usedIn": [
         "judicial-review"
       ],
@@ -1148,14 +1148,14 @@
       "plainExample": "A penalty far out of proportion to a tiny, first-time mistake, with no explanation.",
       "whatRelates": [
         "The outcome seems to make no sense on the facts the decision-maker had.",
-        "The result is far harsher than the situation called for.",
-        "There is no intelligible reason given for the decision."
+        "The result is far harsher than the situation called for, and nothing explains why.",
+        "Nothing in the decision shows why that result was reached. On its own, short reasons do not show this."
       ],
-      "whatItIsNot": "It does not mean you simply disagree with the decision — it has to lack a sensible basis.",
+      "whatItIsNot": "It does not mean you simply disagree with the decision — it has to lack a sensible basis. Most decisions leave the decision-maker room to choose. A decision inside that room is not unlawful just because someone else would have chosen differently.",
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A decision may be unlawful if it lacks an evident and intelligible justification, or is one no reasonable decision-maker could have reached.",
+      "test": "A decision may be unlawful if it lacks an evident and intelligible justification, or is one no reasonable decision-maker could have reached. What counts as unreasonable comes from the Act the power sits in, and from what that Act is for. The bar is a high one. Most powers leave room for more than one answer, and a court will not step in just because it would have chosen another.",
       "elements": [
         {
           "id": "justification",
@@ -1165,7 +1165,7 @@
         {
           "id": "disproportionate",
           "name": "Disproportionate or arbitrary",
-          "layPrompt": "Was the result far harsher than the situation called for, or seemingly arbitrary?"
+          "layPrompt": "Was the result so far out of step with the situation that nothing explains it?"
         }
       ],
       "sources": [
@@ -1181,7 +1181,7 @@
         {
           "name": "Minister for Immigration and Citizenship v Li (2013) 249 CLR 332",
           "pinpoint": "",
-          "explains": "The case that moved Australian law past that older question. A decision can be unreasonable where nothing in it shows why it was made. How the decision was reached counts, not only what was decided."
+          "explains": "Australian law is no longer limited to that older question. A decision can be unreasonable where nothing in it shows why it was made. How the decision was reached counts, not only what was decided."
         },
         {
           "name": "Minister for Immigration and Border Protection v SZVFW (2018) 264 CLR 541",
@@ -1255,7 +1255,7 @@
         {
           "name": "Minister for Immigration and Multicultural Affairs v Bhardwaj (2002) 209 CLR 597",
           "pinpoint": "",
-          "explains": "A decision made outside the power counts in law as no decision."
+          "explains": "Where the error goes to the power itself, the law treats what happened as no decision at all."
         },
         {
           "name": "Attorney-General (NSW) v Quin (1990) 170 CLR 1",
@@ -1277,7 +1277,7 @@
       "appliesTo": [
         "any"
       ],
-      "whatItMeans": "Most departments will look at their own decision again if you ask. Someone who was not involved the first time takes another look. It is usually free, and it is usually much quicker than a tribunal or a court. For many schemes it is also the step you have to take before you can go anywhere else.",
+      "whatItMeans": "Many schemes let you ask the department to look at its own decision again. Often the person who looks again was not involved the first time. It is usually free, and it is usually much quicker than a tribunal or a court. In some schemes it is also the step you have to take before you can go anywhere else.",
       "whatItIsNot": "It is not an outside review. The same department is deciding, so it will not suit every situation. It also does not always pause the clock for the next step, so keep track of any other time limit while you wait.",
       "keyPoints": [
         "Your decision letter is the place to look. It usually sets out what you can ask for and by when.",
@@ -1307,7 +1307,7 @@
       "whatItMeans": "Courts review government decisions. But not every act of government is the kind of thing a court will rule on. Some choices belong to the elected government, not to a judge. What matters is the subject matter, not where the power came from. Everyday decisions made under an Act are the ordinary case, and courts do review those.",
       "whatItIsNot": "This is not a hurdle for ordinary decisions. A Centrelink debt, a fine, a housing refusal or a licence decision is made under an Act, and that is exactly the kind of decision courts review every day. This narrow rule is about things like going to war.",
       "keyPoints": [
-        "Decisions made under an Act are the normal case, and they are reviewable.",
+        "Decisions made under an Act are the ordinary case. Other rules can still get in the way — time limits, who can apply, and some decisions an Act takes out.",
         "A small group of powers sits further from review — things like foreign relations, national security, or a decision to go to war.",
         "What counts is the subject matter of the power, not the label on where it came from.",
         "Courts are more willing to step in where the action directly affects one person's rights or interests.",
@@ -1335,9 +1335,9 @@
     },
     {
       "id": "adjr-or-common-law",
-      "name": "The two ways into a federal court",
+      "name": "The main ways into a federal court",
       "plainName": "There is more than one door",
-      "oneLine": "Commonwealth decisions can be challenged by two different routes.",
+      "oneLine": "Commonwealth decisions can be challenged by more than one route.",
       "order": 20,
       "appliesTo": [
         "judicial-review"
@@ -1345,7 +1345,7 @@
       "jurisdictions": [
         "Cth"
       ],
-      "whatItMeans": "For an Australian Government decision there is more than one way to ask a court to check it. One is a statute made for the job. It is the more straightforward route. The other is the court's older, wider power. Each reaches slightly different things. Which one fits is a question for a lawyer, not something you have to work out.",
+      "whatItMeans": "For an Australian Government decision there is more than one way to ask a court to check it. One is a statute made for the job. It is the more straightforward route. Another is the court's older, wider power. Each reaches slightly different things. Which one fits is a question for a lawyer, not something you have to work out.",
       "whatItIsNot": "This is not a choice you need to make before you get help. You do not have to name a route to ask a free legal service for advice. It is here so the question makes sense when someone asks it.",
       "keyPoints": [
         "There is more than one way to bring a Commonwealth decision to a court.",
@@ -1353,7 +1353,8 @@
         "It covers a decision of an administrative character made under an Act. It also covers some conduct leading up to a decision, and a failure to decide when there was a duty to.",
         "Some decisions are carved out of it. Decisions of the Governor-General are excluded, a schedule to the Act lists whole classes of decision that are out, and regulations can take more out again.",
         "Being outside that Act does not mean no court can look at the decision. The wider route is still there.",
-        "The wider route reaches things the statutory one does not, such as powers that do not come from an Act, and the validity of rules and regulations."
+        "The wider route reaches things the statutory one does not, such as powers that do not come from an Act, and the validity of rules and regulations.",
+        "These two are not the whole picture. The High Court has its own power under the Constitution to review what Commonwealth officers do. The judicial review page lists it alongside the other courts."
       ],
       "options": [
         {
@@ -1462,7 +1463,7 @@
       "id": "standing",
       "name": "Standing",
       "plainName": "Whether you are the right person to bring it",
-      "oneLine": "If the decision was about you, this is almost never the problem.",
+      "oneLine": "If the decision was about you, this is not usually the main issue.",
       "order": 40,
       "appliesTo": [
         "any"
@@ -1470,7 +1471,7 @@
       "whatItMeans": "Before anyone looks at your case, there is a question of whether you are the right person to raise it. This is called standing. If the decision was made about you, and it affects your money, your home, your payment or your licence, you will normally have it. The question really matters for people further from the decision, such as a group objecting on behalf of others.",
       "whatItIsNot": "It is not a test of how strong your case is. It only asks whether you are the right person to bring it. Someone can have standing and still not succeed, and someone can care deeply and still not have standing.",
       "keyPoints": [
-        "If the decision was about you and affects you, standing is rarely the obstacle.",
+        "If the decision was about you and affects you, standing is not usually the main issue.",
         "The test is not the same for every route.",
         "At a tribunal, the law for your decision usually says who may apply. It is often anyone whose interests are affected.",
         "Interests are read broadly. They are not limited to money or property, and they can be affected indirectly.",
@@ -1547,7 +1548,7 @@
         "A written statement of reasons tells you what the decision-maker actually relied on.",
         "Asking for reasons is a useful first step on either review path. Whether they must give them depends on the type of decision.",
         "Freedom of information is a separate right. It asks to see documents rather than to be told why.",
-        "If a freedom of information request is refused, you can ask the agency to review it internally, and you can ask the Information Commissioner. The internal step is the usual order, not a door you have to go through first.",
+        "If a freedom of information request is refused, you can ask the agency to review it internally, and you can ask the Information Commissioner. On a federal request the internal step is the usual order, not a door you have to go through first. Victoria has its own Act, so check the rules for your request.",
         "On an information request, the Commissioner can go further than the Ombudsman. It can change the decision about your documents.",
         "Time limits apply to both. Check the limit for your decision rather than assuming."
       ],
@@ -1568,12 +1569,12 @@
           "name": "Information Commissioner review",
           "plainName": "If they refuse to give you the documents",
           "whatItDoes": "Reviews the agency's decision about access. Federally this is the Office of the Australian Information Commissioner. It can agree with the agency, change the decision, or set it aside and make a different one.",
-          "note": "Most people ask the agency for an internal review first, but you do not have to. This is review of the decision about your documents. It does not review the original decision that brought you here."
+          "note": "On a federal request, most people ask the agency for an internal review first, but you do not have to. Victoria has its own Act and its own steps, so check those. This is review of the decision about your documents. It does not review the original decision that brought you here."
         },
         {
           "name": "Privacy complaints",
           "plainName": "If an agency mishandled your personal information",
-          "whatItDoes": "The Commissioner also looks into how agencies handle personal information, and can require them to put things right.",
+          "whatItDoes": "The Commissioner also looks into complaints about how agencies handle personal information. What can come of a complaint depends on the case.",
           "note": "This is a separate job again, under privacy law."
         }
       ],
@@ -1597,7 +1598,7 @@
       "appliesTo": [
         "complaint"
       ],
-      "whatItMeans": "The Ombudsman takes complaints about government departments and agencies. Complaining is free. It is not a review body. It looks at how your matter was handled rather than whether the decision was the best one. So it is the right place for delay, poor communication, or a process that was not followed.",
+      "whatItMeans": "The Ombudsman takes complaints about government departments and agencies. Complaining is free. It is not merits review. It looks at how your matter was handled rather than whether the decision was the best one. So it is the right place for delay, poor communication, or a process that was not followed.",
       "whatItIsNot": "It is not merits review. The Ombudsman will not replace the decision with a different one. It can recommend that an agency look at something again, or fix how it does things. Those are recommendations, not orders. A complaint also runs separately from any review, so a review time limit keeps running while you wait.",
       "keyPoints": [
         "Complaining is free.",
@@ -1611,7 +1612,7 @@
           "name": "What the Ombudsman asks",
           "plainName": "The kind of question it looks at",
           "whatItDoes": "Take a refused Centrelink claim. The Ombudsman might ask whether the reasons were explained, whether you were treated fairly, whether there was unreasonable delay, and whether proper procedures were followed.",
-          "note": "What it will not ask is whether the payment was owed to you. That is a merits question, and it belongs at the tribunal."
+          "note": "What it will not decide is whether the payment was owed to you. That is a merits question, and it belongs at the tribunal."
         },
         {
           "name": "Commonwealth Ombudsman",

@@ -2,7 +2,7 @@
 id: standing
 name: Standing
 plainName: Whether you are the right person to bring it
-oneLine: If the decision was about you, this is almost never the problem.
+oneLine: If the decision was about you, this is not usually the main issue.
 order: 40
 appliesTo:
   - any
@@ -18,8 +18,8 @@ whatItIsNot: >-
   someone can care deeply and still not have standing.
 keyPoints:
   - >-
-    If the decision was about you and affects you, standing is rarely the
-    obstacle.
+    If the decision was about you and affects you, standing is not usually the
+    main issue.
   - The test is not the same for every route.
   - >-
     At a tribunal, the law for your decision usually says who may apply. It is
@@ -97,3 +97,17 @@ The remedy-specific tests are kept, because that is the structure the mind map d
 labelled by what a person is asking for ("asking a court to make someone do their duty") rather
 than by the remedy's Latin name. Someone scanning this should be able to find their own situation
 without first learning which writ it corresponds to.
+
+**"Almost never the problem" softened 2026-08-23**, on the external legal review. `oneLine` and the
+first `keyPoint` now say "not usually the main issue". Both sentences were already conditional on
+"if the decision was about you", so this is a small move, not a change of position — the reassuring
+opening the node was written to give is intact. It matters because "almost never" reads as a
+promise about the reader's own case, and standing is one of the things a free legal service will
+actually check.
+
+**Open for sign-off: the five option-level tests.** The review's second point — that remedy-specific
+standing is more nuanced than these five notes allow — is not fixed here, and should not be. Each
+note compresses real doctrine into one sentence, and "An order to do or stop something needs a
+legal right" is the flattest of them. Rewriting them accurately means choosing which qualification
+to publish, which is a decision for the supervising lawyer against the source, not an editorial
+one. Carried to the sign-off list as it stands.

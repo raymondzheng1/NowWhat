@@ -30,8 +30,10 @@ keyPoints:
     than to be told why.
   - >-
     If a freedom of information request is refused, you can ask the agency to
-    review it internally, and you can ask the Information Commissioner. The
-    internal step is the usual order, not a door you have to go through first.
+    review it internally, and you can ask the Information Commissioner. On a
+    federal request the internal step is the usual order, not a door you have
+    to go through first. Victoria has its own Act, so check the rules for your
+    request.
   - >-
     On an information request, the Commissioner can go further than the
     Ombudsman. It can change the decision about your documents.
@@ -66,14 +68,15 @@ options:
       of the Australian Information Commissioner. It can agree with the agency,
       change the decision, or set it aside and make a different one.
     note: >-
-      Most people ask the agency for an internal review first, but you do not
-      have to. This is review of the decision about your documents. It does not
-      review the original decision that brought you here.
+      On a federal request, most people ask the agency for an internal review
+      first, but you do not have to. Victoria has its own Act and its own steps,
+      so check those. This is review of the decision about your documents. It
+      does not review the original decision that brought you here.
   - name: Privacy complaints
     plainName: If an agency mishandled your personal information
     whatItDoes: >-
-      The Commissioner also looks into how agencies handle personal
-      information, and can require them to put things right.
+      The Commissioner also looks into complaints about how agencies handle
+      personal information. What can come of a complaint depends on the case.
     note: This is a separate job again, under privacy law.
 leadingCases: []
 sources:
@@ -143,3 +146,23 @@ steps and never said a person may go straight to the Information Commissioner. S
 internal-review window could read that and conclude the door had closed. The correction can only
 widen a reader's options, never narrow them, which is why it was safe to make on the OAIC guidelines
 already cited rather than waiting for a new source.
+
+**Two changes 2026-08-23, on the external legal review.**
+
+**The optional internal step is now scoped to federal requests.** The correction above rested on one
+source — the OAIC FOI Guidelines, Part 10 — which is a Commonwealth document, but the entry has no
+`jurisdictions` field and reaches Victorian readers as readily as federal ones. So a Commonwealth
+proposition was being stated nationally. OVIC is listed as a source but carries nothing that
+supports the same step for a Victorian request. Both places that said it — the `keyPoint` and the
+Commissioner option's note — now say "on a federal request", and both send a Victorian reader to
+check their own Act rather than guessing from ours.
+
+No Victorian rule is stated in its place, and no time limit is added on either side. The review also
+asked for each review route and time limit to be sourced separately; this entry deliberately states
+no FOI period at all, and none can be added until a provision is behind it.
+
+**The privacy power was overstated.** "Can require them to put things right" claims a determinative
+power from an entry whose privacy material amounts to one line. It now says the Commissioner looks
+into complaints about how agencies handle personal information, and that what can come of a
+complaint depends on the case. That is a removal, not a substitution — the accurate version of the
+outcome needs a source this entry does not have.

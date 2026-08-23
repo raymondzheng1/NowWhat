@@ -24,8 +24,9 @@ usedIn:
   - judicial-review
 test: >-
   Whether a mistake makes a decision invalid depends on the purpose of the Act,
-  and on whether the mistake could have made a difference. Some problems do not
-  need that second step. Bias and unreasonableness count on their own.
+  and on whether the mistake could have made a difference. Some problems can
+  count on their own, without that second step. Bias and unreasonableness can
+  fall into that group.
 elements:
   - id: what-was-missed
     name: The step that was missed
@@ -78,3 +79,12 @@ materiality as though it applied to every error, which would tell someone their 
 the outcome test when the law does not ask them to pass it. Bhardwaj added for the consequence our
 materials attach to jurisdictional error: "a decision that involves jurisdictional error ... is
 properly regarded, in law, as no decision at all".
+
+**Materiality carve-out hedged 2026-08-23.** The test read "Bias and unreasonableness count on their
+own" — a flat rule, and a harder one than its own source. Our materials put it as an illustration:
+where an error is established it "will be jurisdictional irrespective of any effect ... E.g.
+apprehended or actual bias/unreasonableness". This file's `whatItIsNot` already hedged correctly —
+"a few problems are serious enough" — so `test` was the outlier, and `test` is the field the
+downloaded memo prints as the rule. Both examples stay, because the source names both; what changed
+is that they are now given as problems that can count on their own, not as a closed rule that they
+always do.

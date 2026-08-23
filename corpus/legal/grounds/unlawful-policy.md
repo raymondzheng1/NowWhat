@@ -6,7 +6,8 @@ oneLine: A policy cannot cut down what the Act allows.
 whatItMeans: >-
   Departments write policies to guide their staff. A policy must fit inside the
   Act it sits under. A policy cannot contradict the Act. It also cannot remove
-  a choice the Act gives.
+  a choice the Act gives, or lead to that choice being used in a way the Act
+  does not allow.
 plainExample: >-
   An Act lets Centrelink waive a debt in special cases. A policy tells staff to
   never waive a debt.
@@ -18,7 +19,10 @@ whatRelates:
   - The policy and the wording of the law seem to disagree.
 whatItIsNot: >-
   Policies are allowed, and they are useful. The question is whether this
-  policy fits the Act.
+  policy fits the Act. A policy can go wrong in two ways. The policy itself may
+  not match the Act, and that is this ground. Or a lawful policy may be applied
+  without looking at the person, and that is the inflexible policy ground
+  instead.
 usedIn:
   - judicial-review
 test: >-
@@ -68,3 +72,21 @@ discretion." Green now carries the one the materials attribute to it jointly wit
 The line was not bad law — Green's own holding did involve statutory inconsistency — but the
 attribution was unsourced, and this entry's own note already conceded that every policy
 proposition in our materials belongs to Drake (No 2).
+
+**The distinguishing sentence moved into the frontmatter, 2026-08-23.** The sentence separating this
+ground from inflexible policy was written at the top of this body, where the build strips it —
+`GroundExplainer` renders frontmatter only. That is the same defect recorded in
+`relevant-considerations` on 2026-08-23. Two policy grounds sat side by side in the explorer with the
+distinction visible to nobody but us, so a reader with a policy problem had no way to tell which card was
+theirs, and could reasonably tick both.
+
+It now sits in `whatItIsNot`, in the words it was already written in. `inflexible-policy` holds the mirror
+sentence in the same dead position; that entry is not in this change set, and the pair should be finished
+together. A `relatedGrounds` field would be the cleaner fix, but `lib/schemas/legal.ts` has none and adding
+one is not a content change.
+
+**`whatItMeans` broadened the same day.** It gave two failures — contradicting the Act, and removing a
+choice the Act gives — which read as though removal of a discretion were required. Drake (No 2) in our
+materials is wider: a decision-maker "must not apply a policy that is unlawful, inconsistent with the
+statute, or leads to an improper exercise of discretion". The third limb is now published in plain words,
+as a choice used in a way the Act does not allow.

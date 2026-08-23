@@ -6,10 +6,10 @@ oneLine: >-
   The decision-maker applied the wrong legal test, or misread what the law
   requires.
 whatItMeans: >-
-  A decision can be challenged where the decision-maker made a legal error — for
-  example, applying the wrong test, misreading what a law requires, or
+  A decision can be challenged where the decision-maker made a legal error. That
+  can mean applying the wrong test, misreading what a law requires, or
   misunderstanding a legal word. Some legal errors are reviewable even when they
-  appear on the face of the written decision.
+  show on the face of the reasons or record.
 plainExample: A decision applies a stricter test than the law actually sets.
 whatRelates:
   - The decision seems to apply the wrong rule or test.
@@ -27,7 +27,8 @@ test: >-
   wrong. That can mean misreading a word in the Act, using the wrong test, or
   misunderstanding the limits of the power. Some of these errors go to the power
   itself. Others show on the face of the decision-maker's reasons or record, and
-  may still be corrected.
+  may still be corrected. What counts as the record is not the same on every
+  route, and it does not always include the reasons.
 elements:
   - id: wrong-test
     name: Wrong legal test
@@ -83,3 +84,14 @@ the general position.
 So the shorter version promised a reader outside Victoria something the common law may not give
 them. The restored phrase is the owner's own, which makes this extraction rather than new legal
 content — the distinction that has decided every citation question in this corpus.
+
+**"Written decision" dropped 2026-08-23.** `whatItMeans` said some legal errors are reviewable "even
+when they appear on the face of the written decision". That is not the owner's phrasing, and it is
+looser than the restored line in `test`: it tells a reader the letter in their hand is the record.
+The field now uses the owner's own "reasons or record", so both fields say the same thing.
+
+`test` gained one plain caveat with it — what counts as the record is not the same on every route,
+and it does not always include the reasons. Per Craig the record "will not include the transcript,
+the exhibits or the reasons for decision unless they are incorporated by reference", and reasons
+forming part of the record is a Victorian statutory cure (ALA s 10) rather than the general
+position. This qualifies the restored phrase; it does not reverse the ruling that restored it.

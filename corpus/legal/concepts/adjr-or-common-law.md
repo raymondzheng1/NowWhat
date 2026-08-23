@@ -1,8 +1,8 @@
 ---
 id: adjr-or-common-law
-name: The two ways into a federal court
+name: The main ways into a federal court
 plainName: There is more than one door
-oneLine: Commonwealth decisions can be challenged by two different routes.
+oneLine: Commonwealth decisions can be challenged by more than one route.
 order: 20
 appliesTo:
   - judicial-review
@@ -11,9 +11,9 @@ jurisdictions:
 whatItMeans: >-
   For an Australian Government decision there is more than one way to ask a
   court to check it. One is a statute made for the job. It is the more
-  straightforward route. The other is the court's older, wider power. Each
-  reaches slightly different things. Which one fits is a question for a lawyer,
-  not something you have to work out.
+  straightforward route. Another is the court's older, wider power. Each reaches
+  slightly different things. Which one fits is a question for a lawyer, not
+  something you have to work out.
 whatItIsNot: >-
   This is not a choice you need to make before you get help. You do not have to
   name a route to ask a free legal service for advice. It is here so the
@@ -35,6 +35,10 @@ keyPoints:
   - >-
     The wider route reaches things the statutory one does not, such as powers
     that do not come from an Act, and the validity of rules and regulations.
+  - >-
+    These two are not the whole picture. The High Court has its own power under
+    the Constitution to review what Commonwealth officers do. The judicial
+    review page lists it alongside the other courts.
 options:
   - name: The Administrative Decisions (Judicial Review) Act 1977 (Cth)
     plainName: The statutory route
@@ -91,3 +95,19 @@ catch ordinary applicants: the Schedule 1 classes and the regulation-making powe
 The more important addition is the sentence after them. Being excluded from the statutory route
 does not mean no court can look at the decision, and a reader who met a list of exclusions without
 that would reasonably conclude the door was shut.
+
+**"Two" dropped 2026-08-23**, on the external legal review. The entry was titled "The two ways into
+a federal court" and its `oneLine` said "two different routes", while the judicial review process
+page already lists a third federal court and a third source of jurisdiction — the High Court's own
+constitutional power over Commonwealth officers. Counting the doors and getting the count wrong is
+worse than not counting them, so the title is now "The main ways" and the `oneLine` says "more than
+one route". `whatItMeans` says "Another is the court's older, wider power" rather than "The other".
+
+A `keyPoint` now names the High Court and points at the judicial review page, which is where our
+courts are listed. It states no section number: the constitutional jurisdiction is carried in this
+corpus by `processes/judicial-review.md`, and this entry's own source line does not reach a
+provision, so the plain description is as far as it goes.
+
+The other two limbs of the finding were not acted on. The customer copy never calls s 39B "common
+law" — that phrase lives only in the `id` and in this note, and the build publishes frontmatter
+only. Conduct and failure to decide were already a `keyPoint`.

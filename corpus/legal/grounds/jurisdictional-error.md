@@ -22,7 +22,8 @@ usedIn:
   - judicial-review
 test: >-
   An error going to the existence or exercise of power (a jurisdictional error)
-  may make a decision invalid.
+  may make a decision invalid. The Act itself decides which errors cross the
+  limit of the power.
 elements:
   - id: beyond-power
     name: Acting beyond power
@@ -52,3 +53,14 @@ leadingCases:
 ---
 
 Explainer reviewed and confirmed by a supervising lawyer (2026-06-30) — general information, not advice. Leading cases (citations + judgment pinpoints) added and approved by the owner on 2026-07-12. They are not yet rendered in the UI; the v2 elements/cases feature may rely on them.
+
+**Statutory construction added to `test`, 2026-08-23.** The one-sentence test read as though power were a
+line you either crossed or did not, with no account of what draws the line. It now says the Act decides
+which errors cross it. Half of the same finding needed nothing: `whatItIsNot` already carries "it does not
+mean any mistake". Craig is the source already cited for the classic errors, and each of them is a failure
+measured against what the Act gave.
+
+Open item for the next sourcing pass: this entry and `unreasonableness` are the two grounds still sourced
+only to "Victoria Legal Aid — legalaid.vic.gov.au". They did not go through the August pass that rebuilt
+their neighbours against the owner's materials, which is why both read thinner than the rest of the set.
+Nothing further was added here, because there is no source in the entry to add it from.

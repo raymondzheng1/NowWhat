@@ -126,6 +126,18 @@ export function AnalysisPanel({
               </>
             )}
 
+            {/* A non-tribunal body does not have a tribunal's powers. The merits avenue used
+                to be typed only as "merits review", so the Housing Appeals Office — a
+                departmental appeal — inherited the tribunal's remedies below, including
+                setting a decision aside and substituting a new one. An internal reviewer
+                cannot do that, and saying otherwise overstates both its independence and
+                what a person can expect from it. */}
+            {(p.character === "internal" || p.character === "mixed") && (
+              <p className="mt-3.5 rounded-card border-2 border-amber-border bg-amber-bg px-3 py-2 text-[15px] leading-snug text-ink-soft">
+                {t(p.character === "internal" ? "pathBodyInternal" : "pathBodyMixed")}
+              </p>
+            )}
+
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div>
                 <p className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-help-ink">

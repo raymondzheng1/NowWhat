@@ -18,7 +18,10 @@ whatRelates:
   - The decision seems aimed at something the rules never mention.
 whatItIsNot: >-
   It does not mean the decision-maker is a bad person. A well-meant decision
-  can still use a power the wrong way. Courts do not assume this lightly.
+  can still use a power the wrong way. Courts do not assume this lightly. They
+  start from the position that the power was used properly. Timing on its own
+  does not show the reason — a decision that came soon after a complaint may
+  have had nothing to do with it.
 usedIn:
   - judicial-review
 test: >-
@@ -85,3 +88,16 @@ someone's state of mind.
 
 Nothing here changed. This note exists so the removal is discoverable from the ground a reader
 would land on instead.
+
+**Presumption of regularity added to `whatItIsNot` 2026-08-23.** `whatRelates` carries a bare timing
+line — "The decision followed soon after you made a complaint" — and `plainExample` is a retaliation
+example. Between them they invited a reader to read purpose off the calendar, with nothing saying
+what timing on its own is worth. Our materials are pointed about that: improper purpose "will not
+lightly be inferred, and, by application of a presumption of regularity, will only be inferred if
+the evidence cannot be reconciled with the proper exercise of the power".
+
+So `whatItIsNot` now says courts start from the position that the power was used properly, and that
+timing on its own does not show the reason. The bullet and the example stay — what was missing was
+the limit on them, not the prompts themselves. "Substantial" in `test` was checked and left alone:
+it is Samrein's own word, and the case already sits in this entry saying the improper purpose "need
+not be the only purpose, only a substantial one".

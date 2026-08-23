@@ -7,14 +7,17 @@ whatItMeans: >-
   Some Acts say what a decision-maker must take into account. Missing one of
   those matters can make a decision unlawful.
 plainExample: >-
-  You send Centrelink medical reports about your illness. The debt decision
-  never mentions them.
+  The rules for your payment may require your health to be taken into account.
+  You send in medical reports about your illness. The decision does not deal
+  with your health at all.
 whatRelates:
-  - You gave them information that the decision never mentions.
+  - You gave them information on a matter the rules say must be weighed.
   - >-
     Something the rules say must be weighed appears to have been left out.
   - Your reasons letter skips a matter you raised in writing.
-  - A report or assessment you sent in is not discussed anywhere.
+  - >-
+    A report you sent in is not dealt with anywhere. On its own that does not
+    settle it.
 whatItIsNot: >-
   It does not mean every point you raised had to be accepted. The required
   matters only had to be genuinely considered. How much weight to give something
@@ -103,3 +106,15 @@ The qualifying explanation existed only in this file's markdown body, which the 
 `GroundExplainer` renders frontmatter fields, so nothing on the page carried it. The Charter now
 lives solely in `charter-proper-consideration`, which states the consequence rule in its own
 `whatItIsNot`.
+
+**Example and two bullets reframed 2026-08-23.** The sequencing this ground needs was already right in the
+elements — "A matter the law required them to consider" comes before "That matter was not considered" —
+and `whatItIsNot` already carried the non-mention point from Mason J and Tickner. The example and two
+`whatRelates` bullets pulled the other way. They made the reader's own document the required matter, and
+silence about it the proof.
+
+`plainExample` now puts the subject first: the rules may require your health to be taken into account, the
+reports are evidence about it, and the gap is that the decision does not deal with your health. The first
+bullet asks about a matter the rules say must be weighed rather than about any information you sent. The
+report bullet keeps its place — it is the fact most readers arrive with — but no longer stands as proof on
+its own.

@@ -3,6 +3,7 @@ import { callModel } from "@/lib/generation/anthropic";
 import { systemPrompt, userPrompt, repairPrompt, type Task } from "@/lib/generation/prompts";
 import { verifyOutput, type VerifyFailure } from "@/lib/verification/verify";
 import { record, estimateCostUsd, type GuardContext } from "@/lib/cost/guard";
+import { getKv } from "@/lib/kv/redis";
 import { MODELS, MAX_GENERATION_ATTEMPTS } from "@/lib/config";
 import type { PathwayEntry } from "@/lib/schemas/corpus";
 import {
@@ -36,6 +37,41 @@ function tryParse(text: string): unknown | null {
       }
     }
     return null;
+  }
+}
+
+/**
+ * Governance record for blocked output (external legal review, 2026-08-23).
+ *
+ * The review asked us to log blocked outputs. We cannot log the output: a rejected draft is
+ * built from the person's letter or their answers, and never storing that is the promise the
+ * whole product rests on. What we record instead is the SHAPE of the block — which gate fired,
+ * how many times, on which task, on which day. Gate names are a fixed set of identifiers we
+ * chose ourselves, so no user text can travel in this key. There is no session id, no IP, no
+ * draft, no prompt, and the counters expire.
+ *
+ * That is enough to answer the question the review was actually asking: is a gate firing far
+ * more often than it should, and are people being shown "not covered" because our own gates
+ * keep rejecting a grounded answer?
+ */
+const BLOCKED_METRIC_TTL_SECONDS = 60 * 60 * 24 * 90;
+
+/** Keys are built from a fixed vocabulary only — belt and braces on top of that. */
+const safeKeyPart = (s: string) => s.replace(/[^a-z0-9-]/gi, "").slice(0, 40).toLowerCase();
+
+async function recordBlockedOutput(task: Task, gates: string[]): Promise<void> {
+  const names = [...new Set(gates.map(safeKeyPart))].filter(Boolean);
+  if (names.length === 0) return;
+  try {
+    const kv = getKv();
+    const day = new Date().toISOString().slice(0, 10);
+    const prefix = `wn:blocked:${day}:${safeKeyPart(task)}`;
+    for (const key of [`${prefix}:_total`, ...names.map((n) => `${prefix}:${n}`)]) {
+      await kv.incr(key);
+      await kv.expire(key, BLOCKED_METRIC_TTL_SECONDS);
+    }
+  } catch {
+    // A metric is never load-bearing. A KV outage must not change what the person is shown.
   }
 }
 
@@ -115,6 +151,7 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
     const verdict = verifyOutput({ text, declaredSources, entry: opts.entry });
     if (verdict.ok) return { status: "answered", data, attempts };
     lastFailures = verdict.failures; // diagnostic only — never contains PII
+    await recordBlockedOutput(opts.task, verdict.failures.map((f) => f.gate));
 
     // Reading level is a QUALITY gate, not a safety gate: it measures how hard the text is
     // to read, not whether it could harm anyone. Its failure mode was inverted — we threw

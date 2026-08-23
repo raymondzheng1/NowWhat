@@ -18,7 +18,10 @@ whatItIsNot: >-
   exactly the kind of decision courts review every day. This narrow rule is
   about things like going to war.
 keyPoints:
-  - Decisions made under an Act are the normal case, and they are reviewable.
+  - >-
+    Decisions made under an Act are the ordinary case. Other rules can still get
+    in the way — time limits, who can apply, and some decisions an Act takes
+    out.
   - >-
     A small group of powers sits further from review — things like foreign
     relations, national security, or a decision to go to war.
@@ -61,3 +64,18 @@ The Notes give the two application factors verbatim: courts are more likely to i
 "the administrative action directly affects an individual's interests, rights or liabilities", and
 "Most non-statutory, administrative actions of a senior governmental or political nature, which
 tend to affect the public in general, will not be justiciable."
+
+**First `keyPoint` qualified 2026-08-23**, on the external legal review. It read "Decisions made
+under an Act are the normal case, and they are reviewable" — a flat promise of review that a
+statutory source does not deliver on its own. Time limits, standing, and the classes of decision an
+Act carves out all sit between "made under an Act" and a court actually looking at it.
+
+The corpus handles each of those elsewhere — the Schedule 1 exclusions in `adjr-or-common-law`, the
+`standing` node, the privative row in the comparison — but a reader who takes this line and stops
+has been told the path is open when it may not be. The qualifier names the obstacles in plain words
+rather than sending anyone to another page for them.
+
+The reassurance is deliberate and stays. This entry exists so somebody with a Centrelink debt does
+not read a list of what courts refuse to touch and conclude it includes them. `whatItIsNot` still
+names their own situation as the ordinary case, and the new sentence adds a caution without moving
+the emphasis.
