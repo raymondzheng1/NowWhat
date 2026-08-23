@@ -45,7 +45,7 @@ reasonsRequest:
     and send anything they relied on
   provision: ''
   extendsMR: 'depends — confirm with VCAT or a free service before relying on it'
-  extendsJR: false
+  extendsJR: 'depends — confirm with a free legal service before relying on it'
 privativeClause: false
 forms: []
 mrCriteria:

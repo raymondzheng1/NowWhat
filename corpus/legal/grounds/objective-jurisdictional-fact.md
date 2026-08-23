@@ -13,10 +13,13 @@ plainExample: >-
   A rule lets an office act only if you live in a certain area. You do not live
   there. They acted anyway.
 whatRelates:
-  - The letter relies on a fact about you that is simply not true.
-  - You can show the opposite with a document you already hold.
+  - >-
+    The rule says a decision can only be made if something is true, and it is
+    not true in your case.
   - The rule you were given applies to a group you are not part of.
-  - The letter says you were somewhere, or held something, that you did not.
+  - >-
+    A fact the rule names as a condition is wrong, and you can show the
+    opposite with a document you already hold.
 whatItIsNot: >-
   This is not about a judgement call, like whether something was reasonable. It
   is about a plain fact that is either true or not. Most facts in a decision are
@@ -30,9 +33,13 @@ test: >-
   instead leaves an assessment or a value judgement to the decision-maker, it is
   difficult to treat the criterion this way.
 elements:
+  - id: gateway
+    name: Whether the rule makes this fact a condition
+    layPrompt: >-
+      Does the rule say the decision can only be made if this thing is true?
   - id: required-fact
-    name: The fact the power needed
-    layPrompt: Does the letter rely on a fact about you that is not true?
+    name: Whether that fact was there
+    layPrompt: Was that thing actually true in your case?
   - id: can-show
     name: Something that shows it
     layPrompt: Do you have a document or record that shows the real position?

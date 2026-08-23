@@ -8,7 +8,8 @@ whatItMeans: >-
   from the position that a fair hearing is owed to you. That means being told
   what is being decided, and getting a real chance to reply before it happens.
   If something important counts against you, and it is the sort of thing a
-  decision-maker would rely on, you usually get to see it first.
+  decision-maker would rely on, you usually need to be told enough about it.
+  Enough to have a real chance to reply.
 plainExample: >-
   Centrelink raises a debt using a report you were never shown. Nobody asked
   you to explain.
@@ -16,7 +17,7 @@ whatRelates:
   - You did not know a decision about you was coming.
   - Nobody asked you to explain your side of it.
   - Something was used against you that you never saw.
-  - You asked to speak to someone, and were told no.
+  - You had something to say and no way to put it to them.
   - The process changed part way, and nobody told you.
   - >-
     They decided it on a different basis than you were led to expect, and you

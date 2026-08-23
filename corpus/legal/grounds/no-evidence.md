@@ -13,9 +13,7 @@ plainExample: >-
   were not.
 whatRelates:
   - A key finding was made with nothing at all to support it.
-  - >-
-    Evidence you gave that contradicts a central finding appears to have been
-    overlooked.
+  - The letter states a key fact about you and points to nothing behind it.
 whatItIsNot: >-
   This is not a way to argue the facts again. A court checking whether a
   decision was lawful does not decide the facts a second time. Where the problem

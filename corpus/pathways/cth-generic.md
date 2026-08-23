@@ -48,7 +48,7 @@ pathways:
     source: "Administrative Review Tribunal Act 2024 (Cth) s 268 — legislation.gov.au"
   - name: "Apply to the Administrative Review Tribunal (ART)"
     body: "Administrative Review Tribunal (ART)"
-    deadline: "The Tribunal's own Act sets a standard time limit, and the law your decision was made under can set a different one. Confirm the current period and how it is counted before you apply."
+    deadline: "A time limit applies under the Tribunal's framework, and the law your decision was made under can set a different one. Confirm the current period and how it is counted before you apply."
     deadlineDays: null
     deadlineVerified: false
     howToStart: "check whether the law for your decision allows ART review, then apply through art.gov.au"

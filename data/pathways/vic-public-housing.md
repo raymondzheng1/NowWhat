@@ -31,10 +31,11 @@ avenue:
 deadlineRule: >-
   A housing review can have a time limit, set by the relevant housing law or
   policy. Check the limit with the Housing Appeals Office or a free service.
-  If you are looking at the Supreme Court instead, Victoria has two separate
-  ways in and they cannot be joined. Order 56 runs 60 days from when the
-  grounds first arose. The Administrative Law Act 1978 (Vic) runs 30 days.
-  Trying another path first does not restart either clock.
+  If you are looking at the Supreme Court instead, Victoria has different
+  review routes, with different rules and time limits. Order 56 runs 60 days
+  from when the grounds first arose. The Administrative Law Act 1978 (Vic)
+  runs 30 days. Trying another path first does not restart either clock.
+  Choosing the right route can be technical, so get legal help before you file.
 verifiedAsAt: '2026-06-30'
 sourceUrl: 'https://www.housing.vic.gov.au'
 reviewCadenceDays: 90
@@ -42,7 +43,7 @@ reasonsRequest:
   how: ask the housing office in writing for the reasons for the decision
   provision: 'Housing Act 1983 (Vic); Residential Tenancies Act 1997 (Vic)'
   extendsMR: 'depends — confirm with the Housing Appeals Office or a free service before relying on it'
-  extendsJR: false
+  extendsJR: 'depends — confirm with a free legal service before relying on it'
 privativeClause: false
 forms: []
 mrCriteria:

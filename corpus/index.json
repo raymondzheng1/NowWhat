@@ -1,5 +1,5 @@
 {
-  "builtAt": "0571765be114cb9b",
+  "builtAt": "fb2d4b55fc2b651c",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -187,7 +187,7 @@
           "cost": "A fee may apply, and it can often be reduced or waived in cases of financial hardship.",
           "name": "Apply to the Administrative Review Tribunal (ART)",
           "body": "Administrative Review Tribunal (ART)",
-          "deadline": "The Tribunal's own Act sets a standard time limit, and the law your decision was made under can set a different one. Confirm the current period and how it is counted before you apply.",
+          "deadline": "A time limit applies under the Tribunal's framework, and the law your decision was made under can set a different one. Confirm the current period and how it is counted before you apply.",
           "howToStart": "check whether the law for your decision allows ART review, then apply through art.gov.au",
           "source": "Administrative Review Tribunal — art.gov.au"
         },

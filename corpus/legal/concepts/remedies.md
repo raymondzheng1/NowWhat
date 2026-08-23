@@ -61,7 +61,9 @@ options:
   - name: Injunction
     plainName: An order to do or stop something
     whatItDoes: Orders someone to do a particular thing, or to stop doing one.
-    note: You need a legal right of your own for this one.
+    note: >-
+      Who can ask for one is technical, and it is set out under standing. Legal
+      help matters for this remedy.
   - name: Declaration
     plainName: A statement of where you stand
     whatItDoes: >-

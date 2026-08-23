@@ -41,7 +41,7 @@ reasonsRequest:
   how: 'ask the decision-maker in writing for a statement of reasons. The tribunal right only exists where your decision can go to the tribunal; the judicial review right is separate'
   provision: 'Administrative Review Tribunal Act 2024 (Cth) ss 268-269, where the decision is reviewable; and Administrative Decisions (Judicial Review) Act 1977 (Cth) s 13'
   extendsMR: 'depends on the Act your decision was made under — confirm before relying on it'
-  extendsJR: false
+  extendsJR: 'depends — confirm with a free legal service before relying on it'
 privativeClause: false
 forms: []
 mrCriteria:

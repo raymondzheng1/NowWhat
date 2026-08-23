@@ -1,9 +1,17 @@
 import { isVerifyMarker, type DataPathway } from "@/lib/schemas/data";
 
 /**
- * Request-reasons step (PRD §3 step 2) — DETERMINISTIC template + the CORRECTED clock
- * warning. A reasons request may extend a MERITS-review period only if the enabling Act
- * says so (from the data layer); it does NOT pause any JUDICIAL-review limitation period.
+ * Request-reasons step (PRD §3 step 2) — DETERMINISTIC template + the clock warning.
+ *
+ * A reasons request may extend a MERITS-review period only if the enabling Act says so, and
+ * the data layer records that per decision type.
+ *
+ * This comment used to end "it does NOT pause any JUDICIAL-review limitation period". That
+ * was a rule the app cannot source, and on the ADJR route it may be backwards — the period
+ * can run from receipt of a requested statement. `extendsJR` is now a three-state value like
+ * `extendsMR`, and every entry says it depends and names who to ask. Do not reintroduce a
+ * flat rule here or in the data.
+ *
  * Information, not advice; no outcome claims.
  */
 

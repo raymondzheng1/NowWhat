@@ -81,7 +81,7 @@ executive powers (unlike the ADJR Act)", "allows review of the validity of deleg
 legislation", and "is not limited to matters involving 'an officer of the Commonwealth'".
 
 Scoped to `Cth`. The Victorian equivalent — Order 56 versus the Administrative Law Act 1978, which
-also cannot be joined — is carried on the judicial-review process page instead, where the Victorian
+which run to different rules and limits — is carried on the judicial-review process page instead, where the Victorian
 bodies already live.
 
 Exclusions expanded 2026-08-23 on the owner's QA decision. The entry named the exclusion least

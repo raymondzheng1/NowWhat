@@ -6,9 +6,8 @@ oneLine: A rule can be applied so rigidly that a person is never considered.
 whatItMeans: >-
   A decision-maker who has a choice must actually make it. Applying a policy with
   no room for your circumstances can be unlawful, because your case is never
-  really considered. Simply doing what someone else told them to do is the same
-  failing in another form — the person with the power never brought their own
-  mind to it.
+  really considered. A related problem is where the person with the power just
+  does what someone else tells them. They never really decide it themselves.
 plainExample: >-
   You ask for more time to pay a fine. You are told 'we never do that', with no
   questions asked.
@@ -27,8 +26,8 @@ usedIn:
 test: >-
   A decision-maker with a choice must really make it. A policy guides that
   choice; it cannot control it, and it cannot be applied as a fixed rule that
-  leaves your case unconsidered. Doing what another person directs is one way
-  that happens.
+  leaves your case unconsidered. A related failure is deciding at another
+  person's direction, so the power is never really exercised by its holder.
 elements:
   - id: rigid-policy
     name: A rule applied without looking at your case

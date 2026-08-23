@@ -31,8 +31,10 @@ jurisdictions:
   - Vic
 test: >-
   A public authority must not act incompatibly with a human right, and must give
-  proper consideration to a relevant human right. Proper consideration is a
-  higher standard than the ordinary duty to take a relevant matter into account.
+  proper consideration to a relevant human right. Proper consideration means real
+  attention to the right, and to how the decision affects it. Listing the right as
+  one matter among others may not be enough. The duty does not apply where another
+  law leaves the authority no real choice.
 elements:
   - id: public-authority
     name: A Victorian public authority

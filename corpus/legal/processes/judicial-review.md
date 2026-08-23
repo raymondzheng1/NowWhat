@@ -30,9 +30,9 @@ bodies:
       the Victorian equivalent, for state government decisions. There are two
       separate ways in — the court's own supervisory jurisdiction through its
       rules, and the Administrative Law Act 1978 (Vic), which is narrower and
-      also gives a right to written reasons. They run to different time limits
-      and they cannot be joined, so picking one rules the other out. Ask a human
-      legal service early.
+      also gives a right to written reasons. They run to different rules and
+      different time limits. Choosing the right one can be technical, so get
+      legal help before you file anything.
 canApply:
   - >-
     You need to point to a 'ground of review' — a specific legal error in how

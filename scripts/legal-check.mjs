@@ -88,6 +88,33 @@ function main() {
     `legal-check: ${processes.length} processes, ${grounds.length} grounds, ${concepts.length} concepts` +
       (noPinpoint ? ` (${noPinpoint} citation(s) without a pinpoint — accepted).` : "."),
   );
+
+  // Sign-off and sourcing ledger.
+  //
+  // `status: verified` came to mean "drafted and editorially reviewed", and every published
+  // entry carried it while no lawyer had read most of them. An external review put it plainly:
+  // one label was doing three jobs, and that is how unsigned content came to look verified.
+  // These two counts are reported on every build so the gap cannot go quiet again.
+  //
+  // Entries sourced ONLY to the owner's knowledge base are listed separately. That base is
+  // legitimate provenance — it is the owner's own synthesis — but it is not primary authority,
+  // and an entry resting on nothing else should be named to the supervising lawyer rather than
+  // presented as fully sourced.
+  const KB = /owner'?s administrative-law knowledge base/i;
+  const all = [...grounds, ...concepts, ...processes];
+  const unsigned = all.filter((e) => !e.lawyerApproved).map((e) => e.id);
+  const kbOnly = all
+    .filter((e) => (e.sources ?? []).length > 0 && (e.sources ?? []).every((s) => KB.test(s)))
+    .map((e) => e.id);
+  console.log(
+    `legal-check sign-off: ${all.length - unsigned.length}/${all.length} entries lawyer-approved.`,
+  );
+  if (unsigned.length) console.log(`  awaiting sign-off: ${unsigned.join(", ")}`);
+  if (kbOnly.length) {
+    console.log(
+      `  sourced only to the owner's knowledge base (${kbOnly.length}): ${kbOnly.join(", ")}`,
+    );
+  }
   if (hard.length) {
     console.error("\nlegal-check FAILED:\n  " + hard.join("\n  "));
     process.exit(1);

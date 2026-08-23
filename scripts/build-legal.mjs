@@ -52,6 +52,8 @@ function loadGrounds() {
     g.jurisdictions = asArray(g.jurisdictions);
     g.whatItIsNot = g.whatItIsNot ?? "";
     g.status = g.status ?? "seed";
+    // Explicit, never derived: a lawyer either signed this entry or did not.
+    g.lawyerApproved = g.lawyerApproved === true;
     const need = (c, m) => { if (!c) fail(`grounds/${f}: ${m}`); };
     need(g.id, "missing id");
     need(g.name && g.plainName && g.oneLine, "missing name/plainName/oneLine");
@@ -88,6 +90,8 @@ function loadProcesses() {
     p.goodToKnow = asArray(p.goodToKnow);
     p.sources = asArray(p.sources);
     p.status = p.status ?? "seed";
+    // Explicit, never derived: a lawyer either signed this entry or did not.
+    p.lawyerApproved = p.lawyerApproved === true;
     const need = (c, m) => { if (!c) fail(`processes/${f}: ${m}`); };
     need(p.id === "merits-review" || p.id === "judicial-review", "id must be merits-review or judicial-review");
     need(p.name && p.plainName && p.oneLine && p.question && p.whatItIs, "missing name/plainName/oneLine/question/whatItIs");
@@ -122,6 +126,8 @@ function loadConcepts() {
     c.whatItIsNot = c.whatItIsNot ?? "";
     c.order = typeof c.order === "number" ? c.order : 50;
     c.status = c.status ?? "seed";
+    // Explicit, never derived: a lawyer either signed this entry or did not.
+    c.lawyerApproved = c.lawyerApproved === true;
     const need = (cond, m) => { if (!cond) fail(`concepts/${f}: ${m}`); };
     need(c.id, "missing id");
     need(c.name && c.plainName && c.oneLine, "missing name/plainName/oneLine");

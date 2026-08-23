@@ -40,7 +40,7 @@ reasonsRequest:
   how: ask Fines Victoria or the issuing agency in writing for the reasons
   provision: 'Infringements Act 2006 (Vic)'
   extendsMR: 'depends — confirm with Fines Victoria or a free service before relying on it'
-  extendsJR: false
+  extendsJR: 'depends — confirm with a free legal service before relying on it'
 privativeClause: false
 forms: []
 mrCriteria:

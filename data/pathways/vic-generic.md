@@ -33,10 +33,11 @@ avenue:
 deadlineRule: >-
   Most reviews have a strict time limit, set by the law for your decision.
   Check it with the official body or a free service. If you are looking at
-  the Supreme Court instead, Victoria has two separate ways in and they
-  cannot be joined. Order 56 runs 60 days from when the grounds first arose.
-  The Administrative Law Act 1978 (Vic) runs 30 days. Court time runs from
-  the decision, not from the end of anything else you try first.
+  the Supreme Court instead, Victoria has different review routes, with
+  different rules and time limits. Order 56 runs 60 days from when the
+  grounds first arose. The Administrative Law Act 1978 (Vic) runs 30 days.
+  Trying another path first does not restart either clock. Choosing the right
+  route can be technical, so get legal help before you file.
 verifiedAsAt: '2026-08-17'
 sourceUrl: 'https://www.ombudsman.vic.gov.au'
 reviewCadenceDays: 90
@@ -44,7 +45,7 @@ reasonsRequest:
   how: 'ask the decision-maker in writing for a statement of reasons. Whether you have a right to them depends on the kind of decision, so check which law applies to yours'
   provision: 'Victorian Civil and Administrative Tribunal Act 1998 (Vic) ss 45-46, where the decision can go to VCAT; and Administrative Law Act 1978 (Vic) s 8'
   extendsMR: 'depends on the Act your decision was made under — confirm before relying on it'
-  extendsJR: false
+  extendsJR: 'depends — confirm with a free legal service before relying on it'
 privativeClause: false
 forms: []
 mrCriteria:

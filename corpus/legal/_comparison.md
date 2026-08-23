@@ -5,7 +5,7 @@ rows:
   - { aspect: "Who decides", mr: "A tribunal (VCAT or the ART)", jr: "A court (Supreme Court or Federal Court)" }
   - { aspect: "What they look at", mr: "The facts and the law, fresh", jr: "Only how the decision was made — its legality" }
   - { aspect: "What they can do", mr: "Change or replace the decision", jr: "Set it aside and send it back — not replace it" }
-  - { aspect: "The evidence they look at", mr: "The best and most current evidence. You can give them new information.", jr: "Usually only what was in front of the original decision-maker." }
+  - { aspect: "The evidence they look at", mr: "The best and most current evidence. You can give them new information.", jr: "Usually only what was in front of the original decision-maker. A court does not hear the facts again, but it may look at other evidence needed to decide whether the process was lawful." }
   - { aspect: "Who can apply", mr: "Whoever the law for that decision says can apply", jr: "A person with a real interest in the decision" }
   - { aspect: "Cost and formality", mr: "Usually cheaper and less formal", jr: "More formal, and often needs a lawyer" }
   - { aspect: "The money risk", mr: "Usually free, or a low fee", jr: "Court fees. You may also be ordered to pay the other side's costs." }

@@ -1,5 +1,5 @@
 {
-  "builtAt": "1ec8be55b2bbdaf5",
+  "builtAt": "ebc18f0034dfef46",
   "processes": [
     {
       "id": "judicial-review",
@@ -22,7 +22,7 @@
         {
           "jurisdiction": "Vic",
           "name": "The Supreme Court of Victoria",
-          "note": "the Victorian equivalent, for state government decisions. There are two separate ways in — the court's own supervisory jurisdiction through its rules, and the Administrative Law Act 1978 (Vic), which is narrower and also gives a right to written reasons. They run to different time limits and they cannot be joined, so picking one rules the other out. Ask a human legal service early."
+          "note": "the Victorian equivalent, for state government decisions. There are two separate ways in — the court's own supervisory jurisdiction through its rules, and the Administrative Law Act 1978 (Vic), which is narrower and also gives a right to written reasons. They run to different rules and different time limits. Choosing the right one can be technical, so get legal help before you file anything."
         }
       ],
       "canApply": [
@@ -60,7 +60,8 @@
         "Supreme Court of Victoria — supremecourt.vic.gov.au",
         "Federal Court of Australia — fedcourt.gov.au"
       ],
-      "status": "verified"
+      "status": "verified",
+      "lawyerApproved": false
     },
     {
       "id": "merits-review",
@@ -115,7 +116,8 @@
         "VCAT — vcat.vic.gov.au",
         "Administrative Review Tribunal — art.gov.au"
       ],
-      "status": "verified"
+      "status": "verified",
+      "lawyerApproved": false
     }
   ],
   "comparison": {
@@ -144,7 +146,7 @@
       {
         "aspect": "The evidence they look at",
         "mr": "The best and most current evidence. You can give them new information.",
-        "jr": "Usually only what was in front of the original decision-maker."
+        "jr": "Usually only what was in front of the original decision-maker. A court does not hear the facts again, but it may look at other evidence needed to decide whether the process was lawful."
       },
       {
         "aspect": "Who can apply",
@@ -283,7 +285,8 @@
           "explains": "Where the error goes to the power itself, the law treats what happened as no decision at all."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "charter-proper-consideration",
@@ -306,7 +309,7 @@
       "jurisdictions": [
         "Vic"
       ],
-      "test": "A public authority must not act incompatibly with a human right, and must give proper consideration to a relevant human right. Proper consideration is a higher standard than the ordinary duty to take a relevant matter into account.",
+      "test": "A public authority must not act incompatibly with a human right, and must give proper consideration to a relevant human right. Proper consideration means real attention to the right, and to how the decision affects it. Listing the right as one matter among others may not be enough. The duty does not apply where another law leaves the authority no real choice.",
       "elements": [
         {
           "id": "public-authority",
@@ -349,7 +352,8 @@
           "pinpoint": "",
           "explains": "Once a right is limited, it is for the state to show the limit is demonstrably justified."
         }
-      ]
+      ],
+      "lawyerApproved": false
     },
     {
       "id": "delegated-legislation",
@@ -411,7 +415,8 @@
           "explains": "Such a rule has to be appropriate and adapted to the Act's purpose."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "error-of-law",
@@ -458,7 +463,8 @@
           "explains": "An error that shows on the face of the record can be corrected, even where it did not go to the power itself."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "improper-purpose",
@@ -517,14 +523,15 @@
           "explains": "The improper purpose need not be the only purpose, only a substantial one."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "inflexible-policy",
       "name": "Inflexible application of policy",
       "plainName": "They followed a rule or an order instead of deciding your case",
       "oneLine": "A rule can be applied so rigidly that a person is never considered.",
-      "whatItMeans": "A decision-maker who has a choice must actually make it. Applying a policy with no room for your circumstances can be unlawful, because your case is never really considered. Simply doing what someone else told them to do is the same failing in another form — the person with the power never brought their own mind to it.",
+      "whatItMeans": "A decision-maker who has a choice must actually make it. Applying a policy with no room for your circumstances can be unlawful, because your case is never really considered. A related problem is where the person with the power just does what someone else tells them. They never really decide it themselves.",
       "plainExample": "You ask for more time to pay a fine. You are told 'we never do that', with no questions asked.",
       "whatRelates": [
         "You were told 'that is just our policy', and nothing more.",
@@ -537,7 +544,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "A decision-maker with a choice must really make it. A policy guides that choice; it cannot control it, and it cannot be applied as a fixed rule that leaves your case unconsidered. Doing what another person directs is one way that happens.",
+      "test": "A decision-maker with a choice must really make it. A policy guides that choice; it cannot control it, and it cannot be applied as a fixed rule that leaves your case unconsidered. A related failure is deciding at another person's direction, so the power is never really exercised by its holder.",
       "elements": [
         {
           "id": "rigid-policy",
@@ -566,7 +573,8 @@
           "explains": "A general rule was applied so rigidly that it stopped the person from being considered at all."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "invalid-delegation",
@@ -619,7 +627,8 @@
           "explains": "Whether a subordinate may sign in the named person's place depends on the Act."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "irrelevant-considerations",
@@ -662,7 +671,8 @@
           "explains": "The same Act can also imply which matters must be left out."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "jurisdictional-error",
@@ -714,7 +724,8 @@
           "explains": "A law can say a decision is final. That still does not protect a decision made outside the power."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "no-evidence",
@@ -725,7 +736,7 @@
       "plainExample": "A debt is raised on the basis you were paid on dates that the records show you were not.",
       "whatRelates": [
         "A key finding was made with nothing at all to support it.",
-        "Evidence you gave that contradicts a central finding appears to have been overlooked."
+        "The letter states a key fact about you and points to nothing behind it."
       ],
       "whatItIsNot": "This is not a way to argue the facts again. A court checking whether a decision was lawful does not decide the facts a second time. Where the problem is that a fact is simply wrong, merits review is usually the process that looks at that. A human service can tell you which one fits your letter.",
       "usedIn": [
@@ -756,7 +767,8 @@
           "explains": "Findings have to rest on evidence that actually proves something, not on nothing."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "objective-jurisdictional-fact",
@@ -766,10 +778,9 @@
       "whatItMeans": "Sometimes an Act says a decision can only be made if a particular thing is true. Where that is so, the thing has to really be true. It is not enough that the decision-maker believed it, and a court can look at that fact for itself. The first question is whether the Act works that way at all. Most facts a decision-maker finds are not of this kind.",
       "plainExample": "A rule lets an office act only if you live in a certain area. You do not live there. They acted anyway.",
       "whatRelates": [
-        "The letter relies on a fact about you that is simply not true.",
-        "You can show the opposite with a document you already hold.",
+        "The rule says a decision can only be made if something is true, and it is not true in your case.",
         "The rule you were given applies to a group you are not part of.",
-        "The letter says you were somewhere, or held something, that you did not."
+        "A fact the rule names as a condition is wrong, and you can show the opposite with a document you already hold."
       ],
       "whatItIsNot": "This is not about a judgement call, like whether something was reasonable. It is about a plain fact that is either true or not. Most facts in a decision are not of this kind, and a court will not usually put its own view in place of the decision-maker's on something the Act left to them to weigh up.",
       "usedIn": [
@@ -778,9 +789,14 @@
       "test": "Whether a fact is one the power depends on comes from reading the Act. Where it is, that fact must exist, and a court can decide it for itself. Where the Act instead leaves an assessment or a value judgement to the decision-maker, it is difficult to treat the criterion this way.",
       "elements": [
         {
+          "id": "gateway",
+          "name": "Whether the rule makes this fact a condition",
+          "layPrompt": "Does the rule say the decision can only be made if this thing is true?"
+        },
+        {
           "id": "required-fact",
-          "name": "The fact the power needed",
-          "layPrompt": "Does the letter rely on a fact about you that is not true?"
+          "name": "Whether that fact was there",
+          "layPrompt": "Was that thing actually true in your case?"
         },
         {
           "id": "can-show",
@@ -804,7 +820,8 @@
           "explains": "A court can decide such a fact for itself, not just review the view taken."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "procedural-fairness-bias",
@@ -858,20 +875,21 @@
           "explains": "The other version asks what a fair-minded onlooker might think. It has two steps. First, name the thing that might pull the decision off course. Then show how it connects to this decision."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "procedural-fairness-hearing",
       "name": "Procedural fairness — the hearing rule",
       "plainName": "You never got to have your say",
       "oneLine": "You usually get told what is coming, and a real chance to reply.",
-      "whatItMeans": "Where a decision affects something that matters to you, the law usually starts from the position that a fair hearing is owed to you. That means being told what is being decided, and getting a real chance to reply before it happens. If something important counts against you, and it is the sort of thing a decision-maker would rely on, you usually get to see it first.",
+      "whatItMeans": "Where a decision affects something that matters to you, the law usually starts from the position that a fair hearing is owed to you. That means being told what is being decided, and getting a real chance to reply before it happens. If something important counts against you, and it is the sort of thing a decision-maker would rely on, you usually need to be told enough about it. Enough to have a real chance to reply.",
       "plainExample": "Centrelink raises a debt using a report you were never shown. Nobody asked you to explain.",
       "whatRelates": [
         "You did not know a decision about you was coming.",
         "Nobody asked you to explain your side of it.",
         "Something was used against you that you never saw.",
-        "You asked to speak to someone, and were told no.",
+        "You had something to say and no way to put it to them.",
         "The process changed part way, and nobody told you.",
         "They decided it on a different basis than you were led to expect, and you never got to answer that."
       ],
@@ -933,7 +951,8 @@
           "explains": "Deciding on a new issue without notice can deny a fair hearing."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "relevant-considerations",
@@ -996,7 +1015,8 @@
           "explains": "A Victorian court applied that human rights duty to prison conditions."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "subjective-jurisdictional-fact",
@@ -1061,7 +1081,8 @@
           "explains": "A decision needs a reason you can see and follow."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "unlawful-policy",
@@ -1115,7 +1136,8 @@
           "explains": "A policy that is appropriate guides decision-making. It does not control it."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "unreasonableness",
@@ -1172,7 +1194,8 @@
           "explains": "Heard with a second case that went the other way. Whether a failure is unreasonable turns on the statute and on what actually went wrong."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "without-authority",
@@ -1240,7 +1263,8 @@
           "explains": "A court checks whether a decision was lawful, not whether it was right."
         }
       ],
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     }
   ],
   "concepts": [
@@ -1268,7 +1292,8 @@
         "Owner's administrative-law knowledge base (Combined MR/JR Framework, 2026-08-22)"
       ],
       "status": "verified",
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "justiciability",
@@ -1305,7 +1330,8 @@
         "Owner's administrative-law knowledge base (Review Notes; JR Hypo, 2026-08-19)"
       ],
       "status": "verified",
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "adjr-or-common-law",
@@ -1358,7 +1384,8 @@
       "sources": [
         "Owner's administrative-law knowledge base (JR Hypo, 2026-08-19)"
       ],
-      "status": "verified"
+      "status": "verified",
+      "lawyerApproved": false
     },
     {
       "id": "remedies",
@@ -1403,7 +1430,7 @@
           "name": "Injunction",
           "plainName": "An order to do or stop something",
           "whatItDoes": "Orders someone to do a particular thing, or to stop doing one.",
-          "note": "You need a legal right of your own for this one."
+          "note": "Who can ask for one is technical, and it is set out under standing. Legal help matters for this remedy."
         },
         {
           "name": "Declaration",
@@ -1428,7 +1455,8 @@
         "Owner's administrative-law knowledge base (JR Hypo; Combined MR/JR Framework, 2026-08-19)"
       ],
       "status": "verified",
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "standing",
@@ -1501,7 +1529,8 @@
         "Owner's administrative-law knowledge base (JR Hypo; Review Notes, 2026-08-19)"
       ],
       "status": "verified",
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "information-commissioner",
@@ -1556,7 +1585,8 @@
         "Owner's administrative-law knowledge base (Combined MR/JR Framework; Venture Concepts, 2026-08-19)"
       ],
       "status": "verified",
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     },
     {
       "id": "ombudsman",
@@ -1603,7 +1633,8 @@
         "Owner's administrative-law knowledge base (Combined MR/JR Framework, 2026-08-19)"
       ],
       "status": "verified",
-      "jurisdictions": []
+      "jurisdictions": [],
+      "lawyerApproved": false
     }
   ],
   "triage": {

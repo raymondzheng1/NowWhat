@@ -61,6 +61,15 @@ export const GroundSchema = z.object({
    */
   jurisdictions: z.array(JurisdictionName).default([]),
   status: z.enum(["seed", "verified"]).default("seed"),
+  /**
+   * Whether a supervising lawyer has signed THIS entry off as it currently stands.
+   *
+   * Separate from `status` on purpose. `status: verified` came to mean "drafted and
+   * editorially reviewed", and 22 of the 27 published entries carried it while no lawyer
+   * had ever read them — one ambiguous label doing three jobs. Setting this true is a human
+   * act, recorded on the day it happens; it is never derived and never defaulted.
+   */
+  lawyerApproved: z.boolean().default(false),
 });
 export type Ground = z.infer<typeof GroundSchema>;
 
@@ -103,6 +112,15 @@ export const ProcessSchema = z.object({
   goodToKnow: z.array(z.string()).default([]),
   sources: z.array(z.string()).default([]),
   status: z.enum(["seed", "verified"]).default("seed"),
+  /**
+   * Whether a supervising lawyer has signed THIS entry off as it currently stands.
+   *
+   * Separate from `status` on purpose. `status: verified` came to mean "drafted and
+   * editorially reviewed", and 22 of the 27 published entries carried it while no lawyer
+   * had ever read them — one ambiguous label doing three jobs. Setting this true is a human
+   * act, recorded on the day it happens; it is never derived and never defaulted.
+   */
+  lawyerApproved: z.boolean().default(false),
 });
 export type Process = z.infer<typeof ProcessSchema>;
 
@@ -177,6 +195,15 @@ export const ConceptSchema = z.object({
   /** Order in the mind map's flow, low first — so the library reads as the tree does. */
   order: z.number().default(50),
   status: z.enum(["seed", "verified"]).default("seed"),
+  /**
+   * Whether a supervising lawyer has signed THIS entry off as it currently stands.
+   *
+   * Separate from `status` on purpose. `status: verified` came to mean "drafted and
+   * editorially reviewed", and 22 of the 27 published entries carried it while no lawyer
+   * had ever read them — one ambiguous label doing three jobs. Setting this true is a human
+   * act, recorded on the day it happens; it is never derived and never defaulted.
+   */
+  lawyerApproved: z.boolean().default(false),
 });
 export type Concept = z.infer<typeof ConceptSchema>;
 
