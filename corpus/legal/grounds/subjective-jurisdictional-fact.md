@@ -68,7 +68,8 @@ leadingCases:
     pinpoint: 'French CJ'
     explains: >-
       Where a power depends on the decision-maker forming a state of mind, that
-      state of mind is itself the thing the power depends on.
+      state of mind is itself the thing the power depends on. Whether a power
+      works that way comes from reading the Act.
   - name: >-
       Minister for Immigration and Citizenship v Li (2013) 249 CLR 332
     pinpoint: ''
@@ -145,3 +146,8 @@ The neighbouring bullet stays. "The reasons skip straight to the answer" is the 
 and Li support and the `any-path` element already asks. The gateway was not repeated across the other
 prompts either: it is in the ground's name, the `oneLine`, the first sentence of `whatItMeans` and the
 `right-question` element, and saying it a fifth time would cost more in reading grade than it bought.
+
+**Construction added to the M70 note, 2026-08-23**, on the same reviewer's point about categorical
+wording. "That state of mind is itself the thing the power depends on" is exact for a power that
+works that way, and says nothing about how you know it does. The note now closes with where that
+comes from.

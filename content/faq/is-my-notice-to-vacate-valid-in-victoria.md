@@ -60,7 +60,7 @@ Gather these things and look them over carefully:
 
 ### If the time limit has already passed
 
-Missing the date does not always end things. A tribunal can be asked to allow a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+Missing the date does not always end things. Where the law allows it, a tribunal can be asked to accept a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
 
 ## How to get free help
 

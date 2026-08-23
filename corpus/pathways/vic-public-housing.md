@@ -105,7 +105,7 @@ getHelp:
     phone: "1300 792 387"
     link: "https://www.legalaid.vic.gov.au/renting"
   - service: "Housing Appeals Office"
-    who: "free, independent reviews of housing decisions"
+    who: "free reviews of housing decisions, by an independent reviewer within the housing department"
     phone: "1800 807 702"
     link: "https://www.housing.vic.gov.au/appeal-decision"
 plainLanguageExplainer: "If you live in or applied for social housing in Victoria and you disagree with a decision, what you can do depends on the type of decision. Decisions about your application, priority, a transfer or your rebate can be appealed for free through the Housing Appeals Office. An eviction notice is different — it goes to VCAT, and there is a 30-day time limit to challenge it early. Free help is available."

@@ -1,5 +1,5 @@
 {
-  "builtAt": "6eab59fead677671",
+  "builtAt": "ed18049f993019cb",
   "processes": [
     {
       "id": "judicial-review",
@@ -531,7 +531,7 @@
         "You were told a senior officer decided, but someone else signed.",
         "The decision is one the Act seems to want that person to make themselves, such as a decision that can only be made once."
       ],
-      "whatItIsNot": "It does not mean staff can never act for a minister. Many powers are used that way every day, and a large department dealing with the same decision often is the ordinary case, not a problem. A signature you do not recognise is not a sign of anything by itself. The authority to sign does not have to appear in the letter, or in any formal document. It can come from the Act, from a delegation, or — within what the Act allows — from the way that decision has long been made in the department. The question is what the Act requires, not what the letter shows.",
+      "whatItIsNot": "It does not mean staff can never act for a minister. Many powers are used that way every day, and a large department dealing with the same decision often is the ordinary case, not a problem. A signature you do not recognise is not a sign of anything by itself. The authority to sign does not have to appear in the letter, or in any formal document. It can come from the Act, from a delegation, or from the way that decision has long been made in the department. That last one is not authority on its own. Whether it is allowed comes from the Act, and from the rules about who may decide under it. The question is what the Act requires, not what the letter shows.",
       "usedIn": [
         "judicial-review"
       ],
@@ -717,7 +717,7 @@
       "name": "A fact the power depended on",
       "plainName": "A fact the law required was not there",
       "oneLine": "Some powers only exist if a certain fact is true.",
-      "whatItMeans": "Sometimes an Act says a decision can only be made if a particular thing is true. Where that is so, the thing has to really be true. It is not enough that the decision-maker believed it, and a court can look at that fact for itself. The first question is whether the Act works that way at all. Most facts a decision-maker finds are not of this kind.",
+      "whatItMeans": "Sometimes an Act says a decision can only be made if a particular thing is true. Whether an Act works that way is always the first question, and it comes from reading the Act. Most facts a decision-maker finds are not of this kind. Where an Act does work that way, the thing has to really be true. It is not enough that the decision-maker believed it, and a court can look at that fact for itself.",
       "plainExample": "A rule lets an office act only if you live in a certain area. You do not live there. They acted anyway.",
       "whatRelates": [
         "The rule says a decision can only be made if something is true, and it is not true in your case.",
@@ -1014,7 +1014,7 @@
         {
           "name": "Plaintiff M70/2011 v Minister for Immigration and Citizenship (2011) 244 CLR 144",
           "pinpoint": "French CJ",
-          "explains": "Where a power depends on the decision-maker forming a state of mind, that state of mind is itself the thing the power depends on."
+          "explains": "Where a power depends on the decision-maker forming a state of mind, that state of mind is itself the thing the power depends on. Whether a power works that way comes from reading the Act."
         },
         {
           "name": "Minister for Immigration and Citizenship v Li (2013) 249 CLR 332",
@@ -1069,12 +1069,12 @@
         {
           "name": "Re Drake (No 2)",
           "pinpoint": "",
-          "explains": "A policy must leave the decision-maker's discretion intact."
+          "explains": "A policy that is appropriate guides decision-making. It does not control it. It tells you the standards and values usually applied."
         },
         {
           "name": "Green v Daniels (1977) 13 ALR 1",
           "pinpoint": "",
-          "explains": "A policy that is appropriate guides decision-making. It does not control it."
+          "explains": "A general rule was applied so rigidly that it stopped the person from being considered at all."
         }
       ],
       "jurisdictions": [],

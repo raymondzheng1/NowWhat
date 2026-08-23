@@ -5,10 +5,11 @@ plainName: A fact the law required was not there
 oneLine: Some powers only exist if a certain fact is true.
 whatItMeans: >-
   Sometimes an Act says a decision can only be made if a particular thing is
-  true. Where that is so, the thing has to really be true. It is not enough that
-  the decision-maker believed it, and a court can look at that fact for itself.
-  The first question is whether the Act works that way at all. Most facts a
-  decision-maker finds are not of this kind.
+  true. Whether an Act works that way is always the first question, and it comes
+  from reading the Act. Most facts a decision-maker finds are not of this kind.
+  Where an Act does work that way, the thing has to really be true. It is not
+  enough that the decision-maker believed it, and a court can look at that fact
+  for itself.
 plainExample: >-
   A rule lets an office act only if you live in a certain area. You do not live
   there. They acted anyway.
@@ -79,3 +80,9 @@ Both points pull the same way, and both were missing: most facts a decision-make
 jurisdictional facts, and a court will not substitute its own view on an evaluative judgement the
 Act left to them. Without them the ground read as "any wrong fact" — the same over-reading that
 had to be corrected in no-evidence the day before.
+
+**The statutory gateway now leads, 2026-08-23.** A reviewer read "a court can look at that fact for
+itself" as sounding categorical. The qualifier existed — the entry already said the first question is
+whether the Act works that way — but it came third, after the reader had met the strong statement.
+It is now first, with where it comes from: reading the Act. The strong statement follows, conditioned
+on it.

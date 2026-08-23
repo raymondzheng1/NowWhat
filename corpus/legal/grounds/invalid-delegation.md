@@ -24,9 +24,10 @@ whatItIsNot: >-
   the ordinary case, not a problem. A signature you do not recognise is not a
   sign of anything by itself. The authority to sign does not have to appear in
   the letter, or in any formal document. It can come from the Act, from a
-  delegation, or — within what the Act allows — from the way that decision has
-  long been made in the department. The question is what the Act requires, not
-  what the letter shows.
+  delegation, or from the way that decision has long been made in the
+  department. That last one is not authority on its own. Whether it is allowed
+  comes from the Act, and from the rules about who may decide under it. The
+  question is what the Act requires, not what the letter shows.
 usedIn:
   - judicial-review
 test: >-
@@ -113,3 +114,9 @@ So the limit is now inside the sentence — practice counts "within what the Act
 than left to the sentence after it. Nothing was added or removed: the three sources stand, and the
 field still closes on what the Act requires being the question, which is the sentence the reviewer
 asked for and we already had. The long sentence was also split at the dash, which was overdue.
+
+**Long practice is not authority on its own, 2026-08-23.** A reviewer read the previous wording as
+risking the inference that long practice equals lawful authority — an over-simplification of the
+Carltona line. The qualifier was there but buried mid-sentence as an aside, where a scanning reader
+would miss it. It is now its own sentence: that last one is not authority on its own, and whether
+it is allowed comes from the Act and the rules about who may decide under it.

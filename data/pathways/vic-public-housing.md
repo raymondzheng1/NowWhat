@@ -70,7 +70,7 @@ examples:
 getHelp:
   - service: Housing Appeals Office
     link: 'https://www.housing.vic.gov.au'
-    who: 'free, independent reviews of housing decisions'
+    who: 'free reviews of housing decisions, by an independent reviewer within the housing department'
     phone: '1800 807 702'
   - service: Tenants Victoria
     link: 'https://tenantsvic.org.au'

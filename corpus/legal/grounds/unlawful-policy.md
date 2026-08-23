@@ -45,12 +45,13 @@ leadingCases:
   - name: Re Drake (No 2)
     pinpoint: ''
     explains: >-
-      A policy must leave the decision-maker's discretion intact.
+      A policy that is appropriate guides decision-making. It does not control
+      it. It tells you the standards and values usually applied.
   - name: Green v Daniels (1977) 13 ALR 1
     pinpoint: ''
     explains: >-
-      A policy that is appropriate guides decision-making. It does not control
-      it.
+      A general rule was applied so rigidly that it stopped the person from
+      being considered at all.
 ---
 
 A policy can go wrong in two different ways. The policy itself may not match the Act. That is this ground. Or a lawful policy may be applied without looking at the person. That is the inflexible policy ground instead.
@@ -106,3 +107,13 @@ materials give to both — the exact error corrected on 23 August.
 
 The citation goes to the supervising lawyer with this entry's sign-off, to be supplied from an
 authorised report. `inflexible-policy` carries the matching note, and the two entries move together.
+
+**Case propositions aligned with the twin entry, 2026-08-23.** A reviewer noticed the summaries were
+blurred across the two policy grounds: Drake carried "a policy must leave the discretion intact"
+here while Green carried "appropriate policy guides, but does not control" — which is Drake's own
+proposition, and the one attributed to Drake on inflexible-policy.
+
+Our materials give that proposition to both cases jointly ("Drake [No 2]/Green v Daniel"), so
+neither attribution was wrong. But the same case said different things on two pages a reader moves
+between, and Green is conventionally cited for rigid application rather than for policy guidance.
+Each case now carries the same line on both grounds.

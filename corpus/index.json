@@ -1,5 +1,5 @@
 {
-  "builtAt": "8a14562924549776",
+  "builtAt": "60b364fdcd37c46b",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -680,7 +680,7 @@
         },
         {
           "service": "Housing Appeals Office",
-          "who": "free, independent reviews of housing decisions",
+          "who": "free reviews of housing decisions, by an independent reviewer within the housing department",
           "phone": "1800 807 702",
           "link": "https://www.housing.vic.gov.au/appeal-decision"
         }

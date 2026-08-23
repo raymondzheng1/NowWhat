@@ -61,7 +61,7 @@ Acting early can also matter if you want any back-payment. This includes the int
 
 ### If the ART time limit has already passed
 
-Missing the date does not always end things. The ART can be asked to accept a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
+Missing the date does not always end things. Where the law allows it, the ART can be asked to accept a late application. It does not have to say yes, but it can be asked, and it is worth raising as soon as you can. A human legal service can help you explain why you were late.
 
 ## If the tribunal decides against you
 
