@@ -58,16 +58,16 @@ pathways:
     source: "ombudsman.vic.gov.au"
   - name: "Ask a court to check the decision was made lawfully (judicial review)"
     body: "Supreme Court of Victoria"
-    deadline: "Court time limits are strict, and they run from the decision rather than from when you finish trying other things. Asking for reasons does not pause them. Please talk to a human legal service before you file anything."
+    deadline: "Court time limits are strict, and trying something else first does not restart them. Do not assume that asking for reasons buys you time in a court. Please talk to a human legal service before you file anything."
     deadlineDays: null
     deadlineVerified: false
     howToStart: "talk to a free legal service first — this is a court process and it is technical"
     cost: "Court fees apply and there is a risk of paying the other side's costs."
     source: "Administrative Law Act 1978 (Vic); Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
 rightToReasons:
-  available: "yes"
-  how: "you can ask the decision-maker, in writing, for a statement of reasons within 28 days of the decision"
-  provision: "Victorian Civil and Administrative Tribunal Act 1998 (Vic) s 45"
+  available: "sometimes"
+  how: "you can ask the decision-maker, in writing, for a statement of reasons. Which law gives you that right depends on the decision: where VCAT can review it, the VCAT Act gives it, and the Administrative Law Act is the general Victorian route. A time limit applies to the request, so check the one for your decision"
+  provision: "Victorian Civil and Administrative Tribunal Act 1998 (Vic) s 45, where VCAT can review the decision; Administrative Law Act 1978 (Vic) s 8"
   source: "vcat.vic.gov.au; legislation.vic.gov.au"
   verified: true
 groundsOrCriteria:
@@ -103,8 +103,14 @@ sources:
 lastVerified: "2026-06-16"
 ---
 
-Figures here were checked against the cited Victorian sources on 2026-06-16. A
-Victorian legal professional should confirm them before public launch.
+Figures here were checked against the cited Victorian sources on 2026-06-16. The owner
+confirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day
+review cycle.
+
+The old note said a lawyer should confirm the figures before launch. That clashed with the
+verified status. The renting twin in the data layer had already recorded the confirmation.
+And the note was not inert. This text feeds the chat grounding set and the safety checker.
+So the app read a pre-launch caveat as verified content.
 
 This is the general guide for a Victorian state-government decision when there isn't a
 more specific one. The most important point is honest uncertainty: VCAT can only review

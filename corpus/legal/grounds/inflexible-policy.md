@@ -86,3 +86,16 @@ The entry was shaped as though they were parallel — a slash in the name, "they
 test, and two co-equal elements. That is now one ground with one principle, and dictation appears
 as the recognisable form it usually takes: "my manager decided", or a rule repeated back with no
 questions asked.
+
+**Drake short form kept 2026-08-23 on the owner's ruling.** A QA finding suggested expanding
+"Re Drake (No 2)" to its full citation, on the basis that the full form appears in the owner's memo.
+It does not: a search of all four KNOWLEDGE documents finds neither "Re Drake and Minister" nor
+"2 ALD 634". Adding it would have introduced a second unsourced citation rather than fixed one — the
+same defect that removed Agfa-Gevaert and SBBS from this corpus a day earlier.
+
+The short form therefore stays, consistent with the standing rule that short forms are not expanded.
+The citation question rolls into the sign-off renewal this entry already asks for, together with the
+point the same QA pass raised for the lawyer: the memo runs acting under dictation under the
+authority head, without a Green or Drake attribution, whereas this entry publishes it as an example
+of the inflexible application of policy on the owner's 2026-08-23 decision. That placement is what
+the renewal needs to confirm.

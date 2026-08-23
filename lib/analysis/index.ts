@@ -72,7 +72,8 @@ const NOT_A_FORUM_NAME = new Set(["ADJR/FederalCourt", "SCV-O56", "ART", "VCAT"]
  * This is decision-specific and getting it wrong sends someone to the wrong place, so the
  * order matters. The data layer is the LAWYER-VERIFIED, per-decision source: for Victorian
  * fines the reviewing body is "internal review then Magistrates' Court", and for public
- * housing it is "Housing Appeals Office, then VCAT where applicable". Those must win.
+ * housing it is "Housing Appeals Office for a housing decision; VCAT for a notice to vacate".
+ * Those must win.
  *
  * The legal corpus holds only the GENERAL body for each jurisdiction (VCAT / ART), which is
  * right when the data layer offers nothing readable — an internal judicial-review code, or
@@ -139,7 +140,7 @@ export function planFor({
       canDo: judicialReview.remedies,
       cannotDo: judicialReview.limits,
       criteria: [],
-      conditional: false,
+      conditional: avenue.jrConditional ?? false,
       focusKey: "focusJudicial",
     });
   }

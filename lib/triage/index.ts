@@ -23,6 +23,8 @@ export interface AvenueView {
   mrConditional: boolean;
   mrBody: string;
   jrAvailable: boolean;
+  /** Set where the entry covers decision-makers this path may not reach. */
+  jrConditional: boolean;
   jrForum: string;
   /** Set when there is a dignified endpoint instead of a review right. */
   noReviewEndpoint: string | null;
@@ -54,6 +56,7 @@ export function avenueView(entry: DataPathway): AvenueView {
     mrConditional: entry.avenue.mr.conditional ?? false,
     mrBody: cleanForDisplay(entry.avenue.mr.body),
     jrAvailable: entry.avenue.jr.available,
+    jrConditional: entry.avenue.jr.conditional ?? false,
     jrForum: cleanForDisplay(entry.avenue.jr.forum),
     noReviewEndpoint: cleanEndpoint(entry.avenue.noReviewEndpoint),
   };
@@ -80,6 +83,7 @@ export function triage(input: TriageInput): TriageResult {
     mrConditional: entry.avenue.mr.conditional ?? false,
       mrBody: cleanForDisplay(entry.avenue.mr.body),
       jrAvailable: entry.avenue.jr.available,
+      jrConditional: entry.avenue.jr.conditional ?? false,
       jrForum: cleanForDisplay(entry.avenue.jr.forum),
       noReviewEndpoint: cleanEndpoint(entry.avenue.noReviewEndpoint),
     },

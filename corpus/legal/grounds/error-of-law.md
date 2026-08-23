@@ -26,7 +26,8 @@ test: >-
   An error of law happens where the decision-maker had the power but got the law
   wrong. That can mean misreading a word in the Act, using the wrong test, or
   misunderstanding the limits of the power. Some of these errors go to the power
-  itself. Others show on the face of the reasons and may still be corrected.
+  itself. Others show on the face of the decision-maker's reasons or record, and
+  may still be corrected.
 elements:
   - id: wrong-test
     name: Wrong legal test
@@ -71,3 +72,14 @@ question of law. Craig and Kirk remain, and between them they hold the two propo
 actually needs: an error within power against one that takes the decision-maker outside it, and an
 error on the face of the record. The fact/law boundary is not stated anywhere in this entry's
 customer copy, so removing the case removes an authority, not a claim left hanging without one.
+
+**"Reasons or record" restored 2026-08-23 on the owner's ruling.** The test said an error may be
+corrected where it shows "on the face of the reasons". The owner's own hypothetical says "reasons or
+record", and the Review Notes are pointed about why the difference matters: the record "will not
+include the transcript, the exhibits or the reasons for decision unless they are incorporated by
+reference" (Craig). Reasons forming part of the record is a Victorian statutory cure (ALA s 10), not
+the general position.
+
+So the shorter version promised a reader outside Victoria something the common law may not give
+them. The restored phrase is the owner's own, which makes this extraction rather than new legal
+content — the distinction that has decided every citation question in this corpus.

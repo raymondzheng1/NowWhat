@@ -24,6 +24,7 @@ avenue:
     source: 'housing.vic.gov.au — appeal a decision; Housing Act 1983 (Vic)'
   jr:
     available: true
+    conditional: true
     forum: SCV-O56
     source: 'Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au'
   noReviewEndpoint: null
@@ -33,8 +34,7 @@ deadlineRule: >-
   If you are looking at the Supreme Court instead, Victoria has two separate
   ways in and they cannot be joined. Order 56 runs 60 days from when the
   grounds first arose. The Administrative Law Act 1978 (Vic) runs 30 days.
-  Court time runs from the decision, not from the end of anything else you
-  try first.
+  Trying another path first does not restart either clock.
 verifiedAsAt: '2026-06-30'
 sourceUrl: 'https://www.housing.vic.gov.au'
 reviewCadenceDays: 90
@@ -92,3 +92,23 @@ the kind of decision.
 
 Someone facing a notice to vacate who is sent to the Housing Appeals Office first loses time they
 may not have.
+
+**Two corrections 2026-08-23 on the owner's ruling.**
+
+**The court sentences no longer contradict themselves.** The rule said Order 56 runs 60 days from
+when the grounds first arose, and then that court time runs from the decision. Both cannot be true,
+and the app can source neither version. What survives is the part that is sourced and useful:
+trying another path first does not restart either clock.
+
+**Judicial review is now conditional, not unconditional.** This entry covers the Director of
+Housing, Homes Victoria, the department — and a community housing provider. Judicial review
+supervises conferred public power; whether a private provider is amenable to it is not established
+anywhere in the owner's materials, and our own decode corpus routes community-housing complaints to
+the provider and then the Housing Registrar, not to court.
+
+The owner asked for the card to be hidden for community providers. **It cannot be, and this is
+worth knowing**: the flow never learns who made the decision — the person picks an AREA, and the
+same entry serves every decision-maker in it. There is no signal to gate on without asking a new
+question. So the path takes the shape the owner already approved for conditional merits review: it
+still shows, because hiding it would keep a real route from the people who do have it, and the
+condition travels with it on the card — "Only where a public body made the decision".

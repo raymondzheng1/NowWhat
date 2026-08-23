@@ -31,8 +31,8 @@ avenue:
     If review options have closed, a payment plan or financial-hardship option
     may still be available through Fines Victoria, and a free service can help.
 deadlineRule: >-
-  Fines have a strict time limit, set by the Fines Reform Act 2014 (Vic). Check
-  the exact limit with Fines Victoria or a free service.
+  Fines have a strict time limit. Check the exact limit with Fines Victoria or a
+  free service.
 verifiedAsAt: '2026-06-30'
 sourceUrl: 'https://www.fines.vic.gov.au'
 reviewCadenceDays: 90
@@ -75,3 +75,12 @@ isFallback: false
 ---
 
 Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` was supplied by the supervising lawyer on 2026-08-19, confirmed as drafted from the matching verified decode entry. Note this scheme has no tribunal step — the path is internal review, then the Magistrates' Court.
+
+**Act attribution dropped from the deadline rule, 2026-08-23 on the owner's ruling.** The rule named
+the Fines Reform Act 2014 (Vic) while this entry's own review source and the decode corpus
+counterpart both cite the Infringements Act 2006 (Vic), where the 14-day 'person unaware' and 28-day
+court-election limits sit. One attribution was wrong and the app could not settle which.
+
+The sentence states no figure and already sends the reader to Fines Victoria, so the citation was
+doing no work for them — dropping it removes the contradiction without needing a legal ruling. If
+the supervising lawyer confirms the Infringements Act at the next cadence, it can be named again.

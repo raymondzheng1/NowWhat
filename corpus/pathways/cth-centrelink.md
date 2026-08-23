@@ -56,7 +56,7 @@ pathways:
     source: "Commonwealth Ombudsman — ombudsman.gov.au"
   - name: "Ask a court to check the decision was made lawfully (judicial review)"
     body: "Federal Court of Australia / Federal Circuit and Family Court"
-    deadline: "Court time limits are strict, and asking for reasons does not pause them. Please talk to a free legal service before you file anything."
+    deadline: "Court time limits are strict. Do not assume that asking for reasons buys you time in a court. Check the limit for your decision and act within it. Please talk to a free legal service before you file anything."
     deadlineDays: null
     deadlineVerified: false
     howToStart: "talk to a free legal service first — this is a court process and it is technical"

@@ -56,7 +56,7 @@ pathways:
     source: "Administrative Review Tribunal — art.gov.au"
   - name: "Ask a court to check the decision was made lawfully (judicial review)"
     body: "Federal Court of Australia / Federal Circuit and Family Court"
-    deadline: "Court time limits are strict, and asking for reasons does not pause them. Please talk to a free legal service before you file anything."
+    deadline: "Court time limits are strict. Do not assume that asking for reasons buys you time in a court. Check the limit for your decision and act within it. Please talk to a free legal service before you file anything."
     deadlineDays: null
     deadlineVerified: false
     howToStart: "talk to a free legal service first — this is a court process and it is technical"
@@ -71,12 +71,19 @@ pathways:
     cost: "free"
     source: "Commonwealth Ombudsman — ombudsman.gov.au"
 rightToReasons:
-  available: yes
+  available: sometimes
   how: >-
     ask the decision-maker, in writing, for a statement of reasons for the
-    decision
-  provision: 'Administrative Review Tribunal Act 2024 (Cth) s 268'
-  source: 'legislation.gov.au — Administrative Review Tribunal Act 2024'
+    decision. Which law gives you that right depends on the decision: where it
+    can go to the Tribunal, the Tribunal's own Act gives it, and there is a
+    separate right tied to going to court
+  provision: >-
+    Administrative Review Tribunal Act 2024 (Cth) s 268, where the decision can
+    go to the Tribunal; Administrative Decisions (Judicial Review) Act 1977
+    (Cth) s 13
+  source: >-
+    legislation.gov.au — Administrative Review Tribunal Act 2024; Administrative
+    Decisions (Judicial Review) Act 1977
   verified: true
 groundsOrCriteria: []
 evidenceChecklist:
@@ -101,7 +108,7 @@ getHelp:
     who: free legal information and advice, wherever you live
     link: 'https://www.nationallegalaid.org'
 plainLanguageExplainer: >-
-  This is a decision by an Australian Government department or agency. Most of
+  This is a decision by an Australian Government department or agency. Many of
   these decisions can be looked at again. There are usually two different paths.
   A tribunal can look at the decision again on the facts. A court can check that
   the decision was made in a lawful way. Which path applies comes from the law

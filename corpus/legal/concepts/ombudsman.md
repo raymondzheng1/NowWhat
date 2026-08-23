@@ -12,8 +12,8 @@ whatItMeans: >-
   handled rather than whether the decision was the best one. So it is the right
   place for delay, poor communication, or a process that was not followed.
 whatItIsNot: >-
-  It is not merits review. The Ombudsman will not usually replace the decision
-  with a different one. It can recommend that an agency look at something again,
+  It is not merits review. The Ombudsman will not replace the decision with a
+  different one. It can recommend that an agency look at something again,
   or fix how it does things. Those are recommendations, not orders. A complaint
   also runs separately from any review, so a review time limit keeps running
   while you wait.
@@ -27,8 +27,8 @@ keyPoints:
     that were not followed, unreasonable conduct, and problems that affect lots
     of people.
   - >-
-    It can recommend that a decision be looked at again. It does not usually
-    make its own decision in place of the agency's.
+    It can recommend that a decision be looked at again. It does not make its
+    own decision in place of the agency's.
   - >-
     A complaint is separate from a review. Keep track of any review time limit
     as well.
@@ -92,3 +92,16 @@ found the right door.
 because "the Ombudsman agreed with me" and "the decision changed" are different outcomes, and
 somebody waiting on the first while a review clock runs is the failure this entry exists to
 prevent.
+
+**"Not usually" dropped 2026-08-23 on the owner's ruling.** Two sentences hedged the one fact this
+entry exists to deliver: "will not usually replace the decision" and "does not usually make its own
+decision in place of the agency's". The note directly above says it flatly — the powers are
+recommendatory, not determinative — and the cited ombudsman.gov.au role page is already listed as a
+source. The hedge invited a reader to wait for an outcome the Ombudsman cannot deliver while a
+review clock ran out, which is the exact failure this entry was written to prevent.
+
+Still on the supervising lawyer's list, flagged by the same QA pass and not changed here: the
+investigates-list, "There is no strict time limit on complaining, but sooner is usually better", and
+the Victorian "The usual step is to complain to the organisation first" rest on the two cited
+websites rather than on any of the owner's four documents. They are consistent with those sites and
+are left as they stand, to be confirmed at sign-off.

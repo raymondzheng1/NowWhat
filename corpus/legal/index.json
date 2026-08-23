@@ -1,5 +1,5 @@
 {
-  "builtAt": "450e8d6819f164d9",
+  "builtAt": "6346c935d06f224f",
   "processes": [
     {
       "id": "judicial-review",
@@ -26,7 +26,7 @@
         }
       ],
       "canApply": [
-        "You need a 'ground of review' — a specific legal error in how the decision was made.",
+        "You need to point to a 'ground of review' — a specific legal error in how the decision was made. Whether that error is made out is what the court decides.",
         "You usually need to be a person affected by the decision (standing).",
         "There are strict time limits. Check the one that applies to your decision rather than assuming what does or does not move it."
       ],
@@ -144,7 +144,7 @@
       {
         "aspect": "The evidence they look at",
         "mr": "The best and most current evidence. You can give them new information.",
-        "jr": "Usually only what was in front of the original decision-maker. Where the complaint is about the process itself — what you were told, or whether you got a chance to reply — a court can look at evidence about what actually happened."
+        "jr": "Usually only what was in front of the original decision-maker."
       },
       {
         "aspect": "Who can apply",
@@ -202,7 +202,7 @@
       },
       {
         "q": "If both are open, which one comes first?",
-        "a": "Where a law gives a right to merits review, that is usually the step people take first. It costs less, it can change the outcome, and a fresh decision may settle the matter without a court. One thing to know before you choose: going to a tribunal does not pause the court clock for the original decision. That time limit keeps running while the review happens, and it can pass. What is usually left afterwards is a challenge to the tribunal's own decision, which is a different thing. If you think there is also a legality problem, raise it with a human legal service early rather than after the tribunal finishes."
+        "a": "Where a law gives a right to merits review, that is usually the step people take first. It costs less, it can change the outcome, and a fresh decision may settle the matter without a court. One thing to know before you choose: the court's time limit for the original decision may keep running while the tribunal review happens. Ask a free legal service about that limit before the tribunal starts, rather than after. What is usually left afterwards is a challenge to the tribunal's own decision, which is a different thing. If you think there is also a legality problem, raise it with a human legal service early rather than after the tribunal finishes."
       },
       {
         "q": "What if the tribunal decides against me too?",
@@ -459,7 +459,7 @@
       "usedIn": [
         "judicial-review"
       ],
-      "test": "An error of law happens where the decision-maker had the power but got the law wrong. That can mean misreading a word in the Act, using the wrong test, or misunderstanding the limits of the power. Some of these errors go to the power itself. Others show on the face of the reasons and may still be corrected.",
+      "test": "An error of law happens where the decision-maker had the power but got the law wrong. That can mean misreading a word in the Act, using the wrong test, or misunderstanding the limits of the power. Some of these errors go to the power itself. Others show on the face of the decision-maker's reasons or record, and may still be corrected.",
       "elements": [
         {
           "id": "wrong-test",
@@ -662,8 +662,7 @@
         "The reasons mention something that has nothing to do with the rules.",
         "Your past, your attitude, or an old complaint seems to have counted.",
         "A staff member raised a topic the rules never mention.",
-        "The outcome seems driven by something outside the scheme.",
-        "Cost or convenience seems to have driven a decision about your needs."
+        "The outcome seems driven by something outside the scheme."
       ],
       "whatItIsNot": "It does not cover every fact you think was unfair. The law must actually put that matter out of bounds.",
       "usedIn": [
@@ -783,7 +782,7 @@
       "leadingCases": [
         {
           "name": "Australian Broadcasting Tribunal v Bond (1990) 170 CLR 321",
-          "pinpoint": "Mason CJ",
+          "pinpoint": "",
           "explains": "Findings have to rest on evidence that actually proves something, not on nothing."
         }
       ],
@@ -1183,7 +1182,7 @@
       "status": "verified",
       "leadingCases": [
         {
-          "name": "Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1 KB 223",
+          "name": "Associated Provincial Picture Houses Ltd v Wednesbury Corporation",
           "pinpoint": "",
           "explains": "An old English case, and where this ground began. It asked whether a decision was so unreasonable that no reasonable authority could ever have come to it. Australian law is no longer limited to that question."
         },
@@ -1543,13 +1542,13 @@
       "appliesTo": [
         "any"
       ],
-      "whatItMeans": "There are two separate things you can ask for, and people often mix them up. You can ask the decision-maker for a written statement of reasons. That tells you why. You can also make a freedom of information request. That asks to see documents. Asking for reasons is usually the more useful first step, and it is free.",
+      "whatItMeans": "There are two separate things you can ask for, and people often mix them up. You can ask the decision-maker for a written statement of reasons. That tells you why. You can also make a freedom of information request. That asks to see documents. Asking for reasons is usually the more useful first step, and it is usually free.",
       "whatItIsNot": "A freedom of information request is not a way to have the original decision reviewed. Neither is a request for reasons. They get you information, and information is what tells you whether a review is worth it and what to say. Refusing to give you documents is a different matter — that refusal can itself be reviewed.",
       "keyPoints": [
         "A written statement of reasons tells you what the decision-maker actually relied on.",
         "Asking for reasons is a useful first step on either review path. Whether they must give them depends on the type of decision.",
         "Freedom of information is a separate right. It asks to see documents rather than to be told why.",
-        "If a freedom of information request is refused, there are usually two steps: ask the agency to review it internally, then ask the Information Commissioner.",
+        "If a freedom of information request is refused, you can ask the agency to review it internally, and you can ask the Information Commissioner. The internal step is the usual order, not a door you have to go through first.",
         "On an information request, the Commissioner can go further than the Ombudsman. It can change the decision about your documents.",
         "Time limits apply to both. Check the limit for your decision rather than assuming."
       ],
@@ -1570,7 +1569,7 @@
           "name": "Information Commissioner review",
           "plainName": "If they refuse to give you the documents",
           "whatItDoes": "Reviews the agency's decision about access. Federally this is the Office of the Australian Information Commissioner. It can agree with the agency, change the decision, or set it aside and make a different one.",
-          "note": "There is usually an internal review step at the agency first. This is review of the decision about your documents. It does not review the original decision that brought you here."
+          "note": "Most people ask the agency for an internal review first, but you do not have to. This is review of the decision about your documents. It does not review the original decision that brought you here."
         },
         {
           "name": "Privacy complaints",
@@ -1599,12 +1598,12 @@
         "complaint"
       ],
       "whatItMeans": "The Ombudsman takes complaints about government departments and agencies. Complaining is free. It is not a review body. It looks at how your matter was handled rather than whether the decision was the best one. So it is the right place for delay, poor communication, or a process that was not followed.",
-      "whatItIsNot": "It is not merits review. The Ombudsman will not usually replace the decision with a different one. It can recommend that an agency look at something again, or fix how it does things. Those are recommendations, not orders. A complaint also runs separately from any review, so a review time limit keeps running while you wait.",
+      "whatItIsNot": "It is not merits review. The Ombudsman will not replace the decision with a different one. It can recommend that an agency look at something again, or fix how it does things. Those are recommendations, not orders. A complaint also runs separately from any review, so a review time limit keeps running while you wait.",
       "keyPoints": [
         "Complaining is free.",
         "Think of it this way. Merits review is \"I think the decision itself is wrong\". The Ombudsman is \"I think the agency handled my matter badly\".",
         "It looks into unfair administration, delay, poor communication, procedures that were not followed, unreasonable conduct, and problems that affect lots of people.",
-        "It can recommend that a decision be looked at again. It does not usually make its own decision in place of the agency's.",
+        "It can recommend that a decision be looked at again. It does not make its own decision in place of the agency's.",
         "A complaint is separate from a review. Keep track of any review time limit as well."
       ],
       "options": [

@@ -15,6 +15,7 @@ const AV = {
   mrConditional: false,
   mrBody: "ART",
   jrAvailable: true,
+  jrConditional: false,
   jrForum: "Federal Court",
   noReviewEndpoint: null,
 };
@@ -56,9 +57,12 @@ describe("analysis plan (what this means, and in what order)", () => {
   });
 
   it("names the real body for each path, from the decision's own data entry", () => {
+    // Centrelink's value used to be the bare acronym "ART", which sent people straight past
+    // the internal review by an Authorised Review Officer that comes first. Corrected
+    // 2026-08-23 from our own verified decode entry.
     const t = triage({ jurisdiction: "Cth", decisionType: "Centrelink debt" });
     const p = plan(avenueView(t.entry));
-    expect(p.primary?.body).toBe("ART");
+    expect(p.primary?.body).toBe("internal review by Services Australia, then the ART");
   });
 
   it("every lead/focus key it can emit exists in the message catalog", () => {
@@ -118,8 +122,17 @@ describe("the merits-review body is the one the lawyer verified for THAT decisio
   });
 
   it("a bare acronym is expanded from the corpus, not shown as a code", () => {
-    expect(meritsBody("cth-centrelink")).toBe("The Administrative Review Tribunal (ART)");
     expect(meritsBody("vic-renting")).toMatch(/^VCAT \(/);
+  });
+
+  it("Centrelink names the internal review before the tribunal", () => {
+    // The lawyer's own wording wins over the corpus' general body name, which is the whole
+    // point of the precedence rule above. The bare "ART" it replaced fell through to the
+    // corpus and dropped a free first step people are entitled to.
+    const body = meritsBody("cth-centrelink")!;
+    expect(body).toMatch(/internal review/i);
+    expect(body).toMatch(/ART/);
+    expect(body.indexOf("internal review")).toBeLessThan(body.indexOf("ART"));
   });
 
   it("no entry ever renders an internal judicial-review code", () => {
@@ -216,5 +229,38 @@ describe("conditional merits review (the catch-all entries)", () => {
 
   it("the condition has customer copy to render", () => {
     expect(messages.rights.pathConditional).toBeTruthy();
+  });
+});
+
+describe("conditional judicial review (public housing)", () => {
+  it("a conditional judicial-review path is shown with its condition, not dropped", () => {
+    // The public-housing entry covers the Director of Housing AND a community housing
+    // provider. Judicial review supervises conferred PUBLIC power, and the flow never learns
+    // which of them made the decision — the person picks an area, not a body. Dropping the
+    // path would take a real route from the people who do have it; asserting it
+    // unconditionally offers a Supreme Court proceeding to someone whose provider may not be
+    // amenable to one. So it shows, with the condition attached.
+    const p = planFor({
+      avenue: { ...AV, jrConditional: true },
+      meritsReview: merits,
+      judicialReview: judicial,
+    });
+    const jr = p.paths.find((x) => x.id === "judicial-review");
+    expect(jr, "judicial path must survive").toBeDefined();
+    expect(jr!.conditional).toBe(true);
+  });
+
+  it("the housing entry is the one that carries it, and its copy exists", () => {
+    const housing = getDataEntry("vic-public-housing")!;
+    expect(housing.avenue.jr.available).toBe(true);
+    expect(housing.avenue.jr.conditional).toBe(true);
+    // A different condition from merits review, so a different sentence.
+    expect(messages.rights.pathConditionalJudicial).toBeTruthy();
+    expect(messages.rights.pathConditionalJudicial).not.toBe(messages.rights.pathConditional);
+  });
+
+  it("renting carries no judicial-review path at all, conditional or otherwise", () => {
+    // A notice to vacate comes from a private rental provider. Settled 2026-08-23.
+    expect(getDataEntry("vic-renting")!.avenue.jr.available).toBe(false);
   });
 });

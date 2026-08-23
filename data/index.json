@@ -1,5 +1,5 @@
 {
-  "builtAt": "7b618599cbc9b9ab",
+  "builtAt": "33f3cbf1a5883800",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -28,7 +28,7 @@
       "avenue": {
         "mr": {
           "available": true,
-          "body": "ART",
+          "body": "internal review by Services Australia, then the ART",
           "source": "art.gov.au — apply for a review; Social Security (Administration) Act 1999 (Cth)"
         },
         "jr": {
@@ -46,7 +46,7 @@
         "how": "ask Services Australia for a written statement of reasons",
         "provision": "Social Security (Administration) Act 1999 (Cth); Administrative Review Tribunal Act 2024 (Cth) ss 268-269; Administrative Decisions (Judicial Review) Act 1977 (Cth) s 13",
         "extendsMR": "depends — confirm with Services Australia or a free service before relying on it",
-        "extendsJR": false
+        "extendsJR": "depends — confirm with a free legal service before relying on it"
       },
       "privativeClause": false,
       "forms": [],
@@ -82,7 +82,7 @@
       ],
       "status": "verified",
       "isFallback": false,
-      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` was supplied by the supervising lawyer on 2026-08-19, confirmed as drafted from the matching verified decode entry."
+      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` was supplied by the supervising lawyer on 2026-08-19, confirmed as drafted from the matching verified decode entry.\n\n**Two corrections 2026-08-23 on the owner's ruling, both from the Fable QA.**\n\n**The review step now names the internal review.** `avenue.mr.body` was the bare acronym \"ART\",\nwhich sits in `NOT_A_FORUM_NAME`, so the result card fell back to the corpus' general tribunal name\nand step 3 sent people straight to the tribunal. This app's own lawyer-confirmed decode entry says\nthe first step is usually an internal review by an Authorised Review Officer at Services Australia,\nwith the ART after it. The two layers disagreed about the sequence, which is different from\ndeliberate silence. The correction is extracted from our own verified corpus, not from outside\nknowledge, and the fines entry already showed this field can carry a sequence.\n\n**`extendsJR` is no longer a flat false.** The schema comment asserted that a reasons request NEVER\npauses a judicial-review period. Some statutory schemes run the period from when the requested\nstatement arrives, so that was a rule the app could not source. It now takes the same three-state\nshape as `extendsMR` and says it depends, naming who to ask. The old value erred in the safe\ndirection — a reader acting earlier — but an unsourceable rule on a deadline is the thing this\ncorpus exists to prevent."
     },
     {
       "id": "cth-generic",
@@ -194,7 +194,7 @@
         },
         "noReviewEndpoint": "If review options have closed, a payment plan or financial-hardship option may still be available through Fines Victoria, and a free service can help."
       },
-      "deadlineRule": "Fines have a strict time limit, set by the Fines Reform Act 2014 (Vic). Check the exact limit with Fines Victoria or a free service.",
+      "deadlineRule": "Fines have a strict time limit. Check the exact limit with Fines Victoria or a free service.",
       "verifiedAsAt": "2026-06-30",
       "sourceUrl": "https://www.fines.vic.gov.au",
       "reviewCadenceDays": 90,
@@ -239,7 +239,7 @@
       ],
       "status": "verified",
       "isFallback": false,
-      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` was supplied by the supervising lawyer on 2026-08-19, confirmed as drafted from the matching verified decode entry. Note this scheme has no tribunal step — the path is internal review, then the Magistrates' Court."
+      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` was supplied by the supervising lawyer on 2026-08-19, confirmed as drafted from the matching verified decode entry. Note this scheme has no tribunal step — the path is internal review, then the Magistrates' Court.\n\n**Act attribution dropped from the deadline rule, 2026-08-23 on the owner's ruling.** The rule named\nthe Fines Reform Act 2014 (Vic) while this entry's own review source and the decode corpus\ncounterpart both cite the Infringements Act 2006 (Vic), where the 14-day 'person unaware' and 28-day\ncourt-election limits sit. One attribution was wrong and the app could not settle which.\n\nThe sentence states no figure and already sends the reader to Fines Victoria, so the citation was\ndoing no work for them — dropping it removes the contradiction without needing a legal ruling. If\nthe supervising lawyer confirms the Infringements Act at the next cadence, it can be named again."
     },
     {
       "id": "vic-generic",
@@ -345,12 +345,13 @@
         },
         "jr": {
           "available": true,
+          "conditional": true,
           "forum": "SCV-O56",
           "source": "Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
         },
         "noReviewEndpoint": null
       },
-      "deadlineRule": "A housing review can have a time limit, set by the relevant housing law or policy. Check the limit with the Housing Appeals Office or a free service. If you are looking at the Supreme Court instead, Victoria has two separate ways in and they cannot be joined. Order 56 runs 60 days from when the grounds first arose. The Administrative Law Act 1978 (Vic) runs 30 days. Court time runs from the decision, not from the end of anything else you try first.",
+      "deadlineRule": "A housing review can have a time limit, set by the relevant housing law or policy. Check the limit with the Housing Appeals Office or a free service. If you are looking at the Supreme Court instead, Victoria has two separate ways in and they cannot be joined. Order 56 runs 60 days from when the grounds first arose. The Administrative Law Act 1978 (Vic) runs 30 days. Trying another path first does not restart either clock.",
       "verifiedAsAt": "2026-06-30",
       "sourceUrl": "https://www.housing.vic.gov.au",
       "reviewCadenceDays": 90,
@@ -397,7 +398,7 @@
       ],
       "status": "verified",
       "isFallback": false,
-      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` was settled by the supervising lawyer on 2026-08-19. The draft put to them said the reviewer checks whether the department applied \"its own policies and procedures\"; they replaced it with the relevant legislation, policies and procedures, because policy guides a statutory decision rather than supplying the test. The same overstatement was corrected in the decode entry, where it was user-facing.\n\nRouting split 2026-08-23 on the owner's QA decision. This entry's own decisionTypes include\nhousing termination, and its corpus counterpart already records that public housing splits into two\nseparate paths with different bodies. The procedural layer blended them into one — \"Housing Appeals\nOffice, then VCAT where applicable\" — which reads as a sequence when they are alternatives chosen by\nthe kind of decision.\n\nSomeone facing a notice to vacate who is sent to the Housing Appeals Office first loses time they\nmay not have."
+      "body": "Deadline rule lawyer-confirmed (2026-06-30) — shown as a rule + verified-as-at date + official source, never a countdown. Avenue sources and the reasons provision were aligned on 2026-08-17 with the matching verified entry in the decode corpus, so the two knowledge sources now agree. `mrCriteria` was settled by the supervising lawyer on 2026-08-19. The draft put to them said the reviewer checks whether the department applied \"its own policies and procedures\"; they replaced it with the relevant legislation, policies and procedures, because policy guides a statutory decision rather than supplying the test. The same overstatement was corrected in the decode entry, where it was user-facing.\n\nRouting split 2026-08-23 on the owner's QA decision. This entry's own decisionTypes include\nhousing termination, and its corpus counterpart already records that public housing splits into two\nseparate paths with different bodies. The procedural layer blended them into one — \"Housing Appeals\nOffice, then VCAT where applicable\" — which reads as a sequence when they are alternatives chosen by\nthe kind of decision.\n\nSomeone facing a notice to vacate who is sent to the Housing Appeals Office first loses time they\nmay not have.\n\n**Two corrections 2026-08-23 on the owner's ruling.**\n\n**The court sentences no longer contradict themselves.** The rule said Order 56 runs 60 days from\nwhen the grounds first arose, and then that court time runs from the decision. Both cannot be true,\nand the app can source neither version. What survives is the part that is sourced and useful:\ntrying another path first does not restart either clock.\n\n**Judicial review is now conditional, not unconditional.** This entry covers the Director of\nHousing, Homes Victoria, the department — and a community housing provider. Judicial review\nsupervises conferred public power; whether a private provider is amenable to it is not established\nanywhere in the owner's materials, and our own decode corpus routes community-housing complaints to\nthe provider and then the Housing Registrar, not to court.\n\nThe owner asked for the card to be hidden for community providers. **It cannot be, and this is\nworth knowing**: the flow never learns who made the decision — the person picks an AREA, and the\nsame entry serves every decision-maker in it. There is no signal to gate on without asking a new\nquestion. So the path takes the shape the owner already approved for conditional merits review: it\nstill shows, because hiding it would keep a real route from the people who do have it, and the\ncondition travels with it on the card — \"Only where a public body made the decision\"."
     },
     {
       "id": "vic-renting",
@@ -438,13 +439,13 @@
         },
         "noReviewEndpoint": null
       },
-      "deadlineRule": "Renting reviews have a strict time limit, set by the Residential Tenancies Act 1997 (Vic). Check the exact limit for your situation with VCAT or a free service. If you are looking at the Supreme Court instead, Victoria has two separate ways in and they cannot be joined. Order 56 runs 60 days from when the grounds first arose. The Administrative Law Act 1978 (Vic) runs 30 days. Court time runs from the decision, not from the end of anything else you try first.",
+      "deadlineRule": "Renting reviews have a strict time limit, set by the Residential Tenancies Act 1997 (Vic). Check the exact limit for your situation with VCAT or a free service. Trying something else first does not restart the clock.",
       "verifiedAsAt": "2026-08-17",
       "sourceUrl": "https://www.vcat.vic.gov.au",
       "reviewCadenceDays": 90,
       "reasonsRequest": {
-        "how": "ask the decision-maker in writing for the reasons for the decision",
-        "provision": "the reasons a notice must state — Residential Tenancies Act 1997 (Vic)",
+        "how": "check the notice itself first — it must be on the correct form and state a valid reason — then ask the rental provider in writing to confirm the reason and send anything they relied on",
+        "provision": "",
         "extendsMR": "depends — confirm with VCAT or a free service before relying on it",
         "extendsJR": false
       },
@@ -474,7 +475,7 @@
       ],
       "status": "verified",
       "isFallback": false,
-      "body": "Lawyer-verified 2026-08-17: the owner confirmed this entry's figures and sources, and `status` was flipped to `verified` then. The note that stood here still described it as a SEED with placeholder figures, which a senior-partner QA pass on 2026-08-22 correctly flagged as contradicting the entry's own status. The status is right; the note had simply never been rewritten.\n\nJudicial review removed 2026-08-23 on the owner's ruling. This layer asserted a Supreme Court\npathway for renting, which made every renting result open with \"Two paths are open for this\ndecision.\"\n\nA notice to vacate comes from a private rental provider. There is no public decision to review, and\nthe corpus entry for this decision type has always, deliberately, carried no judicial-review\npathway — a Fable QA pass called that omission \"a virtue\" and used it as the yardstick for the\nothers. The two layers now agree.",
+      "body": "Lawyer-verified 2026-08-17: the owner confirmed this entry's figures and sources, and `status` was flipped to `verified` then. The note that stood here still described it as a SEED with placeholder figures, which a senior-partner QA pass on 2026-08-22 correctly flagged as contradicting the entry's own status. The status is right; the note had simply never been rewritten.\n\nJudicial review removed 2026-08-23 on the owner's ruling. This layer asserted a Supreme Court\npathway for renting, which made every renting result open with \"Two paths are open for this\ndecision.\"\n\nA notice to vacate comes from a private rental provider. There is no public decision to review, and\nthe corpus entry for this decision type has always, deliberately, carried no judicial-review\npathway — a Fable QA pass called that omission \"a virtue\" and used it as the yardstick for the\nothers. The two layers now agree.\n\n**Two corrections 2026-08-23 on the owner's ruling, completing the judicial-review removal made a\nday earlier.**\n\n**The reasons step follows the Act's actual mechanism.** `provision` held a description, not a\nprovision — \"the reasons a notice must state — Residential Tenancies Act 1997 (Vic)\" — and\n`lib/reasons` interpolates that field straight into a letter the person sends: \"Under the reasons a\nnotice must state — Residential Tenancies Act 1997 (Vic), I ask for...\". Garbled, and it asked a\nprivate landlord for a statement of reasons the RTA does not provide.\n\nThe decode corpus counterpart gets this right and is the yardstick the owner chose for renting: the\nnotice itself must be on the correct form and state a valid reason. `how` now says that first, then\nasks the rental provider in writing to confirm the reason. `provision` is empty, so the letter reads\nplainly with no section number in it.\n\n**The Supreme Court sentences are gone from the deadline rule.** They were left behind when `jr` was\nset to unavailable, so the entry warned about Order 56 and Administrative Law Act clocks for a path\nit no longer offers.",
       "examples": []
     }
   ],

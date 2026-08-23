@@ -35,8 +35,9 @@ bodies:
       legal service early.
 canApply:
   - >-
-    You need a 'ground of review' — a specific legal error in how the decision
-    was made.
+    You need to point to a 'ground of review' — a specific legal error in how
+    the decision was made. Whether that error is made out is what the court
+    decides.
   - You usually need to be a person affected by the decision (standing).
   - >-
     There are strict time limits. Check the one that applies to your decision
@@ -131,3 +132,10 @@ assertion.
 What remains is the part that is both true and useful: the limits are strict, and a reader should
 check the one that applies rather than assume anything about what moves it. This matches the
 reasons clock warning, which was corrected the same way.
+
+**"You need a ground of review" reworded 2026-08-23 on the owner's ruling.** As written it read as a
+condition of applying. `_comparison.md` says the opposite in as many words: whether there was a legal
+error "is the question a court decides, not a condition for asking". Both are true — you allege a
+ground, the court decides whether it is made out — but a first-time reader met two of our own pages
+appearing to disagree about whether they were allowed through the door. The line now carries the
+distinction itself.

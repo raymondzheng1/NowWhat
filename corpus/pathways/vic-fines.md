@@ -33,7 +33,7 @@ reviewable:
 pathways:
   - name: "Ask for a review (on one of the five grounds)"
     body: "the agency that issued the fine, or Fines Victoria"
-    deadline: "You can usually ask before your fine is registered — that is, before a 'Notice of Final Demand'. You can only ask for one review per fine."
+    deadline: "You can usually ask before your fine is registered — that is, before a 'Notice of Final Demand'. Usually only one review is allowed per fine."
     deadlineDays: null
     deadlineVerified: false
     howCounted: "before the fine is registered (before a Notice of Final Demand)"
@@ -49,12 +49,21 @@ pathways:
     howToStart: "apply for a review on the 'person was unaware' ground (you may need a statutory declaration)"
     cost: "free"
     source: "fines.vic.gov.au — if you didn't know about your fine"
-  - name: "Ask to have the matter heard in court"
+  - name: "Ask to have the matter heard in court (excessive speed, drink-driving or drug-driving)"
     body: "Magistrates' Court of Victoria (Children's Court if you are under 18)"
-    deadline: "For excessive-speed, drink-driving or drug-driving offences: within 28 days of the notice. For other fines: before the fine is registered (before a Notice of Final Demand)."
+    deadline: "For excessive-speed, drink-driving or drug-driving offences: within 28 days of the notice."
     deadlineDays: 28
     deadlineVerified: true
-    howCounted: "for serious driving offences, from the date your infringement notice was issued"
+    howCounted: "from the date your infringement notice was issued"
+    howToStart: "ask to have the matter heard in court"
+    cost: "no fee to ask. Going to court can lead to a different penalty, so free legal help is available."
+    source: "fines.vic.gov.au — go to court; Infringements Act 2006 (Vic)"
+  - name: "Ask to have the matter heard in court (any other fine)"
+    body: "Magistrates' Court of Victoria (Children's Court if you are under 18)"
+    deadline: "For fines other than excessive speed, drink-driving or drug-driving: before the fine is registered — that is, before a 'Notice of Final Demand'."
+    deadlineDays: null
+    deadlineVerified: false
+    howCounted: "before the fine is registered (before a Notice of Final Demand)"
     howToStart: "ask to have the matter heard in court"
     cost: "no fee to ask. Going to court can lead to a different penalty, so free legal help is available."
     source: "fines.vic.gov.au — go to court; Infringements Act 2006 (Vic)"
@@ -118,8 +127,14 @@ sources:
 lastVerified: "2026-06-16"
 ---
 
-Figures here were checked against the cited Victorian sources on 2026-06-16. A
-Victorian legal professional should confirm them before public launch.
+Figures here were checked against the cited Victorian sources on 2026-06-16. The owner
+confirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day
+review cycle.
+
+The old note said a lawyer should confirm the figures before launch. That clashed with the
+verified status. The renting twin in the data layer had already recorded the confirmation.
+And the note was not inert. This text feeds the chat grounding set and the safety checker.
+So the app read a pre-launch caveat as verified content.
 
 Victorian fines move through stages: an Infringement Notice, then a Penalty Reminder
 Notice, then a Notice of Final Demand, then enforcement. Some options — like going to

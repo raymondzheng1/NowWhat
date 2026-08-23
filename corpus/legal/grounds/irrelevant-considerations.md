@@ -15,7 +15,6 @@ whatRelates:
   - Your past, your attitude, or an old complaint seems to have counted.
   - A staff member raised a topic the rules never mention.
   - The outcome seems driven by something outside the scheme.
-  - Cost or convenience seems to have driven a decision about your needs.
 whatItIsNot: >-
   It does not cover every fact you think was unfair. The law must actually put
   that matter out of bounds.
@@ -44,3 +43,14 @@ leadingCases:
 This ground is the mirror of relevant considerations. There, something the law required was left out. Here, something the law rules out was let in. One asks what was missing. The other asks what should never have been there.
 
 Provenance. This ground is drawn from our own verified judicial review materials. The cases it cites come from the same source. Verified on 2026-08-16. A supervising lawyer sign-off is tracked separately.
+
+**"Cost or convenience" prompt deleted 2026-08-23 on the owner's ruling.** The entry invited a
+reader to treat a decision driven by cost or convenience as a sign of this ground. Nothing in the
+owner's materials makes cost a forbidden matter — they support only the Peko-Wallsend rule that the
+Act itself must expressly state, or necessarily imply, that a matter must or must not be taken into
+account.
+
+The prompt was worse than merely unsourced. In several of the schemes this audience faces, cost is a
+lawful and sometimes a mandatory consideration, so the line pointed people at a ground the law may
+not give them. The first prompt — "The reasons mention something that has nothing to do with the
+rules" — already carries the sourced idea, so nothing was lost by removing it.

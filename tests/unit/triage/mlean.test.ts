@@ -20,7 +20,9 @@ describe("M-Lean triage (deterministic Rights Saver)", () => {
 
     const cth = triage({ jurisdiction: "Cth", decisionType: "Centrelink debt" });
     expect(cth.entry.id).toBe("cth-centrelink");
-    expect(cth.avenue.mrBody).toBe("ART");
+    // Not the bare "ART" any more: the internal review by an Authorised Review Officer comes
+    // first, and naming only the tribunal skipped a free step (corrected 2026-08-23).
+    expect(cth.avenue.mrBody).toBe("internal review by Services Australia, then the ART");
   });
 
   it("routes an unmatched decision to the jurisdiction fallback (still gets a path + help)", () => {
@@ -81,10 +83,23 @@ describe("reasons (corrected clock warning)", () => {
   it("no entry ever leaks a VERIFY placeholder as a provision", () => {
     // Provisions were real as at 2026-08-17. This asserts the invariant rather than the
     // value, so it keeps holding whichever way the data moves.
+    //
+    // An EMPTY provision is now legitimate and is not the same as a missing one. Renting is
+    // the case: the RTA's mechanism is that the notice itself must be on the correct form and
+    // state a valid reason, so there is no section to cite in a letter to a private landlord.
+    // The template drops the "Under ..." clause entirely rather than naming something wrong.
     for (const e of listDataEntries()) {
-      expect(e.reasonsRequest.provision, e.id).toBeTruthy();
       expect(reasonsView(e).provision ?? "", e.id).not.toContain("VERIFY");
     }
+  });
+
+  it("an empty provision produces a letter with no section number in it", () => {
+    const renting = listDataEntries().find((e) => e.id === "vic-renting")!;
+    expect(renting.reasonsRequest.provision).toBe("");
+    const letter = reasonsRequestTemplate(renting);
+    expect(letter).toContain("I ask for a written statement of the reasons");
+    expect(letter).not.toContain("Under ");
+    expect(letter).not.toMatch(/Residential Tenancies Act/);
   });
 
   it("a provision still carrying VERIFY is suppressed, not shown", () => {

@@ -78,9 +78,13 @@ export function AnalysisPanel({
                   merits review exists only if the enabling Act provides it. The path still
                   shows — hiding it would keep the cheaper route from the people least able to
                   work out it might exist — but the condition travels with it. */}
+              {/* Judicial review carries a different condition from merits review. Merits
+                  review exists only where the enabling Act provides it; judicial review
+                  supervises PUBLIC power, so the open question is who made the decision —
+                  a housing entry covers both the department and a private provider. */}
               {p.conditional && (
                 <span className="rounded-pill border-2 border-amber-border bg-amber-bg px-2.5 py-0.5 text-[13px] font-semibold text-ink-soft">
-                  {t("pathConditional")}
+                  {t(p.id === "judicial-review" ? "pathConditionalJudicial" : "pathConditional")}
                 </span>
               )}
             </div>

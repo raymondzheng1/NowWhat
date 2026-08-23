@@ -1,5 +1,5 @@
 {
-  "builtAt": "ba784dd079d4c970",
+  "builtAt": "4ed7fad0912c23ab",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -73,7 +73,7 @@
           "cost": "Court fees apply and there is a risk of paying the other side's costs.",
           "name": "Ask a court to check the decision was made lawfully (judicial review)",
           "body": "Federal Court of Australia / Federal Circuit and Family Court",
-          "deadline": "Court time limits are strict, and asking for reasons does not pause them. Please talk to a free legal service before you file anything.",
+          "deadline": "Court time limits are strict. Do not assume that asking for reasons buys you time in a court. Check the limit for your decision and act within it. Please talk to a free legal service before you file anything.",
           "howToStart": "talk to a free legal service first — this is a court process and it is technical",
           "source": "Administrative Decisions (Judicial Review) Act 1977 (Cth) s 5 — legislation.gov.au"
         }
@@ -197,7 +197,7 @@
           "cost": "Court fees apply and there is a risk of paying the other side's costs.",
           "name": "Ask a court to check the decision was made lawfully (judicial review)",
           "body": "Federal Court of Australia / Federal Circuit and Family Court",
-          "deadline": "Court time limits are strict, and asking for reasons does not pause them. Please talk to a free legal service before you file anything.",
+          "deadline": "Court time limits are strict. Do not assume that asking for reasons buys you time in a court. Check the limit for your decision and act within it. Please talk to a free legal service before you file anything.",
           "howToStart": "talk to a free legal service first — this is a court process and it is technical",
           "source": "Administrative Decisions (Judicial Review) Act 1977 (Cth) s 5 — legislation.gov.au"
         },
@@ -213,10 +213,10 @@
         }
       ],
       "rightToReasons": {
-        "available": "yes",
-        "how": "ask the decision-maker, in writing, for a statement of reasons for the decision",
-        "provision": "Administrative Review Tribunal Act 2024 (Cth) s 268",
-        "source": "legislation.gov.au — Administrative Review Tribunal Act 2024",
+        "available": "sometimes",
+        "how": "ask the decision-maker, in writing, for a statement of reasons for the decision. Which law gives you that right depends on the decision: where it can go to the Tribunal, the Tribunal's own Act gives it, and there is a separate right tied to going to court",
+        "provision": "Administrative Review Tribunal Act 2024 (Cth) s 268, where the decision can go to the Tribunal; Administrative Decisions (Judicial Review) Act 1977 (Cth) s 13",
+        "source": "legislation.gov.au — Administrative Review Tribunal Act 2024; Administrative Decisions (Judicial Review) Act 1977",
         "verified": true
       },
       "groundsOrCriteria": [],
@@ -249,7 +249,7 @@
           "link": "https://www.nationallegalaid.org"
         }
       ],
-      "plainLanguageExplainer": "This is a decision by an Australian Government department or agency. Most of these decisions can be looked at again. There are usually two different paths. A tribunal can look at the decision again on the facts. A court can check that the decision was made in a lawful way. Which path applies comes from the law your decision was made under, so it is worth checking with a free service. Asking for the reasons in writing is a good first step, and it is free.",
+      "plainLanguageExplainer": "This is a decision by an Australian Government department or agency. Many of these decisions can be looked at again. There are usually two different paths. A tribunal can look at the decision again on the facts. A court can check that the decision was made in a lawful way. Which path applies comes from the law your decision was made under, so it is worth checking with a free service. Asking for the reasons in writing is a good first step, and it is free.",
       "sources": [
         "Administrative Review Tribunal — art.gov.au",
         "Administrative Review Tribunal Act 2024 (Cth) — legislation.gov.au",
@@ -303,7 +303,7 @@
           "howCounted": "before the fine is registered (before a Notice of Final Demand)",
           "name": "Ask for a review (on one of the five grounds)",
           "body": "the agency that issued the fine, or Fines Victoria",
-          "deadline": "You can usually ask before your fine is registered — that is, before a 'Notice of Final Demand'. You can only ask for one review per fine.",
+          "deadline": "You can usually ask before your fine is registered — that is, before a 'Notice of Final Demand'. Usually only one review is allowed per fine.",
           "howToStart": "apply for a review and choose a ground",
           "source": "fines.vic.gov.au — request a review; Infringements Act 2006 (Vic)"
         },
@@ -322,10 +322,21 @@
           "deadlineDays": 28,
           "deadlineVerified": true,
           "cost": "no fee to ask. Going to court can lead to a different penalty, so free legal help is available.",
-          "howCounted": "for serious driving offences, from the date your infringement notice was issued",
-          "name": "Ask to have the matter heard in court",
+          "howCounted": "from the date your infringement notice was issued",
+          "name": "Ask to have the matter heard in court (excessive speed, drink-driving or drug-driving)",
           "body": "Magistrates' Court of Victoria (Children's Court if you are under 18)",
-          "deadline": "For excessive-speed, drink-driving or drug-driving offences: within 28 days of the notice. For other fines: before the fine is registered (before a Notice of Final Demand).",
+          "deadline": "For excessive-speed, drink-driving or drug-driving offences: within 28 days of the notice.",
+          "howToStart": "ask to have the matter heard in court",
+          "source": "fines.vic.gov.au — go to court; Infringements Act 2006 (Vic)"
+        },
+        {
+          "deadlineDays": null,
+          "deadlineVerified": false,
+          "cost": "no fee to ask. Going to court can lead to a different penalty, so free legal help is available.",
+          "howCounted": "before the fine is registered (before a Notice of Final Demand)",
+          "name": "Ask to have the matter heard in court (any other fine)",
+          "body": "Magistrates' Court of Victoria (Children's Court if you are under 18)",
+          "deadline": "For fines other than excessive speed, drink-driving or drug-driving: before the fine is registered — that is, before a 'Notice of Final Demand'.",
           "howToStart": "ask to have the matter heard in court",
           "source": "fines.vic.gov.au — go to court; Infringements Act 2006 (Vic)"
         },
@@ -405,7 +416,7 @@
         "Victorian Ombudsman — ombudsman.vic.gov.au"
       ],
       "lastVerified": "2026-06-16",
-      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nVictorian fines move through stages: an Infringement Notice, then a Penalty Reminder\nNotice, then a Notice of Final Demand, then enforcement. Some options — like going to\ncourt or nominating another driver — are only available before the fine is registered\n(before the Notice of Final Demand). The exact date to pay is the due date printed on\nyour own notice, so check the notice itself.",
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. The owner\nconfirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day\nreview cycle.\n\nThe old note said a lawyer should confirm the figures before launch. That clashed with the\nverified status. The renting twin in the data layer had already recorded the confirmation.\nAnd the note was not inert. This text feeds the chat grounding set and the safety checker.\nSo the app read a pre-launch caveat as verified content.\n\nVictorian fines move through stages: an Infringement Notice, then a Penalty Reminder\nNotice, then a Notice of Final Demand, then enforcement. Some options — like going to\ncourt or nominating another driver — are only available before the fine is registered\n(before the Notice of Final Demand). The exact date to pay is the due date printed on\nyour own notice, so check the notice itself.",
       "isFallback": false
     },
     {
@@ -482,15 +493,15 @@
           "cost": "Court fees apply and there is a risk of paying the other side's costs.",
           "name": "Ask a court to check the decision was made lawfully (judicial review)",
           "body": "Supreme Court of Victoria",
-          "deadline": "Court time limits are strict, and they run from the decision rather than from when you finish trying other things. Asking for reasons does not pause them. Please talk to a human legal service before you file anything.",
+          "deadline": "Court time limits are strict, and trying something else first does not restart them. Do not assume that asking for reasons buys you time in a court. Please talk to a human legal service before you file anything.",
           "howToStart": "talk to a free legal service first — this is a court process and it is technical",
           "source": "Administrative Law Act 1978 (Vic); Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
         }
       ],
       "rightToReasons": {
-        "available": "yes",
-        "how": "you can ask the decision-maker, in writing, for a statement of reasons within 28 days of the decision",
-        "provision": "Victorian Civil and Administrative Tribunal Act 1998 (Vic) s 45",
+        "available": "sometimes",
+        "how": "you can ask the decision-maker, in writing, for a statement of reasons. Which law gives you that right depends on the decision: where VCAT can review it, the VCAT Act gives it, and the Administrative Law Act is the general Victorian route. A time limit applies to the request, so check the one for your decision",
+        "provision": "Victorian Civil and Administrative Tribunal Act 1998 (Vic) s 45, where VCAT can review the decision; Administrative Law Act 1978 (Vic) s 8",
         "source": "vcat.vic.gov.au; legislation.vic.gov.au",
         "verified": true
       },
@@ -537,7 +548,7 @@
         "Supreme Court of Victoria — supremecourt.vic.gov.au"
       ],
       "lastVerified": "2026-06-16",
-      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nThis is the general guide for a Victorian state-government decision when there isn't a\nmore specific one. The most important point is honest uncertainty: VCAT can only review\na decision if the Act it was made under gives VCAT that power, so the decision letter\nitself is the best guide to whether review is available and by when. The 28-day VCAT\nreview limit is a common default but can be shorter under a particular Act — so the safe\nstep is to check the letter and get free legal help quickly. The Victorian Ombudsman can\nlook into unfair treatment but cannot overturn or change a decision."
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. The owner\nconfirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day\nreview cycle.\n\nThe old note said a lawyer should confirm the figures before launch. That clashed with the\nverified status. The renting twin in the data layer had already recorded the confirmation.\nAnd the note was not inert. This text feeds the chat grounding set and the safety checker.\nSo the app read a pre-launch caveat as verified content.\n\nThis is the general guide for a Victorian state-government decision when there isn't a\nmore specific one. The most important point is honest uncertainty: VCAT can only review\na decision if the Act it was made under gives VCAT that power, so the decision letter\nitself is the best guide to whether review is available and by when. The 28-day VCAT\nreview limit is a common default but can be shorter under a particular Act — so the safe\nstep is to check the letter and get free legal help quickly. The Victorian Ombudsman can\nlook into unfair treatment but cannot overturn or change a decision."
     },
     {
       "id": "vic-public-housing",
@@ -626,7 +637,7 @@
           "cost": "Court fees apply and there is a risk of paying the other side's costs.",
           "name": "Ask a court to check the decision was made lawfully (judicial review)",
           "body": "Supreme Court of Victoria",
-          "deadline": "Court time limits are strict, and they run from the decision rather than from when you finish trying other things. Asking for reasons does not pause them. Please talk to a human legal service before you file anything.",
+          "deadline": "Court time limits are strict, and trying something else first does not restart them. Do not assume that asking for reasons buys you time in a court. Please talk to a human legal service before you file anything.",
           "howToStart": "talk to a free legal service first — this is a court process and it is technical",
           "source": "Administrative Law Act 1978 (Vic); Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
         }
@@ -686,7 +697,7 @@
         "Supreme Court of Victoria — supremecourt.vic.gov.au"
       ],
       "lastVerified": "2026-06-16",
-      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nSocial-housing problems split into two separate paths, and getting into the right one\nmatters. Decisions about a housing *application* — eligibility, priority, a transfer, or\na rebate — are reviewed by the **Housing Appeals Office** and have no strict deadline.\nAn *eviction* (a notice to vacate) is a tenancy matter under the Residential Tenancies\nAct, goes to **VCAT**, and has a 30-day window to challenge it early. The 30-day window\nis the time to challenge *early* — a renter can still argue the notice is invalid at the\npossession hearing.",
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. The owner\nconfirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day\nreview cycle.\n\nThe old note said a lawyer should confirm the figures before launch. That clashed with the\nverified status. The renting twin in the data layer had already recorded the confirmation.\nAnd the note was not inert. This text feeds the chat grounding set and the safety checker.\nSo the app read a pre-launch caveat as verified content.\n\nSocial-housing problems split into two separate paths, and getting into the right one\nmatters. Decisions about a housing *application* — eligibility, priority, a transfer, or\na rebate — are reviewed by the **Housing Appeals Office** and have no strict deadline.\nAn *eviction* (a notice to vacate) is a tenancy matter under the Residential Tenancies\nAct, goes to **VCAT**, and has a 30-day window to challenge it early. The 30-day window\nis the time to challenge *early* — a renter can still argue the notice is invalid at the\npossession hearing.",
       "isFallback": false
     },
     {
@@ -775,7 +786,8 @@
         "the notice period is too short for the reason given",
         "the reason on the notice is not a lawful reason, or is not genuine (for example, a 'sale' notice when there is no real plan to sell)",
         "the notice was given because you asked for repairs or stood up for your rights",
-        "for a rent increase: it came less than 12 months after the last one, the notice was too short, or the rent is high compared with similar nearby homes and the condition of the place"
+        "for a rent increase: it came less than 12 months after the last one, or the rent is high compared with similar nearby homes and the condition of the place",
+        "for a rent increase, the notice may also be too short: from 25 November 2025 the minimum notice period is 90 days, and it was 60 days before that, so an older notice may lawfully use the shorter period"
       ],
       "evidenceChecklist": [
         "the notice or letter itself, so you can check the date, the form and the reason",
@@ -819,7 +831,7 @@
         "Tenants Victoria — tenantsvic.org.au"
       ],
       "lastVerified": "2026-06-16",
-      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. A\nVictorian legal professional should confirm them before public launch.\n\nTwo recent changes matter when reading a renter's letter: since June 2025, bond,\nrent-increase, repairs and compensation disputes start at **Rental Dispute Resolution\nVictoria** (which can refer them to VCAT), while evictions and notices to vacate still\ngo to **VCAT**. From 25 November 2025 the minimum notice period for a rent increase\nchanged from 60 to 90 days, so an older letter may lawfully use the shorter period.\n\nThe 30-day window to challenge a notice to vacate is the time to challenge it *early* —\nit is not the only chance. A renter can still argue a notice is invalid at the\npossession hearing, so missing 30 days does not end their options.",
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. The owner\nconfirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day\nreview cycle.\n\nThe old note said a lawyer should confirm the figures before launch. That clashed with the\nverified status. The renting twin in the data layer had already recorded the confirmation.\nAnd the note was not inert. This text feeds the chat grounding set and the safety checker.\nSo the app read a pre-launch caveat as verified content.\n\nTwo recent changes matter when reading a renter's letter: since June 2025, bond,\nrent-increase, repairs and compensation disputes start at **Rental Dispute Resolution\nVictoria** (which can refer them to VCAT), while evictions and notices to vacate still\ngo to **VCAT**. The rent-increase notice period also changed on 25 November 2025, which is why\nan older letter may lawfully use a shorter one.\n\nThat figure used to live only here, in prose. `entry.body` feeds the verifier's grounded\ntime-figure set, so a model answer could state it on the strength of a note rather than a sourced\nfield — the safety check would have accepted a number nothing had verified. It now sits in\n`groundsOrCriteria`, which is customer-visible content covered by this entry's sources, with the\nbefore-and-after periods both stated so a reader can tell which one applied to their notice.\n\nThe 30-day window to challenge a notice to vacate is the time to challenge it *early* —\nit is not the only chance. A renter can still argue a notice is invalid at the\npossession hearing, so missing 30 days does not end their options.",
       "isFallback": false
     }
   ],

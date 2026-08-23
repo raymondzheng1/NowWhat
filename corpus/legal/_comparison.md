@@ -5,7 +5,7 @@ rows:
   - { aspect: "Who decides", mr: "A tribunal (VCAT or the ART)", jr: "A court (Supreme Court or Federal Court)" }
   - { aspect: "What they look at", mr: "The facts and the law, fresh", jr: "Only how the decision was made — its legality" }
   - { aspect: "What they can do", mr: "Change or replace the decision", jr: "Set it aside and send it back — not replace it" }
-  - { aspect: "The evidence they look at", mr: "The best and most current evidence. You can give them new information.", jr: "Usually only what was in front of the original decision-maker. Where the complaint is about the process itself — what you were told, or whether you got a chance to reply — a court can look at evidence about what actually happened." }
+  - { aspect: "The evidence they look at", mr: "The best and most current evidence. You can give them new information.", jr: "Usually only what was in front of the original decision-maker." }
   - { aspect: "Who can apply", mr: "Whoever the law for that decision says can apply", jr: "A person with a real interest in the decision" }
   - { aspect: "Cost and formality", mr: "Usually cheaper and less formal", jr: "More formal, and often needs a lawyer" }
   - { aspect: "The money risk", mr: "Usually free, or a low fee", jr: "Court fees. You may also be ordered to pay the other side's costs." }
@@ -24,7 +24,7 @@ faq:
   - q: "Can I use both merits review and judicial review?"
     a: "Sometimes both are possible. They have different time limits, so it is worth getting free legal advice early so you do not miss one."
   - q: "If both are open, which one comes first?"
-    a: "Where a law gives a right to merits review, that is usually the step people take first. It costs less, it can change the outcome, and a fresh decision may settle the matter without a court. One thing to know before you choose: going to a tribunal does not pause the court clock for the original decision. That time limit keeps running while the review happens, and it can pass. What is usually left afterwards is a challenge to the tribunal's own decision, which is a different thing. If you think there is also a legality problem, raise it with a human legal service early rather than after the tribunal finishes."
+    a: "Where a law gives a right to merits review, that is usually the step people take first. It costs less, it can change the outcome, and a fresh decision may settle the matter without a court. One thing to know before you choose: the court's time limit for the original decision may keep running while the tribunal review happens. Ask a free legal service about that limit before the tribunal starts, rather than after. What is usually left afterwards is a challenge to the tribunal's own decision, which is a different thing. If you think there is also a legality problem, raise it with a human legal service early rather than after the tribunal finishes."
   - q: "What if the tribunal decides against me too?"
     a: "Two different things may be open, and each has its own short time limit. One is an appeal to a court on a question of law, which the law setting up the tribunal gives you. The other is judicial review, which asks whether the tribunal kept within its legal power — for example if it applied the wrong test or did not give you a fair hearing. An appeal sometimes needs the court's permission first. Which one fits is technical, so ask a human legal service quickly."
   - q: "Is there one first step that helps either way?"
@@ -38,3 +38,17 @@ faq:
 ---
 
 SEED comparison — general information, not advice.
+
+Two unsourced claims corrected 2026-08-23 on the owner's ruling, both raised by the Fable QA.
+
+**The tribunal clock.** The chooser stated as a rule that going to a tribunal does not pause the
+court clock, and that the limit can pass while the review runs. Nothing in the owner's materials
+carries that proposition — the closest lines are the framework's keep-judicial-review-in-reserve
+sequencing and the notes' bar on inexcusable delay. It now says the limit *may* keep running and
+sends the reader to a free service before the tribunal starts. That is the same treatment the owner
+ruled for the reasons clock in `judicial-review.md`: the protective message survives, the
+unsourceable rule does not.
+
+**The process-evidence exception deleted.** The evidence row added that a court can look at evidence
+about what actually happened where the complaint is about the process. The framework says only
+"Generally the record before the decision-maker". The sourced half stands alone.

@@ -40,9 +40,7 @@ sources:
   - Victoria Legal Aid — legalaid.vic.gov.au
 status: verified
 leadingCases:
-  - name: >-
-      Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1
-      KB 223
+  - name: Associated Provincial Picture Houses Ltd v Wednesbury Corporation
     pinpoint: ''
     explains: >-
       An old English case, and where this ground began. It asked whether a

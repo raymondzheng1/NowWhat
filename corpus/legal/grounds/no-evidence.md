@@ -40,7 +40,7 @@ sources:
 status: verified
 leadingCases:
   - name: Australian Broadcasting Tribunal v Bond (1990) 170 CLR 321
-    pinpoint: 'Mason CJ'
+    pinpoint: ''
     explains: >-
       Findings have to rest on evidence that actually proves something, not on
       nothing.
@@ -85,3 +85,9 @@ Renamed 2026-08-23 on the owner's QA decision. The ground was "No evidence"; it 
 for a key finding", which carries the materiality limit in the name itself rather than leaving it
 to the test. `plainName` shortened to "The finding had nothing behind it" so the card, which renders
 "{name}: {plainName}", does not say key finding twice.
+
+**Bond pinpoint dropped 2026-08-23 on the owner's ruling.** The entry attributed this proposition to
+Mason CJ. Our memo cites Bond for it with no judge named, and the only place the materials attach
+Mason CJ to Bond is the separate ADJR "decision"/"conduct" point. The attribution was not wrong law,
+but it came from outside the owner's documents, and it now renders on a public Learn page. Craig,
+Kirk and Peko-Wallsend already carry no pinpoint; this entry now matches them.

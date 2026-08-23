@@ -72,7 +72,8 @@ groundsOrCriteria:
   - "the notice period is too short for the reason given"
   - "the reason on the notice is not a lawful reason, or is not genuine (for example, a 'sale' notice when there is no real plan to sell)"
   - "the notice was given because you asked for repairs or stood up for your rights"
-  - "for a rent increase: it came less than 12 months after the last one, the notice was too short, or the rent is high compared with similar nearby homes and the condition of the place"
+  - "for a rent increase: it came less than 12 months after the last one, or the rent is high compared with similar nearby homes and the condition of the place"
+  - "for a rent increase, the notice may also be too short: from 25 November 2025 the minimum notice period is 90 days, and it was 60 days before that, so an older notice may lawfully use the shorter period"
 evidenceChecklist:
   - "the notice or letter itself, so you can check the date, the form and the reason"
   - "your rental agreement (lease) and any condition report"
@@ -106,14 +107,26 @@ sources:
 lastVerified: "2026-06-16"
 ---
 
-Figures here were checked against the cited Victorian sources on 2026-06-16. A
-Victorian legal professional should confirm them before public launch.
+Figures here were checked against the cited Victorian sources on 2026-06-16. The owner
+confirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day
+review cycle.
+
+The old note said a lawyer should confirm the figures before launch. That clashed with the
+verified status. The renting twin in the data layer had already recorded the confirmation.
+And the note was not inert. This text feeds the chat grounding set and the safety checker.
+So the app read a pre-launch caveat as verified content.
 
 Two recent changes matter when reading a renter's letter: since June 2025, bond,
 rent-increase, repairs and compensation disputes start at **Rental Dispute Resolution
 Victoria** (which can refer them to VCAT), while evictions and notices to vacate still
-go to **VCAT**. From 25 November 2025 the minimum notice period for a rent increase
-changed from 60 to 90 days, so an older letter may lawfully use the shorter period.
+go to **VCAT**. The rent-increase notice period also changed on 25 November 2025, which is why
+an older letter may lawfully use a shorter one.
+
+That figure used to live only here, in prose. `entry.body` feeds the verifier's grounded
+time-figure set, so a model answer could state it on the strength of a note rather than a sourced
+field — the safety check would have accepted a number nothing had verified. It now sits in
+`groundsOrCriteria`, which is customer-visible content covered by this entry's sources, with the
+before-and-after periods both stated so a reader can tell which one applied to their notice.
 
 The 30-day window to challenge a notice to vacate is the time to challenge it *early* —
 it is not the only chance. A renter can still argue a notice is invalid at the

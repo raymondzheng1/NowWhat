@@ -34,17 +34,16 @@ avenue:
 deadlineRule: >-
   Renting reviews have a strict time limit, set by the Residential Tenancies
   Act 1997 (Vic). Check the exact limit for your situation with VCAT or a
-  free service. If you are looking at the Supreme Court instead, Victoria has
-  two separate ways in and they cannot be joined. Order 56 runs 60 days from
-  when the grounds first arose. The Administrative Law Act 1978 (Vic) runs 30
-  days. Court time runs from the decision, not from the end of anything else
-  you try first.
+  free service. Trying something else first does not restart the clock.
 verifiedAsAt: '2026-08-17'
 sourceUrl: 'https://www.vcat.vic.gov.au'
 reviewCadenceDays: 90
 reasonsRequest:
-  how: ask the decision-maker in writing for the reasons for the decision
-  provision: 'the reasons a notice must state — Residential Tenancies Act 1997 (Vic)'
+  how: >-
+    check the notice itself first — it must be on the correct form and state a
+    valid reason — then ask the rental provider in writing to confirm the reason
+    and send anything they relied on
+  provision: ''
   extendsMR: 'depends — confirm with VCAT or a free service before relying on it'
   extendsJR: false
 privativeClause: false
@@ -79,3 +78,21 @@ A notice to vacate comes from a private rental provider. There is no public deci
 the corpus entry for this decision type has always, deliberately, carried no judicial-review
 pathway — a Fable QA pass called that omission "a virtue" and used it as the yardstick for the
 others. The two layers now agree.
+
+**Two corrections 2026-08-23 on the owner's ruling, completing the judicial-review removal made a
+day earlier.**
+
+**The reasons step follows the Act's actual mechanism.** `provision` held a description, not a
+provision — "the reasons a notice must state — Residential Tenancies Act 1997 (Vic)" — and
+`lib/reasons` interpolates that field straight into a letter the person sends: "Under the reasons a
+notice must state — Residential Tenancies Act 1997 (Vic), I ask for...". Garbled, and it asked a
+private landlord for a statement of reasons the RTA does not provide.
+
+The decode corpus counterpart gets this right and is the yardstick the owner chose for renting: the
+notice itself must be on the correct form and state a valid reason. `how` now says that first, then
+asks the rental provider in writing to confirm the reason. `provision` is empty, so the letter reads
+plainly with no section number in it.
+
+**The Supreme Court sentences are gone from the deadline rule.** They were left behind when `jr` was
+set to unavailable, so the entry warned about Order 56 and Administrative Law Act clocks for a path
+it no longer offers.

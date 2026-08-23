@@ -11,7 +11,7 @@ whatItMeans: >-
   You can ask the decision-maker for a written statement of reasons. That tells
   you why. You can also make a freedom of information request. That asks to see
   documents. Asking for reasons is usually the more useful first step, and it is
-  free.
+  usually free.
 whatItIsNot: >-
   A freedom of information request is not a way to have the original decision
   reviewed. Neither is a request for reasons. They get you information, and
@@ -29,9 +29,9 @@ keyPoints:
     Freedom of information is a separate right. It asks to see documents rather
     than to be told why.
   - >-
-    If a freedom of information request is refused, there are usually two steps:
-    ask the agency to review it internally, then ask the Information
-    Commissioner.
+    If a freedom of information request is refused, you can ask the agency to
+    review it internally, and you can ask the Information Commissioner. The
+    internal step is the usual order, not a door you have to go through first.
   - >-
     On an information request, the Commissioner can go further than the
     Ombudsman. It can change the decision about your documents.
@@ -66,9 +66,9 @@ options:
       of the Australian Information Commissioner. It can agree with the agency,
       change the decision, or set it aside and make a different one.
     note: >-
-      There is usually an internal review step at the agency first. This is
-      review of the decision about your documents. It does not review the
-      original decision that brought you here.
+      Most people ask the agency for an internal review first, but you do not
+      have to. This is review of the decision about your documents. It does not
+      review the original decision that brought you here.
   - name: Privacy complaints
     plainName: If an agency mishandled your personal information
     whatItDoes: >-
@@ -131,3 +131,15 @@ an adequate statement where what arrived said very little.
 
 That last power is the practically useful one and it was missing entirely. A person who receives
 three sentences of reasons had no idea there was anything to do about it.
+
+Two changes 2026-08-23 on the owner's ruling, both from the Fable QA.
+
+**"It is free" became "usually free".** A flat statement that asking for reasons costs nothing is a
+fee claim, and no line in the owner's materials carries it. `_comparison.md` already hedged the same
+point as "It is usually free", so two of our own pages disagreed about a fact a reader could act on.
+
+**Internal FOI review is now stated as optional.** The entry described it twice as the first of two
+steps and never said a person may go straight to the Information Commissioner. Someone who missed an
+internal-review window could read that and conclude the door had closed. The correction can only
+widen a reader's options, never narrow them, which is why it was safe to make on the OAIC guidelines
+already cited rather than waiting for a new source.

@@ -33,6 +33,18 @@ export const AvenueMRSchema = z.object({
 
 export const AvenueJRSchema = z.object({
   available: z.boolean(),
+  /**
+   * True where the entry covers decision-makers this path may not reach.
+   *
+   * Public housing is the case that created it: the entry covers the Director of Housing and
+   * a community housing provider alike, and judicial review supervises conferred public power.
+   * The app never learns which one made the decision — the person picks an AREA, not a body —
+   * so it cannot gate the card, and offering a Supreme Court path unconditionally to someone
+   * whose provider may not be amenable to it is the failure to avoid. The path still shows,
+   * for the same reason `mr.conditional` shows: hiding it would keep a real route from people
+   * who do have it. The condition travels with it.
+   */
+  conditional: z.boolean().default(false),
   /** Judicial-review forum, e.g. "SCV-O56" (Vic) / "FederalCourt" / "ADJR" / "HCA". */
   forum: z.string(),
   source: z.string(),
@@ -43,8 +55,17 @@ export const ReasonsRequestSchema = z.object({
   provision: z.string(),
   /** A reasons request may extend an MR clock ONLY if the enabling Act says so. */
   extendsMR: z.union([z.boolean(), z.string()]),
-  /** It NEVER pauses a JR limitation period. */
-  extendsJR: z.boolean(),
+  /**
+   * Whether a reasons request moves a JR limitation period.
+   *
+   * This was `z.boolean()` with the comment "It NEVER pauses a JR limitation period" — a rule
+   * the app cannot source, and one the owner ruled out on 2026-08-23. Some statutory judicial
+   * -review schemes do run their period from when a requested statement of reasons arrives.
+   * A flat `false` asserted the opposite for every decision in the layer, so this now takes the
+   * same three-state shape as `extendsMR`: true, false, or a string saying it depends and who
+   * to ask.
+   */
+  extendsJR: z.union([z.boolean(), z.string()]),
 });
 
 export const DataFormSchema = z.object({
