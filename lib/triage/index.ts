@@ -22,7 +22,10 @@ export interface AvenueView {
   /** Exists only where the enabling Act provides it (catch-all entries). */
   mrConditional: boolean;
   /** What kind of body the merits path actually is. */
-  mrCharacter: "tribunal" | "internal" | "mixed";
+  mrCharacter: "tribunal" | "internal" | "mixed" | "court";
+  /** Internal review — asking the decision-maker to look at its own decision again. */
+  irAvailable: boolean;
+  irBody: string;
   mrBody: string;
   jrAvailable: boolean;
   /** Set where the entry covers decision-makers this path may not reach. */
@@ -54,6 +57,8 @@ function cleanEndpoint(s: string | null): string | null {
 /** The avenue family for a chosen entry (when the person picks an area explicitly). */
 export function avenueView(entry: DataPathway): AvenueView {
   return {
+    irAvailable: entry.avenue.ir?.available ?? false,
+    irBody: cleanForDisplay(entry.avenue.ir?.body ?? ""),
     mrAvailable: entry.avenue.mr.available,
     mrConditional: entry.avenue.mr.conditional ?? false,
     mrCharacter: entry.avenue.mr.character ?? "tribunal",

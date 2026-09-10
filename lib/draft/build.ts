@@ -13,6 +13,7 @@ import type { PathwayEntry } from "@/lib/schemas/corpus";
  */
 export type DraftKind =
   | "reasons-request"
+  | "internal-review-request"
   | "review-application"
   | "merits-review-application"
   | "judicial-review-application";
@@ -72,6 +73,50 @@ export function buildDraft(
       title: "Request for the reasons for a decision",
       filename: `${entry.id}-reasons-request.txt`,
       body,
+    };
+  }
+
+  // ---- Internal review -------------------------------------------------------------
+  // Asking the decision-maker to look at its own decision again. It is not a tribunal and
+  // not a court, so this letter claims nothing about powers, tests or remedies — our own
+  // entry for the step says the rules are different for every department.
+  //
+  // Two sentences carry the weight, and both come straight from that entry: the decision
+  // letter is the place to look for how to ask, and an internal review does not always pause
+  // the clock for the next step. Someone who writes this letter and then waits can lose a
+  // tribunal or a court they still had. No provision and no period is named, because the
+  // procedural layer verifies neither for this step.
+  if (kind === "internal-review-request") {
+    const irBody = [
+      header,
+      "Re: Request for an internal review of a decision",
+      "",
+      "Reference number: [reference number from your letter, if any]",
+      "Date of the decision: [date on your letter]",
+      "",
+      "I am writing to ask you to look at the decision described above again.",
+      "",
+      context
+        ? `What I would like looked at again, and why: ${context}`
+        : "What I would like looked at again, and why: [say what you think was missed, what you were not able to explain, or what has changed]",
+      "",
+      "If an internal review is not available for this kind of decision, please tell me what",
+      "the next step is and who I should write to.",
+      "",
+      "Please also tell me the time limit for any next step, so that I can keep track of it",
+      "while this request is with you.",
+      "",
+      "Please let me know if you need anything else from me. Thank you.",
+      "",
+      SIGN_OFF,
+    ]
+      .filter((l) => l !== "")
+      .join("\n");
+
+    return {
+      title: "Request for an internal review of a decision",
+      filename: `${entry.id}-internal-review.txt`,
+      body: irBody,
     };
   }
 

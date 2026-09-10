@@ -18,10 +18,13 @@ keywords:
   - social housing
   - housing office
 avenue:
+  ir:
+    available: true
+    body: 'the Housing Appeals Office, for a housing decision'
+    source: 'housing.vic.gov.au — appeal a decision; Housing Act 1983 (Vic)'
   mr:
     available: true
-    character: mixed
-    body: 'Housing Appeals Office for a housing decision; VCAT for a notice to vacate'
+    body: 'VCAT, for a notice to vacate'
     source: 'housing.vic.gov.au — appeal a decision; Housing Act 1983 (Vic)'
   jr:
     available: true
@@ -47,7 +50,7 @@ reasonsRequest:
   extendsJR: 'depends — confirm with a free legal service before relying on it'
 privativeClause: false
 forms: []
-mrCriteria:
+irCriteria:
   - >-
     These are two different paths, and which one applies depends on the decision.
   - >-
@@ -55,6 +58,12 @@ mrCriteria:
     the Housing Appeals Office reviews it. The reviewer considers whether the
     department correctly applied the relevant legislation, policies and
     procedures.
+  - >-
+    For a notice to vacate, the Housing Appeals Office is not the path. That
+    goes to VCAT.
+mrCriteria:
+  - >-
+    These are two different paths, and which one applies depends on the decision.
   - >-
     For a notice to vacate, the Housing Appeals Office is not the path. That
     goes to VCAT.
@@ -162,3 +171,38 @@ came from the lawyer per scheme and was always the sourced part.
 and the Housing Act 1983 (Vic). What could not be sourced was the claim about its powers, and that is
 what came out. Deleting the route instead would have taken a free avenue from the people this entry
 exists for.
+
+**Internal review became a path of its own, 2026-09-10.** It was buried inside the
+merits-review body string, which is how a departmental reviewer came to inherit a
+tribunal's card. For most decisions this service covers it is the first step and the
+cheapest, and it was reachable only as an explainer link while the result screen called
+merits and judicial review "the two paths".
+
+The body and source come from this entry's own verified decode counterpart, so nothing new
+is asserted — the fact was already published, in the wrong field.
+
+**The criteria were split to follow the avenue, 2026-09-10, and the routing qualifier was
+restored to the body.** When the Housing Appeals Office became its own path, `mrCriteria`
+stayed where it was — so the lawyer's line "For a housing decision … the Housing Appeals
+Office reviews it" was captioned "what they decide for a decision like yours" under a card
+naming VCAT, and the HAO's own card carried no criteria at all.
+
+Nothing was rewritten to split it. Every line the lawyer supplied names the body it is
+about, so each was filed under the body it names. The two ROUTING lines appear on both
+lists, because a person reading either card needs them — and one of those lines is the
+sentence that tells someone facing eviction that the Housing Appeals Office is not their
+path. That sentence had ended up on the VCAT card only, which is the wrong card for the
+person who most needs it.
+
+`avenue.ir.body` also lost its qualifier in the split: it read "the Housing Appeals Office
+(an independent reviewer within the housing department)" while the tribunal kept "VCAT, for
+a notice to vacate". A tenant with a notice to vacate met an unqualified HAO card headed
+"usually considered first". It now reads "the Housing Appeals Office, for a housing
+decision", mirroring the tribunal. The independence wording is not lost: `getHelp` carries
+it, and the card's own caution says the review is done inside the agency, not by a tribunal.
+
+**Still open, and not fixed here: `avenue.mr.source`.** It cites housing.vic.gov.au — appeal
+a decision; Housing Act 1983 (Vic), which was apt when this field held the HAO. It now holds
+VCAT for a notice to vacate, whose limb this entry cites elsewhere to the Residential
+Tenancies Act 1997 (Vic). Repointing a source is a legal call, not an editorial one, so it
+goes to the supervising lawyer at the next cadence rather than being guessed at here.

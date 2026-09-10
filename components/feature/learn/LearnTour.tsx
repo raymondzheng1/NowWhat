@@ -65,7 +65,7 @@ export function LearnTour({
         <div className="max-w-[60ch]">
           <h2 className="font-display text-[30px] font-black leading-[1.08] text-ink">That’s the map</h2>
           <p className="mt-4 text-[17px] leading-[1.7] text-ink-soft">
-            You now know the two paths and the grounds people raise. The next step is to find the body and
+            You now know the paths and the grounds people raise. The next step is to find the body and
             the time limit for <em>your</em> decision — and a draft you can send.
           </p>
           <div className="mt-7 flex flex-wrap gap-3">

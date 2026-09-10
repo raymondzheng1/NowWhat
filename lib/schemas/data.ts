@@ -38,10 +38,32 @@ export const AvenueMRSchema = z.object({
    * housing to the Housing Appeals Office for a housing decision and VCAT for a notice to
    * vacate. Nothing is hidden on a mixed path; a caution travels with it instead.
    */
-  character: z.enum(["tribunal", "internal", "mixed"]).default("tribunal"),
+  character: z.enum(["tribunal", "internal", "mixed", "court"]).default("tribunal"),
   /** Merits-review body, e.g. "VCAT" (Vic) or "ART" (Cth). */
   body: z.string(),
   source: z.string(),
+});
+
+/**
+ * Asking the decision-maker to look at its own decision again.
+ *
+ * This was not modelled at all. For most decisions this service covers it is the FIRST step
+ * and the cheapest one — an Authorised Review Officer at Services Australia, the agency
+ * review of a fine, the housing appeal — and it was reachable only as an explainer link,
+ * while the result screen called merits and judicial review "the two paths". Worse, where an
+ * entry did know about it, the fact was buried inside the merits-review body string
+ * ("internal review by Services Australia, then the ART"), which handed a departmental
+ * reviewer a tribunal's card.
+ *
+ * Populated only where a source names the step. The catch-all entries do not carry one: the
+ * schemes differ too much for any general statement, which is why the decode corpus dropped
+ * its own internal-review pathway for them.
+ */
+export const AvenueIRSchema = z.object({
+  available: z.boolean().default(false),
+  /** Who looks at it again, in the words the source uses. */
+  body: z.string().default(""),
+  source: z.string().default(""),
 });
 
 export const AvenueJRSchema = z.object({
@@ -158,6 +180,8 @@ export const DataPathwaySchema = z.object({
   decisionTypes: z.array(z.string()).min(1),
   keywords: z.array(z.string()).default([]),
   avenue: z.object({
+    /** Internal review — the first step for most decisions, where a source names one. */
+    ir: AvenueIRSchema.default({ available: false, body: "", source: "" }),
     mr: AvenueMRSchema,
     jr: AvenueJRSchema,
     /** A dignified endpoint when no review is available (Ombudsman / complaint / reasons). */
@@ -173,6 +197,22 @@ export const DataPathwaySchema = z.object({
   privativeClause: z.boolean().default(false),
   forms: z.array(DataFormSchema).default([]),
   mrCriteria: z.array(z.string()).default([]),
+  /**
+   * What the INTERNAL reviewer considers for this decision type.
+   *
+   * Added 2026-09-10 with the third path, and it fixes a mis-attribution rather than adding
+   * new content. `mrCriteria` was written when internal review shared the merits field, so
+   * for some schemes the lawyer's list describes the internal reviewer: the Victorian fines
+   * criteria are the statutory review grounds (mistake of identity, contrary to law, special
+   * circumstances) that the ISSUING AGENCY applies, not what a Magistrates' Court decides
+   * when a fine is heard on election. Splitting the avenue without splitting the list left
+   * those grounds captioned "what they decide for a decision like yours" under a court.
+   *
+   * Nothing was rewritten to make this split: every line the lawyer supplied names the body
+   * it is about, so each one was filed under the body it names. A line that states the
+   * ROUTING between the two appears on both, because a person on either card needs it.
+   */
+  irCriteria: z.array(z.string()).default([]),
   /**
    * Kinds of decision this pathway covers, in the words a person would use. Shown as chips
    * on the tile so someone recognises their own situation instead of guessing.

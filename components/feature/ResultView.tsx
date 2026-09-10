@@ -375,11 +375,22 @@ export function ResultView({
               <h2 className="font-display text-[21px] font-black leading-tight text-ink">
                 Read more about your options
               </h2>
+              {/* "The two ways" until 2026-09-10, which stopped being true when internal
+                  review became a path of its own and the result screen began showing three
+                  cards. The count is dropped rather than raised: the Learn area is organised
+                  around the two outside PROCESSES, and asking the department to look again
+                  is a different kind of thing, so counting them together would be its own
+                  small untruth. */}
               <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
-                Plain-English guides to the two ways of challenging a government decision.
+                Plain-English guides to the ways a government decision gets looked at again.
               </p>
               <ul className="mt-3.5 border-t border-line">
                 {[
+                  {
+                    href: "/learn/how-review-fits-together/internal-review",
+                    title: "Asking the department to look at it again",
+                    desc: "Often the first step, and usually the cheapest one.",
+                  },
                   {
                     href: "/learn/merits-review",
                     title: "Merits review",

@@ -21,8 +21,12 @@ describe("M-Lean triage (deterministic Rights Saver)", () => {
     const cth = triage({ jurisdiction: "Cth", decisionType: "Centrelink debt" });
     expect(cth.entry.id).toBe("cth-centrelink");
     // Not the bare "ART" any more: the internal review by an Authorised Review Officer comes
-    // first, and naming only the tribunal skipped a free step (corrected 2026-08-23).
-    expect(cth.avenue.mrBody).toBe("internal review by Services Australia, then the ART");
+    // first, and naming only the tribunal skipped a free step (corrected 2026-08-23). Since
+    // 2026-09-10 the two are separate avenues, so each field names one body and the order is
+    // carried by the paths rather than by the word order inside one string.
+    expect(cth.avenue.mrBody).toBe("the Administrative Review Tribunal");
+    expect(cth.avenue.irAvailable).toBe(true);
+    expect(cth.avenue.irBody).toMatch(/Authorised Review Officer/);
   });
 
   it("routes an unmatched decision to the jurisdiction fallback (still gets a path + help)", () => {
@@ -213,5 +217,56 @@ describe("handoff pack", () => {
     expect(pack).toContain("GROUNDS THAT MIGHT RELATE");
     expect(pack).toContain("You weren't given a fair chance");
     expect(pack.toLowerCase()).toContain("not conclusions");
+  });
+
+  /**
+   * The matter summary is the one document that leaves this app and is read by someone else —
+   * a duty lawyer, a community legal centre. It listed exactly two paths, so when internal
+   * review moved out of the merits-review body string on 2026-09-10 it fell out of this
+   * document altogether: the free first step, absent from the summary, with no test to notice.
+   */
+  it("names the internal reviewer, so the free first step reaches the duty lawyer", () => {
+    const r = triage({ jurisdiction: "Cth", decisionType: "Centrelink debt" });
+    const pack = buildHandoff({ triage: r, decisionAbout: "a Centrelink debt" });
+    expect(pack).toContain("Internal review:");
+    expect(pack).toMatch(/Authorised Review Officer/);
+    // Listed before the tribunal, matching the cards.
+    expect(pack.indexOf("Internal review:")).toBeLessThan(pack.indexOf("Merits review:"));
+    // And it claims no question and no remedy: nothing confirms what a departmental
+    // reviewer decides, which is why it has no question on the card either.
+    const irLine = pack.split("\n").find((l) => l.startsWith("- Internal review:"))!;
+    expect(irLine).not.toMatch(/correct or preferable/i);
+    expect(irLine).not.toMatch(/substitute/i);
+  });
+
+  it("omits the internal line entirely for a scheme that has no internal review", () => {
+    // Renting: a notice to vacate comes from a private rental provider, so there is no
+    // department to ask. An empty heading would invent a step.
+    const r = triage({ jurisdiction: "Vic", decisionType: "notice to vacate" });
+    expect(r.avenue.irAvailable).toBe(false);
+    expect(buildHandoff({ triage: r })).not.toContain("Internal review:");
+  });
+
+  it("does not call a court 'merits review', or give it a tribunal's powers", () => {
+    // A Victorian fine goes to the Magistrates' Court on election. The result card stopped
+    // attributing the tribunal's question and remedy to a non-tribunal on 2026-08-23; this
+    // document went on doing it, and it is the half a lawyer actually reads.
+    const r = triage({ jurisdiction: "Vic", decisionType: "fine" });
+    expect(r.entry.id).toBe("vic-fines");
+    expect(r.avenue.mrCharacter).toBe("court");
+    const pack = buildHandoff({ triage: r, decisionAbout: "a parking fine" });
+    expect(pack).toMatch(/Magistrates' Court/);
+    expect(pack, "a court hearing the charge is not asking the merits question")
+      .not.toMatch(/correct or preferable/i);
+    expect(pack).not.toMatch(/a tribunal can substitute a new decision/i);
+  });
+
+  it("a real tribunal still carries its question and its remedy", () => {
+    // The other half of the same rule — the guard must not have silenced VCAT too.
+    const r = triage({ jurisdiction: "Vic", decisionType: "notice to vacate" });
+    expect(r.avenue.mrCharacter).toBe("tribunal");
+    const pack = buildHandoff({ triage: r });
+    expect(pack).toMatch(/correct or preferable/i);
+    expect(pack).toMatch(/a tribunal can substitute a new decision/i);
   });
 });

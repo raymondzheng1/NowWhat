@@ -11,6 +11,8 @@ const plan = (avenue: Parameters<typeof planFor>[0]["avenue"]) =>
   planFor({ avenue, meritsReview: merits, judicialReview: judicial });
 
 const AV = {
+  irAvailable: false,
+  irBody: "",
   mrAvailable: true,
   mrConditional: false,
   mrCharacter: "tribunal" as const,
@@ -59,11 +61,59 @@ describe("analysis plan (what this means, and in what order)", () => {
 
   it("names the real body for each path, from the decision's own data entry", () => {
     // Centrelink's value used to be the bare acronym "ART", which sent people straight past
-    // the internal review by an Authorised Review Officer that comes first. Corrected
-    // 2026-08-23 from our own verified decode entry.
+    // the internal review by an Authorised Review Officer that comes first. That was first
+    // fixed by naming both bodies in one string; on 2026-09-10 they became two paths, so the
+    // reviewer and the tribunal each carry their own body.
     const t = triage({ jurisdiction: "Cth", decisionType: "Centrelink debt" });
     const p = plan(avenueView(t.entry));
-    expect(p.primary?.body).toBe("internal review by Services Australia, then the ART");
+    expect(p.paths.map((x) => x.id)).toEqual(["internal-review", "merits-review", "judicial-review"]);
+    expect(p.primary?.id).toBe("internal-review");
+    expect(p.primary?.body).toMatch(/Authorised Review Officer/);
+    expect(p.paths.find((x) => x.id === "merits-review")?.body).toMatch(/Administrative Review Tribunal/);
+  });
+
+  it("the internal path leads, and claims none of a tribunal's powers", () => {
+    // It is first because the corpus says so for the step in general — "often the first step,
+    // and usually the cheapest one" — not because of anything about a person's case. And it
+    // carries no question and no remedies: the same entry says the rules differ by department,
+    // so there is no single answer about what the reviewer can do. Inheriting the tribunal's
+    // is exactly the defect that put a departmental reviewer on a tribunal card.
+    const p = plan({ ...AV, irAvailable: true, irBody: "an Authorised Review Officer" });
+    const ir = p.paths.find((x) => x.id === "internal-review")!;
+    expect(ir.order).toBe(1);
+    expect(p.primary?.id).toBe("internal-review");
+    expect(ir.question).toBe("");
+    expect(ir.canDo).toEqual([]);
+    expect(ir.cannotDo).toEqual([]);
+    expect(ir.criteria).toEqual([]);
+    expect(ir.focusKey).toBe("focusInternal");
+    expect(ir.character).toBe("internal");
+    // Merits review keeps everything it had; it has only moved down one place.
+    const mr = p.paths.find((x) => x.id === "merits-review")!;
+    expect(mr.order).toBe(2);
+    expect(mr.question).toBe(merits.question);
+    expect(mr.canDo).toEqual(merits.remedies);
+  });
+
+  it("a scheme with no internal review still starts at merits review", () => {
+    // Renting: a notice to vacate comes from a private rental provider, so there is no
+    // department to ask for another look. The path must be absent, not shown empty.
+    const e = getDataEntry("vic-renting")!;
+    expect(e.avenue.ir.available).toBe(false);
+    const p = planFor({
+      avenue: avenueView(e), meritsReview: merits, judicialReview: judicial,
+      jurisdiction: e.jurisdiction,
+    });
+    expect(p.paths.some((x) => x.id === "internal-review")).toBe(false);
+    expect(p.primary?.id).toBe("merits-review");
+    expect(p.primary?.order).toBe(1);
+  });
+
+  it("an internal review with no named body is not shown as a path", () => {
+    // available:true with an empty body would render a card headed "ask them to look at it
+    // again" that never says who. The gap belongs to the data entry, not the reader.
+    const p = plan({ ...AV, irAvailable: true, irBody: "" });
+    expect(p.paths.some((x) => x.id === "internal-review")).toBe(false);
   });
 
   it("every lead/focus key it can emit exists in the message catalog", () => {
@@ -73,6 +123,8 @@ describe("analysis plan (what this means, and in what order)", () => {
       "analysisLeadMerits",
       "analysisLeadJudicial",
       "analysisLeadNone",
+      "focusInternal",
+      "focusCourt",
       "focusMerits",
       "focusJudicial",
     ]) {
@@ -82,13 +134,37 @@ describe("analysis plan (what this means, and in what order)", () => {
 
   it("the strategy copy describes what the FORUM weighs — never what the reader must do", () => {
     const r = messages.rights as unknown as Record<string, string>;
-    const prose = `${r.focusMerits} ${r.focusJudicial}`.toLowerCase();
+    const prose = `${r.focusInternal} ${r.focusCourt} ${r.focusMerits} ${r.focusJudicial}`.toLowerCase();
     for (const banned of ["you should", "you must", "we recommend", "your best", "likely to succeed"]) {
       expect(prose, banned).not.toContain(banned);
     }
     // Each names the test the forum applies.
     expect(r.focusMerits!.toLowerCase()).toContain("correct or preferable");
     expect(r.focusJudicial!.toLowerCase()).toContain("how the decision was made");
+  });
+
+  it("the focus paragraph follows the BODY, not the slot it sits in", () => {
+    // The last place the tribunal's test survived on a non-tribunal card, and the most
+    // confusing one: for a Victorian fine the card stated "it decides what the correct or
+    // preferable decision is" and then, three lines lower, that this one is a court hearing
+    // the matter itself, not a review of the decision. Both on one card.
+    const r = messages.rights as unknown as Record<string, string>;
+    const focusOf = (character: "tribunal" | "internal" | "mixed" | "court") =>
+      planFor({ avenue: { ...AV, mrCharacter: character }, meritsReview: merits, judicialReview: judicial })
+        .paths.find((x) => x.id === "merits-review")!.focusKey;
+
+    expect(focusOf("tribunal")).toBe("focusMerits");
+    expect(focusOf("court")).toBe("focusCourt");
+    expect(focusOf("internal")).toBe("focusInternal");
+    expect(focusOf("mixed")).toBe("focusInternal");
+    // The court's paragraph must not assert the tribunal's test.
+    expect(r.focusCourt!.toLowerCase()).not.toContain("correct or preferable");
+    expect(r.focusCourt!.toLowerCase()).toContain("hears the matter itself");
+    // Judicial review is never touched by this: it is a court by design, with the corpus's
+    // own question, not a borrowed one.
+    expect(
+      plan(AV).paths.find((x) => x.id === "judicial-review")!.focusKey,
+    ).toBe("focusJudicial");
   });
 });
 
@@ -102,31 +178,57 @@ describe("analysis plan (what this means, and in what order)", () => {
  * fines, and it silently dropped the free Housing Appeals Office step for housing.
  */
 describe("the merits-review body is the one the lawyer verified for THAT decision", () => {
-  function meritsBody(id: string): string | undefined {
+  function bodyFor(id: string, path: "internal-review" | "merits-review"): string | undefined {
     const e = getDataEntry(id)!;
     return planFor({
       avenue: avenueView(e),
       meritsReview: getProcess("merits-review")!,
       judicialReview: getProcess("judicial-review")!,
       jurisdiction: e.jurisdiction,
-    }).paths.find((p) => p.id === "merits-review")?.body;
+    }).paths.find((p) => p.id === path)?.body;
   }
+  const meritsBody = (id: string) => bodyFor(id, "merits-review");
+  const internalBody = (id: string) => bodyFor(id, "internal-review");
 
-  it("Victorian fines offer internal review OR the Magistrates' Court, and never VCAT", () => {
-    // Two corrections live in this one assertion. The forum is not VCAT — that was the
-    // original defect, and naming the wrong forum is the most damaging thing this product
-    // can do. And the two paths are alternatives, not a sequence: the wording said "internal
-    // review then Magistrates' Court", which told someone they had to exhaust the first
-    // before electing to go to court. Corrected 2026-08-23 on the external legal review.
+  it("Victorian fines go to the Magistrates' Court on election, and never to VCAT", () => {
+    // Three corrections live in this one entry. The forum is not VCAT — that was the original
+    // defect, and naming the wrong forum is the most damaging thing this product can do. The
+    // review and the court are alternatives, not a sequence: the wording said "internal review
+    // then Magistrates' Court", which told someone they had to exhaust the first before
+    // electing to go to court. And on 2026-09-10 they stopped sharing one field, so the review
+    // is its own path and the court no longer sits under a heading that calls it merits review.
     const body = meritsBody("vic-fines")!;
     expect(body).not.toMatch(/VCAT/i);
-    expect(body).toMatch(/internal review/i);
     expect(body).toMatch(/Magistrates' Court/);
+    expect(body, "the review is a separate path now, not part of this string").not.toMatch(
+      /internal review/i,
+    );
     expect(body, "the two paths are alternatives, not a sequence").not.toMatch(/\bthen\b/);
+    expect(internalBody("vic-fines")).toMatch(/Fines Victoria|issued the fine/i);
   });
 
-  it("public housing keeps the Housing Appeals Office step", () => {
-    expect(meritsBody("vic-public-housing")).toMatch(/Housing Appeals Office/i);
+  it("a court hearing a fine on election is typed as a court, not as merits review", () => {
+    // "Internal review, or the Magistrates' Court instead" sat under a card headed MERITS
+    // REVIEW. A court hearing the charge decides the charge; it is not reviewing an
+    // administrative decision on its merits, and it does not have a tribunal's remedies.
+    const e = getDataEntry("vic-fines")!;
+    expect(e.avenue.mr.character).toBe("court");
+    const mr = planFor({
+      avenue: avenueView(e), meritsReview: merits, judicialReview: judicial,
+      jurisdiction: e.jurisdiction, criteria: e.mrCriteria,
+    }).paths.find((x) => x.id === "merits-review")!;
+    expect(mr.question).toBe("");
+    expect(mr.canDo).toEqual([]);
+    // What the lawyer supplied per scheme is sourced, and stays.
+    expect(mr.criteria.length).toBeGreaterThan(0);
+  });
+
+  it("public housing keeps the Housing Appeals Office step — now as its own path", () => {
+    // The free HAO step was the thing the original VCAT-everywhere defect silently dropped.
+    // It must still be reachable; since 2026-09-10 it is the internal path rather than half
+    // of the merits string, which is why the tribunal card no longer claims its powers.
+    expect(internalBody("vic-public-housing")).toMatch(/Housing Appeals Office/i);
+    expect(meritsBody("vic-public-housing")).toMatch(/VCAT/);
   });
 
   it("a bare acronym is expanded from the corpus, not shown as a code", () => {
@@ -136,11 +238,18 @@ describe("the merits-review body is the one the lawyer verified for THAT decisio
   it("Centrelink names the internal review before the tribunal", () => {
     // The lawyer's own wording wins over the corpus' general body name, which is the whole
     // point of the precedence rule above. The bare "ART" it replaced fell through to the
-    // corpus and dropped a free first step people are entitled to.
-    const body = meritsBody("cth-centrelink")!;
-    expect(body).toMatch(/internal review/i);
-    expect(body).toMatch(/ART/);
-    expect(body.indexOf("internal review")).toBeLessThan(body.indexOf("ART"));
+    // corpus and dropped a free first step people are entitled to. The order is now carried
+    // by the paths themselves rather than by the word order inside one string.
+    const e = getDataEntry("cth-centrelink")!;
+    const p = planFor({
+      avenue: avenueView(e), meritsReview: merits, judicialReview: judicial,
+      jurisdiction: e.jurisdiction,
+    });
+    const ir = p.paths.find((x) => x.id === "internal-review")!;
+    const mr = p.paths.find((x) => x.id === "merits-review")!;
+    expect(ir.body).toMatch(/Services Australia/);
+    expect(mr.body).toMatch(/Administrative Review Tribunal/);
+    expect(ir.order).toBeLessThan(mr.order);
   });
 
   it("no entry ever renders an internal judicial-review code", () => {
@@ -192,20 +301,98 @@ describe("merits-review criteria (what the tribunal decides for THIS decision)",
     // The draft put to the lawyer said the reviewer checks "its own policies and procedures".
     // They replaced it: policy guides a statutory decision, it does not supply the test — which
     // is also what our own unlawful-policy and inflexible-policy grounds hold.
-    // Asserted over the whole set, not mrCriteria[0]: the housing entry now leads with the
-    // routing split (Housing Appeals Office for a housing decision, VCAT for a notice to
-    // vacate), so pinning this to an index made it break for the right reason.
+    // Asserted over IRCRITERIA since 2026-09-10: the sentence is about the Housing Appeals
+    // Office, and the lists were split so each line sits under the body it names.
     const housing = getDataEntry("vic-public-housing")!;
-    const all = housing.mrCriteria.join(" ").toLowerCase();
+    const all = housing.irCriteria.join(" ").toLowerCase();
     expect(all).toContain("legislation");
     expect(all).not.toMatch(/its own polic/);
-    // And the routing split itself, which is what displaced it.
     expect(all).toMatch(/housing appeals office/);
-    expect(all).toMatch(/notice to vacate/);
   });
 
   it("the heading that introduces them is customer copy and exists", () => {
     expect(messages.rights.pathCriteria).toBeTruthy();
+  });
+});
+
+/**
+ * The criteria follow the avenue, 2026-09-10.
+ *
+ * When internal review became its own path, the lawyer's per-scheme list stayed in
+ * `mrCriteria`. For Victorian fines that list is the statutory grounds the ISSUING AGENCY
+ * applies — mistake of identity, contrary to law, special circumstances — so they were
+ * captioned "what they decide for a decision like yours" under a card naming the Magistrates'
+ * Court, and appeared nowhere on the card of the body that actually applies them.
+ */
+describe("the criteria sit under the body they name", () => {
+  const fines = () => getDataEntry("vic-fines")!;
+  const housing = () => getDataEntry("vic-public-housing")!;
+
+  it("the fines review grounds are the internal reviewer's, not the court's", () => {
+    const ir = fines().irCriteria.join(" ").toLowerCase();
+    const mr = fines().mrCriteria.join(" ").toLowerCase();
+    for (const grounds of ["mistake of identity", "contrary to law", "special circumstances"]) {
+      expect(ir, grounds).toContain(grounds);
+      expect(mr, `${grounds} must not be attributed to the court`).not.toContain(grounds);
+    }
+    // What the court does is the court's line, and it stays.
+    expect(mr).toContain("the court decides the charge itself");
+  });
+
+  it("the routing line appears on BOTH fines lists, because either card needs it", () => {
+    // It is the sentence that stops someone believing they must be refused a review before
+    // they can elect to go to court.
+    const line = /two\s+different choices, not steps in order/i;
+    expect(fines().irCriteria.join(" ")).toMatch(line);
+    expect(fines().mrCriteria.join(" ")).toMatch(line);
+  });
+
+  it("the housing routing line reaches the Housing Appeals Office card", () => {
+    // THE most dangerous failure mode in this product: someone facing eviction sent to the
+    // HAO, which is not their path, losing time they may not have. The HAO card is headed
+    // "usually considered first", so the sentence saying it is the wrong body for a notice
+    // to vacate must be ON that card — it was on the VCAT card only.
+    const line = /the Housing Appeals Office is not the path\. That\s+goes to VCAT/i;
+    expect(housing().irCriteria.join(" ")).toMatch(line);
+    expect(housing().mrCriteria.join(" ")).toMatch(line);
+  });
+
+  it("VCAT's own criteria stay off the internal card", () => {
+    const ir = housing().irCriteria.join(" ").toLowerCase();
+    expect(ir).not.toContain("reasonable and proportionate");
+    expect(housing().mrCriteria.join(" ").toLowerCase()).toContain("reasonable and proportionate");
+  });
+
+  it("planFor puts each list on its own path", () => {
+    const e = fines();
+    const p = planFor({
+      avenue: avenueView(e), meritsReview: merits, judicialReview: judicial,
+      jurisdiction: e.jurisdiction, criteria: e.mrCriteria, internalCriteria: e.irCriteria,
+    });
+    expect(p.paths.find((x) => x.id === "internal-review")!.criteria).toEqual(e.irCriteria);
+    expect(p.paths.find((x) => x.id === "merits-review")!.criteria).toEqual(e.mrCriteria);
+    expect(p.paths.find((x) => x.id === "judicial-review")!.criteria).toEqual([]);
+  });
+
+  it("an entry with no internal criteria is unaffected", () => {
+    // Centrelink's list is all about the tribunal ("The tribunal decides whether…"), so
+    // there was nothing to move and the internal card carries none.
+    const e = getDataEntry("cth-centrelink")!;
+    expect(e.irCriteria).toEqual([]);
+    expect(e.mrCriteria.length).toBeGreaterThan(0);
+    const p = planFor({
+      avenue: avenueView(e), meritsReview: merits, judicialReview: judicial,
+      jurisdiction: e.jurisdiction, criteria: e.mrCriteria, internalCriteria: e.irCriteria,
+    });
+    expect(p.paths.find((x) => x.id === "internal-review")!.criteria).toEqual([]);
+    expect(p.paths.find((x) => x.id === "merits-review")!.criteria.length).toBeGreaterThan(0);
+  });
+
+  it("no entry keeps internal criteria it cannot show", () => {
+    // irCriteria with no internal path would be lawyer-supplied content rendered nowhere.
+    for (const e of listDataEntries()) {
+      if (e.irCriteria.length > 0) expect(e.avenue.ir.available, e.id).toBe(true);
+    }
   });
 });
 
@@ -346,16 +533,25 @@ describe("a body that is not a tribunal does not borrow a tribunal's powers", ()
     expect(mr.canDo).toEqual(merits.remedies);
   });
 
-  it("public housing is the entry this protects, and keeps its criteria", () => {
+  it("public housing's tribunal half is a real tribunal, and keeps its powers", () => {
+    // Until 2026-09-10 this entry was the reason the rule exists: the Housing Appeals Office
+    // shared the merits field with VCAT, so the whole path was typed "mixed" and stripped of
+    // the question and remedies — which cost VCAT claims that are true of it. With the HAO on
+    // its own path, what is left in the merits field is VCAT alone.
     const e = getDataEntry("vic-public-housing")!;
-    expect(e.avenue.mr.character).toBe("mixed");
+    expect(e.avenue.mr.character).toBe("tribunal");
     const mr = planFor({
       avenue: avenueView(e), meritsReview: merits, judicialReview: judicial,
       jurisdiction: e.jurisdiction, criteria: e.mrCriteria,
     }).paths.find((x) => x.id === "merits-review")!;
-    expect(mr.canDo).toEqual([]);
-    // What the lawyer supplied per scheme is the part that was always sourced. It stays.
+    expect(mr.canDo).toEqual(merits.remedies);
     expect(mr.criteria.length).toBeGreaterThan(0);
-    expect(mr.criteria.join(" ")).toMatch(/Housing Appeals Office/i);
+    // And the reviewer it used to share the field with is still reachable, without them.
+    const ir = planFor({
+      avenue: avenueView(e), meritsReview: merits, judicialReview: judicial,
+      jurisdiction: e.jurisdiction,
+    }).paths.find((x) => x.id === "internal-review")!;
+    expect(ir.body).toMatch(/Housing Appeals Office/i);
+    expect(ir.canDo).toEqual([]);
   });
 });

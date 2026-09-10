@@ -104,6 +104,9 @@ type ResultView = "story" | "goal" | "options" | "grounds" | "memo" | "help";
  */
 const RESULT_VIEWS: ResultView[] = ["story", "goal", "options", "grounds", "memo", "help"];
 
+/** The key the internal-review note is filed under, so the memo can find it. */
+const INTERNAL_NOTE_KEY = "What you are asking them to look at again";
+
 /**
  * What someone wants out of this. Multi-select, because people arrive with more than one —
  * "I want the debt gone AND they never told me". Each maps to the routes that can deliver
@@ -880,30 +883,68 @@ function ResultStep({
     judicialReview,
     jurisdiction,
     criteria: entry.mrCriteria ?? [],
+    internalCriteria: entry.irCriteria ?? [],
   });
+  // Read off the plan so the points step, the memo and the card cannot disagree.
+  const internalCriteria = entry.irCriteria ?? [];
+  const meritsIsTribunal = (av.mrCharacter ?? "tribunal") === "tribunal";
 
   // The application letters differ by path: merits review asks a tribunal for the correct
   // or preferable decision on the facts; judicial review is a court process about how the
   // decision was made, so its draft opens with a warning and is framed as something to take
   // to a free service. The person picks which one they mean; nothing is chosen for them.
-  const applyKinds = plan.paths.map((pp) => ({
-    id: (pp.id === "merits-review"
-      ? "merits-review-application"
-      : "judicial-review-application") as DraftKind,
-    pathId: pp.id,
-    label: pp.id === "merits-review" ? t("applyMerits") : t("applyJudicial"),
-    hint: pp.id === "merits-review" ? t("applyMeritsHint") : t("applyJudicialHint"),
-    href: `/learn/${pp.id}`,
-  }));
+  const APPLY_BY_PATH = {
+    "internal-review": {
+      id: "internal-review-request" as DraftKind,
+      label: t("applyInternal"),
+      hint: t("applyInternalHint"),
+      href: "/learn/how-review-fits-together/internal-review",
+    },
+    "merits-review": {
+      id: "merits-review-application" as DraftKind,
+      label: t("applyMerits"),
+      hint: t("applyMeritsHint"),
+      href: "/learn/merits-review",
+    },
+    "judicial-review": {
+      id: "judicial-review-application" as DraftKind,
+      label: t("applyJudicial"),
+      hint: t("applyJudicialHint"),
+      href: "/learn/judicial-review",
+    },
+  } as const;
+  const applyKinds = plan.paths
+    // A NON-TRIBUNAL merits path gets no letter. For a Victorian fine this field holds the
+    // Magistrates' Court on election, and the merits-review letter asks the agency to look
+    // at the decision "afresh on the facts, so that the correct or preferable decision can
+    // be made" — which is neither what an election is nor what that court does. Electing to
+    // go to court is a formal step under the scheme's own Act; we hold no verified form for
+    // it, so the app says so and routes to a free service rather than drafting something
+    // that looks official and is not.
+    .filter((pp) => !(pp.id === "merits-review" && pp.character !== "tribunal"))
+    .map((pp) => ({ ...APPLY_BY_PATH[pp.id], pathId: pp.id }));
   // Only the application for the approach they chose. Offering both put a judicial-review
   // draft in front of someone working through merits review, which is a different document
   // to a different body about a different question.
   const offeredApply = chosenPath ? applyKinds.filter((k) => k.pathId === chosenPath) : applyKinds;
   const activeApply = offeredApply.find((k) => k.id === applyKind) ?? offeredApply[0];
+  // True when the person chose a path we deliberately hold no letter for, so the memo view
+  // can say that rather than silently dropping the section.
+  const noLetterForPath =
+    chosenPath === "merits-review" && !meritsIsTribunal && plan.paths.some((p) => p.id === "merits-review");
   // ONE box. Five labelled questions read as a form to fill in, and a frightened person on a
   // phone abandons forms; they will tell the story once, in their own order, if asked once.
   // The prompts that were the question labels become hints under the box, so nothing is lost.
-  const universalQs = [{ id: "q-story", label: t("accountQStory") }];
+  //
+  // The internal-review note is a second block, and only on that path's letter: what someone
+  // types under "what you are asking them to look at again" IS the substance of that letter,
+  // and it reached the memo but never the draft, so the letter kept its placeholder.
+  const universalQs = [
+    { id: "q-story", label: t("accountQStory") },
+    ...(chosenPath === "internal-review" && (criteriaNotes[INTERNAL_NOTE_KEY] ?? "").trim()
+      ? [{ id: "q-internal", label: t("internalAskTitle") }]
+      : []),
+  ];
 
   const applyDraft =
     corpusEntry && activeApply
@@ -913,6 +954,8 @@ function ResultStep({
           account: {
             answers: {
               ...account,
+              // What they wrote on the internal-review step, so the letter carries it.
+              "q-internal": (criteriaNotes[INTERNAL_NOTE_KEY] ?? "").trim(),
               // Their own words on a ground go in first; a picked sentence for the same
               // ground overwrites it below, because a sentence they ticked is one they have
               // already approved for a letter someone else will read.
@@ -947,7 +990,18 @@ function ResultStep({
   // This listed the whole result regardless of which view was showing, which was harmless
   // while everything lived on one long page. Since the flow was split into six views it
   // would send a reader to an anchor that is not on screen, which is worse than no list.
-  const hasPaths = av.mrAvailable || av.jrAvailable;
+  const hasPaths = plan.paths.length > 0;
+  // Whether the points step has anything on it. Each approach asks for something different:
+  // the tribunal's criteria for this scheme, one open question for an internal review, or
+  // the grounds of review for a court. Without a choice it shows the prompt to go back.
+  const groundsSectionShown =
+    chosenPath === "merits-review"
+      ? entry.mrCriteria.length > 0
+      : chosenPath === "internal-review"
+        ? true
+        : chosenPath === "judicial-review"
+          ? shownGrounds.length > 0
+          : false;
   const contents = (
     {
       story: [{ id: "r-account", label: t("accountTitle") }],
@@ -958,9 +1012,7 @@ function ResultStep({
         ...(hasPaths ? [{ id: "r-learn", label: t("learnTitle") }] : []),
         ...(shownConcepts.length > 0 ? [{ id: "r-concepts", label: t("conceptsTitle") }] : []),
       ],
-      grounds: hasPaths && shownGrounds.length > 0
-        ? [{ id: "r-grounds", label: t("groundsTitle") }]
-        : [],
+      grounds: groundsSectionShown ? [{ id: "r-grounds", label: t("groundsTitle") }] : [],
       memo: [
         { id: "r-reasons", label: t("reasonsTitle") },
         ...(applyDraft ? [{ id: "r-apply", label: t("applyTitle") }] : []),
@@ -970,12 +1022,6 @@ function ResultStep({
       help: [{ id: "r-handoff", label: t("handoffTitle") }],
     } as Record<ResultView, { id: string; label: string }[]>
   )[view];
-  const dl = deadlineRuleView(entry);
-  const template = reasonsRequestTemplate(entry, {
-    about: entry.title.toLowerCase(),
-    decisionDate: decisionDate || undefined,
-  });
-
   // The three ways a decision gets looked at again, assembled from the corpus itself so the
   // wording here and on the pages behind it cannot drift apart.
   const internalReview = shownConcepts.find((c) => c.id === "internal-review");
@@ -991,24 +1037,49 @@ function ResultStep({
     { name: judicialReview.plainName, line: judicialReview.oneLine, href: "/learn/judicial-review" },
   ];
 
+  const dl = deadlineRuleView(entry);
+  const template = reasonsRequestTemplate(entry, {
+    about: entry.title.toLowerCase(),
+    decisionDate: decisionDate || undefined,
+  });
+
   const groundNameById = new Map(shownGrounds.map((g) => [g.id, g.plainName] as const));
   const [memoCopied, setMemoCopied] = useState(false);
   // The memorandum works through the approach the person chose. Before, it always used the
   // first path in the plan, so someone who had deliberately picked judicial review got a
   // memo about merits review.
   const memoPathId = chosenPath ?? plan.primary?.id ?? "merits-review";
-  const memoProcess = memoPathId === "judicial-review" ? judicialReview : meritsReview;
+  const memoProcess =
+    memoPathId === "internal-review"
+      ? null
+      : memoPathId === "judicial-review"
+        ? judicialReview
+        : meritsReview;
+  const memoPath = plan.paths.find((pp) => pp.id === memoPathId);
+  const memoPathBody = memoPath?.body ?? plan.primary?.body ?? "";
   const memo = composeMemo({
     entry,
     process: memoProcess,
-    grounds: shownGrounds.filter((g) => relatedGrounds.includes(g.id)),
+    internal: memoPathId === "internal-review" ? (internalReview ?? null) : null,
+    internalNote: criteriaNotes[INTERNAL_NOTE_KEY] ?? "",
+    // Both come from the plan, so the memo cannot disagree with the card the person read.
+    // Re-deriving them from the process is what gave the fines Magistrates' Court a
+    // tribunal's question and remedies in the one document a lawyer actually reads.
+    character: memoPath?.character ?? "tribunal",
+    criteria: memoPath?.criteria ?? [],
+    // Grounds of review belong to judicial review. Carrying them into a memo about an
+    // internal review or a tribunal would put a court's language in a letter to neither.
+    grounds:
+      memoPathId === "judicial-review"
+        ? shownGrounds.filter((g) => relatedGrounds.includes(g.id))
+        : [],
     groundNotes,
     criteriaNotes,
     story: account["q-story"] ?? "",
     goals: goals.map((g) => t(`goal_${g}`)),
     goalOther,
     decisionDate: decisionDate || undefined,
-    forum: plan.primary?.body ?? memoProcess.plainName,
+    forum: memoPathBody || memoProcess?.plainName || t("pathTitleInternal"),
     // Provenance: which build of the procedural layer produced the rule and the source
     // printed in this memo. It is already in the client bundle, so this costs nothing.
     corpusVersion: getDataIndex().builtAt,
@@ -1023,6 +1094,7 @@ function ResultStep({
       reasonsRequested: false,
       relatedGrounds: relatedGrounds.map((id) => groundNameById.get(id) ?? id),
       forumNames: {
+        internal: plan.paths.find((pp) => pp.id === "internal-review")?.body,
         merits: plan.paths.find((pp) => pp.id === "merits-review")?.body,
         judicial: plan.paths.find((pp) => pp.id === "judicial-review")?.body,
       },
@@ -1499,10 +1571,17 @@ function ResultStep({
           decides for this kind of decision — the criteria the supervising lawyer supplied per
           scheme. Same shape as the grounds below, different source, because the person is
           doing a different thing. */}
+      {/* The heading follows the BODY, not the slot. For a Victorian fine this field holds
+          the Magistrates' Court on election, and "What the tribunal decides" named a
+          tribunal that is not in this person's plan at all. */}
       {view === "grounds" && chosenPath === "merits-review" && entry.mrCriteria.length > 0 && (
         <section id="r-grounds" className="card">
-          <h2 className="font-display text-[21px] font-black text-ink">{t("criteriaTitle")}</h2>
-          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("criteriaLead")}</p>
+          <h2 className="font-display text-[21px] font-black text-ink">
+            {t(meritsIsTribunal ? "criteriaTitle" : "criteriaTitleOther")}
+          </h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
+            {t(meritsIsTribunal ? "criteriaLead" : "criteriaLeadOther")}
+          </p>
           <div className="mt-5 space-y-4">
             {entry.mrCriteria.map((c, i) => (
               <div key={c}>
@@ -1521,6 +1600,54 @@ function ResultStep({
             ))}
           </div>
           <p className="mt-4 text-[14.5px] leading-snug text-ink-faint">{t("groundNotesPrivacy")}</p>
+        </section>
+      )}
+
+      {/* Where the supervising lawyer supplied criteria for the internal reviewer, they are
+          shown — for a Victorian fine those are the statutory review grounds, which is the
+          most useful thing on this step. Where they did not, there is no invented checklist:
+          our own entry says "the rules are different for every department, so there is no
+          single answer about how it works". Either way the open box is there, because the
+          reason a person wants another look is often not on any list. */}
+      {view === "grounds" && chosenPath === "internal-review" && (
+        <section id="r-grounds" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">
+            {t(internalCriteria.length > 0 ? "internalCriteriaTitle" : "internalAskTitle")}
+          </h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
+            {t(internalCriteria.length > 0 ? "internalCriteriaLead" : "internalAskLead")}
+          </p>
+          {internalCriteria.length > 0 && (
+            <div className="mt-5 space-y-4">
+              {internalCriteria.map((c, i) => (
+                <div key={c}>
+                  <label htmlFor={`icn-${i}`} className="block text-[15.5px] font-semibold leading-snug text-ink">
+                    {c}
+                  </label>
+                  <textarea
+                    id={`icn-${i}`}
+                    value={criteriaNotes[c] ?? ""}
+                    onChange={(e) => setCriteriaNotes((prev) => ({ ...prev, [c]: e.target.value }))}
+                    rows={3}
+                    placeholder={t("criteriaPlaceholder")}
+                    className="input mt-1.5 w-full"
+                  />
+                </div>
+              ))}
+            </div>
+          )}
+          {internalCriteria.length > 0 && (
+            <p className="mt-6 text-[15.5px] font-semibold leading-snug text-ink">{t("internalAskTitle")}</p>
+          )}
+          <textarea
+            id="cn-internal"
+            value={criteriaNotes[INTERNAL_NOTE_KEY] ?? ""}
+            onChange={(e) => setCriteriaNotes((prev) => ({ ...prev, [INTERNAL_NOTE_KEY]: e.target.value }))}
+            rows={5}
+            placeholder={t("internalAskPlaceholder")}
+            className="input mt-4 w-full"
+          />
+          <p className="mt-3 text-[14.5px] leading-snug text-ink-faint">{t("groundNotesPrivacy")}</p>
         </section>
       )}
 
@@ -1774,14 +1901,29 @@ function ResultStep({
 
       {/* Apply for review — one draft per path, chosen by the person. Built on-device from
           the corpus entry (pure function, no request), so the no-network promise holds. */}
+      {/* Say when we deliberately hold no letter, instead of just not rendering the section.
+          A person who chose the court election and finds nothing where the draft was cannot
+          tell whether the app decided not to help or simply broke. */}
+      {view === "memo" && noLetterForPath && (
+        <section id="r-apply" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("applyTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("applyNoDraft")}</p>
+          <button type="button" onClick={() => goView("help")} className="btn btn-primary mt-4">
+            {t("applyNoDraftCta")}
+          </button>
+        </section>
+      )}
+
       {view === "memo" && applyDraft && activeApply && (
         <section id="r-apply" data-tour="apply" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("applyTitle")}</h2>
-          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("applyLead")}</p>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
+            {chosenPath ? t("applyLeadChosen") : t("applyLead")}
+          </p>
 
-          {applyKinds.length > 1 && (
+          {offeredApply.length > 1 && (
             <div role="group" aria-label={t("applyTitle")} className="mt-4 flex flex-wrap gap-2.5">
-              {applyKinds.map((k) => {
+              {offeredApply.map((k) => {
                 const on = k.id === applyKind;
                 return (
                   <button

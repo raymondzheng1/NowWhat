@@ -1,4 +1,4 @@
-import type { Ground, Process } from "@/lib/schemas/legal";
+import type { Concept, Ground, Process } from "@/lib/schemas/legal";
 import type { DataPathway } from "@/lib/schemas/data";
 
 /**
@@ -27,7 +27,44 @@ import type { DataPathway } from "@/lib/schemas/data";
 
 export interface MemoInput {
   entry: DataPathway;
-  process: Process;
+  /**
+   * The forum process this memo works through — merits review or judicial review.
+   *
+   * NULL when the person chose internal review, which is not one of them. The corpus holds
+   * two PROCESSES, each with a question, remedies and limits confirmed for it; an internal
+   * reviewer has none of those recorded, and borrowing a tribunal's is the exact defect that
+   * put a departmental reviewer on a tribunal's card. So the memo drops those sections
+   * rather than filling them, and works from `internal` instead.
+   */
+  process: Process | null;
+  /**
+   * The internal-review concept, when that is the path being worked through. Everything the
+   * memo says about the step comes from here — what it means, what it is not, and the key
+   * points — so it is as sourced as the process memo, just from a different entry.
+   */
+  internal?: Concept | null;
+  /** Their own words on what they are asking the decision-maker to look at again. */
+  internalNote?: string;
+  /**
+   * What kind of body the chosen path actually is, from `planFor`.
+   *
+   * The card and the plan stopped attributing a tribunal's question and remedies to a
+   * non-tribunal on 2026-08-23. The memo went on doing it, because it re-derived everything
+   * from the PROCESS: pick the merits path for a Victorian fine and the memo told a duty
+   * lawyer that the Magistrates' Court asks "Is this the correct or preferable decision?"
+   * and can set the decision aside and substitute its own. A court hearing a fine on
+   * election does neither.
+   *
+   * Same rule as `planFor`: only a tribunal gets the tribunal's question, remedies and
+   * limits. Judicial review is unaffected — it carries the court process's own.
+   */
+  character?: "tribunal" | "internal" | "mixed" | "court";
+  /**
+   * The scheme-specific criteria for THIS path — `mrCriteria` or `irCriteria`, chosen by the
+   * caller. Defaults to the old behaviour (the merits list, on a merits memo) so nothing
+   * changes for callers that do not pass it.
+   */
+  criteria?: string[];
   /** Grounds the person marked as possibly relating to them, in corpus order. */
   grounds: Ground[];
   /**
@@ -91,6 +128,9 @@ export function composeMemo(input: MemoInput): Memo {
   const {
     entry,
     process: proc,
+    internal = null,
+    internalNote = "",
+    character = "tribunal",
     grounds,
     story,
     goals,
@@ -114,12 +154,16 @@ export function composeMemo(input: MemoInput): Memo {
     L.push("-".repeat(Math.min(s.length, 64)));
   };
 
+  // The name of the path, from whichever entry describes it. One of the two must be
+  // present; the caller decides which, from the approach the person chose.
+  const pathName = proc?.plainName ?? internal?.plainName ?? t("pathTitleInternal");
+
   const title = `${t("memoTitle")} — ${entry.title}`;
   L.push(title);
   L.push("");
   L.push(`${t("memoAbout")}: ${entry.title}`);
   if (decisionDate) L.push(`${t("memoDecisionDate")}: ${decisionDate}`);
-  L.push(`${t("memoPath")}: ${proc.plainName} (${forum})`);
+  L.push(`${t("memoPath")}: ${pathName} (${forum})`);
   L.push(`${t("memoPrepared")}: ${new Date().toISOString().slice(0, 10)}`);
   L.push("");
   L.push(t("memoNotAdvice"));
@@ -145,7 +189,7 @@ export function composeMemo(input: MemoInput): Memo {
         .join("; ");
       bits.push(`${t("memoSummaryWants")} ${said}.`);
     }
-    bits.push(`${t("memoSummaryPath")} ${proc.plainName.toLowerCase()}, ${t("memoSummaryAt")} ${forum}.`);
+    bits.push(`${t("memoSummaryPath")} ${pathName.toLowerCase()}, ${t("memoSummaryAt")} ${forum}.`);
     if (grounds.length) {
       bits.push(
         grounds.length === 1
@@ -153,7 +197,16 @@ export function composeMemo(input: MemoInput): Memo {
           : t("memoSummaryPoints").replace("{n}", String(grounds.length)),
       );
     }
-    bits.push(t("memoSummaryReads"));
+    // Say what the memo actually contains. The internal line promised "three questions" and
+    // the third — what you are asking them to look at — only exists when the person wrote
+    // something in the box. Left blank, the memo announced a section it did not have.
+    bits.push(
+      proc
+        ? t("memoSummaryReads")
+        : internalNote.trim()
+          ? t("memoSummaryReadsInternal")
+          : t("memoSummaryReadsInternalShort"),
+    );
     for (const b of bits) L.push(b);
   }
 
@@ -176,7 +229,54 @@ export function composeMemo(input: MemoInput): Memo {
     }
   }
 
+  // ---- Internal review ------------------------------------------------------------
+  //
+  // A different shape, because a different thing is being asked. There is no forum to be
+  // admitted to and no set of powers to set out; there is a decision-maker being asked to
+  // look again. What the memo can say about it is what the corpus entry says, and their own
+  // words about what they want looked at.
+  if (!proc && internal) {
+    h(t("memoIssue1Internal"));
+    L.push(t("memoIssue1QInternal"));
+    sub(t("memoRule"));
+    for (const k of internal.keyPoints) L.push(`  - ${rule(k)}`);
+    sub(t("memoApplication"));
+    L.push(`  ${t("memoInternalBodyIs")} ${forum}.`);
+    if (entry.deadlineRule) L.push(`  ${rule(entry.deadlineRule)}`);
+    L.push(`  ${t("memoTimeCheck")}`);
+
+    h(t("memoIssue2Internal"));
+    L.push(rule(internal.whatItMeans));
+    // What the lawyer supplied for THIS scheme, where they supplied it. For a Victorian fine
+    // that is the statutory review grounds the issuing agency applies — the part a duty
+    // lawyer most needs, and the part that was sitting under the Magistrates' Court card
+    // until the criteria were split to follow the avenue.
+    if (input.criteria && input.criteria.length) {
+      sub(t("memoRule"));
+      for (const c of input.criteria) {
+        L.push(`  - ${rule(c)}`);
+        const n = (criteriaNotes[c] ?? "").trim().replace(/\s+/g, " ");
+        if (n) {
+          L.push(`      ${t("memoYourNote")}:`);
+          L.push(`        "${n}"`);
+        }
+      }
+    }
+    if (internal.whatItIsNot) {
+      sub(t("memoWhatItIsNot"));
+      L.push(`  ${rule(internal.whatItIsNot)}`);
+    }
+
+    const askedFor = internalNote.trim().replace(/\s+/g, " ");
+    if (askedFor) {
+      h(t("memoIssue3Internal"));
+      L.push(`${t("memoYourNote")}:`);
+      L.push(`  "${askedFor}"`);
+    }
+  }
+
   // ---- Issue 1: can you apply? -----------------------------------------------------
+  if (proc) {
   h(t("memoIssue1"));
   L.push(t("memoIssue1Q"));
   sub(t("memoRule"));
@@ -187,11 +287,18 @@ export function composeMemo(input: MemoInput): Memo {
   L.push(`  ${t("memoTimeCheck")}`);
 
   // ---- Issue 2: what the forum decides ---------------------------------------------
+  //
+  // A body that is not a tribunal does not get the tribunal's question, remedies or limits —
+  // the same rule `planFor` applies to the card. Judicial review is never affected: it is a
+  // court path carrying the court process's own question and remedies, not borrowed ones.
+  const isTribunal = proc.id === "judicial-review" || character === "tribunal";
   h(t("memoIssue2"));
-  L.push(`${t("memoQuestionAsked")}: "${proc.question}"`);
-  if (entry.mrCriteria.length && proc.id === "merits-review") {
+  if (isTribunal) L.push(`${t("memoQuestionAsked")}: "${proc.question}"`);
+  else L.push(t("memoNotATribunal"));
+  const criteriaList = input.criteria ?? (proc.id === "merits-review" ? entry.mrCriteria : []);
+  if (criteriaList.length) {
     sub(t("memoRule"));
-    for (const c of entry.mrCriteria) {
+    for (const c of criteriaList) {
       L.push(`  - ${rule(c)}`);
       // Their own words against this criterion, verbatim and uncharacterised, exactly as
       // the ground notes are handled.
@@ -202,11 +309,14 @@ export function composeMemo(input: MemoInput): Memo {
       }
     }
   }
-  sub(t("memoWhatItCanDo"));
-  for (const r of proc.remedies) L.push(`  - ${rule(r)}`);
-  if (proc.limits.length) {
-    sub(t("memoWhatItCannotDo"));
-    for (const r of proc.limits) L.push(`  - ${rule(r)}`);
+  if (isTribunal) {
+    sub(t("memoWhatItCanDo"));
+    for (const r of proc.remedies) L.push(`  - ${rule(r)}`);
+    if (proc.limits.length) {
+      sub(t("memoWhatItCannotDo"));
+      for (const r of proc.limits) L.push(`  - ${rule(r)}`);
+    }
+  }
   }
 
   // ---- Issue 3: the points raised, each argued both ways ---------------------------

@@ -112,11 +112,13 @@ export function AnalysisPanel({
                 a tribunal, the card takes a neutral title and the caution below says what the
                 body actually is. */}
             <h3 className="mt-1.5 font-display text-[19px] font-black text-ink">
-              {p.id === "judicial-review"
-                ? judicialReview.name
-                : p.character === "tribunal"
-                  ? meritsReview.name
-                  : t("pathTitleNotTribunal")}
+              {p.id === "internal-review"
+                ? t("pathTitleInternal")
+                : p.id === "judicial-review"
+                  ? judicialReview.name
+                  : p.character === "tribunal"
+                    ? meritsReview.name
+                    : t("pathTitleNotTribunal")}
             </h3>
 
             {/* The question the forum decides — the foundation the whole path rests on.
@@ -165,7 +167,28 @@ export function AnalysisPanel({
                 departmental appeal — inherited the tribunal's remedies below, including
                 setting a decision aside and substituting a new one. An internal reviewer
                 cannot do that, and saying otherwise overstates both its independence and
-                what a person can expect from it. */}
+                what a person can expect from it.
+
+                COURTS ARE EXCLUDED, and the omission is the point of the condition. Keying
+                this box on `character !== "tribunal"` caught two kinds of card it should
+                never have caught.
+
+                Judicial review, because `planFor` stamps every judicial-review path
+                `character: "court"` — true and expected, the card is already about a court.
+                So a warning reading "a court hearing the matter itself, not a review of the
+                decision" printed on the judicial-review card of five of the six entries,
+                three paragraphs under that same card's `focusJudicial`: "A court is not
+                deciding whether the outcome was harsh or unfair. It looks at how the decision
+                was made." The opposite of itself, on one card.
+
+                And the fines court election, which needs the warning but already has it: the
+                focus paragraph is now `focusCourt`, which says a court hears the matter
+                itself and that free legal help beforehand is worth having. A second box
+                repeating that in near-identical words three lines later is noise.
+
+                What is left is the case the box was written for — a body in the MERITS slot
+                whose powers we cannot state. It says the one thing no focus paragraph does:
+                check what this body can actually do with your decision. */}
             {(p.character === "internal" || p.character === "mixed") && (
               <p className="mt-3.5 rounded-card border-2 border-amber-border bg-amber-bg px-3 py-2 text-[15px] leading-snug text-ink-soft">
                 {t(p.character === "internal" ? "pathBodyInternal" : "pathBodyMixed")}
@@ -262,7 +285,16 @@ export function AnalysisPanel({
           { n: "02", title: t("step2"), body: t("step2Body") },
           {
             n: "03",
-            title: t("step3", { body: midSentence(plan.primary?.body ?? t("helpTitle")) }),
+            // The body named here is the one they picked to work through, where they have
+            // picked one. It used to be the first path always, so someone who chose judicial
+            // review still read step 3 telling them to lodge with the tribunal.
+            title: t("step3", {
+              body: midSentence(
+                (chosen ? plan.paths.find((x) => x.id === chosen)?.body : undefined) ??
+                  plan.primary?.body ??
+                  t("helpTitle"),
+              ),
+            }),
             body: t("step3Body"),
           },
           { n: "04", title: t("step4"), body: t("step4Body") },

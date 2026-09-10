@@ -19,11 +19,15 @@ keywords:
   - penalty
   - fines
 avenue:
+  ir:
+    available: true
+    body: the agency that issued the fine, or Fines Victoria
+    source: 'fines.vic.gov.au — request a review; Infringements Act 2006 (Vic)'
   mr:
     available: true
-    character: mixed
-    body: "internal review, or the Magistrates' Court instead"
-    source: 'fines.vic.gov.au — request a review; Infringements Act 2006 (Vic)'
+    character: court
+    body: "the Magistrates' Court, if you elect to have it heard there"
+    source: 'fines.vic.gov.au — go to court; Infringements Act 2006 (Vic)'
   jr:
     available: true
     forum: SCV-O56
@@ -44,7 +48,7 @@ reasonsRequest:
   extendsJR: 'depends — confirm with a free legal service before relying on it'
 privativeClause: false
 forms: []
-mrCriteria:
+irCriteria:
   - >-
     Internal review and asking for the matter to be heard in court are two
     different choices, not steps in order.
@@ -56,6 +60,10 @@ mrCriteria:
     They also include exceptional circumstances, and special circumstances such
     as mental illness, disability, serious addiction, homelessness, or family
     violence.
+mrCriteria:
+  - >-
+    Internal review and asking for the matter to be heard in court are two
+    different choices, not steps in order.
   - If the matter goes to court instead, the court decides the charge itself.
 examples:
   - 'A parking or speeding fine'
@@ -111,3 +119,35 @@ exceptions and the stage-specific limits across the Infringements and Fines Refo
 is new sourced content, not a correction, and it waits on the same lawyer confirmation as the Act
 attribution above — the 14-day 'person unaware' and 28-day court-election figures cannot be named
 until we can say which Act carries which stage.
+
+**Internal review became a path of its own, 2026-09-10.** It was buried inside the
+merits-review body string, which is how a departmental reviewer came to inherit a
+tribunal's card. For most decisions this service covers it is the first step and the
+cheapest, and it was reachable only as an explainer link while the result screen called
+merits and judicial review "the two paths".
+
+The body and source come from this entry's own verified decode counterpart, so nothing new
+is asserted — the fact was already published, in the wrong field.
+
+**And the court election is typed as a court, not as merits review.** "Internal review, or
+the Magistrates' Court instead" sat under a card headed MERITS REVIEW. Neither half was:
+the first is internal, and a court hearing a fine on election is not reviewing an
+administrative decision on its merits. The internal half is now its own path and the court
+half carries `character: court`, so the card takes a neutral title and claims no tribunal
+powers.
+
+**The criteria were split to follow the avenue, 2026-09-10.** When internal review became its
+own path, `mrCriteria` stayed where it was — so the four lines the supervising lawyer supplied
+on 2026-08-19 about what the ISSUING AGENCY decides on a review (the fine stands or is
+cancelled; mistake of identity; a decision contrary to law; exceptional and special
+circumstances such as mental illness, disability, serious addiction, homelessness or family
+violence) were captioned "what they decide for a decision like yours" under a card naming the
+Magistrates' Court. A court hearing a fine on election decides the charge; it does not apply
+the statutory review grounds. The same lines appeared nowhere on the internal-review card,
+which is the card of the body that does apply them.
+
+Nothing was rewritten to split it, and no line was added or dropped. Every line names the body
+it is about, so each was filed under the body it names. The ROUTING line — that internal review
+and electing to go to court are two different choices, not steps in order — appears on both,
+because a person reading either card needs it. It is the sentence that stops someone believing
+they must be refused a review before they can elect to go to court.

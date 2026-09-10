@@ -31,10 +31,10 @@ async function toOptions(page: import("@playwright/test").Page) {
  * through — so a test that walks past the options has to make the choice a person would.
  */
 async function chooseApproach(page: import("@playwright/test").Page, which: RegExp) {
-  // Scoped to the analysis panel: `li` on its own also matches list items elsewhere on the
-  // view. The card title is the process NAME ("Merits review"), or the neutral title where
-  // the body is not a tribunal.
-  const card = page.locator("#r-analysis li", { has: page.getByRole("heading", { name: which }) }).first();
+  // Direct children of the panel's own list: a card's criteria, remedies and limits are
+  // `li` too, as are the four numbered steps below it. The card title is the process NAME
+  // ("Merits review"), or a neutral title where the body is not a tribunal.
+  const card = page.locator("#r-analysis > ol > li", { has: page.getByRole("heading", { name: which }) }).first();
   await expect(card).toBeVisible({ timeout: 15_000 });
   await card.getByRole("button", { name: /work through this one/i }).click();
 }
@@ -101,6 +101,171 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
   await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible({
     timeout: 15_000,
   });
+});
+
+/**
+ * Internal review as a real third path (2026-09-10).
+ *
+ * It used to be buried inside the merits-review body string — "Housing Appeals Office, then
+ * VCAT" — which is how a departmental reviewer came to sit under a card headed MERITS REVIEW
+ * and inherit a tribunal's question and remedies. For most decisions this service covers it
+ * is the first step and the cheapest one, and it was reachable only as an explainer link
+ * while the result screen called merits and judicial review "the two paths".
+ *
+ * Public housing is the entry that shows the whole split: the Housing Appeals Office is the
+ * internal path, VCAT (for a notice to vacate) is the tribunal, and the Supreme Court is the
+ * conditional court path.
+ */
+test("internal review is its own path, and choosing it drives the rest of the flow", async ({ page }) => {
+  await page.goto("/start");
+  const vic = page.getByRole("button", { name: /victorian state body/i });
+  await expect(async () => {
+    await vic.click();
+    await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });
+  }).toPass({ timeout: 15_000 });
+
+  await page.getByRole("button", { name: /public or social housing/i }).first().click();
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  await toOptions(page);
+
+  // Three cards, not two — and the reviewer is named on its own card rather than inside
+  // the tribunal's. Direct children only: a card's own criteria, remedies and limits are
+  // `li` too, and so are the four numbered steps under the panel.
+  const cards = page.locator("#r-analysis > ol > li");
+  await expect(cards).toHaveCount(3, { timeout: 15_000 });
+  const internal = cards.filter({ has: page.getByRole("heading", { name: /^internal review$/i }) });
+  await expect(internal).toHaveCount(1);
+  await expect(internal).toContainText(/Housing Appeals Office/i);
+  await expect(internal).toContainText(/usually considered first/i);
+
+  // And it claims none of a tribunal's powers. This is the defect that caused the split:
+  // "set the decision aside and substitute a new one" is what a tribunal can do, and a
+  // departmental reviewer cannot.
+  await expect(internal).not.toContainText(/correct or preferable/i);
+  await expect(internal).not.toContainText(/substitute/i);
+  await expect(internal).not.toContainText(/what it can do/i);
+  await expect(internal.getByText(/inside the agency, not by a tribunal/i)).toBeVisible();
+
+  // Meanwhile VCAT keeps everything that IS true of it — the split gave the tribunal its
+  // question and remedies back, having lost them while it shared a field with the HAO.
+  const tribunal = cards.filter({ has: page.getByRole("heading", { name: /^merits review$/i }) });
+  await expect(tribunal).toContainText(/correct or preferable/i);
+  await expect(tribunal).toContainText(/what it can do/i);
+
+  // And the judicial-review card must NOT carry the court caution. `planFor` stamps every
+  // judicial-review path character:"court", so keying the caution on character alone printed
+  // "a court hearing the matter itself, not a review of the decision" on this card — three
+  // paragraphs under its own text saying a court looks at HOW the decision was made. It was
+  // reaching five of the six entries.
+  const court = cards.filter({ has: page.getByRole("heading", { name: /^judicial review$/i }) });
+  await expect(court).toHaveCount(1);
+  await expect(court).not.toContainText(/hearing the matter itself/i);
+  await expect(court).not.toContainText(/not a review of the decision/i);
+  // What it should say, and does.
+  await expect(court).toContainText(/how the decision was made/i);
+
+  // The Housing Appeals Office card must carry the sentence saying it is NOT the path for a
+  // notice to vacate. It is headed "usually considered first", and someone facing eviction
+  // who follows that loses time they may not have. The line was on the VCAT card only.
+  await expect(internal).toContainText(/Housing Appeals Office is not the path/i);
+  await expect(internal).toContainText(/goes to VCAT/i);
+
+  await internal.getByRole("button", { name: /work through this one/i }).click();
+  await advance(page, /next: the points you raise/i);
+
+  // There is no checklist here, on purpose: our own entry for this step says the rules are
+  // different for every department, so there is no list to tick. One open question instead.
+  // Housing DOES have lawyer-supplied criteria for the reviewer, so the step shows them and
+  // the open box under them. The heading is the reviewer's, never "What the tribunal decides".
+  await expect(page.getByRole("heading", { name: /what the reviewer looks at for a decision like yours/i }))
+    .toBeVisible({ timeout: 15_000 });
+  await expect(page.locator("#r-grounds")).toContainText(/Housing Appeals Office is not the path/i);
+  await expect(page.locator("#r-grounds")).not.toContainText(/reasonable and proportionate/i);
+  await expect(page.locator("#r-grounds").getByRole("checkbox")).toHaveCount(0);
+  const box = page.locator("#cn-internal");
+  await expect(box).toBeVisible();
+  await box.fill("They never got the medical certificate I sent in March.");
+
+  // The memo follows the approach they chose, in their words.
+  await advance(page, /build my memo/i);
+  const memo = page.locator("#r-memo textarea");
+  await expect(memo).toBeVisible({ timeout: 15_000 });
+  await expect(memo).toHaveValue(/They never got the medical certificate I sent in March\./);
+  await expect(memo).toHaveValue(/Housing Appeals Office/i);
+  await expect(memo, "a tribunal's test has no place in an internal-review memo")
+    .not.toHaveValue(/correct or preferable/i);
+
+  // …and so does the letter. Only the one for the chosen approach is offered, and it asks
+  // for another look rather than naming a ground or asking for the preferable decision.
+  const draft = page.locator("#r-apply textarea");
+  await expect(draft).toBeVisible();
+  await expect(draft).toHaveValue(/look at the decision described above again/i);
+  await expect(draft).toHaveValue(/time limit for any next step/i);
+  await expect(draft).not.toHaveValue(/afresh on the facts/i);
+  await expect(page.locator("#r-apply").getByRole("button", { name: /^judicial review$/i })).toHaveCount(0);
+  // What they typed on the points step reaches the LETTER, not only the memo. It used to
+  // reach the memo alone, so the draft they were about to send kept its placeholder.
+  await expect(draft).toHaveValue(/They never got the medical certificate I sent in March\./);
+});
+
+/**
+ * The Victorian fines scheme, which is where every "the slot is not the body" defect shows
+ * up at once: internal review by the issuing agency, and the Magistrates' Court on election
+ * sitting in the merits slot without being merits review.
+ */
+test("the fines court election is never dressed up as merits review", async ({ page }) => {
+  await page.goto("/start");
+  const vic = page.getByRole("button", { name: /victorian state body/i });
+  await expect(async () => {
+    await vic.click();
+    await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });
+  }).toPass({ timeout: 15_000 });
+
+  await page.getByRole("button", { name: /fine or infringement/i }).first().click();
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  await toOptions(page);
+
+  const cards = page.locator("#r-analysis > ol > li");
+  await expect(cards).toHaveCount(3, { timeout: 15_000 });
+
+  // No card anywhere on this decision may be headed "Merits review" — this scheme has no
+  // tribunal step at all, and the entry's own note says so.
+  await expect(page.getByRole("heading", { name: /^merits review$/i })).toHaveCount(0);
+
+  // The statutory review grounds belong to the agency that reviews the fine, not to a court
+  // hearing the charge. They were captioned "what they decide for a decision like yours"
+  // under the court until the criteria were split to follow the avenue.
+  const internal = cards.filter({ has: page.getByRole("heading", { name: /^internal review$/i }) });
+  await expect(internal).toContainText(/mistake of identity/i);
+  await expect(internal).toContainText(/special circumstances/i);
+  const courtCard = cards.filter({ has: page.getByRole("heading", { name: /having the decision looked at again/i }) });
+  await expect(courtCard).toHaveCount(1);
+  await expect(courtCard).not.toContainText(/mistake of identity/i);
+  await expect(courtCard).not.toContainText(/correct or preferable/i);
+  await expect(courtCard).toContainText(/the court decides the charge itself/i);
+
+  // Choosing the court: the points step must not be headed "What the tribunal decides", and
+  // no letter is offered, because electing to go to court is a formal step under the scheme's
+  // own Act and we hold no checked form for it.
+  await courtCard.getByRole("button", { name: /work through this one/i }).click();
+  await advance(page, /next: the points you raise/i);
+  await expect(page.getByRole("heading", { name: /what this body decides for a decision like yours/i }))
+    .toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("heading", { name: /what the tribunal decides/i })).toHaveCount(0);
+
+  await advance(page, /build my memo/i);
+  await expect(page.locator("#r-apply")).toContainText(/There is no draft for this path/i);
+  await expect(page.locator("#r-apply textarea")).toHaveCount(0);
+
+  // And the memo hands the duty lawyer no tribunal powers for that court either.
+  const memo = page.locator("#r-memo textarea");
+  await expect(memo).toBeVisible();
+  await expect(memo).not.toHaveValue(/correct or preferable/i);
+  await expect(memo).toHaveValue(/not a tribunal conducting merits review/i);
 });
 
 test("tripwire: a sensitive matter shows the guidance first, and hands over at the end", async ({ page }) => {

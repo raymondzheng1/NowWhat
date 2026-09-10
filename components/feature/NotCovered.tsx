@@ -58,7 +58,7 @@ export function NotCovered({
             <Link href="/learn" className="link">
               Read how review works
             </Link>{" "}
-            — the two ways of challenging a government decision, explained.
+            — the ways a government decision gets looked at again, explained.
           </li>
         </ul>
       </div>

@@ -24,7 +24,7 @@ import type { Jurisdiction } from "@/lib/schemas/data";
  * merits review is usually what people want when they disagree with the result."
  */
 
-export type PathId = "merits-review" | "judicial-review";
+export type PathId = "internal-review" | "merits-review" | "judicial-review";
 
 export interface PathPlan {
   id: PathId;
@@ -44,8 +44,17 @@ export interface PathPlan {
    * judicial review applies grounds of review, not the enabling Act's criteria.
    */
   criteria: string[];
-  /** i18n key for the "what carries weight here" paragraph. */
-  focusKey: "focusMerits" | "focusJudicial";
+  /**
+   * i18n key for the "what carries weight here" paragraph.
+   *
+   * It follows the BODY, not the slot. `focusMerits` describes what a tribunal weighs — "it
+   * looks at the facts again … and decides what the correct or preferable decision is" — and
+   * the merits path was handing that to whatever sat in its field. On a Victorian fine that
+   * is the Magistrates' Court on election, so the card asserted the tribunal's test and then
+   * contradicted itself three lines lower, in the caution saying this one is not a review of
+   * the decision at all.
+   */
+  focusKey: "focusInternal" | "focusMerits" | "focusCourt" | "focusJudicial";
   /** Shown with a condition attached: this route exists only if the enabling Act provides it. */
   conditional: boolean;
   /**
@@ -117,6 +126,7 @@ export function planFor({
   judicialReview,
   jurisdiction,
   criteria = [],
+  internalCriteria = [],
 }: {
   avenue: AvenueView;
   meritsReview: Process;
@@ -125,8 +135,39 @@ export function planFor({
   jurisdiction?: Jurisdiction;
   /** `mrCriteria` from the lawyer-verified procedural layer, for this decision type. */
   criteria?: string[];
+  /** `irCriteria` — what the INTERNAL reviewer considers for this decision type. */
+  internalCriteria?: string[];
 }): ResultPlan {
   const paths: PathPlan[] = [];
+
+  // Internal review leads where a source names one. Not a view about anyone's case: the
+  // corpus says it plainly — "often the first step, and usually the cheapest one" — and for
+  // most decisions this service covers it is the step the decision letter itself points at.
+  //
+  // It carries no question and no remedies, deliberately. The corpus holds those for the two
+  // PROCESSES, and an internal reviewer is not a tribunal; the same entry that describes this
+  // step also says "the rules are different for every department, so there is no single
+  // answer about how it works". What it does carry is who looks at it again, which is the
+  // thing a person needs in order to act.
+  //
+  // It DOES carry criteria where the lawyer supplied them for this scheme. Those are the
+  // sourced, decision-specific part — for Victorian fines, the statutory grounds the issuing
+  // agency applies — and they sat under the tribunal/court card until the list was split to
+  // follow the avenue.
+  if (avenue.irAvailable && avenue.irBody) {
+    paths.push({
+      id: "internal-review",
+      order: paths.length + 1,
+      body: avenue.irBody,
+      question: "",
+      canDo: [],
+      cannotDo: [],
+      criteria: internalCriteria,
+      conditional: false,
+      character: "internal",
+      focusKey: "focusInternal",
+    });
+  }
 
   // Merits review leads whenever it exists: it is the only path that can produce a
   // different outcome rather than a re-decision.
@@ -140,7 +181,8 @@ export function planFor({
     //
     // `mrCriteria` still says what the body decides for this decision type — that came from
     // the lawyer, per scheme, and is the part that was always sourced.
-    const isTribunal = (avenue.mrCharacter ?? "tribunal") === "tribunal";
+    const mrCharacter = avenue.mrCharacter ?? "tribunal";
+    const isTribunal = mrCharacter === "tribunal";
     paths.push({
       id: "merits-review",
       order: paths.length + 1,
@@ -150,8 +192,15 @@ export function planFor({
       cannotDo: isTribunal ? meritsReview.limits : [],
       criteria,
       conditional: avenue.mrConditional ?? false,
-      character: avenue.mrCharacter ?? "tribunal",
-      focusKey: "focusMerits",
+      character: mrCharacter,
+      // The focus paragraph follows the body too. It was the last place the tribunal's test
+      // survived on a non-tribunal card, and it is the most confusing one, because the card
+      // then states the test and denies it within three lines.
+      focusKey: isTribunal
+        ? "focusMerits"
+        : mrCharacter === "court"
+          ? "focusCourt"
+          : "focusInternal",
     });
   }
   if (avenue.jrAvailable) {

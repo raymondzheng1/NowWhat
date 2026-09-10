@@ -32,7 +32,17 @@ export function analysisForCorpusEntry(
   const avenue = avenueView(entry);
   const dl = deadlineRuleView(entry);
   return {
-    plan: planFor({ avenue, meritsReview, judicialReview, jurisdiction: entry.jurisdiction }),
+    // The scheme-specific criteria are passed here too. They were omitted, so the decode and
+    // /ask results showed the same cards as /start minus the one part that is about THIS
+    // decision — which is the drift the shared panel exists to prevent.
+    plan: planFor({
+      avenue,
+      meritsReview,
+      judicialReview,
+      jurisdiction: entry.jurisdiction,
+      criteria: entry.mrCriteria ?? [],
+      internalCriteria: entry.irCriteria ?? [],
+    }),
     avenue,
     deadline: { rule: dl.rule, sourceUrl: dl.sourceUrl },
   };

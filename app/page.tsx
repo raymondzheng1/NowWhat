@@ -69,7 +69,7 @@ export default function HomePage() {
   const learnLd = itemListLd({
     name: "How review works — understand your options",
     description:
-      "Plain-English guides to challenging an Australian government decision: merits review, judicial review, and the grounds of review.",
+      "Plain-English guides to challenging an Australian government decision: asking the department to look at it again, merits review, judicial review, and the grounds of review.",
     items: learnLinks.map((l) => ({ name: l.title, path: l.href })),
   });
 

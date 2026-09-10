@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { composeMemo } from "@/lib/memo/compose";
-import { getProcess, listGrounds } from "@/lib/legal";
+import { getConcept, getProcess, listGrounds } from "@/lib/legal";
 import { getDataEntry } from "@/lib/data";
 import messages from "@/lib/i18n/messages/en.json";
 import patterns from "@/lib/safety/no-advice-patterns.json";
@@ -190,5 +190,175 @@ describe("the memo opens with the shape of the matter", () => {
     for (const r of rules) {
       expect(new RegExp(r.pattern, "i").test(m.body.toLowerCase()), r.why).toBe(false);
     }
+  });
+});
+
+/**
+ * The internal-review memo, added 2026-09-10 with the third path.
+ *
+ * Internal review is not one of the two lawyer-verified PROCESSES, so `process` is null and
+ * everything the memo says about the step comes from the corpus CONCEPT instead. The defect
+ * this guards against is the one that started the whole split: a departmental reviewer
+ * inheriting a tribunal's question, remedies and limits because it happened to share a field
+ * with one.
+ */
+describe("a memo about internal review borrows nothing from a tribunal", () => {
+  const internal = getConcept("internal-review")!;
+  const base = {
+    entry: getDataEntry("cth-centrelink")!,
+    grounds: [],
+    story: "They cut my payment without telling me why.",
+    goals: ["The decision changed"],
+    goalOther: "",
+    forum: "Services Australia — an Authorised Review Officer (ARO)",
+    t: (k: string) => k,
+  };
+
+  it("composes from the concept when there is no process", () => {
+    const m = composeMemo({ ...base, process: null, internal });
+    expect(m.body).toContain("memoIssue1Internal".toUpperCase());
+    expect(m.body).toContain("memoIssue2Internal".toUpperCase());
+    // The concept's own words, not ours.
+    expect(m.body).toContain(internal.keyPoints[0]!);
+    expect(m.body).toContain("Many schemes let you ask the department");
+  });
+
+  it("carries no tribunal question, no remedies and no limits", () => {
+    // The exact strings the composer emits, NOT prettier-looking variants of them. An
+    // earlier draft of this test asserted the absence of "MEMOWHATITCANDO", which the
+    // composer never writes in ANY memo — a check that could not fail and proved nothing.
+    // `h()` upper-cases its heading; `sub()` writes the key as it is. The casing follows that.
+    const m = composeMemo({ ...base, process: null, internal });
+    expect(m.body).not.toContain("correct or preferable");
+    expect(m.body, "sub() writes the key as it is").not.toContain("memoWhatItCanDo");
+    expect(m.body).not.toContain("memoWhatItCannotDo");
+    expect(m.body).not.toContain("memoQuestionAsked");
+    // Trailing newline, because h() writes the heading and then a rule line — and
+    // "MEMOISSUE1" is a prefix of the internal heading "MEMOISSUE1INTERNAL".
+    expect(m.body, "the process heading, not the internal one").not.toContain("MEMOISSUE1\n");
+    expect(m.body).not.toContain("MEMOISSUE2\n");
+  });
+
+  it("quotes what they said they want looked at again, and never characterises it", () => {
+    // Asserted STRUCTURALLY, not by banned phrases. An earlier draft checked that the body
+    // did not contain "this shows" or "supports" — strings the composer never emits in any
+    // branch, so the check could not fail and proved nothing about characterisation.
+    //
+    // What can fail: the section holds a label and the quote, and nothing else. Any sentence
+    // added around their words — "this supports the ground", "this indicates…" — is a line
+    // this does not allow, whatever it is worded as.
+    const note = "They never got the medical certificate I sent in March.";
+    const m = composeMemo({ ...base, process: null, internal, internalNote: note });
+    const lines = m.body.split("\n");
+    const at = lines.findIndex((l) => l.includes(note));
+    expect(at, "the note must appear").toBeGreaterThan(-1);
+    expect(lines[at]!.trim()).toBe(`"${note}"`);
+    expect(lines[at - 1]!.trim()).toBe("memoYourNote:");
+    // The heading above it, and then nothing else on the subject.
+    expect(lines.filter((l) => l.includes(note))).toHaveLength(1);
+    expect(lines[at + 1] ?? "").toBe("");
+  });
+
+  it("still carries the time-limit warning and the source block", () => {
+    const m = composeMemo({ ...base, process: null, internal });
+    expect(m.body).toContain("memoTimeCheck");
+    expect(m.body).toContain(base.entry.sourceUrl);
+    expect(m.body).toContain(base.entry.verifiedAsAt);
+  });
+
+  it("names the reviewer as the path, not merits review", () => {
+    const m = composeMemo({ ...base, process: null, internal });
+    expect(m.body).toContain(internal.plainName);
+    expect(m.body).not.toContain("Merits review");
+  });
+
+  it("a process memo is unchanged by any of this", () => {
+    const m = composeMemo({ ...base, process: getProcess("merits-review")!, internal: null });
+    expect(m.body).toContain("correct or preferable");
+    expect(m.body).toContain("MEMOISSUE1\n");
+    expect(m.body).toContain("memoWhatItCanDo");
+    expect(m.body).not.toContain("MEMOISSUE1INTERNAL");
+  });
+});
+
+/**
+ * A body that is not a tribunal does not get a tribunal's question, remedies or limits — the
+ * rule `planFor` and the result card have applied since 2026-08-23. The memo went on breaking
+ * it, because it re-derived everything from the PROCESS rather than from the path: choose the
+ * merits path for a Victorian fine and the memo told a duty lawyer that the Magistrates' Court
+ * asks "Is this the correct or preferable decision?" and can substitute its own decision.
+ */
+describe("the memo does not lend a tribunal's powers to a body that is not one", () => {
+  const fines = getDataEntry("vic-fines")!;
+  const shared = {
+    entry: fines,
+    grounds: [],
+    story: "",
+    goals: [],
+    goalOther: "",
+    forum: "the Magistrates' Court, if you elect to have it heard there",
+    t: (k: string) => k,
+  };
+
+  it("a court on the merits path carries no tribunal question and no remedies", () => {
+    const m = composeMemo({
+      ...shared,
+      process: merits,
+      character: "court",
+      criteria: fines.mrCriteria,
+    });
+    expect(m.body).not.toContain("correct or preferable");
+    expect(m.body).not.toContain("memoWhatItCanDo");
+    expect(m.body).not.toContain("memoWhatItCannotDo");
+    expect(m.body).not.toContain("memoQuestionAsked");
+    // It says so, rather than leaving a blank where the powers were.
+    expect(m.body).toContain("memoNotATribunal");
+    // And the lawyer's line about what the court does is still there.
+    expect(m.body).toContain("the court decides the charge itself");
+  });
+
+  it("the same memo for a real tribunal is unchanged", () => {
+    const m = composeMemo({ ...shared, process: merits, character: "tribunal" });
+    expect(m.body).toContain("correct or preferable");
+    expect(m.body).toContain("memoWhatItCanDo");
+    expect(m.body).not.toContain("memoNotATribunal");
+  });
+
+  it("judicial review keeps its own question and remedies — it is a court by design", () => {
+    // The court process's question and remedies are the corpus's own for that path, not
+    // borrowed ones, so the non-tribunal rule must never strip them.
+    const m = composeMemo({ ...shared, process: judicial, character: "court" });
+    expect(m.body).toContain(judicial.question);
+    expect(m.body).toContain("memoWhatItCanDo");
+    expect(m.body).not.toContain("memoNotATribunal");
+  });
+
+  it("the internal memo shows the scheme's own criteria where the lawyer supplied them", () => {
+    const m = composeMemo({
+      ...shared,
+      process: null,
+      internal: getConcept("internal-review")!,
+      criteria: fines.irCriteria,
+      forum: "the agency that issued the fine, or Fines Victoria",
+    });
+    expect(m.body).toContain("mistake of identity");
+    expect(m.body).toContain("special circumstances");
+  });
+
+  it("the summary counts the sections the memo actually has", () => {
+    const withNote = composeMemo({
+      ...shared, process: null, internal: getConcept("internal-review")!,
+      internalNote: "They never saw my medical certificate.",
+    });
+    expect(withNote.body).toContain("memoSummaryReadsInternal");
+    expect(withNote.body).toContain("MEMOISSUE3INTERNAL");
+
+    // Blank box: the third section does not exist, so the summary must not announce it.
+    const blank = composeMemo({
+      ...shared, process: null, internal: getConcept("internal-review")!, internalNote: "  ",
+    });
+    expect(blank.body).toContain("memoSummaryReadsInternalShort");
+    expect(blank.body).not.toContain("memoSummaryReadsInternal\n");
+    expect(blank.body).not.toContain("MEMOISSUE3INTERNAL");
   });
 });

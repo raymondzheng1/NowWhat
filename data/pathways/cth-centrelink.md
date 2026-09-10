@@ -20,10 +20,13 @@ keywords:
   - pension
   - jobseeker
 avenue:
+  ir:
+    available: true
+    body: Services Australia — an Authorised Review Officer (ARO)
+    source: 'servicesaustralia.gov.au — reviews and appeals'
   mr:
     available: true
-    character: mixed
-    body: internal review by Services Australia, then the ART
+    body: the Administrative Review Tribunal (ART)
     source: 'art.gov.au — apply for a review; Social Security (Administration) Act 1999 (Cth)'
   jr:
     available: true
@@ -113,3 +116,12 @@ confirms which provision sets each one. That is the open item for this entry at 
 then the ART", so half of it is a reviewer inside the agency and half is a tribunal. It was
 typed as a plain tribunal, which handed the internal half the tribunal's question and
 remedies — the same defect already fixed for fines and housing.
+
+**Internal review became a path of its own, 2026-09-10.** It was buried inside the
+merits-review body string, which is how a departmental reviewer came to inherit a
+tribunal's card. For most decisions this service covers it is the first step and the
+cheapest, and it was reachable only as an explainer link while the result screen called
+merits and judicial review "the two paths".
+
+The body and source come from this entry's own verified decode counterpart, so nothing new
+is asserted — the fact was already published, in the wrong field.
