@@ -99,3 +99,47 @@ describe("the memo", () => {
     expect(m.body.toLowerCase()).toContain("late application");
   });
 });
+
+describe("the person's own words on a ground", () => {
+  it("appear under that ground, quoted, and are never characterised", () => {
+    // Marking a ground said "this sounds like my situation" and nothing more, so the memo
+    // could set out the law on a point with not a word from the person about what actually
+    // happened on it. The memo read as though the points were ours.
+    const g = listGrounds().filter((x) => x.id === "procedural-fairness-hearing");
+    const note = "They used a report I was never shown, and nobody asked me about it.";
+    const m = composeMemo({ ...base, grounds: g, groundNotes: { [g[0]!.id]: note } });
+    expect(m.body).toContain(`"${note}"`);
+    expect(m.body).toContain(t("memoYourNote"));
+    // Quoted, not characterised: no claim it proves, supports or makes out anything.
+    const around = m.body.slice(Math.max(0, m.body.indexOf(note) - 400), m.body.indexOf(note));
+    expect(around.toLowerCase()).not.toMatch(/proves|shows that|establishes|supports the ground/);
+  });
+
+  it("a note for a ground they did not mark never reaches the memo", () => {
+    const g = listGrounds().filter((x) => x.id === "procedural-fairness-hearing");
+    const m = composeMemo({
+      ...base,
+      grounds: g,
+      groundNotes: { "improper-purpose": "Something about a different ground entirely." },
+    });
+    expect(m.body).not.toContain("a different ground entirely");
+  });
+
+  it("composes without notes at all — the field is optional", () => {
+    const g = listGrounds().filter((x) => x.id === "procedural-fairness-hearing");
+    expect(() => composeMemo({ ...base, grounds: g })).not.toThrow();
+    expect(composeMemo({ ...base, grounds: g }).body).not.toContain(t("memoYourNote"));
+  });
+
+  it("still never predicts or ranks, with notes attached", () => {
+    const rules = [...patterns.prediction, ...patterns.score] as { pattern: string; why: string }[];
+    const m = composeMemo({
+      ...base,
+      grounds: listGrounds().slice(0, 4),
+      groundNotes: Object.fromEntries(listGrounds().slice(0, 4).map((x) => [x.id, "It happened to me."])),
+    });
+    for (const r of rules) {
+      expect(new RegExp(r.pattern, "i").test(m.body.toLowerCase()), r.why).toBe(false);
+    }
+  });
+});

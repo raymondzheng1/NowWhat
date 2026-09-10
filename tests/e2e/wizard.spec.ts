@@ -12,9 +12,9 @@ test.beforeEach(async ({ context }) => {
 
 
 /**
- * The result is four steps now — what happened, what you want, your options, next steps —
- * so a test that wants the analysis has to walk to it. Continue is never disabled, so this
- * clicks straight through without filling anything in.
+ * The result is six views — what happened, what you want, your options, the points you
+ * raise, your memo, talk to a person — so a test that wants the analysis has to walk to it.
+ * Continue is never disabled, so this clicks straight through without filling anything in.
  */
 async function toOptions(page: import("@playwright/test").Page) {
   const next = page.getByRole("button", { name: /next: what you want/i });
@@ -23,6 +23,13 @@ async function toOptions(page: import("@playwright/test").Page) {
   const opts = page.getByRole("button", { name: /see my options/i });
   await expect(opts).toBeVisible({ timeout: 15_000 });
   await opts.click();
+}
+
+/** Walk on from the options to the grounds, the memo, and finally the hand-over. */
+async function advance(page: import("@playwright/test").Page, label: RegExp) {
+  const b = page.getByRole("button", { name: label });
+  await expect(b).toBeVisible({ timeout: 15_000 });
+  await b.click();
 }
 
 /**
@@ -66,15 +73,18 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
   await expect(page.getByText(/not legal advice/i)).toBeVisible(); // disclaimer
   await expect(page.getByText(/free help/i).first()).toBeVisible();
 
-  // Step "next steps" — the reasons draft and the grounds people raise.
-  await page.getByRole("button", { name: /^next steps/i }).click();
+  // The points you raise, then the memo — which is where the reasons draft now lives.
+  await advance(page, /next: the points you raise/i);
+  await expect(page.getByRole("heading", { name: /grounds people raise/i })).toBeVisible({
+    timeout: 15_000,
+  });
+  await advance(page, /build my memo/i);
   await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible({
     timeout: 15_000,
   });
-  await expect(page.getByRole("heading", { name: /grounds people raise/i })).toBeVisible();
 });
 
-test("tripwire: a sensitive matter leads with a person, and still shows the options", async ({ page }) => {
+test("tripwire: a sensitive matter shows the guidance first, and hands over at the end", async ({ page }) => {
   await page.goto("/start");
   const vic = page.getByRole("button", { name: /victorian state body/i });
   await expect(async () => {
@@ -87,12 +97,22 @@ test("tripwire: a sensitive matter leads with a person, and still shows the opti
   await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
   await page.getByRole("button", { name: /see my next steps/i }).click();
 
-  await expect(page.getByRole("heading", { name: /some extra rules apply/i })).toBeVisible({ timeout: 15_000 });
-  // The hand-over LEADS, but it no longer replaces the analysis: the person picked a
-  // decision type, and their circumstances are extra context rather than a reason to
-  // withhold everything we know about that decision.
+  // The hand-over used to LEAD the result. It does not any more: a person who came here for
+  // guidance gets the guidance first, and is handed to a service as the step after it. What
+  // still leads is a one-line urgent banner, because a child-protection or compulsory-
+  // treatment matter cannot wait six views for a phone number.
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("heading", { name: /some extra rules apply/i })).toHaveCount(0);
+  await expect(page.getByText(/may not be able to wait/i)).toBeVisible();
+
   await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
+
+  // …and the full hand-over is there at the end.
+  await advance(page, /next: the points you raise/i);
+  await advance(page, /build my memo/i);
+  await advance(page, /next: talk to a person/i);
+  await expect(page.getByRole("heading", { name: /some extra rules apply/i })).toBeVisible({ timeout: 15_000 });
 });
 
 test("urgent timing does NOT dead-end: the person still gets their options", async ({ page }) => {
@@ -110,11 +130,15 @@ test("urgent timing does NOT dead-end: the person still gets their options", asy
   await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
   await page.getByRole("button", { name: /see my next steps/i }).click();
 
-  // Urgent banner AND the full result.
+  // Urgent banner AND the full result. Timing is the carve-out from "guidance first": a
+  // limit that is imminent or already gone is exactly the case where reading six views
+  // before seeing a phone number could cost the person the right. lib/tripwire keeps timing
+  // separate from scope, and this banner has always shown on every view.
   await expect(page.getByRole("heading", { name: /call a human service today/i })).toBeVisible({ timeout: 15_000 });
   await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
-  await page.getByRole("button", { name: /^next steps/i }).click();
+  await advance(page, /next: the points you raise/i);
+  await advance(page, /build my memo/i);
   await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible({
     timeout: 15_000,
   });
@@ -202,10 +226,61 @@ test("a ticked tripwire flag no longer withholds the analysis", async ({ page })
   await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
   await page.getByRole("button", { name: /see my next steps/i }).click();
 
-  // The hand-over leads…
-  await expect(page.getByRole("heading", { name: /some extra rules apply/i })).toBeVisible({ timeout: 15_000 });
-  // …and the analysis and pathway still follow it.
+  // The hand-over no longer leads — an urgent banner does, and the analysis comes first.
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("heading", { name: /some extra rules apply/i })).toHaveCount(0);
+  await expect(page.getByText(/may not be able to wait/i)).toBeVisible();
   await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
   await expect(page.getByRole("heading", { name: /putting it together/i })).toBeVisible();
+});
+
+/**
+ * The order of the flow is the product argument, so it is worth a test.
+ *
+ * Someone arrives for guidance. They tell us what happened, say what they want, see their
+ * options, mark the points that sound like their situation and write against each one, get a
+ * memorandum — and only then are handed to a free service. The hand-over used to lead the
+ * result whenever a flag was ticked, and a help list sat in the middle of the options, which
+ * told a person to go and ask someone else before we had told them anything.
+ */
+test("the flow gives guidance first and hands over last", async ({ page }) => {
+  await page.goto("/start");
+  const vic = page.getByRole("button", { name: /victorian state body/i });
+  await expect(async () => {
+    await vic.click();
+    await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });
+  }).toPass({ timeout: 15_000 });
+  await page.getByRole("button", { name: /notice to vacate|renting/i }).first().click();
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+
+  await toOptions(page);
+
+  // The options view carries the analysis, and NOT the free-services list.
+  await expect(page.getByRole("heading", { name: /what this means/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /free help with this decision/i })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: /take this to a human service/i })).toHaveCount(0);
+
+  // Grounds come next, with a box against each one the person marks.
+  await advance(page, /next: the points you raise/i);
+  const ground = page.getByRole("checkbox").first();
+  await expect(ground).toBeVisible({ timeout: 15_000 });
+  await ground.check();
+  const note = page.locator('textarea[id^="gn-"]').first();
+  await expect(note).toBeVisible();
+  await note.fill("They never showed me the report they relied on.");
+
+  // Then the memo — carrying the person's own words on that point, verbatim.
+  await advance(page, /build my memo/i);
+  const memo = page.locator("#r-memo textarea");
+  await expect(memo).toBeVisible({ timeout: 15_000 });
+  await expect(memo).toHaveValue(/They never showed me the report they relied on\./);
+
+  // And only now, the hand-over to a person.
+  await advance(page, /next: talk to a person/i);
+  await expect(page.getByRole("heading", { name: /take this to a human service/i }))
+    .toBeVisible({ timeout: 15_000 });
+  await expect(page.getByRole("heading", { name: /free help with this decision/i })).toBeVisible();
 });

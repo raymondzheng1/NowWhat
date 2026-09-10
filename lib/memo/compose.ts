@@ -30,6 +30,18 @@ export interface MemoInput {
   process: Process;
   /** Grounds the person marked as possibly relating to them, in corpus order. */
   grounds: Ground[];
+  /**
+   * What the person wrote against a particular ground, keyed by ground id.
+   *
+   * The memo used to carry one account of what happened and nothing else, so a person who
+   * had something specific to say about ONE point — the letter they never saw, the phone
+   * call nobody returned — had nowhere to put it, and the memo read as though the grounds
+   * were ours rather than theirs.
+   *
+   * Quoted verbatim, exactly like the story, and never characterised. We do not say the note
+   * proves anything, relates to anything, or makes the point stronger.
+   */
+  groundNotes?: Record<string, string>;
   /** What they wrote about what happened. Quoted verbatim or omitted. */
   story: string;
   /** What they said they are hoping for, already rendered to plain labels. */
@@ -75,6 +87,7 @@ export function composeMemo(input: MemoInput): Memo {
     story,
     goals,
     goalOther,
+    groundNotes = {},
     decisionDate,
     forum,
     corpusVersion,
@@ -166,6 +179,14 @@ export function composeMemo(input: MemoInput): Memo {
       L.push(`${t("memoArgument")}:`);
       for (const w of g.whatRelates) L.push(`  - ${rule(w)}`);
       L.push(`  ${t("memoArgumentNote")}`);
+      // Their own words on this point, if they wrote any. Verbatim and unlabelled as
+      // evidence — the reader of this memo decides what it is worth, not us.
+      const note = (groundNotes[g.id] ?? "").trim().replace(/\s+/g, " ");
+      if (note) {
+        L.push("");
+        L.push(`${t("memoYourNote")}:`);
+        L.push(`  "${note}"`);
+      }
       if (g.whatItIsNot) {
         L.push("");
         L.push(`${t("memoCounter")}:`);

@@ -80,8 +80,28 @@ type Step = "who" | "what" | "result";
  *
  * Each pushes a history entry, so Back walks the steps instead of leaving the flow.
  */
-type ResultView = "story" | "goal" | "options" | "path";
-const RESULT_VIEWS: ResultView[] = ["story", "goal", "options", "path"];
+type ResultView = "story" | "goal" | "options" | "grounds" | "memo" | "help";
+
+/**
+ * The order this flow moves in, and why it changed on 2026-09-10.
+ *
+ * It used to run story → goal → options → path, with the whole of the rest — the grounds, the
+ * memorandum, the draft letter and the hand-over to a free service — stacked inside "path".
+ * Two things were wrong with that. The hand-over to a human led the result whenever any flag
+ * was ticked, and a help list sat in the middle of the options, so a person who came here for
+ * guidance was told to go and ask someone else before we had told them anything. And the
+ * grounds arrived at the very end, as a checklist with nowhere to say what happened on each
+ * one, so the memo read as though the points were ours rather than theirs.
+ *
+ * Now: they tell us what happened, say what they want, see the routes, mark the points that
+ * sound like their situation AND write against each one, get the memorandum, and only then
+ * are handed to a person — as the next step, not as the answer.
+ *
+ * The one exception is timing. Where a flag says the deadline is imminent or already passed,
+ * or a hearing is on foot, or someone is held, a short banner still sits at the top of every
+ * view. Those cannot wait for six screens.
+ */
+const RESULT_VIEWS: ResultView[] = ["story", "goal", "options", "grounds", "memo", "help"];
 
 /**
  * What someone wants out of this. Multi-select, because people arrive with more than one —
@@ -730,6 +750,13 @@ function ResultStep({
   );
   // Which of the four result steps is on screen, and what they told us on the way.
   const [view, setView] = useState<ResultView>("story");
+  // What the person wrote against each ground they marked.
+  //
+  // Marking a ground said "this sounds like my situation" and nothing more, so the memo could
+  // set out the law on a point without a word from the person about what actually happened on
+  // it. Their words go into the memo verbatim, under the ground they wrote them against, and
+  // are never characterised as evidence or as making the point out.
+  const [groundNotes, setGroundNotes] = useState<Record<string, string>>({});
   const [goals, setGoals] = useState<GoalId[]>([]);
   const [goalOther, setGoalOther] = useState("");
   const viewIdx = RESULT_VIEWS.indexOf(view);
@@ -815,6 +842,17 @@ function ResultStep({
   }
 
   // --- Tripwire: stop and route to a person (no builder output) ---
+  // Which STOP reasons cannot wait for the last view.
+  //
+  // The clock cases are already handled: lib/tripwire keeps timing separate as `urgent`, and
+  // that banner has always shown on every view. This is the other kind — `urgentPerson`,
+  // which marks someone held, a criminal matter, or child protection and compulsory
+  // treatment. Those are listed within days, so a phone number cannot wait for view six.
+  //
+  // Everything else that stops — migration, a privative clause — is a SCOPE problem, and
+  // scope keeps perfectly well until the hand-over at the end.
+  const urgentNow = caps.urgentPerson;
+
   // The tripwire no longer STOPS the flow.
   //
   // It used to return a hand-over screen instead of the result, so ticking any box under
@@ -860,6 +898,14 @@ function ResultStep({
           account: {
             answers: {
               ...account,
+              // Their own words on a ground go in first; a picked sentence for the same
+              // ground overwrites it below, because a sentence they ticked is one they have
+              // already approved for a letter someone else will read.
+              ...Object.fromEntries(
+                Object.entries(groundNotes)
+                  .filter(([id, v]) => relatedGrounds.includes(id) && v.trim())
+                  .map(([id, v]) => [`g-${id}`, v.trim()]),
+              ),
               // Ticked lines become the text under each heading. Untouched if they never
               // pressed the button, so the deterministic letter is unchanged.
               ...Object.fromEntries(
@@ -881,19 +927,33 @@ function ResultStep({
         })
       : null;
 
-  // What is actually on this page, in the order it appears.
-  const contents = [
-    { id: "r-analysis", label: t("analysisTitle") },
-    ...(av.mrAvailable || av.jrAvailable ? [{ id: "r-learn", label: t("learnTitle") }] : []),
-    { id: "r-reasons", label: t("reasonsTitle") },
-    ...((av.mrAvailable || av.jrAvailable) && shownGrounds.length > 0
-      ? [{ id: "r-grounds", label: t("groundsTitle") }]
-      : []),
-    ...(relatedGrounds.length > 0 || applyDraft ? [{ id: "r-account", label: t("accountTitle") }] : []),
-    ...(applyDraft ? [{ id: "r-apply", label: t("applyTitle") }] : []),
-    ...(faqs.length > 0 ? [{ id: "r-faq", label: t("faqTitle") }] : []),
-    { id: "r-handoff", label: t("handoffTitle") },
-  ];
+  // What is actually on this VIEW, in the order it appears.
+  //
+  // This listed the whole result regardless of which view was showing, which was harmless
+  // while everything lived on one long page. Since the flow was split into six views it
+  // would send a reader to an anchor that is not on screen, which is worse than no list.
+  const hasPaths = av.mrAvailable || av.jrAvailable;
+  const contents = (
+    {
+      story: [{ id: "r-account", label: t("accountTitle") }],
+      goal: [{ id: "r-goal", label: t("goalTitle") }],
+      options: [
+        { id: "r-analysis", label: t("analysisTitle") },
+        ...(hasPaths ? [{ id: "r-learn", label: t("learnTitle") }] : []),
+        ...(shownConcepts.length > 0 ? [{ id: "r-concepts", label: t("conceptsTitle") }] : []),
+      ],
+      grounds: hasPaths && shownGrounds.length > 0
+        ? [{ id: "r-grounds", label: t("groundsTitle") }]
+        : [],
+      memo: [
+        { id: "r-reasons", label: t("reasonsTitle") },
+        ...(applyDraft ? [{ id: "r-apply", label: t("applyTitle") }] : []),
+        ...(faqs.length > 0 ? [{ id: "r-faq", label: t("faqTitle") }] : []),
+        { id: "r-memo", label: t("memoSectionTitle") },
+      ],
+      help: [{ id: "r-handoff", label: t("handoffTitle") }],
+    } as Record<ResultView, { id: string; label: string }[]>
+  )[view];
   const dl = deadlineRuleView(entry);
   const template = reasonsRequestTemplate(entry, {
     about: entry.title.toLowerCase(),
@@ -909,6 +969,7 @@ function ResultStep({
     entry,
     process: memoProcess,
     grounds: shownGrounds.filter((g) => relatedGrounds.includes(g.id)),
+    groundNotes,
     story: account["q-story"] ?? "",
     goals: goals.map((g) => t(`goal_${g}`)),
     goalOther,
@@ -1004,8 +1065,29 @@ function ResultStep({
 
       <Disclaimer />
 
-      {/* Leads when a flag was ticked; the analysis below is unchanged. */}
-      {trip.stop && (
+      {/* A person who is held, facing a criminal matter, or up against a limit that is
+          imminent or already gone cannot wait six views for a phone number. This banner is
+          short and it does not replace anything — the full hand-over is the last view.
+          Everything else waits for that view, because someone who came here for guidance
+          should be given the guidance before being sent elsewhere. */}
+      {trip.stop && urgentNow && view !== "help" && (
+        <div className="rounded-card border-2 border-help bg-help-soft px-4 py-3.5">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+            <p className="min-w-0 flex-1 text-[15.5px] font-medium leading-snug text-help-ink">
+              {t("urgentBanner")}
+            </p>
+            {stopServices[0]?.phone && (
+              <CallButton phone={stopServices[0].phone} label={stopServices[0].service} />
+            )}
+            <button type="button" onClick={() => goView("help")} className="link-text min-h-[44px] font-semibold text-help-ink">
+              {t("urgentBannerLink")}
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* The hand-over, in full. It closes the flow rather than opening it. */}
+      {trip.stop && view === "help" && (
         <div className="space-y-6">
 
           {/* A warm hand-over, never an error: green help tones, a friendly glyph, no alarm. */}
@@ -1251,7 +1333,7 @@ function ResultStep({
           of the page, below an explainer nobody has to read. Every route here has a time limit,
           so this is not gated on the urgency tripwire — it shows on every options view. The full
           block still closes the page. */}
-      {view === "options" && <HelpList t={t} entry={entry} compact />}
+      {view === "help" && <HelpList t={t} entry={entry} compact />}
 
       {/* Understand these options — in-flow Learn (progressive disclosure) */}
       {view === "options" && (av.mrAvailable || av.jrAvailable) && (
@@ -1287,7 +1369,7 @@ function ResultStep({
       )}
 
       {/* Ask for the reasons */}
-      {view === "path" && (
+      {view === "memo" && (
       <section id="r-reasons" data-tour="reasons" className="card">
         <h2 className="font-display text-[21px] font-black text-ink">{t("reasonsTitle")}</h2>
         <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("reasonsLead")}</p>
@@ -1312,7 +1394,7 @@ function ResultStep({
       )}
 
       {/* Grounds people raise — in-flow, neutral; selection flows into the hand-off */}
-      {view === "path" && (av.mrAvailable || av.jrAvailable) && shownGrounds.length > 0 && (
+      {view === "grounds" && (av.mrAvailable || av.jrAvailable) && shownGrounds.length > 0 && (
         <section id="r-grounds" data-tour="grounds" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("groundsTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("groundsLead")}</p>
@@ -1325,6 +1407,36 @@ function ResultStep({
               linkBase="/learn/grounds"
             />
           </div>
+          {/* One box per marked ground. This is the half that was missing: marking a ground
+              said "this sounds like my situation" and gave the person nowhere to say what
+              actually happened on it, so the memorandum set out the law on a point in
+              nobody's words but ours. Only marked grounds get a box — an empty form of
+              seventeen is a form nobody fills in. */}
+          {relatedGrounds.length > 0 && (
+            <div className="mt-6 space-y-4">
+              <h3 className="font-display text-[17px] font-black text-ink">{t("groundNotesTitle")}</h3>
+              <p className="text-[15.5px] leading-relaxed text-ink-soft">{t("groundNotesLead")}</p>
+              {shownGrounds
+                .filter((g) => relatedGrounds.includes(g.id))
+                .map((g) => (
+                  <div key={g.id}>
+                    <label htmlFor={`gn-${g.id}`} className="block font-display text-[15.5px] font-extrabold text-ink">
+                      {g.plainName}
+                    </label>
+                    <textarea
+                      id={`gn-${g.id}`}
+                      value={groundNotes[g.id] ?? ""}
+                      onChange={(e) => setGroundNotes((prev) => ({ ...prev, [g.id]: e.target.value }))}
+                      rows={3}
+                      placeholder={t("groundNotesPlaceholder")}
+                      className="input mt-1.5 w-full"
+                    />
+                  </div>
+                ))}
+              <p className="text-[14.5px] leading-snug text-ink-faint">{t("groundNotesPrivacy")}</p>
+            </div>
+          )}
+
           <Link href="/learn/grounds" className="link-text mt-5 inline-flex min-h-[44px]">
             {t("groundsMore")}
           </Link>
@@ -1524,7 +1636,7 @@ function ResultStep({
 
       {/* Apply for review — one draft per path, chosen by the person. Built on-device from
           the corpus entry (pure function, no request), so the no-network promise holds. */}
-      {view === "path" && applyDraft && activeApply && (
+      {view === "memo" && applyDraft && activeApply && (
         <section id="r-apply" data-tour="apply" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("applyTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("applyLead")}</p>
@@ -1585,7 +1697,7 @@ function ResultStep({
       {/* Questions other people asked about THIS decision. Every FAQ article names the
           pathway it was written for, so this is a real join rather than a generic list —
           the guided flow and the answer library finally point at each other. */}
-      {view === "path" && faqs.length > 0 && (
+      {view === "memo" && faqs.length > 0 && (
         <section id="r-faq" className="card sticker" style={{ "--rot": "0.6deg" } as React.CSSProperties}>
           <h2 className="font-display text-[21px] font-black text-ink">{t("faqTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("faqLead")}</p>
@@ -1611,10 +1723,10 @@ function ResultStep({
       )}
 
       {/* Hand-off + help */}
-      {/* Move between the four steps. Continue is never disabled: the story box can be left
-          empty and the goals unticked, because someone who just wants to see their options
-          should not be made to write an essay first. */}
-      {view !== "path" && (
+      {/* Move between the six views. Continue is never disabled: the story box can be left
+          empty, the goals unticked and the grounds unmarked, because someone who just wants
+          to see their options should not be made to write an essay first. */}
+      {view !== "help" && (
         <div className="flex flex-wrap items-center justify-between gap-3">
           {viewIdx > 0 ? (
             <button
@@ -1636,21 +1748,10 @@ function ResultStep({
           </button>
         </div>
       )}
-      {view === "path" && (
-        <div>
-          <button
-            type="button"
-            onClick={() => goView("options")}
-            className="btn btn-secondary"
-          >
-            {t("viewBackOptions")}
-          </button>
-        </div>
-      )}
 
       {/* The memo. IRAC, argued both ways, no prediction and no ranking — the owner's two
           worked memoranda minus the two things this app must never do. */}
-      {view === "path" && (
+      {view === "memo" && (
         <section id="r-memo" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("memoSectionTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("memoSectionLead")}</p>
@@ -1685,7 +1786,14 @@ function ResultStep({
       )}
 
       {/* The one foil on this screen (max one per page): the recommended next action is to
-          take the summary to a human service. */}
+          take the summary to a human service.
+
+          This block and the help list under it used to render on EVERY view, so the first
+          thing a person saw after telling us their situation was "take this to a human
+          service" and a list of phone numbers — before we had told them anything. They came
+          here for guidance. The hand-over is the step AFTER the guidance, so it lives on the
+          last view with the rest of the routing. */}
+      {view === "help" && (
       <section
         id="r-handoff"
         data-tour="handoff"
@@ -1705,8 +1813,9 @@ function ResultStep({
           </div>
         </div>
       </section>
+      )}
 
-      <HelpList t={t} entry={entry} />
+      {view === "help" && <HelpList t={t} entry={entry} />}
     </div>
   );
 }
