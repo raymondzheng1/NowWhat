@@ -22,6 +22,7 @@ keywords:
 avenue:
   mr:
     available: true
+    character: mixed
     body: internal review by Services Australia, then the ART
     source: 'art.gov.au — apply for a review; Social Security (Administration) Act 1999 (Cth)'
   jr:
@@ -107,3 +108,8 @@ we hold no source for either. The Act stays named on the review steps, where thi
 
 The stage-by-stage periods the reviewer asked for cannot follow until the supervising lawyer
 confirms which provision sets each one. That is the open item for this entry at the next cadence.
+
+**Typed as a mixed path, 2026-09-10.** The body is "internal review by Services Australia,
+then the ART", so half of it is a reviewer inside the agency and half is a tribunal. It was
+typed as a plain tribunal, which handed the internal half the tribunal's question and
+remedies — the same defect already fixed for fines and housing.

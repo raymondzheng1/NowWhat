@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import type { AvenueView } from "@/lib/triage";
 import type { Process } from "@/lib/schemas/legal";
-import type { ResultPlan, PathPlan } from "@/lib/analysis";
+import type { ResultPlan, PathPlan, PathId } from "@/lib/analysis";
 import { midSentence } from "@/lib/analysis";
 import { Icon } from "@/components/ui/icons";
 
@@ -31,6 +31,9 @@ export function AnalysisPanel({
   judicialReview,
   deadline,
   tour = false,
+  chosen,
+  onChoose,
+  matchesGoal,
 }: {
   plan: ResultPlan;
   avenue: AvenueView;
@@ -38,6 +41,11 @@ export function AnalysisPanel({
   judicialReview: Process;
   deadline: { rule: string; sourceUrl?: string | null };
   tour?: boolean;
+  /** The path the person has picked to work through, if they have picked one. */
+  chosen?: PathId | null;
+  onChoose?: (id: PathId) => void;
+  /** Paths that answer what they said they were hoping for. A mapping, never a prediction. */
+  matchesGoal?: (id: PathId) => boolean;
 }) {
   const t = useTranslations("rights");
   const av = avenue;
@@ -87,9 +95,28 @@ export function AnalysisPanel({
                   {t(p.id === "judicial-review" ? "pathConditionalJudicial" : "pathConditional")}
                 </span>
               )}
+              {/* A mapping from what they said they wanted to what this forum can do — the
+                  goal step asked, the corpus says which remedies exist, and this joins the
+                  two. It is not a view about how their matter will go, and it never says one
+                  path is better than another. */}
+              {matchesGoal?.(p.id) && (
+                <span className="rounded-pill border-2 border-help bg-help-soft px-2.5 py-0.5 text-[13px] font-semibold text-help-ink">
+                  {t("pathMatchesGoal")}
+                </span>
+              )}
             </div>
+            {/* "Merits review" is the name of a thing a TRIBUNAL does. Calling an internal
+                review or a Magistrates' Court election by that name is wrong: an internal
+                reviewer is inside the agency, and a court hearing a fine on election is not
+                conducting merits review of an administrative decision. Where the body is not
+                a tribunal, the card takes a neutral title and the caution below says what the
+                body actually is. */}
             <h3 className="mt-1.5 font-display text-[19px] font-black text-ink">
-              {p.id === "merits-review" ? meritsReview.name : judicialReview.name}
+              {p.id === "judicial-review"
+                ? judicialReview.name
+                : p.character === "tribunal"
+                  ? meritsReview.name
+                  : t("pathTitleNotTribunal")}
             </h3>
 
             {/* The question the forum decides — the foundation the whole path rests on.
@@ -178,6 +205,24 @@ export function AnalysisPanel({
                 </div>
               )}
             </div>
+            )}
+
+            {/* Choosing a path is the person's, and everything after this follows from it:
+                which points they are asked about, which application draft they get, and what
+                the memorandum works through. The app orders the paths — merits review first
+                where it exists, because only a tribunal can substitute the decision — but it
+                does not choose, and it does not say which one suits their facts. */}
+            {onChoose && (
+              <div className="mt-4 border-t-2 border-line pt-4">
+                <button
+                  type="button"
+                  aria-pressed={chosen === p.id}
+                  onClick={() => onChoose(p.id)}
+                  className={chosen === p.id ? "btn btn-primary" : "btn btn-secondary"}
+                >
+                  {chosen === p.id ? t("pathChosen") : t("pathChoose")}
+                </button>
+              </div>
             )}
           </li>
         ))}

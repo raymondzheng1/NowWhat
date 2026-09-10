@@ -25,6 +25,20 @@ async function toOptions(page: import("@playwright/test").Page) {
   await opts.click();
 }
 
+/**
+ * Choose an approach. Everything after the options view follows from it — which points the
+ * person is asked about, which application draft they get, and what the memorandum works
+ * through — so a test that walks past the options has to make the choice a person would.
+ */
+async function chooseApproach(page: import("@playwright/test").Page, which: RegExp) {
+  // Scoped to the analysis panel: `li` on its own also matches list items elsewhere on the
+  // view. The card title is the process NAME ("Merits review"), or the neutral title where
+  // the body is not a tribunal.
+  const card = page.locator("#r-analysis li", { has: page.getByRole("heading", { name: which }) }).first();
+  await expect(card).toBeVisible({ timeout: 15_000 });
+  await card.getByRole("button", { name: /work through this one/i }).click();
+}
+
 /** Walk on from the options to the grounds, the memo, and finally the hand-over. */
 async function advance(page: import("@playwright/test").Page, label: RegExp) {
   const b = page.getByRole("button", { name: label });
@@ -73,12 +87,17 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
   await expect(page.getByText(/not legal advice/i)).toBeVisible(); // disclaimer
   await expect(page.getByText(/free help/i).first()).toBeVisible();
 
-  // The points you raise, then the memo — which is where the reasons draft now lives.
+  // Choosing an approach drives what comes next. Renting is a tribunal path, so the points
+  // are what VCAT decides — not seventeen judicial-review grounds, which are not what a
+  // person doing merits review is arguing.
+  await chooseApproach(page, /^merits review$|having the decision looked at again/i);
   await advance(page, /next: the points you raise/i);
-  await expect(page.getByRole("heading", { name: /grounds people raise/i })).toBeVisible({
+  await expect(page.getByRole("heading", { name: /what the tribunal decides/i })).toBeVisible({
     timeout: 15_000,
   });
   await advance(page, /build my memo/i);
+  // Asking for written reasons is opt-in now, so it is a disclosure rather than a section
+  // sitting open for everyone.
   await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible({
     timeout: 15_000,
   });
@@ -137,6 +156,7 @@ test("urgent timing does NOT dead-end: the person still gets their options", asy
   await expect(page.getByRole("heading", { name: /call a human service today/i })).toBeVisible({ timeout: 15_000 });
   await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
+  await chooseApproach(page, /^merits review$|having the decision looked at again/i);
   await advance(page, /next: the points you raise/i);
   await advance(page, /build my memo/i);
   await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible({
@@ -251,7 +271,9 @@ test("the flow gives guidance first and hands over last", async ({ page }) => {
     await vic.click();
     await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });
   }).toPass({ timeout: 15_000 });
-  await page.getByRole("button", { name: /notice to vacate|renting/i }).first().click();
+  // Public housing, not renting: this test chooses the court path, and renting deliberately
+  // carries no judicial review — a notice to vacate comes from a private rental provider.
+  await page.getByRole("button", { name: /public or social housing/i }).first().click();
   await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
   await page.getByRole("button", { name: /see my next steps/i }).click();
   await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
@@ -276,7 +298,16 @@ test("the flow gives guidance first and hands over last", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /free help with this decision/i })).toHaveCount(0);
   await expect(page.getByRole("heading", { name: /take this to a human service/i })).toHaveCount(0);
 
-  // Grounds come next, with a box against each one the person marks.
+  // Nothing to raise until an approach is chosen: what you argue to a tribunal and what you
+  // argue to a court are different questions, so asking first would be asking the wrong one.
+  await advance(page, /next: the points you raise/i);
+  await expect(page.getByRole("heading", { name: /choose an approach first/i })).toBeVisible({
+    timeout: 15_000,
+  });
+  await page.getByRole("button", { name: /back to my options/i }).click();
+
+  // Choose the court path, and the points become the grounds of review.
+  await chooseApproach(page, /^judicial review$/i);
   await advance(page, /next: the points you raise/i);
   const ground = page.getByRole("checkbox").first();
   await expect(ground).toBeVisible({ timeout: 15_000 });

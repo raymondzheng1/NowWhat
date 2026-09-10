@@ -23,6 +23,7 @@ import {
 } from "@/lib/tripwire";
 import { buildHandoff } from "@/lib/handoff";
 import { composeMemo } from "@/lib/memo/compose";
+import type { PathId } from "@/lib/analysis";
 import { Disclaimer } from "@/components/ui/Disclaimer";
 import { AutoTextarea } from "@/components/ui/AutoTextarea";
 import { GetHelp } from "@/components/ui/GetHelp";
@@ -757,6 +758,16 @@ function ResultStep({
   // it. Their words go into the memo verbatim, under the ground they wrote them against, and
   // are never characterised as evidence or as making the point out.
   const [groundNotes, setGroundNotes] = useState<Record<string, string>>({});
+  // Which approach the person has chosen to work through. Everything after the options view
+  // follows from it: which points they are asked about, which application draft they get,
+  // and what the memorandum works through. Null until they pick — the app orders the paths
+  // but never picks for them.
+  const [chosenPath, setChosenPath] = useState<PathId | null>(null);
+  // Merits review is not argued on grounds of review — it is argued on what the tribunal
+  // decides for this kind of decision, which the lawyer supplied per scheme. So someone who
+  // picks merits review writes against those criteria, not against seventeen judicial-review
+  // grounds that do not apply to what they are doing.
+  const [criteriaNotes, setCriteriaNotes] = useState<Record<string, string>>({});
   const [goals, setGoals] = useState<GoalId[]>([]);
   const [goalOther, setGoalOther] = useState("");
   const viewIdx = RESULT_VIEWS.indexOf(view);
@@ -884,7 +895,11 @@ function ResultStep({
     hint: pp.id === "merits-review" ? t("applyMeritsHint") : t("applyJudicialHint"),
     href: `/learn/${pp.id}`,
   }));
-  const activeApply = applyKinds.find((k) => k.id === applyKind) ?? applyKinds[0];
+  // Only the application for the approach they chose. Offering both put a judicial-review
+  // draft in front of someone working through merits review, which is a different document
+  // to a different body about a different question.
+  const offeredApply = chosenPath ? applyKinds.filter((k) => k.pathId === chosenPath) : applyKinds;
+  const activeApply = offeredApply.find((k) => k.id === applyKind) ?? offeredApply[0];
   // ONE box. Five labelled questions read as a form to fill in, and a frightened person on a
   // phone abandons forms; they will tell the story once, in their own order, if asked once.
   // The prompts that were the question labels become hints under the box, so nothing is lost.
@@ -978,14 +993,17 @@ function ResultStep({
 
   const groundNameById = new Map(shownGrounds.map((g) => [g.id, g.plainName] as const));
   const [memoCopied, setMemoCopied] = useState(false);
-  const memoProcess = (plan.primary?.id ?? "merits-review") === "judicial-review"
-    ? judicialReview
-    : meritsReview;
+  // The memorandum works through the approach the person chose. Before, it always used the
+  // first path in the plan, so someone who had deliberately picked judicial review got a
+  // memo about merits review.
+  const memoPathId = chosenPath ?? plan.primary?.id ?? "merits-review";
+  const memoProcess = memoPathId === "judicial-review" ? judicialReview : meritsReview;
   const memo = composeMemo({
     entry,
     process: memoProcess,
     grounds: shownGrounds.filter((g) => relatedGrounds.includes(g.id)),
     groundNotes,
+    criteriaNotes,
     story: account["q-story"] ?? "",
     goals: goals.map((g) => t(`goal_${g}`)),
     goalOther,
@@ -1379,6 +1397,9 @@ function ResultStep({
         meritsReview={meritsReview}
         judicialReview={judicialReview}
         deadline={dl}
+        chosen={chosenPath}
+        onChoose={setChosenPath}
+        matchesGoal={(id) => wantedRoutes.has(id)}
         tour
       />
       )}
@@ -1426,9 +1447,19 @@ function ResultStep({
       )}
 
       {/* Ask for the reasons */}
+      {/* Asking for written reasons is a real step, but it is not everybody's step, and it
+          was open on the page for everyone. It is a disclosure now: the heading says what it
+          is, and the draft appears for the people who want it. */}
       {view === "memo" && (
-      <section id="r-reasons" data-tour="reasons" className="card">
-        <h2 className="font-display text-[21px] font-black text-ink">{t("reasonsTitle")}</h2>
+      <details id="r-reasons" data-tour="reasons" className="card">
+        <summary className="cursor-pointer list-none">
+          {/* The heading lives INSIDE the summary rather than being repeated as a hidden
+              one: a screen reader should meet this section once, as the control that opens
+              it, not twice with one copy invisible. */}
+          <h2 className="font-display text-[21px] font-black text-ink">{t("reasonsTitle")}</h2>
+          <span className="mt-1 block text-[15px] leading-snug text-ink-faint">{t("reasonsDisclose")}</span>
+        </summary>
+        <div className="mt-4">
         <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("reasonsLead")}</p>
         {/* Anything about the clock is amber and calm — same rule as the time-limit line. */}
         <div className="mt-4 rounded-sticker border-2 border-amber-border bg-amber-bg px-4 py-3">
@@ -1447,11 +1478,53 @@ function ResultStep({
         <button type="button" onClick={copyTemplate} className="btn btn-secondary mt-4">
           {copied ? t("reasonsCopied") : t("reasonsCopy")}
         </button>
-      </section>
+        </div>
+      </details>
       )}
 
       {/* Grounds people raise — in-flow, neutral; selection flows into the hand-off */}
-      {view === "grounds" && (av.mrAvailable || av.jrAvailable) && shownGrounds.length > 0 && (
+      {/* Nothing to raise until an approach is chosen: the points differ completely between
+          the two, so asking before the choice means asking the wrong question. */}
+      {view === "grounds" && !chosenPath && (
+        <section className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("pointsNeedPathTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("pointsNeedPathLead")}</p>
+          <button type="button" onClick={() => goView("options")} className="btn btn-primary mt-4">
+            {t("pointsNeedPathCta")}
+          </button>
+        </section>
+      )}
+
+      {/* Merits review is not argued on grounds of review. It is argued on what the tribunal
+          decides for this kind of decision — the criteria the supervising lawyer supplied per
+          scheme. Same shape as the grounds below, different source, because the person is
+          doing a different thing. */}
+      {view === "grounds" && chosenPath === "merits-review" && entry.mrCriteria.length > 0 && (
+        <section id="r-grounds" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("criteriaTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("criteriaLead")}</p>
+          <div className="mt-5 space-y-4">
+            {entry.mrCriteria.map((c, i) => (
+              <div key={c}>
+                <label htmlFor={`cn-${i}`} className="block text-[15.5px] font-semibold leading-snug text-ink">
+                  {c}
+                </label>
+                <textarea
+                  id={`cn-${i}`}
+                  value={criteriaNotes[c] ?? ""}
+                  onChange={(e) => setCriteriaNotes((prev) => ({ ...prev, [c]: e.target.value }))}
+                  rows={3}
+                  placeholder={t("criteriaPlaceholder")}
+                  className="input mt-1.5 w-full"
+                />
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-[14.5px] leading-snug text-ink-faint">{t("groundNotesPrivacy")}</p>
+        </section>
+      )}
+
+      {view === "grounds" && chosenPath === "judicial-review" && shownGrounds.length > 0 && (
         <section id="r-grounds" data-tour="grounds" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("groundsTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("groundsLead")}</p>

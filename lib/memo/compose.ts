@@ -42,6 +42,14 @@ export interface MemoInput {
    * proves anything, relates to anything, or makes the point stronger.
    */
   groundNotes?: Record<string, string>;
+  /**
+   * What the person wrote against each merits-review criterion, keyed by the criterion text.
+   *
+   * Merits review is not argued on grounds of review, so a memo about it needs their words
+   * against what the tribunal actually decides — not against a list of judicial-review
+   * grounds that has nothing to do with what they are doing.
+   */
+  criteriaNotes?: Record<string, string>;
   /** What they wrote about what happened. Quoted verbatim or omitted. */
   story: string;
   /** What they said they are hoping for, already rendered to plain labels. */
@@ -88,6 +96,7 @@ export function composeMemo(input: MemoInput): Memo {
     goals,
     goalOther,
     groundNotes = {},
+    criteriaNotes = {},
     decisionDate,
     forum,
     corpusVersion,
@@ -114,6 +123,39 @@ export function composeMemo(input: MemoInput): Memo {
   L.push(`${t("memoPrepared")}: ${new Date().toISOString().slice(0, 10)}`);
   L.push("");
   L.push(t("memoNotAdvice"));
+
+  // ---- Summary --------------------------------------------------------------------
+  //
+  // The memo used to open on the header block and go straight into quoting the person back
+  // at themselves. Someone handing this to a duty lawyer needs the shape of the matter in
+  // the first few lines: what the decision was, when, what they want, and which path this
+  // note works through. Assembled from what is already here — it states nothing new, and it
+  // does not say how any of it is likely to go.
+  h(t("memoSummary"));
+  {
+    const bits: string[] = [];
+    bits.push(
+      decisionDate
+        ? `${t("memoSummaryAbout")} ${entry.title.toLowerCase()}, ${t("memoSummaryDated")} ${decisionDate}.`
+        : `${t("memoSummaryAbout")} ${entry.title.toLowerCase()}.`,
+    );
+    if (goals.length || goalOther.trim()) {
+      const said = [...goals, ...(goalOther.trim() ? [goalOther.trim()] : [])]
+        .map((g) => g.toLowerCase().replace(/\s+/g, " "))
+        .join("; ");
+      bits.push(`${t("memoSummaryWants")} ${said}.`);
+    }
+    bits.push(`${t("memoSummaryPath")} ${proc.plainName.toLowerCase()}, ${t("memoSummaryAt")} ${forum}.`);
+    if (grounds.length) {
+      bits.push(
+        grounds.length === 1
+          ? t("memoSummaryOnePoint")
+          : t("memoSummaryPoints").replace("{n}", String(grounds.length)),
+      );
+    }
+    bits.push(t("memoSummaryReads"));
+    for (const b of bits) L.push(b);
+  }
 
   // ---- What they told us ----------------------------------------------------------
   const q = quoted(story);
@@ -149,7 +191,16 @@ export function composeMemo(input: MemoInput): Memo {
   L.push(`${t("memoQuestionAsked")}: "${proc.question}"`);
   if (entry.mrCriteria.length && proc.id === "merits-review") {
     sub(t("memoRule"));
-    for (const c of entry.mrCriteria) L.push(`  - ${rule(c)}`);
+    for (const c of entry.mrCriteria) {
+      L.push(`  - ${rule(c)}`);
+      // Their own words against this criterion, verbatim and uncharacterised, exactly as
+      // the ground notes are handled.
+      const n = (criteriaNotes[c] ?? "").trim().replace(/\s+/g, " ");
+      if (n) {
+        L.push(`      ${t("memoYourNote")}:`);
+        L.push(`        "${n}"`);
+      }
+    }
   }
   sub(t("memoWhatItCanDo"));
   for (const r of proc.remedies) L.push(`  - ${rule(r)}`);

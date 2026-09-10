@@ -143,3 +143,52 @@ describe("the person's own words on a ground", () => {
     }
   });
 });
+
+describe("the memo opens with the shape of the matter", () => {
+  it("summarises the decision, what they want, and the approach — before quoting anyone", () => {
+    // Someone handing this to a duty lawyer needs the shape in the first few lines. It used
+    // to open on the header block and go straight to quoting the person back at themselves.
+    const m = composeMemo({
+      ...base,
+      goals: ["A different decision"],
+      decisionDate: "2026-08-01",
+      grounds: listGrounds().slice(0, 2),
+    });
+    // Section headings are uppercased by the composer, so match that form.
+    const summaryAt = m.body.indexOf(t("memoSummary").toUpperCase());
+    const toldAt = m.body.indexOf(t("memoWhatYouTold").toUpperCase());
+    expect(summaryAt).toBeGreaterThan(-1);
+    expect(summaryAt, "the summary comes before the quotes").toBeLessThan(toldAt);
+    expect(m.body).toContain("2026-08-01");
+    expect(m.body.toLowerCase()).toContain("a different decision");
+    // Two points marked, so it says so — a count, never a view on their worth.
+    expect(m.body).toContain(t("memoSummaryPoints").replace("{n}", "2"));
+  });
+
+  it("merits-review criteria carry the person's own words too", () => {
+    // Merits review is not argued on grounds of review, so a memo about it needs their words
+    // against what the tribunal actually decides.
+    const merits = getProcess("merits-review")!;
+    const c = entry.mrCriteria[0]!;
+    const m = composeMemo({
+      ...base,
+      process: merits,
+      criteriaNotes: { [c]: "The income figure they used was from the wrong year." },
+    });
+    expect(m.body).toContain(c);
+    expect(m.body).toContain('"The income figure they used was from the wrong year."');
+  });
+
+  it("still never predicts or ranks, summary and criteria notes included", () => {
+    const rules = [...patterns.prediction, ...patterns.score] as { pattern: string; why: string }[];
+    const m = composeMemo({
+      ...base,
+      goals: ["A different decision", "To be treated fairly"],
+      grounds: listGrounds().slice(0, 3),
+      criteriaNotes: Object.fromEntries(entry.mrCriteria.map((x) => [x, "This happened to me."])),
+    });
+    for (const r of rules) {
+      expect(new RegExp(r.pattern, "i").test(m.body.toLowerCase()), r.why).toBe(false);
+    }
+  });
+});
