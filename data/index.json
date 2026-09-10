@@ -1,5 +1,5 @@
 {
-  "builtAt": "6202cd840125a09f",
+  "builtAt": "3447c1f763d18fff",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -41,6 +41,7 @@
           "forum": "ADJR/FederalCourt",
           "source": "Administrative Decisions (Judicial Review) Act 1977 (Cth) s 5 — legislation.gov.au"
         },
+        "pathsAre": "sequence",
         "noReviewEndpoint": null
       },
       "deadlineRule": "Centrelink reviews have a time limit, set by the Social Security (Administration) Act 1999 (Cth). The first step is an internal review by Services Australia. Asking sooner can also matter for any back payment. That is a different thing from the limit for asking. The tribunal is a separate step, with its own limit. A court limit is separate again, and court limits are strict. Check each limit, and how it is counted, with Services Australia or a free service.",
@@ -204,6 +205,7 @@
           "forum": "SCV-O56",
           "source": "Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
         },
+        "pathsAre": "alternatives",
         "noReviewEndpoint": "If review options have closed, a payment plan or financial-hardship option may still be available through Fines Victoria, and a free service can help."
       },
       "deadlineRule": "Fines have a strict time limit. Check the exact limit with Fines Victoria or a free service.",
@@ -370,6 +372,7 @@
           "forum": "SCV-O56",
           "source": "Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au"
         },
+        "pathsAre": "alternatives",
         "noReviewEndpoint": null
       },
       "deadlineRule": "A housing review can have a time limit, set by the relevant housing law or policy. Check the limit with the Housing Appeals Office or a free service. If you are looking at the Supreme Court instead, Victoria has different review routes, with different rules and time limits. Order 56 runs 60 days from when the grounds first arose. The Administrative Law Act 1978 (Vic) runs 30 days. Trying another path first does not restart either clock. Choosing the right route can be technical, so get legal help before you file.",

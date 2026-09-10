@@ -32,6 +32,7 @@ avenue:
     available: true
     forum: SCV-O56
     source: 'Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au'
+  pathsAre: alternatives
   noReviewEndpoint: >-
     If review options have closed, a payment plan or financial-hardship option
     may still be available through Fines Victoria, and a free service can help.

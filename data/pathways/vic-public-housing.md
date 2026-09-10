@@ -31,6 +31,7 @@ avenue:
     conditional: true
     forum: SCV-O56
     source: 'Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au'
+  pathsAre: alternatives
   noReviewEndpoint: null
 deadlineRule: >-
   A housing review can have a time limit, set by the relevant housing law or

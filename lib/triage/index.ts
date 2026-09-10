@@ -33,6 +33,11 @@ export interface AvenueView {
   jrForum: string;
   /** Set when there is a dignified endpoint instead of a review right. */
   noReviewEndpoint: string | null;
+  /**
+   * Whether this scheme's paths run in order or are alternatives. Undefined where no source
+   * settles it, and the app then claims neither. See `pathsAre` in lib/schemas/data.ts.
+   */
+  pathsAre?: "sequence" | "alternatives";
 }
 
 export interface TriageResult {
@@ -67,6 +72,7 @@ export function avenueView(entry: DataPathway): AvenueView {
     jrConditional: entry.avenue.jr.conditional ?? false,
     jrForum: cleanForDisplay(entry.avenue.jr.forum),
     noReviewEndpoint: cleanEndpoint(entry.avenue.noReviewEndpoint),
+    pathsAre: entry.avenue.pathsAre,
   };
 }
 

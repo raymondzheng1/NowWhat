@@ -182,6 +182,25 @@ export const DataPathwaySchema = z.object({
   avenue: z.object({
     /** Internal review — the first step for most decisions, where a source names one. */
     ir: AvenueIRSchema.default({ available: false, body: "", source: "" }),
+    /**
+     * How the paths for THIS scheme relate to each other.
+     *
+     * "sequence"     — they run in order, and the later ones usually follow the earlier.
+     * "alternatives" — they are different choices a person makes, not stages.
+     * unset          — we do not know, so the app says only that they are listed in the
+     *                  order people usually consider them.
+     *
+     * This asserts nothing new. It encodes, in a field the UI can act on, what each entry
+     * ALREADY states in prose: the fines criteria say internal review and the court election
+     * "are two different choices, not steps in order", and the housing criteria say which
+     * body applies "depends on the decision". Left unset where no source settles it — the
+     * corpus is explicit that it varies: "For SOME schemes you have to do this first before
+     * an outside body will look at your case."
+     *
+     * Getting this wrong is not cosmetic. Someone told that a fine must go to internal
+     * review before court can miss the election window entirely.
+     */
+    pathsAre: z.enum(["sequence", "alternatives"]).optional(),
     mr: AvenueMRSchema,
     jr: AvenueJRSchema,
     /** A dignified endpoint when no review is available (Ombudsman / complaint / reasons). */

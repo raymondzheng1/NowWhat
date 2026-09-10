@@ -555,3 +555,89 @@ describe("a body that is not a tribunal does not borrow a tribunal's powers", ()
     expect(ir.canDo).toEqual([]);
   });
 });
+
+/**
+ * Whether the paths run in order, 2026-09-11.
+ *
+ * The owner asked for the result to show a linear process followed in sequence. It is one
+ * for some schemes and not for others, and the difference is not cosmetic: told that a
+ * Victorian fine must go to internal review before court, a person can miss the
+ * court-election window entirely. The corpus is explicit that it varies — "For SOME schemes
+ * you have to do this first before an outside body will look at your case."
+ *
+ * So `pathsAre` is set only where the entry's OWN text already settles it, and the panel
+ * says nothing about order where it does not.
+ */
+describe("whether the paths are steps or choices", () => {
+  it("fines are alternatives, because the lawyer's own criteria say so", () => {
+    const e = getDataEntry("vic-fines")!;
+    expect(e.avenue.pathsAre).toBe("alternatives");
+    // The claim traces to text already in this entry, not to a new assertion.
+    expect(e.irCriteria.join(" ")).toMatch(/not steps in order/i);
+  });
+
+  it("public housing is alternatives, chosen by the kind of decision", () => {
+    const e = getDataEntry("vic-public-housing")!;
+    expect(e.avenue.pathsAre).toBe("alternatives");
+    expect(e.irCriteria.join(" ")).toMatch(/depends on the decision/i);
+  });
+
+  it("Centrelink is a sequence, because its own deadline rule says so", () => {
+    const e = getDataEntry("cth-centrelink")!;
+    expect(e.avenue.pathsAre).toBe("sequence");
+    expect(e.deadlineRule).toMatch(/first step is an internal review/i);
+    expect(e.deadlineRule).toMatch(/separate step/i);
+  });
+
+  it("the catch-alls claim neither, because nothing settles it for an unknown decision", () => {
+    for (const id of ["cth-generic", "vic-generic"]) {
+      expect(getDataEntry(id)!.avenue.pathsAre, id).toBeUndefined();
+    }
+  });
+
+  it("no entry claims a relation its own text does not support", () => {
+    // The guard against someone setting this field from intuition later. An entry saying
+    // "not steps in order" may never be marked a sequence, and vice versa.
+    for (const e of listDataEntries()) {
+      const prose = [...e.irCriteria, ...e.mrCriteria, e.deadlineRule].join(" ").toLowerCase();
+      if (e.avenue.pathsAre === "sequence") {
+        expect(prose, `${e.id}: marked a sequence`).not.toMatch(/not steps in order/);
+      }
+      if (e.avenue.pathsAre === "alternatives") {
+        expect(prose, `${e.id}: marked alternatives`).toMatch(
+          /not steps in order|depends on the decision|two different choices/,
+        );
+      }
+    }
+  });
+
+  it("it reaches the plan, so the panel can say what the numbering means", () => {
+    const e = getDataEntry("vic-fines")!;
+    const p = planFor({
+      avenue: avenueView(e), meritsReview: merits, judicialReview: judicial,
+      jurisdiction: e.jurisdiction,
+    });
+    expect(p.pathsAre).toBe("alternatives");
+    // And the numbering itself is still 1..n, in the order people consider them.
+    expect(p.paths.map((x) => x.order)).toEqual([1, 2, 3]);
+  });
+
+  it("every line the panel can print for it exists, and the alternatives one denies order", () => {
+    const r = messages.rights as unknown as Record<string, string>;
+    for (const k of [
+      "pathStepN", "pathOptionN",
+      "pathsAreSequence", "pathsAreSequenceLabel",
+      "pathsAreAlternatives", "pathsAreAlternativesLabel",
+      "pathsAreUnknown", "pathsAreUnknownLabel",
+    ]) {
+      expect(r[k], k).toBeTruthy();
+    }
+    // The sentence a fines reader gets must actually deny the sequence, or the flag is
+    // doing nothing.
+    expect(r.pathsAreAlternatives!.toLowerCase()).toContain("not stages");
+    expect(r.pathsAreAlternatives!.toLowerCase()).toContain("do not have to");
+    // And it must not promise the opposite of the sequence copy.
+    expect(r.pathsAreSequence!.toLowerCase()).toContain("in order");
+    expect(r.pathsAreUnknown!.toLowerCase()).toContain("depends on the law");
+  });
+});

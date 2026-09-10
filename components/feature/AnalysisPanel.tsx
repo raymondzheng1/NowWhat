@@ -73,13 +73,64 @@ export function AnalysisPanel({
       </ul>
     )}
 
+    {/* What the numbering on the cards MEANS for this scheme. It is not decoration: told
+        that a Victorian fine must go to internal review before court, a person can miss the
+        court-election window entirely. Only stated where the entry settles it — otherwise
+        the neutral line, which claims order of consideration and nothing more. */}
+    {plan.paths.length > 1 && (
+      <p
+        className={`mt-3 rounded-sticker border-2 px-4 py-2.5 text-[15px] leading-snug ${
+          plan.pathsAre === "alternatives"
+            ? "border-amber-border bg-amber-bg text-ink-soft"
+            : "border-line bg-cream text-ink-soft"
+        }`}
+      >
+        <span className="font-display font-black uppercase tracking-[0.08em] text-[12.5px] text-ink-faint">
+          {t(
+            plan.pathsAre === "sequence"
+              ? "pathsAreSequenceLabel"
+              : plan.pathsAre === "alternatives"
+                ? "pathsAreAlternativesLabel"
+                : "pathsAreUnknownLabel",
+          )}
+        </span>{" "}
+        {t(
+          plan.pathsAre === "sequence"
+            ? "pathsAreSequence"
+            : plan.pathsAre === "alternatives"
+              ? "pathsAreAlternatives"
+              : "pathsAreUnknown",
+        )}
+      </p>
+    )}
+
     {plan.paths.length > 0 && (
       <ol className="mt-5 space-y-4">
         {plan.paths.map((p: PathPlan) => (
           <li key={p.id} className="rounded-card border-2 border-line bg-cream p-4 sm:p-5">
+            {/* The goal match leads the card now, on its own line and at card width, rather
+                than trailing a row of small pills where it was the easiest thing to miss.
+                It is still a MAPPING — the goal step asked what they want, the corpus says
+                which remedies each forum has, and this joins the two. It is not a view about
+                how their matter will go, and it never says one path is better. */}
+            {matchesGoal?.(p.id) && (
+              <p className="-mx-4 -mt-4 mb-4 flex items-center gap-2 rounded-t-card border-b-2 border-help bg-help-soft px-4 py-2.5 font-display text-[14.5px] font-extrabold text-help-ink sm:-mx-5 sm:-mt-5 sm:px-5">
+                <Icon.CheckSquare className="h-4 w-4 shrink-0" strokeWidth={2.5} aria-hidden />
+                {t("pathMatchesGoal")}
+              </p>
+            )}
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+              {/* The step number, so the order reads as an order. What it means is set out
+                  once above, for the whole scheme, rather than reasserted on every card. */}
+              <span
+                aria-hidden="true"
+                className="chip !h-8 !w-8 !text-[13px]"
+                style={{ background: "linear-gradient(135deg,#2B8A4B,#308371)" }}
+              >
+                {p.order}
+              </span>
               <span className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-red-ink">
-                {p.order === 1 ? t("pathOrderFirst") : t("pathOrderNext")}
+                {t(plan.pathsAre === "alternatives" ? "pathOptionN" : "pathStepN", { n: p.order })}
               </span>
               <span className="mono text-ink-faint">{t("pathVia", { body: midSentence(p.body) })}</span>
               {/* The catch-all entries cover decisions we have no specific guide for, where
@@ -93,15 +144,6 @@ export function AnalysisPanel({
               {p.conditional && (
                 <span className="rounded-pill border-2 border-amber-border bg-amber-bg px-2.5 py-0.5 text-[13px] font-semibold text-ink-soft">
                   {t(p.id === "judicial-review" ? "pathConditionalJudicial" : "pathConditional")}
-                </span>
-              )}
-              {/* A mapping from what they said they wanted to what this forum can do — the
-                  goal step asked, the corpus says which remedies exist, and this joins the
-                  two. It is not a view about how their matter will go, and it never says one
-                  path is better than another. */}
-              {matchesGoal?.(p.id) && (
-                <span className="rounded-pill border-2 border-help bg-help-soft px-2.5 py-0.5 text-[13px] font-semibold text-help-ink">
-                  {t("pathMatchesGoal")}
                 </span>
               )}
             </div>

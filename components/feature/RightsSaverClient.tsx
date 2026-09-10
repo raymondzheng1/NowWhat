@@ -7,7 +7,7 @@ import { listDataEntries, getDataEntry, getDataIndex } from "@/lib/data";
 import type { DataPathway, Jurisdiction } from "@/lib/schemas/data";
 import { groundAppliesIn, type Process, type Ground, type Concept } from "@/lib/schemas/legal";
 import { avenueView } from "@/lib/triage";
-import { planFor } from "@/lib/analysis";
+import { planFor, midSentence } from "@/lib/analysis";
 import { AnalysisPanel } from "@/components/feature/AnalysisPanel";
 import { deadlineRuleView } from "@/lib/deadline/rule";
 import { reasonsRequestTemplate, REASONS_CLOCK_WARNING } from "@/lib/reasons";
@@ -1002,6 +1002,81 @@ function ResultStep({
         : chosenPath === "judicial-review"
           ? shownGrounds.length > 0
           : false;
+  // ---- The points step, built from what they have already told us -------------------
+  //
+  // The step used to open on a static list with no sign it was about this person's matter:
+  // the same heading and the same points whatever they had said on the two steps before it.
+  // Someone who had just written six paragraphs met a bare checklist and had to hold their
+  // own account in their head while filling it in.
+  //
+  // What is carried forward is only what they typed or chose — their decision, its date,
+  // the approach they picked, what they said they were hoping for, and their account, shown
+  // back so they can work from it instead of from memory. Nothing is inferred FROM it: the
+  // points are not reordered, scored or pre-ticked against their story. Ranking points by
+  // what someone wrote is the app forming a view about their case, which is the line this
+  // product does not cross — the memo has refused to rank grounds since 2026-08-22 and this
+  // step follows the same rule.
+  const pointsSaidGoals = [
+    ...goals.map((g) => t(`goal_${g}`)),
+    ...(goalOther.trim() ? [goalOther.trim()] : []),
+  ];
+  const pointsStory = (account["q-story"] ?? "").trim();
+  const pointsWrittenCount =
+    chosenPath === "judicial-review"
+      ? relatedGrounds.filter((id) => (groundNotes[id] ?? "").trim()).length
+      : Object.entries(criteriaNotes).filter(([, v]) => v.trim()).length;
+  const pointsContext = (
+    <div className="mt-4 rounded-card border-2 border-line bg-cream px-4 py-3.5">
+      <p className="font-display text-[12.5px] font-black uppercase tracking-[0.1em] text-ink-faint">
+        {t("pointsContextTitle")}
+      </p>
+      <dl className="mt-2 space-y-1 text-[15px] leading-snug text-ink-soft">
+        <div className="flex flex-wrap gap-x-2">
+          <dt className="font-semibold text-ink">{t("pointsContextDecision")}:</dt>
+          <dd>
+            {entry.title}
+            {decisionDate ? ` — ${t("pointsContextDated")} ${decisionDate}` : ""}
+          </dd>
+        </div>
+        <div className="flex flex-wrap gap-x-2">
+          <dt className="font-semibold text-ink">{t("pointsContextApproach")}:</dt>
+          <dd>
+            {midSentence(
+              plan.paths.find((pp) => pp.id === chosenPath)?.body ??
+                t("pointsContextApproachUnknown"),
+            )}
+          </dd>
+        </div>
+        {pointsSaidGoals.length > 0 && (
+          <div className="flex flex-wrap gap-x-2">
+            <dt className="font-semibold text-ink">{t("pointsContextWants")}:</dt>
+            <dd>{pointsSaidGoals.join("; ")}</dd>
+          </div>
+        )}
+      </dl>
+      {/* Their own account, to hand. Collapsed by default so it does not push the points
+          off a phone screen, and never edited from here — this is the copy they wrote. */}
+      {pointsStory && (
+        <details className="mt-3 border-t-2 border-line pt-3">
+          <summary className="cursor-pointer text-[15px] font-semibold text-ink hover:text-red-ink">
+            {t("pointsContextStory")}
+          </summary>
+          <p className="mt-2 whitespace-pre-wrap text-[15px] leading-relaxed text-ink-soft">
+            {pointsStory}
+          </p>
+          <button type="button" onClick={() => goView("story")} className="link-text mt-2 inline-flex min-h-[44px]">
+            {t("pointsContextEdit")}
+          </button>
+        </details>
+      )}
+      {pointsWrittenCount > 0 && (
+        <p className="mt-3 text-[14.5px] font-semibold leading-snug text-help-ink">
+          {t("pointsWritten", { n: pointsWrittenCount })}
+        </p>
+      )}
+    </div>
+  );
+
   const contents = (
     {
       story: [{ id: "r-account", label: t("accountTitle") }],
@@ -1582,6 +1657,7 @@ function ResultStep({
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
             {t(meritsIsTribunal ? "criteriaLead" : "criteriaLeadOther")}
           </p>
+          {pointsContext}
           <div className="mt-5 space-y-4">
             {entry.mrCriteria.map((c, i) => (
               <div key={c}>
@@ -1617,6 +1693,7 @@ function ResultStep({
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
             {t(internalCriteria.length > 0 ? "internalCriteriaLead" : "internalAskLead")}
           </p>
+          {pointsContext}
           {internalCriteria.length > 0 && (
             <div className="mt-5 space-y-4">
               {internalCriteria.map((c, i) => (
@@ -1655,6 +1732,7 @@ function ResultStep({
         <section id="r-grounds" data-tour="grounds" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("groundsTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("groundsLead")}</p>
+          {pointsContext}
           <div className="mt-5">
             <GroundsExplorer
               grounds={shownGrounds}
@@ -1874,11 +1952,17 @@ function ResultStep({
           <h2 className="font-display text-[21px] font-black text-ink">{t("accountTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("accountLead")}</p>
 
-          {/* The admissions guard. Someone writing freely about a Centrelink debt can put
-              something in a letter that counts against them, and nothing else warns them. */}
-          <p className="mt-4 rounded-sticker border-2 border-amber-border bg-amber-bg px-4 py-3 text-[15px] leading-relaxed text-ink-soft">
-            {t("accountAdmitWarn")}
-          </p>
+          {/* No admissions warning here, removed 2026-09-11 on the owner's instruction.
+              It read "Some things can count against you if you write them down. If you are
+              not sure whether to put something in, leave it out" — an amber box, before the
+              person had typed a word, telling them to say less. This step is where they tell
+              us what happened, and nothing they write here is sent anywhere; the whole point
+              of asking is to have the full account to work from.
+
+              The guard is not lost, it has moved to where it can act on something real:
+              `letterSensitive` flags a specific line at the point it is about to go into a
+              LETTER that an agency will read. That is a warning about one sentence they can
+              see, not a chill on the whole account. */}
 
           <label className="mt-5 block">
             <span className="mb-1.5 block font-display text-[15.5px] font-extrabold text-ink">

@@ -138,7 +138,13 @@ test("internal review is its own path, and choosing it drives the rest of the fl
   const internal = cards.filter({ has: page.getByRole("heading", { name: /^internal review$/i }) });
   await expect(internal).toHaveCount(1);
   await expect(internal).toContainText(/Housing Appeals Office/i);
-  await expect(internal).toContainText(/usually considered first/i);
+  // "Option 1", NOT "Step 1". Housing's two bodies are chosen by the kind of decision — the
+  // lawyer's own criteria say which one applies "depends on the decision" — so the panel
+  // numbers them as choices and says plainly that they are not stages.
+  await expect(internal).toContainText(/option 1/i);
+  await expect(page.locator("#r-analysis")).toContainText(/not steps in order/i);
+  await expect(page.locator("#r-analysis")).toContainText(/do not have to do one before another/i);
+  await expect(page.locator("#r-analysis")).not.toContainText(/these usually run in order/i);
 
   // And it claims none of a tribunal's powers. This is the defect that caused the split:
   // "set the decision aside and substitute a new one" is what a tribunal can do, and a
@@ -167,7 +173,7 @@ test("internal review is its own path, and choosing it drives the rest of the fl
   await expect(court).toContainText(/how the decision was made/i);
 
   // The Housing Appeals Office card must carry the sentence saying it is NOT the path for a
-  // notice to vacate. It is headed "usually considered first", and someone facing eviction
+  // notice to vacate. It is numbered step 1 on the page, and someone facing eviction
   // who follows that loses time they may not have. The line was on the VCAT card only.
   await expect(internal).toContainText(/Housing Appeals Office is not the path/i);
   await expect(internal).toContainText(/goes to VCAT/i);
@@ -496,4 +502,102 @@ test("the flow gives guidance first and hands over last", async ({ page }) => {
   await expect(page.getByRole("heading", { name: /take this to a human service/i }))
     .toBeVisible({ timeout: 15_000 });
   await expect(page.getByRole("heading", { name: /free help with this decision/i })).toBeVisible();
+});
+
+/**
+ * The numbering means different things for different schemes (2026-09-11).
+ *
+ * The owner asked for the result to read as a linear process followed in sequence. It IS one
+ * for Centrelink — that entry's own deadline rule says "The first step is an internal review
+ * by Services Australia … The tribunal is a separate step" — and it is NOT one for fines,
+ * where the supervising lawyer's own line is that internal review and the court election
+ * "are two different choices, not steps in order".
+ *
+ * Getting this backwards for fines costs someone the court-election window, so both halves
+ * are pinned here.
+ */
+test("Centrelink reads as a sequence; a fine reads as a choice", async ({ page }) => {
+  // --- Centrelink: steps, in order.
+  await page.goto("/start");
+  const cth = page.getByRole("button", { name: /australian government body/i });
+  await expect(async () => {
+    await cth.click();
+    await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });
+  }).toPass({ timeout: 15_000 });
+  await page.getByRole("button", { name: /centrelink|social-security/i }).first().click();
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  await toOptions(page);
+
+  const panel = page.locator("#r-analysis");
+  await expect(panel).toContainText(/these usually run in order/i);
+  await expect(panel).toContainText(/step 1/i);
+  await expect(panel).toContainText(/step 2/i);
+  await expect(panel).toContainText(/step 3/i);
+  await expect(panel, "a sequence must not also deny being one").not.toContainText(/not stages/i);
+  // Each step has its own limit — the thing someone walking a sequence most needs to know.
+  await expect(panel).toContainText(/its own time limit/i);
+
+  // --- A fine: options, not stages.
+  await page.goto("/start");
+  const vic = page.getByRole("button", { name: /victorian state body/i });
+  await expect(async () => {
+    await vic.click();
+    await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });
+  }).toPass({ timeout: 15_000 });
+  await page.getByRole("button", { name: /fine or infringement/i }).first().click();
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  await toOptions(page);
+
+  await expect(panel).toContainText(/not steps in order/i);
+  await expect(panel).toContainText(/option 1/i);
+  await expect(panel, "choosing one can close another — say so").toContainText(/can close another/i);
+  await expect(panel, "a fine is not a sequence").not.toContainText(/these usually run in order/i);
+});
+
+/**
+ * The points step is about THIS person's matter (2026-09-11). It used to open on a static
+ * list with no sign of anything they had said on the two steps before it, so someone who
+ * had just written six paragraphs met a bare checklist and had to hold their own account in
+ * their head while filling it in.
+ */
+test("the points step carries forward what you already told us", async ({ page }) => {
+  await page.goto("/start");
+  const vic = page.getByRole("button", { name: /victorian state body/i });
+  await expect(async () => {
+    await vic.click();
+    await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });
+  }).toPass({ timeout: 15_000 });
+  await page.getByRole("button", { name: /public or social housing/i }).first().click();
+  await page.locator('input[type="date"]').fill("2026-08-04");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+
+  // Step 1 asks for the account, and no longer opens by telling them to write less.
+  await expect(page.getByRole("heading", { name: /tell us what happened/i })).toBeVisible();
+  await expect(page.getByText(/can count against you if you write them down/i)).toHaveCount(0);
+  await expect(page.getByText(/leave it out and ask a human service first/i)).toHaveCount(0);
+
+  const story = "They never told me the transfer was refused until I rang in August.";
+  await page.locator("#r-account textarea").fill(story);
+
+  await advance(page, /next: what you want/i);
+  // Say what they are hoping for, so the points step can carry it.
+  await page.getByRole("checkbox").first().check();
+  await advance(page, /see my options/i);
+  await chooseApproach(page, /^internal review$/i);
+  await advance(page, /next: the points you raise/i);
+
+  const ctx = page.locator("#r-grounds");
+  await expect(ctx).toContainText(/what you have told us so far/i);
+  await expect(ctx).toContainText(/Public or social housing decision/i);
+  await expect(ctx).toContainText(/2026-08-04/);
+  await expect(ctx).toContainText(/Housing Appeals Office/i);
+  // Their own account is to hand, verbatim, without leaving the step.
+  await expect(ctx).toContainText(/read back what you wrote/i);
+  await expect(ctx.getByText(story)).toBeAttached();
 });

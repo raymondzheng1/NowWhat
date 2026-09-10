@@ -32,6 +32,7 @@ avenue:
     available: true
     forum: ADJR/FederalCourt
     source: 'Administrative Decisions (Judicial Review) Act 1977 (Cth) s 5 — legislation.gov.au'
+  pathsAre: sequence
   noReviewEndpoint: null
 deadlineRule: >-
   Centrelink reviews have a time limit, set by the Social Security

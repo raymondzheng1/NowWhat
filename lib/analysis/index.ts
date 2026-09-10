@@ -71,6 +71,16 @@ export interface ResultPlan {
   paths: PathPlan[];
   /** The path to lead with, or null when no formal review is available. */
   primary: PathPlan | null;
+  /**
+   * Whether the paths above run IN ORDER for this scheme, or are alternatives a person
+   * chooses between. Undefined where no source settles it, and the panel then says only
+   * that they are listed in the order people usually consider them.
+   *
+   * The numbering on the cards means different things in each case, and the difference is
+   * not cosmetic: told that a Victorian fine must go to internal review before court, a
+   * person can miss the court-election window entirely.
+   */
+  pathsAre?: "sequence" | "alternatives";
   /** i18n key for the one-paragraph orientation at the top. */
   leadKey:
     | "analysisLeadBoth"
@@ -235,5 +245,5 @@ export function planFor({
           ? "analysisLeadJudicial"
           : "analysisLeadNone";
 
-  return { paths, primary: paths[0] ?? null, leadKey };
+  return { paths, primary: paths[0] ?? null, leadKey, pathsAre: avenue.pathsAre };
 }
