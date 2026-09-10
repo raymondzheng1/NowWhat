@@ -938,6 +938,7 @@ function ResultStep({
       story: [{ id: "r-account", label: t("accountTitle") }],
       goal: [{ id: "r-goal", label: t("goalTitle") }],
       options: [
+        { id: "r-approaches", label: t("approachesTitle") },
         { id: "r-analysis", label: t("analysisTitle") },
         ...(hasPaths ? [{ id: "r-learn", label: t("learnTitle") }] : []),
         ...(shownConcepts.length > 0 ? [{ id: "r-concepts", label: t("conceptsTitle") }] : []),
@@ -959,6 +960,21 @@ function ResultStep({
     about: entry.title.toLowerCase(),
     decisionDate: decisionDate || undefined,
   });
+
+  // The three ways a decision gets looked at again, assembled from the corpus itself so the
+  // wording here and on the pages behind it cannot drift apart.
+  const internalReview = shownConcepts.find((c) => c.id === "internal-review");
+  const approaches = [
+    ...(internalReview
+      ? [{
+          name: internalReview.plainName,
+          line: internalReview.oneLine,
+          href: "/learn/how-review-fits-together/internal-review",
+        }]
+      : []),
+    { name: meritsReview.plainName, line: meritsReview.oneLine, href: "/learn/merits-review" },
+    { name: judicialReview.plainName, line: judicialReview.oneLine, href: "/learn/judicial-review" },
+  ];
 
   const groundNameById = new Map(shownGrounds.map((g) => [g.id, g.plainName] as const));
   const [memoCopied, setMemoCopied] = useState(false);
@@ -1020,9 +1036,12 @@ function ResultStep({
   const orderedPaths = [...plan.paths].sort(
     (a, b) => Number(wantedRoutes.has(b.id)) - Number(wantedRoutes.has(a.id)) || a.order - b.order,
   );
-  const orderedConcepts = [...shownConcepts].sort(
-    (a, b) => Number(wantedRoutes.has(b.id)) - Number(wantedRoutes.has(a.id)) || a.order - b.order,
-  );
+  // Internal review is promoted into the three-approaches section above, so it comes out of
+  // "the bits around the edges" — otherwise the same card appears twice on one view, once as
+  // a headline route and once as a footnote, which is a worse answer than either.
+  const orderedConcepts = shownConcepts
+    .filter((c) => c.id !== "internal-review")
+    .sort((a, b) => Number(wantedRoutes.has(b.id)) - Number(wantedRoutes.has(a.id)) || a.order - b.order);
 
   return (
     <div className="space-y-6" ref={topRef}>
@@ -1315,6 +1334,44 @@ function ResultStep({
         </section>
       )}
 
+      {/* The three approaches, before the specifics.
+          The options view opened straight into "here are your paths", which assumes the
+          reader already knows what a path IS. Most do not: they have had a letter, and the
+          words tribunal, review and court all sound like the same expensive thing. So name
+          the three ways a decision gets looked at again, in one line each, before saying
+          which ones are open here.
+          Every word of this comes from the corpus' own plainName and oneLine fields — the
+          same text the concept and process pages carry — so it adds no legal claim. Internal
+          review leads because for most decisions it is the first and cheapest step, and it
+          was reachable only as a link buried under "the bits around the edges". */}
+      {view === "options" && (
+        <section id="r-approaches" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("approachesTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("approachesLead")}</p>
+          <ol className="mt-4 space-y-2.5">
+            {approaches.map((a, i) => (
+              <li key={a.href}>
+                <Link
+                  href={a.href}
+                  className="flex min-h-[44px] items-start gap-3 rounded-card border-2 border-line bg-paper px-4 py-3 no-underline transition hover:shadow-lift"
+                >
+                  <span aria-hidden="true" className="mt-[2px] font-display text-[15px] font-black text-red-ink">
+                    {i + 1}
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block font-display text-[16px] font-black leading-snug text-ink">
+                      {a.name}
+                    </span>
+                    <span className="block text-[14.5px] leading-snug text-ink-soft">{a.line}</span>
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ol>
+          <p className="mt-4 text-[14.5px] leading-snug text-ink-faint">{t("approachesNote")}</p>
+        </section>
+      )}
+
       {view === "options" && (
       <AnalysisPanel
         plan={{ ...plan, paths: orderedPaths, primary: orderedPaths[0] ?? null }}
@@ -1437,70 +1494,13 @@ function ResultStep({
             </div>
           )}
 
-          <Link href="/learn/grounds" className="link-text mt-5 inline-flex min-h-[44px]">
-            {t("groundsMore")}
-          </Link>
-        </section>
-      )}
-
-      {/* The structural layer, scoped to where the person is. These answer the questions that
-          come AFTER "what went wrong" — what a court can actually give you, whether you are the
-          right person to ask, and the free routes that exist alongside review. Kept as links
-          rather than expanded inline: a result screen is already long, and someone who needs
-          these will follow them. */}
-      {view === "options" && shownConcepts.length > 0 && (
-        <section id="r-concepts" className="card">
-          <h2 className="font-display text-[21px] font-black text-ink">{t("conceptsTitle")}</h2>
-          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("conceptsLead")}</p>
-          <ul className="mt-4 grid gap-2.5">
-            {orderedConcepts.map((c) => (
-              <li key={c.id}>
-                <Link
-                  href={`/learn/how-review-fits-together/${c.id}`}
-                  className="flex min-h-[44px] flex-col justify-center gap-0.5 rounded-card border-2 border-line bg-paper px-4 py-2.5 no-underline transition hover:shadow-lift"
-                >
-                  <span className="font-display text-[16px] font-black leading-snug text-ink">
-                    {c.plainName}
-                  </span>
-                  <span className="text-[14.5px] leading-snug text-ink-soft">{c.oneLine}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
-
-      {/* Tell us what happened — one box, in their own words.
-          The grounds they ticked above are the lead indicator: they decide which headings the
-          letter is organised under. This text never leaves the device until they press the
-          button below it. */}
-      {view === "story" && (
-        <section id="r-account" className="card">
-          <h2 className="font-display text-[21px] font-black text-ink">{t("accountTitle")}</h2>
-          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("accountLead")}</p>
-
-          {/* The admissions guard. Someone writing freely about a Centrelink debt can put
-              something in a letter that counts against them, and nothing else warns them. */}
-          <p className="mt-4 rounded-sticker border-2 border-amber-border bg-amber-bg px-4 py-3 text-[15px] leading-relaxed text-ink-soft">
-            {t("accountAdmitWarn")}
-          </p>
-
-          <label className="mt-5 block">
-            <span className="mb-1.5 block font-display text-[15.5px] font-extrabold text-ink">
-              {t("accountQStory")}
-            </span>
-            <span className="mb-2 block text-[14.5px] leading-snug text-ink-faint">
-              {t("accountHint")}
-            </span>
-            <textarea
-              value={account["q-story"] ?? ""}
-              onChange={(e) => setAccount((a) => ({ ...a, "q-story": e.target.value }))}
-              rows={10}
-              className="input leading-relaxed"
-              placeholder={t("accountPlaceholder")}
-            />
-          </label>
-
+          {/* Moved here from the very first view on 2026-09-10.
+              It sat directly under the "tell us what happened" box, so the first thing a
+              person saw after writing their account was a button offering to put it in a
+              letter — before they had been told what their options were, and before they had
+              marked a single point. It could not even work there: it slots the account under
+              the points they marked, and nothing was marked yet. It belongs here, after the
+              points exist and after they have had a chance to write against each one. */}
           {/* What they marked, and what it will do. Ticking a ground had no visible effect
               before — this is the connection between the two. */}
           {relatedGrounds.length > 0 && (
@@ -1631,6 +1631,71 @@ function ResultStep({
               </div>
             </div>
           )}
+
+          <Link href="/learn/grounds" className="link-text mt-5 inline-flex min-h-[44px]">
+            {t("groundsMore")}
+          </Link>
+        </section>
+      )}
+
+      {/* The structural layer, scoped to where the person is. These answer the questions that
+          come AFTER "what went wrong" — what a court can actually give you, whether you are the
+          right person to ask, and the free routes that exist alongside review. Kept as links
+          rather than expanded inline: a result screen is already long, and someone who needs
+          these will follow them. */}
+      {view === "options" && shownConcepts.length > 0 && (
+        <section id="r-concepts" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("conceptsTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("conceptsLead")}</p>
+          <ul className="mt-4 grid gap-2.5">
+            {orderedConcepts.map((c) => (
+              <li key={c.id}>
+                <Link
+                  href={`/learn/how-review-fits-together/${c.id}`}
+                  className="flex min-h-[44px] flex-col justify-center gap-0.5 rounded-card border-2 border-line bg-paper px-4 py-2.5 no-underline transition hover:shadow-lift"
+                >
+                  <span className="font-display text-[16px] font-black leading-snug text-ink">
+                    {c.plainName}
+                  </span>
+                  <span className="text-[14.5px] leading-snug text-ink-soft">{c.oneLine}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {/* Tell us what happened — one box, in their own words.
+          The grounds they ticked above are the lead indicator: they decide which headings the
+          letter is organised under. This text never leaves the device until they press the
+          button below it. */}
+      {view === "story" && (
+        <section id="r-account" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("accountTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("accountLead")}</p>
+
+          {/* The admissions guard. Someone writing freely about a Centrelink debt can put
+              something in a letter that counts against them, and nothing else warns them. */}
+          <p className="mt-4 rounded-sticker border-2 border-amber-border bg-amber-bg px-4 py-3 text-[15px] leading-relaxed text-ink-soft">
+            {t("accountAdmitWarn")}
+          </p>
+
+          <label className="mt-5 block">
+            <span className="mb-1.5 block font-display text-[15.5px] font-extrabold text-ink">
+              {t("accountQStory")}
+            </span>
+            <span className="mb-2 block text-[14.5px] leading-snug text-ink-faint">
+              {t("accountHint")}
+            </span>
+            <textarea
+              value={account["q-story"] ?? ""}
+              onChange={(e) => setAccount((a) => ({ ...a, "q-story": e.target.value }))}
+              rows={10}
+              className="input leading-relaxed"
+              placeholder={t("accountPlaceholder")}
+            />
+          </label>
+
         </section>
       )}
 

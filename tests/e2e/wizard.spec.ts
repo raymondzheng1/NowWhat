@@ -256,7 +256,20 @@ test("the flow gives guidance first and hands over last", async ({ page }) => {
   await page.getByRole("button", { name: /see my next steps/i }).click();
   await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
 
+  // The first view asks one thing and offers no action on the answer. It used to put a
+  // "Put my words into the letter" button directly under the box — before the person had
+  // been told what their options were, and before a single point was marked. It could not
+  // even work there: it slots the account under the points they marked, and nothing was.
+  await expect(page.getByRole("heading", { name: /tell us what happened/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: /put my words into the letter/i })).toHaveCount(0);
+
   await toOptions(page);
+
+  // The options view explains the three approaches BEFORE the person's own paths. Someone
+  // who has had a letter does not already know that tribunal, review and court are
+  // different things.
+  await expect(page.getByRole("heading", { name: /three ways a decision gets looked at again/i })).toBeVisible();
+  await expect(page.getByRole("link", { name: /asking the department to look at it again/i })).toBeVisible();
 
   // The options view carries the analysis, and NOT the free-services list.
   await expect(page.getByRole("heading", { name: /what this means/i })).toBeVisible();
@@ -271,6 +284,10 @@ test("the flow gives guidance first and hands over last", async ({ page }) => {
   const note = page.locator('textarea[id^="gn-"]').first();
   await expect(note).toBeVisible();
   await note.fill("They never showed me the report they relied on.");
+
+  // The letter action lives HERE now — after the points exist, which is the only place it
+  // can do what it says it does.
+  await expect(page.getByRole("button", { name: /put my words into the letter/i })).toBeVisible();
 
   // Then the memo — carrying the person's own words on that point, verbatim.
   await advance(page, /build my memo/i);

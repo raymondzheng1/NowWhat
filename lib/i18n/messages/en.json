@@ -363,7 +363,10 @@
     "groundNotesPrivacy": "This stays on your device. It is not sent anywhere.",
     "memoYourNote": "What you told us about this point",
     "urgentBanner": "From what you ticked, this may not be able to wait. A free service can help you today.",
-    "urgentBannerLink": "See who to call"
+    "urgentBannerLink": "See who to call",
+    "approachesTitle": "Three ways a decision gets looked at again",
+    "approachesLead": "Before your own options, here is what each one is. They are different things, and they are not all open for every decision.",
+    "approachesNote": "Which of these you can use comes from the law your decision was made under."
   },
   "ask": {
     "title": "Ask a question",
