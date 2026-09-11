@@ -49,6 +49,33 @@ import { GroundsExplorer } from "@/components/feature/learn/GroundsExplorer";
  * boolean, never an answer, and dies with the tab.
  */
 const CONSENT_KEY = "wn-consented";
+
+/**
+ * The in-flow answers, held per tab so Back returns someone to where they were.
+ *
+ * SessionStorage, never localStorage: this is the person's own account of what happened to
+ * them, and on a shared or library computer it must not outlive the tab. Written only once
+ * the consent flag for this tab exists, cleared by "Start over", and never sent anywhere —
+ * the flow still computes everything on the device.
+ */
+const FLOW_KEY = "wn-flow";
+interface FlowState {
+  chosenPath: PathId | null;
+  goals: GoalId[];
+  goalOther: string;
+  account: Record<string, string>;
+  relatedGrounds: string[];
+  groundNotes: Record<string, string>;
+  criteriaNotes: Record<string, string>;
+  pickedCriteria: string[];
+}
+function forgetFlow(): void {
+  try {
+    window.sessionStorage.removeItem(FLOW_KEY);
+  } catch {
+    /* nothing to clear */
+  }
+}
 function sessionConsented(): boolean {
   try {
     return window.sessionStorage.getItem(CONSENT_KEY) === "1";
@@ -243,6 +270,19 @@ export function RightsSaverClient({
   // given IN THIS SESSION. A fresh load, a bookmark or a shared link starts at the
   // questions, because `consent` is false until the person ticks the box.
   const poppingRef = useRef(false);
+  // The result step named in the URL when this page was LOADED.
+  //
+  // Captured during the first render, because by the time anything else could read it, it
+  // is gone: `step` starts at "who" on a fresh load, so the URL effect below runs once with
+  // step !== "result", rewrites the query without `view`, and the result component — which
+  // only mounts once step becomes "result" — then finds nothing to restore. That is why
+  // Back from a ground's explainer landed on "tell us what happened" however faithfully the
+  // step had been recorded.
+  const initialViewRef = useRef<string | null | undefined>(undefined);
+  if (initialViewRef.current === undefined) {
+    initialViewRef.current =
+      typeof window === "undefined" ? null : new URLSearchParams(window.location.search).get("view");
+  }
   useEffect(() => {
     // Runs for EVERY step including "who". Skipping it left lastStepRef null on the first
     // move, so who -> what replaced the entry instead of pushing one, and there was no step 1
@@ -252,6 +292,13 @@ export function RightsSaverClient({
     if (areaId) p.set("area", areaId);
     if (decisionDate) p.set("date", decisionDate);
     p.set("step", step);
+    // Keep the result step the person is on. This rebuilt the query FROM SCRATCH, so it
+    // dropped `view` on every run — including the run right after a Back from a Learn page,
+    // which is exactly when it is needed. The result then restored to the top of the flow
+    // however carefully the view had been recorded.
+    const currentView =
+      new URLSearchParams(window.location.search).get("view") ?? initialViewRef.current;
+    if (step === "result" && currentView) p.set("view", currentView);
     const qs = p.toString();
     const url = qs ? `${window.location.pathname}?${qs}` : window.location.pathname;
     // A step reached by pressing Back must NOT push a new entry — that re-pushes the entry
@@ -313,6 +360,9 @@ export function RightsSaverClient({
     setConsent(false);
     rememberConsent(false);
     setRelatedGrounds([]);
+    // Start over means start over. The per-tab restore holds what they wrote, so leaving it
+    // behind would hand their account to whoever used the machine next.
+    forgetFlow();
   }
 
   function toggleGround(id: string) {
@@ -383,6 +433,8 @@ export function RightsSaverClient({
               concepts={concepts}
               relatedGrounds={relatedGrounds}
               onToggleGround={toggleGround}
+              onRestoreGrounds={setRelatedGrounds}
+              initialView={initialViewRef.current ?? null}
               tLetter={tLetter}
               faqs={faqsByEntry[entry.id] ?? []}
               corpusEntry={corpusByEntry[entry.id]}
@@ -724,6 +776,8 @@ function ResultStep({
   concepts,
   relatedGrounds,
   onToggleGround,
+  onRestoreGrounds,
+  initialView,
   faqs,
   corpusEntry,
 }: {
@@ -741,6 +795,10 @@ function ResultStep({
   concepts: Concept[];
   relatedGrounds: string[];
   onToggleGround: (id: string) => void;
+  /** Restores the ticked grounds after a trip out of the flow — the parent owns them. */
+  onRestoreGrounds: (ids: string[]) => void;
+  /** The `?view=` this page loaded with, captured before the URL was rewritten. */
+  initialView: string | null;
   faqs: FaqLink[];
   corpusEntry?: PathwayEntry;
 }) {
@@ -771,6 +829,11 @@ function ResultStep({
   // picks merits review writes against those criteria, not against seventeen judicial-review
   // grounds that do not apply to what they are doing.
   const [criteriaNotes, setCriteriaNotes] = useState<Record<string, string>>({});
+  // Which criteria the person says relate to them. The step used to put an open box under
+  // every line and expect all of them filled in — four mandatory boxes on a Victorian fine,
+  // including some under lines there is nothing to answer. Ticking first is the same shape
+  // as the grounds step, and it means we ask for what they have to say and nothing else.
+  const [pickedCriteria, setPickedCriteria] = useState<string[]>([]);
   const [goals, setGoals] = useState<GoalId[]>([]);
   const [goalOther, setGoalOther] = useState("");
   const viewIdx = RESULT_VIEWS.indexOf(view);
@@ -798,6 +861,7 @@ function ResultStep({
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
   }, []);
+
   // Same jurisdiction rule as the grounds: an unscoped concept applies everywhere, and a
   // scoped one only where it exists. The two federal routes must not surface in Victoria.
   const shownConcepts = useMemo(
@@ -811,6 +875,84 @@ function ResultStep({
   // never written to storage, never put in the URL, and never sent anywhere. It exists to be
   // composed into a letter they then send themselves.
   const [account, setAccount] = useState<Record<string, string>>({});
+
+  // ---- Coming back to where you were -----------------------------------------------
+  //
+  // Following a link out of the flow — a ground's own explainer, a Learn page — and pressing
+  // Back is a FULL PAGE LOAD. The step was mirrored into `?view=` but only ever read on
+  // popstate, so it was never applied on a fresh load; and everything the person had typed
+  // lived in React state, which the load wipes. Someone who tapped a ground heading to find
+  // out what it meant came back to the top of the result with their notes gone.
+  //
+  // Restored per tab, from sessionStorage, and only where the consent flag from this tab is
+  // present — the same rule the consent gate already uses, so a shared link still cannot
+  // restore anyone's answers. It never leaves the device and it dies with the tab, which is
+  // what the privacy note on these steps promises. "Start over" clears it.
+  useEffect(() => {
+    if (!sessionConsented()) return;
+    try {
+      const v = initialView ?? new URLSearchParams(window.location.search).get("view");
+      if (RESULT_VIEWS.includes(v as ResultView)) setView(v as ResultView);
+      const raw = window.sessionStorage.getItem(FLOW_KEY);
+      if (!raw) return;
+      const f = JSON.parse(raw) as Partial<FlowState>;
+      if (f.chosenPath) setChosenPath(f.chosenPath);
+      if (f.goals) setGoals(f.goals);
+      if (typeof f.goalOther === "string") setGoalOther(f.goalOther);
+      if (f.account) setAccount(f.account);
+      if (f.relatedGrounds) onRestoreGrounds(f.relatedGrounds);
+      if (f.groundNotes) setGroundNotes(f.groundNotes);
+      if (f.criteriaNotes) setCriteriaNotes(f.criteriaNotes);
+      if (f.pickedCriteria) setPickedCriteria(f.pickedCriteria);
+    } catch {
+      /* storage or JSON unavailable — the flow simply starts fresh, which is safe */
+    }
+    // Mount only: later changes are written by the effect below, never read back.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    if (!sessionConsented()) return;
+    // NEVER blank a real saved answer set.
+    //
+    // Both effects fire in the same commit on mount, and this one sees the state as it was
+    // BEFORE the restore's setState lands — which is empty. A flag set by the restore does
+    // not help, because it is already set by the time this runs. So the rule is about the
+    // values themselves: a completely empty flow may not overwrite a stored one.
+    //
+    // The only way to reach genuinely-empty state with a blob on disk is this mount window,
+    // or someone deleting every answer by hand — and for that, "Start over" is the control
+    // that clears it, explicitly.
+    const empty =
+      !chosenPath &&
+      goals.length === 0 &&
+      !goalOther.trim() &&
+      Object.keys(account).length === 0 &&
+      relatedGrounds.length === 0 &&
+      Object.keys(groundNotes).length === 0 &&
+      Object.keys(criteriaNotes).length === 0 &&
+      pickedCriteria.length === 0;
+    try {
+      if (empty && (window.sessionStorage.getItem(FLOW_KEY)?.length ?? 0) > 2) return;
+    } catch {
+      /* storage unreadable — fall through and try the write */
+    }
+    try {
+      const f: FlowState = {
+        chosenPath,
+        goals,
+        goalOther,
+        account,
+        relatedGrounds,
+        groundNotes,
+        criteriaNotes,
+        pickedCriteria,
+      };
+      window.sessionStorage.setItem(FLOW_KEY, JSON.stringify(f));
+    } catch {
+      /* quota or private mode — losing the restore is not worth breaking the step */
+    }
+  }, [chosenPath, goals, goalOther, account, relatedGrounds, groundNotes, criteriaNotes, pickedCriteria]);
   // Lines the model selected FROM the person's own words, and which of them they have ticked.
   // Only ticked lines reach the letter, so nothing is ever sent that they have not read.
   const [picked, setPicked] = useState<
@@ -888,6 +1030,25 @@ function ResultStep({
   // Read off the plan so the points step, the memo and the card cannot disagree.
   const internalCriteria = entry.irCriteria ?? [];
   const meritsIsTribunal = (av.mrCharacter ?? "tribunal") === "tribunal";
+
+  // ---- Which criteria are POINTS, and which are only orientation -------------------
+  //
+  // Not every line in a criteria list is something a person can answer. Some say what the
+  // body decides — "the reviewing agency decides whether the fine should stand or be
+  // cancelled" — and someone can say what happened on that. Others say which path applies:
+  // "internal review and asking for the matter to be heard in court are two different
+  // choices, not steps in order". There is nothing to write against that, and the step was
+  // putting a text box under it anyway.
+  //
+  // The data already marks them. A routing line is the one that appears in BOTH lists,
+  // because that is exactly why it is in both — it is about choosing between the bodies,
+  // not about what either one decides. So no new field, and nothing to keep in sync.
+  const criteriaIsContext = (c: string) =>
+    (entry.irCriteria ?? []).includes(c) && (entry.mrCriteria ?? []).includes(c);
+  const splitCriteria = (list: string[]) => ({
+    context: list.filter(criteriaIsContext),
+    points: list.filter((c) => !criteriaIsContext(c)),
+  });
 
   // The application letters differ by path: merits review asks a tribunal for the correct
   // or preferable decision on the facts; judicial review is a court process about how the
@@ -1016,6 +1177,15 @@ function ResultStep({
   // what someone wrote is the app forming a view about their case, which is the line this
   // product does not cross — the memo has refused to rank grounds since 2026-08-22 and this
   // step follows the same rule.
+  // Why Continue is off, or null when it is on. A reason, not a silent dead button — a
+  // disabled control with no explanation reads as the app being broken.
+  const nextBlockedReason =
+    view === "story" && !(account["q-story"] ?? "").trim()
+      ? t("nextNeedsStory")
+      : view === "goal" && goals.length === 0 && !goalOther.trim()
+        ? t("nextNeedsGoal")
+        : null;
+
   const pointsSaidGoals = [
     ...goals.map((g) => t(`goal_${g}`)),
     ...(goalOther.trim() ? [goalOther.trim()] : []),
@@ -1025,6 +1195,79 @@ function ResultStep({
     chosenPath === "judicial-review"
       ? relatedGrounds.filter((id) => (groundNotes[id] ?? "").trim()).length
       : Object.entries(criteriaNotes).filter(([, v]) => v.trim()).length;
+  /**
+   * The answerable points, as tick-then-write.
+   *
+   * Nothing is asked for until the person says the point relates to them, and the prompt
+   * inside the box asks about THAT point rather than offering one example for all of them.
+   * The step previously showed the same placeholder — "what the figures should have been" —
+   * under a fines criterion about mistaken identity.
+   */
+  const renderPoints = (list: string[], idPrefix: string) => {
+    const { context, points } = splitCriteria(list);
+    return (
+      <>
+        {context.length > 0 && (
+          <div className="mt-5 rounded-card border-2 border-amber-border bg-amber-bg px-4 py-3">
+            <p className="font-display text-[12.5px] font-black uppercase tracking-[0.1em] text-amber-ink">
+              {t("criteriaContextTitle")}
+            </p>
+            <ul className="mt-1.5 space-y-1.5 text-[15px] leading-snug text-ink-soft">
+              {context.map((c) => (
+                <li key={c} className="flex gap-2">
+                  <span aria-hidden="true" className="mt-[8px] h-1.5 w-1.5 flex-none rounded-[2px] bg-amber-ink" />
+                  <span>{c}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+        {points.length > 0 && (
+          <div className="mt-5 space-y-3">
+            {points.map((c, i) => {
+              const on = pickedCriteria.includes(c);
+              return (
+                <div key={c} className="rounded-card border-2 border-line bg-cream px-4 py-3">
+                  <label className="flex cursor-pointer items-start gap-3">
+                    <input
+                      type="checkbox"
+                      checked={on}
+                      onChange={() =>
+                        setPickedCriteria((prev) =>
+                          prev.includes(c) ? prev.filter((x) => x !== c) : [...prev, c],
+                        )
+                      }
+                      className="mt-[3px] h-5 w-5 flex-none accent-help"
+                    />
+                    <span className="text-[15.5px] font-semibold leading-snug text-ink">{c}</span>
+                  </label>
+                  {on && (
+                    <div className="mt-3">
+                      <label
+                        htmlFor={`${idPrefix}-${i}`}
+                        className="block text-[14.5px] leading-snug text-ink-faint"
+                      >
+                        {t("criteriaAsk")}
+                      </label>
+                      <textarea
+                        id={`${idPrefix}-${i}`}
+                        value={criteriaNotes[c] ?? ""}
+                        onChange={(e) => setCriteriaNotes((prev) => ({ ...prev, [c]: e.target.value }))}
+                        rows={3}
+                        placeholder={t("criteriaPlaceholder")}
+                        className="input mt-1.5 w-full"
+                      />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </>
+    );
+  };
+
   const pointsContext = (
     <div className="mt-4 rounded-card border-2 border-line bg-cream px-4 py-3.5">
       <p className="font-display text-[12.5px] font-black uppercase tracking-[0.1em] text-ink-faint">
@@ -1082,9 +1325,8 @@ function ResultStep({
       story: [{ id: "r-account", label: t("accountTitle") }],
       goal: [{ id: "r-goal", label: t("goalTitle") }],
       options: [
-        { id: "r-approaches", label: t("approachesTitle") },
-        { id: "r-analysis", label: t("analysisTitle") },
         ...(hasPaths ? [{ id: "r-learn", label: t("learnTitle") }] : []),
+        { id: "r-analysis", label: t("analysisTitle") },
         ...(shownConcepts.length > 0 ? [{ id: "r-concepts", label: t("conceptsTitle") }] : []),
       ],
       grounds: groundsSectionShown ? [{ id: "r-grounds", label: t("groundsTitle") }] : [],
@@ -1097,20 +1339,9 @@ function ResultStep({
       help: [{ id: "r-handoff", label: t("handoffTitle") }],
     } as Record<ResultView, { id: string; label: string }[]>
   )[view];
-  // The three ways a decision gets looked at again, assembled from the corpus itself so the
-  // wording here and on the pages behind it cannot drift apart.
+  // The internal-review concept, read by the in-place explainer above the cards and by the
+  // memo. Taken from the corpus so this wording and the page behind it cannot drift apart.
   const internalReview = shownConcepts.find((c) => c.id === "internal-review");
-  const approaches = [
-    ...(internalReview
-      ? [{
-          name: internalReview.plainName,
-          line: internalReview.oneLine,
-          href: "/learn/how-review-fits-together/internal-review",
-        }]
-      : []),
-    { name: meritsReview.plainName, line: meritsReview.oneLine, href: "/learn/merits-review" },
-    { name: judicialReview.plainName, line: judicialReview.oneLine, href: "/learn/judicial-review" },
-  ];
 
   const dl = deadlineRuleView(entry);
   const template = reasonsRequestTemplate(entry, {
@@ -1261,7 +1492,7 @@ function ResultStep({
               {t("urgentBanner")}
             </p>
             {stopServices[0]?.phone && (
-              <CallButton phone={stopServices[0].phone} label={stopServices[0].service} />
+              <CallButton phone={stopServices[0].phone} label={stopServices[0].service} withName />
             )}
             <button type="button" onClick={() => goView("help")} className="link-text min-h-[44px] font-semibold text-help-ink">
               {t("urgentBannerLink")}
@@ -1293,7 +1524,7 @@ function ResultStep({
                     screens down. */}
                 {stopServices[0]?.phone && (
                   <div className="mt-4">
-                    <CallButton phone={stopServices[0].phone} label={stopServices[0].service} />
+                    <CallButton phone={stopServices[0].phone} label={stopServices[0].service} withName />
                     <p className="mt-1.5 text-[14px] leading-snug text-help-ink">
                       {stopServices[0].service}
                     </p>
@@ -1509,63 +1740,49 @@ function ResultStep({
           same text the concept and process pages carry — so it adds no legal claim. Internal
           review leads because for most decisions it is the first and cheapest step, and it
           was reachable only as a link buried under "the bits around the edges". */}
-      {view === "options" && (
-        <section id="r-approaches" className="card">
-          <h2 className="font-display text-[21px] font-black text-ink">{t("approachesTitle")}</h2>
-          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("approachesLead")}</p>
-          <ol className="mt-4 space-y-2.5">
-            {approaches.map((a, i) => (
-              <li key={a.href}>
-                <Link
-                  href={a.href}
-                  className="flex min-h-[44px] items-start gap-3 rounded-card border-2 border-line bg-paper px-4 py-3 no-underline transition hover:shadow-lift"
-                >
-                  <span aria-hidden="true" className="mt-[2px] font-display text-[15px] font-black text-red-ink">
-                    {i + 1}
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block font-display text-[16px] font-black leading-snug text-ink">
-                      {a.name}
-                    </span>
-                    <span className="block text-[14.5px] leading-snug text-ink-soft">{a.line}</span>
-                  </span>
-                </Link>
-              </li>
-            ))}
-          </ol>
-          <p className="mt-4 text-[14.5px] leading-snug text-ink-faint">{t("approachesNote")}</p>
-        </section>
-      )}
-
-      {view === "options" && (
-      <AnalysisPanel
-        plan={{ ...plan, paths: orderedPaths, primary: orderedPaths[0] ?? null }}
-        avenue={av}
-        meritsReview={meritsReview}
-        judicialReview={judicialReview}
-        deadline={dl}
-        chosen={chosenPath}
-        onChoose={setChosenPath}
-        matchesGoal={(id) => wantedRoutes.has(id)}
-        tour
-      />
-      )}
-
-      {/* Free help, before the reading.
-          External legal review (2026-08-23): on a time-sensitive route, the official body AND a
-          free service belong above optional educational content. The panel above already names
-          the official body, the rule and its source; the free services only appeared at the foot
-          of the page, below an explainer nobody has to read. Every route here has a time limit,
-          so this is not gated on the urgency tripwire — it shows on every options view. The full
-          block still closes the page. */}
-      {view === "help" && <HelpList t={t} entry={entry} compact />}
-
-      {/* Understand these options — in-flow Learn (progressive disclosure) */}
-      {view === "options" && (av.mrAvailable || av.jrAvailable) && (
+      {view === "options" && hasPaths && (
         <section id="r-learn" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("learnTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("learnLead")}</p>
           <div className="mt-4 space-y-3">
+            {/* Internal review belongs here too. This section explains "these options", and
+                it listed two of the three — the one a person is most likely to use first was
+                the one missing. It is a CONCEPT rather than one of the corpus's two
+                processes, so it has no ProcessExplainer; what it does have is what it means,
+                what it is not, and the key points, which is what the explainer shows anyway. */}
+            {av.irAvailable && internalReview && (
+              <details className="rounded-sticker border-2 border-line bg-cream px-4 py-3">
+                <summary className="cursor-pointer py-2.5 font-display text-[17px] font-extrabold text-ink">
+                  {t("pathTitleInternal")} — {internalReview.plainName}
+                </summary>
+                <div className="mt-4 space-y-3.5">
+                  <p className="text-[16px] leading-[1.6] text-ink">{internalReview.whatItMeans}</p>
+                  <div>
+                    <p className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-red-ink">
+                      {t("learnKeyPoints")}
+                    </p>
+                    <ul className="mt-2 space-y-1.5 text-[15.5px] leading-[1.55] text-ink-soft">
+                      {internalReview.keyPoints.map((k) => (
+                        <li key={k} className="flex gap-2.5">
+                          <span aria-hidden className="mt-[9px] h-1.5 w-1.5 flex-none rounded-[2px] bg-red" />
+                          <span>{k}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  {internalReview.whatItIsNot && (
+                    <div>
+                      <p className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-ink-faint">
+                        {t("learnWhatItIsNot")}
+                      </p>
+                      <p className="mt-1.5 text-[15.5px] leading-[1.55] text-ink-soft">
+                        {internalReview.whatItIsNot}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </details>
+            )}
             {av.mrAvailable && (
               <details className="rounded-sticker border-2 border-line bg-cream px-4 py-3">
                 <summary className="cursor-pointer py-2.5 font-display text-[17px] font-extrabold text-ink">
@@ -1593,6 +1810,30 @@ function ResultStep({
         </section>
       )}
 
+      {view === "options" && (
+      <AnalysisPanel
+        plan={{ ...plan, paths: orderedPaths, primary: orderedPaths[0] ?? null }}
+        avenue={av}
+        meritsReview={meritsReview}
+        judicialReview={judicialReview}
+        deadline={dl}
+        chosen={chosenPath}
+        onChoose={setChosenPath}
+        matchesGoal={(id) => wantedRoutes.has(id)}
+        tour
+      />
+      )}
+
+      {/* Free help, before the reading.
+          External legal review (2026-08-23): on a time-sensitive route, the official body AND a
+          free service belong above optional educational content. The panel above already names
+          the official body, the rule and its source; the free services only appeared at the foot
+          of the page, below an explainer nobody has to read. Every route here has a time limit,
+          so this is not gated on the urgency tripwire — it shows on every options view. The full
+          block still closes the page. */}
+      {view === "help" && <HelpList t={t} entry={entry} compact />}
+
+      {/* Understand these options — in-flow Learn (progressive disclosure) */}
       {/* Ask for the reasons */}
       {/* Asking for written reasons is a real step, but it is not everybody's step, and it
           was open on the page for everyone. It is a disclosure now: the heading says what it
@@ -1658,23 +1899,7 @@ function ResultStep({
             {t(meritsIsTribunal ? "criteriaLead" : "criteriaLeadOther")}
           </p>
           {pointsContext}
-          <div className="mt-5 space-y-4">
-            {entry.mrCriteria.map((c, i) => (
-              <div key={c}>
-                <label htmlFor={`cn-${i}`} className="block text-[15.5px] font-semibold leading-snug text-ink">
-                  {c}
-                </label>
-                <textarea
-                  id={`cn-${i}`}
-                  value={criteriaNotes[c] ?? ""}
-                  onChange={(e) => setCriteriaNotes((prev) => ({ ...prev, [c]: e.target.value }))}
-                  rows={3}
-                  placeholder={t("criteriaPlaceholder")}
-                  className="input mt-1.5 w-full"
-                />
-              </div>
-            ))}
-          </div>
+          {renderPoints(entry.mrCriteria, "cn")}
           <p className="mt-4 text-[14.5px] leading-snug text-ink-faint">{t("groundNotesPrivacy")}</p>
         </section>
       )}
@@ -1694,28 +1919,8 @@ function ResultStep({
             {t(internalCriteria.length > 0 ? "internalCriteriaLead" : "internalAskLead")}
           </p>
           {pointsContext}
-          {internalCriteria.length > 0 && (
-            <div className="mt-5 space-y-4">
-              {internalCriteria.map((c, i) => (
-                <div key={c}>
-                  <label htmlFor={`icn-${i}`} className="block text-[15.5px] font-semibold leading-snug text-ink">
-                    {c}
-                  </label>
-                  <textarea
-                    id={`icn-${i}`}
-                    value={criteriaNotes[c] ?? ""}
-                    onChange={(e) => setCriteriaNotes((prev) => ({ ...prev, [c]: e.target.value }))}
-                    rows={3}
-                    placeholder={t("criteriaPlaceholder")}
-                    className="input mt-1.5 w-full"
-                  />
-                </div>
-              ))}
-            </div>
-          )}
-          {internalCriteria.length > 0 && (
-            <p className="mt-6 text-[15.5px] font-semibold leading-snug text-ink">{t("internalAskTitle")}</p>
-          )}
+          {renderPoints(internalCriteria, "icn")}
+          <p className="mt-6 text-[15.5px] font-semibold leading-snug text-ink">{t("internalAskTitle")}</p>
           <textarea
             id="cn-internal"
             value={criteriaNotes[INTERNAL_NOTE_KEY] ?? ""}
@@ -2086,10 +2291,17 @@ function ResultStep({
         </section>
       )}
 
-      {/* Hand-off + help */}
-      {/* Move between the six views. Continue is never disabled: the story box can be left
-          empty, the goals unticked and the grounds unmarked, because someone who just wants
-          to see their options should not be made to write an essay first. */}
+      {/* Move between the six views.
+          Continue used to be enabled unconditionally, so a person could walk from "tell us
+          what happened" to "what you want" having written nothing, and the steps behind them
+          did nothing. The two steps that FEED everything downstream now ask to be answered:
+          the account is what the letter and the memo are built from, and the goal is what
+          orders the paths. Neither is a high bar — the goal step has "I am not sure" as a
+          real answer, so nobody is trapped by not knowing.
+
+          The later steps are NOT gated. The points are optional by design: someone who only
+          wants to see their options should not have to argue a case first, and the memo
+          composes perfectly well from the account alone. */}
       {view !== "help" && (
         <div className="flex flex-wrap items-center justify-between gap-3">
           {viewIdx > 0 ? (
@@ -2103,13 +2315,22 @@ function ResultStep({
           ) : (
             <span />
           )}
-          <button
-            type="button"
-            onClick={() => goView(RESULT_VIEWS[viewIdx + 1]!)}
-            className="btn btn-primary"
-          >
-            {t(`viewNext_${view}`)}
-          </button>
+          <div className="flex flex-col items-end gap-1.5">
+            {nextBlockedReason && (
+              <p id="r-next-why" className="text-[14.5px] leading-snug text-ink-faint">
+                {nextBlockedReason}
+              </p>
+            )}
+            <button
+              type="button"
+              disabled={!!nextBlockedReason}
+              aria-describedby={nextBlockedReason ? "r-next-why" : undefined}
+              onClick={() => goView(RESULT_VIEWS[viewIdx + 1]!)}
+              className="btn btn-primary disabled:cursor-not-allowed disabled:opacity-50"
+            >
+              {t(`viewNext_${view}`)}
+            </button>
+          </div>
         </div>
       )}
 

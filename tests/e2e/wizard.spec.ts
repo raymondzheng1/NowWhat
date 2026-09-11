@@ -14,14 +14,29 @@ test.beforeEach(async ({ context }) => {
 /**
  * The result is six views — what happened, what you want, your options, the points you
  * raise, your memo, talk to a person — so a test that wants the analysis has to walk to it.
- * Continue is never disabled, so this clicks straight through without filling anything in.
+ *
+ * The first two steps are ANSWERED here rather than clicked past. Continue used to be
+ * enabled unconditionally and a person could walk the whole flow having entered nothing,
+ * which made every step behind them do nothing. The account feeds the letter and the memo,
+ * and the goal orders the paths, so both are now required — and this helper does what a
+ * real person would.
  */
 async function toOptions(page: import("@playwright/test").Page) {
+  const story = page.locator("#r-account textarea");
+  await expect(story).toBeVisible({ timeout: 15_000 });
+  await story.fill("They decided against me and I do not think they had the full picture.");
+
   const next = page.getByRole("button", { name: /next: what you want/i });
-  await expect(next).toBeVisible({ timeout: 15_000 });
+  await expect(next).toBeEnabled({ timeout: 15_000 });
   await next.click();
+
+  // Any goal will do; "I am not sure" is a real answer, so nobody is trapped by not knowing.
+  const goal = page.locator("#r-goal").getByRole("checkbox").first();
+  await expect(goal).toBeVisible({ timeout: 15_000 });
+  await goal.check();
+
   const opts = page.getByRole("button", { name: /see my options/i });
-  await expect(opts).toBeVisible({ timeout: 15_000 });
+  await expect(opts).toBeEnabled({ timeout: 15_000 });
   await opts.click();
 }
 
@@ -83,7 +98,7 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
   await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
   await expect(page.getByText(/time limits:/i)).toBeVisible(); // brief generic note, not a headline
-  await expect(page.getByRole("heading", { name: /understand these options/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /the ways a decision gets looked at again/i })).toBeVisible();
   await expect(page.getByText(/not legal advice/i)).toBeVisible(); // disclaimer
   await expect(page.getByText(/free help/i).first()).toBeVisible();
 
@@ -189,7 +204,9 @@ test("internal review is its own path, and choosing it drives the rest of the fl
     .toBeVisible({ timeout: 15_000 });
   await expect(page.locator("#r-grounds")).toContainText(/Housing Appeals Office is not the path/i);
   await expect(page.locator("#r-grounds")).not.toContainText(/reasonable and proportionate/i);
-  await expect(page.locator("#r-grounds").getByRole("checkbox")).toHaveCount(0);
+  // One tick, for the one answerable point housing carries for the reviewer. The routing
+  // lines above it are context and carry no control — there is nothing to answer on them.
+  await expect(page.locator("#r-grounds").getByRole("checkbox")).toHaveCount(1);
   const box = page.locator("#cn-internal");
   await expect(box).toBeVisible();
   await box.fill("They never got the medical certificate I sent in March.");
@@ -366,11 +383,12 @@ test("leaving to read a Learn page and coming back keeps your place", async ({ p
   await expect(page).toHaveURL(/\/learn/);
   await page.goBack();
 
-  // Back on the result, not back at question two.
-  await toOptions(page);
+  // Back on the result — and on the STEP they left from, not the top of the flow. This used
+  // to need walking forward again, because the view was dropped from the URL on every load.
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible({
     timeout: 15_000,
   });
+  await expect(page).toHaveURL(/view=options/);
 });
 
 test("the returning-user restore does not let a shared link skip consent", async ({ page }) => {
@@ -461,8 +479,11 @@ test("the flow gives guidance first and hands over last", async ({ page }) => {
   // The options view explains the three approaches BEFORE the person's own paths. Someone
   // who has had a letter does not already know that tribunal, review and court are
   // different things.
-  await expect(page.getByRole("heading", { name: /three ways a decision gets looked at again/i })).toBeVisible();
-  await expect(page.getByRole("link", { name: /asking the department to look at it again/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /the ways a decision gets looked at again/i })).toBeVisible();
+  // Explained IN PLACE, above the cards. This was a second list of the same three approaches
+  // whose items were links out of the flow — the same navigation that stranded people.
+  await expect(page.locator("#r-learn")).toContainText(/internal review/i);
+  await expect(page.locator("#r-learn")).toContainText(/judicial review/i);
 
   // The options view carries the analysis, and NOT the free-services list.
   await expect(page.getByRole("heading", { name: /what this means/i })).toBeVisible();
@@ -587,7 +608,7 @@ test("the points step carries forward what you already told us", async ({ page }
 
   await advance(page, /next: what you want/i);
   // Say what they are hoping for, so the points step can carry it.
-  await page.getByRole("checkbox").first().check();
+  await page.locator("#r-goal").getByRole("checkbox").first().check();
   await advance(page, /see my options/i);
   await chooseApproach(page, /^internal review$/i);
   await advance(page, /next: the points you raise/i);
@@ -600,4 +621,146 @@ test("the points step carries forward what you already told us", async ({ page }
   // Their own account is to hand, verbatim, without leaving the step.
   await expect(ctx).toContainText(/read back what you wrote/i);
   await expect(ctx.getByText(story)).toBeAttached();
+});
+
+/**
+ * You cannot walk past a step you have not answered (2026-09-11).
+ *
+ * Continue used to be enabled unconditionally, so someone could reach "your options" having
+ * typed nothing — and every step behind them then did nothing, because the letter, the memo
+ * and the ordering of the paths are all built from those two answers.
+ *
+ * Only the first two steps are gated. The points are optional by design.
+ */
+test("the first two steps must be answered, and say why", async ({ page }) => {
+  await page.goto("/start?jur=Vic&area=vic-renting");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+
+  // Nothing written: Continue is off, and it says what is needed rather than sitting dead.
+  const next = page.getByRole("button", { name: /next: what you want/i });
+  await expect(next).toBeDisabled();
+  await expect(page.getByText(/write a little about what happened first/i)).toBeVisible();
+
+  // Whitespace is not an answer.
+  const story = page.locator("#r-account textarea");
+  await story.fill("     ");
+  await expect(next).toBeDisabled();
+
+  await story.fill("They cut my payment and never told me why.");
+  await expect(next).toBeEnabled();
+  await next.click();
+
+  // Same again on the goal step, where "I am not sure" is itself a valid answer.
+  const opts = page.getByRole("button", { name: /see my options/i });
+  await expect(opts).toBeDisabled();
+  await expect(page.getByText(/pick what you are hoping for first/i)).toBeVisible();
+  await page.locator("#r-goal").getByRole("checkbox").last().check();
+  await expect(opts).toBeEnabled();
+  await opts.click();
+
+  // And the steps AFTER the choice are not gated — the points are optional.
+  await chooseApproach(page, /^merits review$/i);
+  await advance(page, /next: the points you raise/i);
+  await expect(page.getByRole("button", { name: /build my memo/i })).toBeEnabled();
+});
+
+/**
+ * Leaving to read an explainer and coming back (2026-09-11).
+ *
+ * On the judicial-review step every ground's heading links to its own page. Tapping one —
+ * which is what the page invites — was a full load, and the flow came back at the top with
+ * the approach unchosen and every note gone. Per-tab only, and never for someone opening the
+ * same link fresh.
+ */
+test("going out to a ground explainer and pressing Back keeps your place", async ({ page }) => {
+  await page.goto("/start?jur=Vic&area=vic-public-housing");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+
+  const story = "They never showed me the report they relied on.";
+  await page.locator("#r-account textarea").fill(story);
+  await advance(page, /next: what you want/i);
+  await page.locator("#r-goal").getByRole("checkbox").first().check();
+  await advance(page, /see my options/i);
+  await chooseApproach(page, /^judicial review$/i);
+  await advance(page, /next: the points you raise/i);
+
+  const ground = page.locator("#r-grounds").getByRole("checkbox").first();
+  await ground.check();
+  const note = page.locator('textarea[id^="gn-"]').first();
+  await note.fill("It was a report about my rent arrears.");
+
+  // Follow a ground's own explainer, the way the heading invites.
+  await page.goto("/learn/grounds/procedural-fairness-hearing");
+  await expect(page).toHaveURL(/\/learn\/grounds\//);
+  await page.goBack();
+
+  // Back on the SAME step, with the approach and the notes intact.
+  await expect(page.getByRole("heading", { name: /the points you raise|grounds/i }).first())
+    .toBeVisible({ timeout: 15_000 });
+  await expect(page.locator("#r-grounds")).toBeVisible();
+  await expect(page.locator('textarea[id^="gn-"]').first())
+    .toHaveValue(/It was a report about my rent arrears\./);
+  // And their account is still there, on the step that reads it back. Attached rather than
+  // visible: it sits inside a collapsed <details>, so it is deliberately not on screen until
+  // the reader opens it.
+  await expect(page.locator("#r-grounds").getByText(story)).toBeAttached();
+});
+
+/**
+ * The points step asks questions that can be answered (2026-09-11).
+ *
+ * It put an open text box under EVERY criterion, including lines there is nothing to answer
+ * — "internal review and asking for the matter to be heard in court are two different
+ * choices, not steps in order" is orientation, not a question. Every box also carried the
+ * same placeholder, about figures, under a fines point about mistaken identity.
+ */
+test("routing lines are shown as context, not as questions", async ({ page }) => {
+  await page.goto("/start?jur=Vic&area=vic-fines");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  await toOptions(page);
+  await chooseApproach(page, /^internal review$/i);
+  await advance(page, /next: the points you raise/i);
+
+  const step = page.locator("#r-grounds");
+  // The routing line is context, and carries no box.
+  await expect(step).toContainText(/worth knowing before you start/i);
+  await expect(step).toContainText(/two different choices, not steps in order/i);
+
+  // The answerable points are ticks, and nothing is asked until one is ticked.
+  await expect(step).toContainText(/mistake of identity/i);
+  await expect(step.locator('textarea[id^="icn-"]')).toHaveCount(0);
+  await expect(step.getByText(/what happened on this point/i)).toHaveCount(0);
+
+  const point = step.getByRole("checkbox", { name: /mistake of identity/i });
+  await point.check();
+  await expect(step.getByText(/what happened on this point/i)).toBeVisible();
+  const box = step.locator('textarea[id^="icn-"]').first();
+  await expect(box).toBeVisible();
+  // The placeholder is no longer the one about figures, which made no sense here.
+  await expect(box).toHaveAttribute("placeholder", /what happened, and anything you have/i);
+
+  // Unticking takes the box away again — we do not keep asking.
+  await point.uncheck();
+  await expect(step.locator('textarea[id^="icn-"]')).toHaveCount(0);
+});
+
+/** Internal review belongs in the explainer list too — it listed two of the three. */
+test("the options explainer covers all three approaches", async ({ page }) => {
+  await page.goto("/start?jur=Cth&area=cth-centrelink");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  await toOptions(page);
+
+  const learn = page.locator("#r-learn");
+  await expect(learn).toContainText(/internal review/i);
+  await expect(learn).toContainText(/merits review/i);
+  await expect(learn).toContainText(/judicial review/i);
+  await expect(learn.locator("details")).toHaveCount(3);
 });
