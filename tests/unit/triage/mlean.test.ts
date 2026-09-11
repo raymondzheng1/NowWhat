@@ -10,7 +10,6 @@ import {
   URGENT_REASONS,
 } from "@/lib/tripwire";
 import messages from "@/lib/i18n/messages/en.json";
-import { buildHandoff } from "@/lib/handoff";
 
 describe("M-Lean triage (deterministic Rights Saver)", () => {
   it("branches on jurisdiction and selects the matching entry", () => {
@@ -193,80 +192,5 @@ describe("tripwire — two tiers: STOP (out of scope) vs URGENT (timing)", () =>
     expect(capabilitiesForStop(["migration"]).urgentPerson).toBe(false);
     // Most-restrictive wins across a mixed set.
     expect(capabilitiesForStop(["migration", "criminal"]).urgentPerson).toBe(true);
-  });
-});
-
-describe("handoff pack", () => {
-  it("summarises the matter without leaking VERIFY and states the generic time-limit rule", () => {
-    const r = triage({ jurisdiction: "Vic", decisionType: "notice to vacate" });
-    const pack = buildHandoff({ triage: r, decisionAbout: "a notice to vacate", reasonsRequested: false });
-    expect(pack.toLowerCase()).not.toContain("verify");
-    expect(pack).toContain("MATTER SUMMARY");
-    expect(pack).toContain("Victoria");
-    expect(pack).toContain("TIME LIMIT:");
-    expect(pack.toLowerCase()).toContain("check the exact limit");
-    expect(pack.toLowerCase()).toContain("not stored");
-  });
-
-  it("includes the person's selected grounds as neutral points to discuss, not conclusions", () => {
-    const r = triage({ jurisdiction: "Vic", decisionType: "notice to vacate" });
-    const pack = buildHandoff({
-      triage: r,
-      relatedGrounds: ["You weren't given a fair chance"],
-    });
-    expect(pack).toContain("GROUNDS THAT MIGHT RELATE");
-    expect(pack).toContain("You weren't given a fair chance");
-    expect(pack.toLowerCase()).toContain("not conclusions");
-  });
-
-  /**
-   * The matter summary is the one document that leaves this app and is read by someone else —
-   * a duty lawyer, a community legal centre. It listed exactly two paths, so when internal
-   * review moved out of the merits-review body string on 2026-09-10 it fell out of this
-   * document altogether: the free first step, absent from the summary, with no test to notice.
-   */
-  it("names the internal reviewer, so the free first step reaches the duty lawyer", () => {
-    const r = triage({ jurisdiction: "Cth", decisionType: "Centrelink debt" });
-    const pack = buildHandoff({ triage: r, decisionAbout: "a Centrelink debt" });
-    expect(pack).toContain("Internal review:");
-    expect(pack).toMatch(/Authorised Review Officer/);
-    // Listed before the tribunal, matching the cards.
-    expect(pack.indexOf("Internal review:")).toBeLessThan(pack.indexOf("Merits review:"));
-    // And it claims no question and no remedy: nothing confirms what a departmental
-    // reviewer decides, which is why it has no question on the card either.
-    const irLine = pack.split("\n").find((l) => l.startsWith("- Internal review:"))!;
-    expect(irLine).not.toMatch(/correct or preferable/i);
-    expect(irLine).not.toMatch(/substitute/i);
-  });
-
-  it("omits the internal line entirely for a scheme that has no internal review", () => {
-    // Renting: a notice to vacate comes from a private rental provider, so there is no
-    // department to ask. An empty heading would invent a step.
-    const r = triage({ jurisdiction: "Vic", decisionType: "notice to vacate" });
-    expect(r.avenue.irAvailable).toBe(false);
-    expect(buildHandoff({ triage: r })).not.toContain("Internal review:");
-  });
-
-  it("does not call a court 'merits review', or give it a tribunal's powers", () => {
-    // A Victorian fine goes to the Magistrates' Court on election. The result card stopped
-    // attributing the tribunal's question and remedy to a non-tribunal on 2026-08-23; this
-    // document went on doing it, and it is the half a lawyer actually reads.
-    const r = triage({ jurisdiction: "Vic", decisionType: "fine" });
-    expect(r.entry.id).toBe("vic-fines");
-    expect(r.avenue.mrCharacter).toBe("court");
-    const pack = buildHandoff({ triage: r, decisionAbout: "a parking fine" });
-    expect(pack).toMatch(/Magistrates' Court/);
-    expect(pack, "a court hearing the charge is not asking the merits question")
-      .not.toMatch(/correct or preferable/i);
-    expect(pack).not.toMatch(/a tribunal can substitute a new decision/i);
-  });
-
-  it("a real tribunal still carries its question and its remedy", () => {
-    // The other half of the same rule — the guard must not have silenced VCAT too.
-    const r = triage({ jurisdiction: "Vic", decisionType: "notice to vacate" });
-    expect(r.avenue.mrCharacter).toBe("tribunal");
-    const pack = buildHandoff({ triage: r });
-    expect(pack).toMatch(/correct or preferable/i);
-    expect(pack).toMatch(/a tribunal can substitute a new decision/i);
   });
 });

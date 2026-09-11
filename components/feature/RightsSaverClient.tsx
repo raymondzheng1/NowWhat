@@ -21,7 +21,6 @@ import {
   TRIPWIRE_MESSAGE_KEYS,
   type TripwireFlags,
 } from "@/lib/tripwire";
-import { buildHandoff } from "@/lib/handoff";
 import { composeMemo } from "@/lib/memo/compose";
 import type { PathId } from "@/lib/analysis";
 import { Disclaimer } from "@/components/ui/Disclaimer";
@@ -177,14 +176,20 @@ const AREA_CHIP = [
  * come last, so this restores it. Same two colours as the base rule (#FFFFFF + --ink).
  */
 
-const FLAG_KEYS: { key: keyof TripwireFlags; label: string; hint?: string }[] = [
+const FLAG_KEYS: {
+  key: keyof TripwireFlags;
+  label: string;
+  hint?: string;
+  /** Shown only for these jurisdictions. Omitted means every jurisdiction. */
+  jurisdictions?: Jurisdiction[];
+}[] = [
   // The family/mental-health flag is the one people over-tick: it must read as "the
   // DECISION is one of these", not "my life involves one of these", or the Centrelink,
   // housing and fines users this service exists for get handed away.
   { key: "family", label: "flagFamily", hint: "flagFamilyHint" },
   { key: "criminal", label: "flagCriminal", hint: "flagCriminalHint" },
   { key: "detention", label: "flagDetention", hint: "flagDetentionHint" },
-  { key: "migration", label: "flagMigration" },
+  { key: "migration", label: "flagMigration", jurisdictions: ["Cth"] },
   { key: "hearingBooked", label: "flagHearing" },
   { key: "deadlineImminentOrPassed", label: "flagDeadline" },
   { key: "tribunalDecision", label: "flagTribunal", hint: "flagTribunalHint" },
@@ -219,6 +224,9 @@ export function RightsSaverClient({
 
   const [step, setStep] = useState<Step>("who");
   const [jurisdiction, setJurisdiction] = useState<Jurisdiction | null>(null);
+  // Which result step is on screen. It lives in the result component, and the header — a
+  // sibling — needs it to say where the person is in the whole journey.
+  const [resultView, setResultView] = useState<ResultView>("story");
   const [areaId, setAreaId] = useState<string | null>(null);
   const [decisionDate, setDecisionDate] = useState("");
   const [flags, setFlags] = useState<TripwireFlags>({});
@@ -270,6 +278,34 @@ export function RightsSaverClient({
   // given IN THIS SESSION. A fresh load, a bookmark or a shared link starts at the
   // questions, because `consent` is false until the person ticks the box.
   const poppingRef = useRef(false);
+  // Every step change starts at the top, not wherever the last one was scrolled to.
+  //
+  // The consent box sits near the bottom of question two, so pressing "See my next steps"
+  // left the reader ~500px down a brand-new page — past the heading, the disclaimer and the
+  // step nav that say what they are looking at.
+  //
+  // Scroll restoration is turned off HERE, in the component that owns the history pushes.
+  // Each step change pushes an entry, and with the default "auto" the browser reapplies the
+  // offset it remembers for that entry — after our scroll, which is why setting this in the
+  // result component was too late to help. The scroll itself waits a frame so it lands after
+  // the new step has painted and the page is tall enough to hold it.
+  useEffect(() => {
+    if ("scrollRestoration" in window.history) window.history.scrollRestoration = "manual";
+  }, []);
+  useEffect(() => {
+    // INSTANT, not smooth. The stylesheet sets `scroll-behavior: smooth` globally, which is
+    // right for jumping to an anchor on the page you are already reading and wrong here: a
+    // step change would animate the reader a thousand pixels up a page they have not seen,
+    // taking about a second to arrive. A new step should simply start at its top.
+    //
+    // Twice, deliberately: once now, and once after the next step has painted. The new step
+    // is taller than the old one, so a scroll fired before layout can be undone as the page
+    // grows under it.
+    const toTop = () => window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+    toTop();
+    const id = window.requestAnimationFrame(toTop);
+    return () => window.cancelAnimationFrame(id);
+  }, [step]);
   // The result step named in the URL when this page was LOADED.
   //
   // Captured during the first render, because by the time anything else could read it, it
@@ -316,6 +352,10 @@ export function RightsSaverClient({
     }
     lastStepRef.current = step;
   }, [step, jurisdiction, areaId, decisionDate]);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" as ScrollBehavior });
+  }, []);
 
   useEffect(() => {
     function onPop() {
@@ -369,7 +409,12 @@ export function RightsSaverClient({
     setRelatedGrounds((prev) => (prev.includes(id) ? prev.filter((g) => g !== id) : [...prev, id]));
   }
 
-  const stepNo = step === "who" ? 1 : step === "what" ? 2 : 3;
+  // Where they are in the WHOLE journey: two questions, then the six result steps. It used
+  // to count the questions only and call everything after them "step 3 of 3", so someone who
+  // had just reached "tell us what happened" was told they had finished.
+  const stepNo =
+    step === "who" ? 1 : step === "what" ? 2 : 3 + Math.max(0, RESULT_VIEWS.indexOf(resultView));
+  const stepTotal = 2 + RESULT_VIEWS.length;
 
   // One guide per wizard step, gated on that step being visible: advancing tears the old
   // tour down and auto-starts the next, with no manual driver navigation (harness §14.11).
@@ -382,6 +427,7 @@ export function RightsSaverClient({
     <div className="min-h-screen">
       <FocusedHeader
         stepNo={stepNo}
+        stepTotal={stepTotal}
         t={t}
         onReset={step === "result" ? reset : undefined}
         onReplayGuide={replay}
@@ -403,6 +449,7 @@ export function RightsSaverClient({
           {step === "what" && jurisdiction && (
             <WhatStep
               t={t}
+              jurisdiction={jurisdiction}
               areas={areas}
               areaId={areaId}
               setAreaId={setAreaId}
@@ -434,6 +481,7 @@ export function RightsSaverClient({
               relatedGrounds={relatedGrounds}
               onToggleGround={toggleGround}
               onRestoreGrounds={setRelatedGrounds}
+              onViewChange={setResultView}
               initialView={initialViewRef.current ?? null}
               tLetter={tLetter}
               faqs={faqsByEntry[entry.id] ?? []}
@@ -452,11 +500,13 @@ export function RightsSaverClient({
 
 function FocusedHeader({
   stepNo,
+  stepTotal,
   t,
   onReset,
   onReplayGuide,
 }: {
   stepNo: number;
+  stepTotal: number;
   t: ReturnType<typeof useTranslations>;
   onReset?: () => void;
   onReplayGuide?: () => void;
@@ -475,7 +525,7 @@ function FocusedHeader({
         </span>
       </Link>
       <span className="inline-flex items-center rounded-pill bg-cream-deep px-3.5 py-2 font-display text-[12px] font-extrabold uppercase tracking-[0.1em] text-ink sm:text-[12.5px]">
-        {t("stepOf", { n: stepNo })}
+        {t("stepOf", { n: stepNo, total: stepTotal })}
       </span>
       <div className="flex items-center gap-2 sm:gap-3">
         {onReplayGuide && (
@@ -561,6 +611,7 @@ function WhoStep({
 
 function WhatStep({
   t,
+  jurisdiction,
   areas,
   areaId,
   setAreaId,
@@ -575,6 +626,7 @@ function WhatStep({
   onContinue,
 }: {
   t: ReturnType<typeof useTranslations>;
+  jurisdiction: Jurisdiction | null;
   areas: DataPathway[];
   areaId: string | null;
   setAreaId: (s: string) => void;
@@ -689,7 +741,9 @@ function WhatStep({
           </legend>
           <p className="clear-both text-[15.5px] leading-relaxed text-ink-soft">{t("checkHelp")}</p>
           <div className="mt-3 space-y-1">
-            {FLAG_KEYS.map(({ key, label, hint }) => (
+            {FLAG_KEYS.filter(
+              (f) => !f.jurisdictions || (jurisdiction && f.jurisdictions.includes(jurisdiction)),
+            ).map(({ key, label, hint }) => (
               <label
                 key={key}
                 /* py + min-h keeps each row a >= 44px tap target on a phone. */
@@ -778,6 +832,7 @@ function ResultStep({
   onToggleGround,
   onRestoreGrounds,
   initialView,
+  onViewChange,
   faqs,
   corpusEntry,
 }: {
@@ -799,6 +854,8 @@ function ResultStep({
   onRestoreGrounds: (ids: string[]) => void;
   /** The `?view=` this page loaded with, captured before the URL was rewritten. */
   initialView: string | null;
+  /** Reports the step on screen, so the header can count the whole journey. */
+  onViewChange: (v: ResultView) => void;
   faqs: FaqLink[];
   corpusEntry?: PathwayEntry;
 }) {
@@ -837,6 +894,9 @@ function ResultStep({
   const [goals, setGoals] = useState<GoalId[]>([]);
   const [goalOther, setGoalOther] = useState("");
   const viewIdx = RESULT_VIEWS.indexOf(view);
+  useEffect(() => {
+    onViewChange(view);
+  }, [view, onViewChange]);
   const topRef = useRef<HTMLDivElement | null>(null);
 
   // Moving between result steps pushes history, so Back walks them. Scroll to the top too:
@@ -1349,7 +1409,6 @@ function ResultStep({
     decisionDate: decisionDate || undefined,
   });
 
-  const groundNameById = new Map(shownGrounds.map((g) => [g.id, g.plainName] as const));
   const [memoCopied, setMemoCopied] = useState(false);
   // The memorandum works through the approach the person chose. Before, it always used the
   // first path in the plan, so someone who had deliberately picked judicial review got a
@@ -1381,31 +1440,47 @@ function ResultStep({
         : [],
     groundNotes,
     criteriaNotes,
-    story: account["q-story"] ?? "",
+    // Their account, plus anything they added on the memo step itself. Quoted the same way
+    // — as their own paragraphs — so adding to it improves the memo rather than appending a
+    // differently-labelled afterthought.
+    story: [account["q-story"] ?? "", account["q-more"] ?? ""]
+      .map((x) => x.trim())
+      .filter(Boolean)
+      .join("\n\n"),
     goals: goals.map((g) => t(`goal_${g}`)),
     goalOther,
     decisionDate: decisionDate || undefined,
     forum: memoPathBody || memoProcess?.plainName || t("pathTitleInternal"),
     // Provenance: which build of the procedural layer produced the rule and the source
     // printed in this memo. It is already in the client bundle, so this costs nothing.
+    paths: plan.paths.map((pp) => ({
+      name:
+        pp.id === "internal-review"
+          ? t("pathTitleInternal")
+          : pp.id === "judicial-review"
+            ? judicialReview.name
+            : pp.character === "tribunal"
+              ? meritsReview.name
+              : t("pathTitleNotTribunal"),
+      body: pp.body,
+      question: pp.question,
+      conditional: pp.conditional,
+    })),
     corpusVersion: getDataIndex().builtAt,
     t: (k) => t(k),
   });
 
-  function downloadHandoff() {
-    const text = buildHandoff({
-      triage: { entry, isFallback: entry.isFallback, jurisdiction, avenue: av },
-      decisionAbout: entry.title,
-      decisionDate: decisionDate || undefined,
-      reasonsRequested: false,
-      relatedGrounds: relatedGrounds.map((id) => groundNameById.get(id) ?? id),
-      forumNames: {
-        internal: plan.paths.find((pp) => pp.id === "internal-review")?.body,
-        merits: plan.paths.find((pp) => pp.id === "merits-review")?.body,
-        judicial: plan.paths.find((pp) => pp.id === "judicial-review")?.body,
-      },
-    });
-    const blob = new Blob([text], { type: "text/plain;charset=utf-8" });
+  /**
+   * The one document, downloaded.
+   *
+   * This used to build a SECOND, thinner "matter summary" from lib/handoff — so the person
+   * had a memo on one step and a different document on the next, both to hand to the same
+   * lawyer. The hand-over offered the thinner one. What a legal service actually needs is
+   * the analysis, so both steps now offer the memo, and the paths the summary listed have
+   * moved into it.
+   */
+  function downloadMemo() {
+    const blob = new Blob([memo.body], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -1838,6 +1913,85 @@ function ResultStep({
       {/* Asking for written reasons is a real step, but it is not everybody's step, and it
           was open on the page for everyone. It is a disclosure now: the heading says what it
           is, and the draft appears for the people who want it. */}
+      {/* The memo. IRAC, argued both ways, no prediction and no ranking — the owner's two
+          worked memoranda minus the two things this app must never do.
+
+          It LEADS this step. It used to come last, under the reasons draft, the
+          application letter and a list of FAQ links, so someone who reached "your memo"
+          met a letter template before a word of the analysis. The letter is what you do
+          AFTER reading the analysis, so it now follows it. */}
+      {view === "memo" && (
+        <section id="r-memo" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("memoSectionTitle")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("memoSectionLead")}</p>
+          <textarea
+            id="memo-text"
+            readOnly
+            value={memo.body}
+            rows={18}
+            className="input mt-4 font-mono text-[13.5px] leading-relaxed"
+            aria-label={t("memoSectionTitle")}
+          />
+          <div className="mt-4 flex flex-wrap gap-3">
+            <button
+              type="button"
+              className="btn btn-primary"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(memo.body);
+                  setMemoCopied(true);
+                  setTimeout(() => setMemoCopied(false), 2000);
+                } catch {
+                  /* clipboard unavailable — the text is selectable */
+                }
+              }}
+            >
+              {memoCopied ? t("memoCopied") : t("memoCopy")}
+            </button>
+            <button type="button" className="btn btn-secondary" onClick={downloadMemo}>
+              {t("memoDownload")}
+            </button>
+          </div>
+
+          {/* Anything else? The memo is composed from what they have told us, so the way to
+              improve it is to tell us more — and until now the only route to that was
+              walking back through the steps. Typing here re-composes the memo above as they
+              go: there is no model call and nothing is sent, so it is genuinely live. */}
+          <div className="mt-6 border-t-2 border-line pt-5">
+            <h3 className="font-display text-[17px] font-black text-ink">{t("memoMoreTitle")}</h3>
+            <p className="mt-1.5 text-[15px] leading-relaxed text-ink-soft">{t("memoMoreLead")}</p>
+            <label htmlFor="memo-more" className="sr-only">
+              {t("memoMoreTitle")}
+            </label>
+            <textarea
+              id="memo-more"
+              value={account["q-more"] ?? ""}
+              onChange={(e) => setAccount((a) => ({ ...a, "q-more": e.target.value }))}
+              rows={4}
+              placeholder={t("memoMorePlaceholder")}
+              className="input mt-3 w-full"
+            />
+            <p className="mt-2 text-[14.5px] leading-snug text-ink-faint">{t("memoMoreLive")}</p>
+          </div>
+
+          {/* And what to do with it, once they have read it. Both lead OUT of the analysis
+              rather than sitting above it. */}
+          <div className="mt-6 border-t-2 border-line pt-5">
+            <h3 className="font-display text-[17px] font-black text-ink">{t("memoNextTitle")}</h3>
+            <div className="mt-3 flex flex-wrap gap-3">
+              {(applyDraft || noLetterForPath) && (
+                <a href="#r-apply" className="btn btn-secondary">
+                  {t("memoNextLetter")}
+                </a>
+              )}
+              <button type="button" onClick={() => goView("help")} className="btn btn-secondary">
+                {t("memoNextHuman")}
+              </button>
+            </div>
+          </div>
+        </section>
+      )}
+
       {view === "memo" && (
       <details id="r-reasons" data-tour="reasons" className="card">
         <summary className="cursor-pointer list-none">
@@ -2334,42 +2488,6 @@ function ResultStep({
         </div>
       )}
 
-      {/* The memo. IRAC, argued both ways, no prediction and no ranking — the owner's two
-          worked memoranda minus the two things this app must never do. */}
-      {view === "memo" && (
-        <section id="r-memo" className="card">
-          <h2 className="font-display text-[21px] font-black text-ink">{t("memoSectionTitle")}</h2>
-          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("memoSectionLead")}</p>
-          <textarea
-            readOnly
-            value={memo.body}
-            rows={18}
-            className="input mt-4 font-mono text-[13.5px] leading-relaxed"
-            aria-label={t("memoSectionTitle")}
-          />
-          <div className="mt-4 flex flex-wrap gap-3">
-            <button
-              type="button"
-              className="btn btn-primary"
-              onClick={async () => {
-                try {
-                  await navigator.clipboard.writeText(memo.body);
-                  setMemoCopied(true);
-                  setTimeout(() => setMemoCopied(false), 2000);
-                } catch {
-                  /* clipboard unavailable — the text is selectable */
-                }
-              }}
-            >
-              {memoCopied ? t("memoCopied") : t("memoCopy")}
-            </button>
-            <button type="button" className="btn btn-secondary" onClick={() => window.print()}>
-              {t("handoffPrint")}
-            </button>
-          </div>
-        </section>
-      )}
-
       {/* The one foil on this screen (max one per page): the recommended next action is to
           take the summary to a human service.
 
@@ -2388,12 +2506,36 @@ function ResultStep({
         <div className="foil-inner">
           <h2 className="font-display text-[21px] font-black text-ink">{t("handoffTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("handoffLead")}</p>
+          {/* The summary, on screen, not just behind a download. It is the SAME memo as the
+              step before: this used to hand over a second, thinner document built by
+              lib/handoff, so a person arrived at a legal service with a different paper from
+              the one the app had just walked them through. And offering it only as a file
+              meant someone on a phone with no easy way to open a .txt had nothing to read. */}
+          <AutoTextarea
+            readOnly
+            value={memo.body}
+            minRows={14}
+            className="input mt-4 font-mono text-[13.5px] leading-relaxed"
+            aria-label={t("handoffTitle")}
+          />
           <div className="mt-4 flex flex-wrap items-center gap-3">
-            <button type="button" onClick={downloadHandoff} className="btn btn-help">
-              {t("handoffDownload")}
+            <button
+              type="button"
+              className="btn btn-help"
+              onClick={async () => {
+                try {
+                  await navigator.clipboard.writeText(memo.body);
+                  setMemoCopied(true);
+                  setTimeout(() => setMemoCopied(false), 2000);
+                } catch {
+                  /* clipboard unavailable — the text is selectable */
+                }
+              }}
+            >
+              {memoCopied ? t("memoCopied") : t("memoCopy")}
             </button>
-            <button type="button" onClick={() => window.print()} className="btn btn-secondary">
-              {t("handoffPrint")}
+            <button type="button" onClick={downloadMemo} className="btn btn-secondary">
+              {t("handoffDownload")}
             </button>
           </div>
         </div>

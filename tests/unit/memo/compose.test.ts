@@ -362,3 +362,64 @@ describe("the memo does not lend a tribunal's powers to a body that is not one",
     expect(blank.body).not.toContain("MEMOISSUE3INTERNAL");
   });
 });
+
+/**
+ * The memo became THE document on 2026-09-11.
+ *
+ * The hand-over used to build a second, thinner "matter summary" from lib/handoff, so a
+ * person walked through an analysis on one step and was handed a different paper on the
+ * next — and the thinner one was the one offered to the legal service. That module is gone;
+ * the one thing it carried that the memo did not was the list of every avenue, which is the
+ * first thing a duty lawyer asks. It lives here now.
+ */
+describe("the memo lists every path, not only the one being worked through", () => {
+  const base = {
+    entry: getDataEntry("cth-centrelink")!,
+    process: merits,
+    grounds: [],
+    story: "",
+    goals: [],
+    goalOther: "",
+    forum: "the Administrative Review Tribunal",
+    t: (k: string) => k,
+  };
+  const PATHS = [
+    { name: "Internal review", body: "an Authorised Review Officer", question: "", conditional: false },
+    { name: "Merits review", body: "the ART", question: "Is this the correct or preferable decision?", conditional: false },
+    { name: "Judicial review", body: "the Federal Court", question: "Was the decision made lawfully?", conditional: true },
+  ];
+
+  it("names each avenue and the body that hears it", () => {
+    const m = composeMemo({ ...base, paths: PATHS });
+    expect(m.body).toContain("MEMOPATHSTITLE");
+    expect(m.body).toContain("Internal review: an Authorised Review Officer");
+    expect(m.body).toContain("Merits review: the ART");
+    expect(m.body).toContain("Judicial review: the Federal Court");
+  });
+
+  it("marks a conditional path as one that may not apply", () => {
+    const m = composeMemo({ ...base, paths: PATHS });
+    const jr = m.body.split("\n").find((l) => l.includes("Judicial review:"))!;
+    expect(jr).toContain("memoPathsConditional");
+    const mr = m.body.split("\n").find((l) => l.includes("Merits review:"))!;
+    expect(mr).not.toContain("memoPathsConditional");
+  });
+
+  it("says nothing at all when there is only one path — there is no choice to report", () => {
+    const m = composeMemo({ ...base, paths: [PATHS[1]!] });
+    expect(m.body).not.toContain("MEMOPATHSTITLE");
+  });
+
+  it("composes without the field, because it is optional", () => {
+    expect(() => composeMemo({ ...base })).not.toThrow();
+    expect(composeMemo({ ...base }).body).not.toContain("MEMOPATHSTITLE");
+  });
+
+  it("still predicts nothing and ranks nothing with the paths attached", () => {
+    const rules = [...patterns.prediction, ...patterns.score] as { pattern: string; why: string }[];
+    const m = composeMemo({ ...base, paths: PATHS, t });
+    for (const r of rules) {
+      expect(new RegExp(r.pattern, "i").test(m.body.toLowerCase()), r.why).toBe(false);
+    }
+  });
+});

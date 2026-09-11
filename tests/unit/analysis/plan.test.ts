@@ -13,6 +13,7 @@ const plan = (avenue: Parameters<typeof planFor>[0]["avenue"]) =>
 const AV = {
   irAvailable: false,
   irBody: "",
+  irConditional: false,
   mrAvailable: true,
   mrConditional: false,
   mrCharacter: "tribunal" as const,

@@ -63,6 +63,18 @@ export const AvenueIRSchema = z.object({
   available: z.boolean().default(false),
   /** Who looks at it again, in the words the source uses. */
   body: z.string().default(""),
+  /**
+   * Shown with a condition attached: whether this scheme offers an internal review at all.
+   *
+   * Set on the catch-all entries, which cover decisions we have no specific guide for. Our
+   * own corpus entry says "many schemes let you ask the department to look at its own
+   * decision again" and "if the letter does not mention it, you can ask the department
+   * whether an internal review is available" — so for an unknown decision the honest answer
+   * is "probably, ask", not silence. Leaving it off hid the cheapest step from exactly the
+   * people with the least guidance, which is the same mistake the conditional merits path
+   * on these entries exists to avoid.
+   */
+  conditional: z.boolean().default(false),
   source: z.string().default(""),
 });
 

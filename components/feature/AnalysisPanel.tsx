@@ -143,7 +143,13 @@ export function AnalysisPanel({
                   a housing entry covers both the department and a private provider. */}
               {p.conditional && (
                 <span className="rounded-pill border-2 border-amber-border bg-amber-bg px-2.5 py-0.5 text-[13px] font-semibold text-ink-soft">
-                  {t(p.id === "judicial-review" ? "pathConditionalJudicial" : "pathConditional")}
+                  {t(
+                    p.id === "judicial-review"
+                      ? "pathConditionalJudicial"
+                      : p.id === "internal-review"
+                        ? "pathConditionalInternal"
+                        : "pathConditional",
+                  )}
                 </span>
               )}
             </div>

@@ -19,6 +19,11 @@ keywords:
   - federal
   - decision
 avenue:
+  ir:
+    available: true
+    conditional: true
+    body: the agency that made the decision
+    source: 'Owner''s administrative-law knowledge base — internal review (2026-08-22)'
   mr:
     available: true
     conditional: true
@@ -85,3 +90,16 @@ question is which decisions the Act reaches. The string reads "Depends on who ma
 check this with a free service" as at 2026-08-23, so the card hedges and routes to a human, which is
 short of the point but no longer promises the path outright. A Commonwealth key of its own — plainly,
 that some decisions sit outside this court path — would finish the fix.
+
+**Internal review offered, conditionally, 2026-09-11.** The catch-alls covered decisions we
+hold no specific guide for, and they showed merits review and judicial review but no internal
+review at all — so the people with the least guidance were the only ones never told about the
+cheapest step. A person who picked "a Victorian government decision" saw two paths, both of
+them slower and harder than asking the decision-maker to look again.
+
+Nothing new is asserted. The corpus entry for the step already says "many schemes let you ask
+the department to look at its own decision again" and, for exactly this case, "if the letter
+does not mention it, you can ask the department whether an internal review is available". The
+body is named no more precisely than we can know it — the agency that made the decision — and
+the condition travels with the card, the same shape the merits path on this entry already
+uses for the same reason.

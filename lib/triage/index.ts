@@ -26,6 +26,8 @@ export interface AvenueView {
   /** Internal review — asking the decision-maker to look at its own decision again. */
   irAvailable: boolean;
   irBody: string;
+  /** Set where the scheme may not offer one at all — the catch-all entries. */
+  irConditional: boolean;
   mrBody: string;
   jrAvailable: boolean;
   /** Set where the entry covers decision-makers this path may not reach. */
@@ -64,6 +66,7 @@ export function avenueView(entry: DataPathway): AvenueView {
   return {
     irAvailable: entry.avenue.ir?.available ?? false,
     irBody: cleanForDisplay(entry.avenue.ir?.body ?? ""),
+    irConditional: entry.avenue.ir?.conditional ?? false,
     mrAvailable: entry.avenue.mr.available,
     mrConditional: entry.avenue.mr.conditional ?? false,
     mrCharacter: entry.avenue.mr.character ?? "tribunal",

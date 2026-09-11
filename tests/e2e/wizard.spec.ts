@@ -213,7 +213,7 @@ test("internal review is its own path, and choosing it drives the rest of the fl
 
   // The memo follows the approach they chose, in their words.
   await advance(page, /build my memo/i);
-  const memo = page.locator("#r-memo textarea");
+  const memo = page.locator("#memo-text");
   await expect(memo).toBeVisible({ timeout: 15_000 });
   await expect(memo).toHaveValue(/They never got the medical certificate I sent in March\./);
   await expect(memo).toHaveValue(/Housing Appeals Office/i);
@@ -285,7 +285,7 @@ test("the fines court election is never dressed up as merits review", async ({ p
   await expect(page.locator("#r-apply textarea")).toHaveCount(0);
 
   // And the memo hands the duty lawyer no tribunal powers for that court either.
-  const memo = page.locator("#r-memo textarea");
+  const memo = page.locator("#memo-text");
   await expect(memo).toBeVisible();
   await expect(memo).not.toHaveValue(/correct or preferable/i);
   await expect(memo).toHaveValue(/not a tribunal conducting merits review/i);
@@ -514,7 +514,7 @@ test("the flow gives guidance first and hands over last", async ({ page }) => {
 
   // Then the memo — carrying the person's own words on that point, verbatim.
   await advance(page, /build my memo/i);
-  const memo = page.locator("#r-memo textarea");
+  const memo = page.locator("#memo-text");
   await expect(memo).toBeVisible({ timeout: 15_000 });
   await expect(memo).toHaveValue(/They never showed me the report they relied on\./);
 
@@ -763,4 +763,91 @@ test("the options explainer covers all three approaches", async ({ page }) => {
   await expect(learn).toContainText(/merits review/i);
   await expect(learn).toContainText(/judicial review/i);
   await expect(learn.locator("details")).toHaveCount(3);
+});
+
+/**
+ * The seven fixes from walking the live flow (2026-09-11).
+ */
+test("a result link opens at the top, and the counter covers the whole journey", async ({ page }) => {
+  // Landing mid-page: browsers restore the previous scroll position for a URL, so a link
+  // straight to a result step dropped people under the heading, the disclaimer and the step
+  // nav that say what they are looking at.
+  await page.goto("/start?jur=Vic&area=vic-generic&step=result");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  expect(await page.evaluate(() => window.scrollY)).toBeLessThan(50);
+
+  // "Step 3 of 3" on the FIRST of six result steps told people they had finished. Two
+  // questions plus six result steps is eight.
+  await expect(page.getByText(/step 3 of 8/i)).toBeVisible();
+  await expect(page.getByText(/of 3\b/i)).toHaveCount(0);
+  await page.locator("#r-account textarea").fill("They refused my application.");
+  await page.getByRole("button", { name: /next: what you want/i }).click();
+  await expect(page.getByText(/step 4 of 8/i)).toBeVisible();
+});
+
+test("a Victorian decision is never offered the visa flag", async ({ page }) => {
+  // Migration is a Commonwealth matter. A Victorian state body cannot decide a visa, so
+  // offering the flag there invites a tick that routes someone away for no reason.
+  await page.goto("/start?jur=Vic&area=vic-generic");
+  await expect(page.getByRole("checkbox", { name: /visa or migration/i })).toHaveCount(0);
+  await expect(page.getByRole("checkbox", { name: /criminal case, a police matter/i })).toBeVisible();
+
+  await page.goto("/start?jur=Cth&area=cth-generic");
+  await expect(page.getByRole("checkbox", { name: /visa or migration/i })).toBeVisible();
+});
+
+test("the catch-alls offer internal review, with its condition attached", async ({ page }) => {
+  // They showed merits and judicial review but no internal review at all, so the people with
+  // the least guidance were the only ones never told about the cheapest step.
+  await page.goto("/start?jur=Vic&area=vic-generic");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  await toOptions(page);
+
+  const cards = page.locator("#r-analysis > ol > li");
+  await expect(cards).toHaveCount(3, { timeout: 15_000 });
+  const internal = cards.filter({ has: page.getByRole("heading", { name: /^internal review$/i }) });
+  await expect(internal).toHaveCount(1);
+  await expect(internal).toContainText(/the agency that made the decision/i);
+  // Conditional, because for an unknown decision we cannot say the scheme has one.
+  await expect(internal).toContainText(/ask whether this scheme offers one/i);
+});
+
+test("the memo leads its step, regenerates, and is what the hand-over gives", async ({ page }) => {
+  await page.goto("/start?jur=Cth&area=cth-centrelink");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  await toOptions(page);
+  await chooseApproach(page, /^merits review$/i);
+  await advance(page, /next: the points you raise/i);
+  await advance(page, /build my memo/i);
+
+  // The analysis comes FIRST. It used to be last, under the reasons draft, the application
+  // letter and a list of FAQ links.
+  const memoTop = await page.locator("#r-memo").evaluate((el) => el.getBoundingClientRect().top + window.scrollY);
+  const applyTop = await page.locator("#r-apply").evaluate((el) => el.getBoundingClientRect().top + window.scrollY);
+  expect(memoTop).toBeLessThan(applyTop);
+
+  // It lists every avenue, which is the first thing a duty lawyer asks.
+  const memo = page.locator("#memo-text");
+  await expect(memo).toHaveValue(/Internal review: /);
+  await expect(memo).toHaveValue(/Judicial review: /);
+
+  // Adding more re-composes it live — no model call, nothing sent.
+  await expect(memo).not.toHaveValue(/a letter they sent in June/i);
+  await page.locator("#memo-more").fill("There was a letter they sent in June I never saw.");
+  await expect(memo).toHaveValue(/a letter they sent in June I never saw/i);
+
+  // And the hand-over gives the SAME document, on screen, not a second thinner one.
+  await advance(page, /next: talk to a person/i);
+  const handoff = page.locator("#r-handoff textarea");
+  await expect(handoff).toBeVisible({ timeout: 15_000 });
+  await expect(handoff).toHaveValue(/a letter they sent in June I never saw/i);
+  await expect(handoff).toHaveValue(/MEMOPATHSTITLE|Every path open/i);
+  // …and the print button is gone from it.
+  await expect(page.locator("#r-handoff").getByRole("button", { name: /print/i })).toHaveCount(0);
 });

@@ -97,6 +97,14 @@ export interface MemoInput {
   /** The forum name for this decision, from the lawyer-verified data layer. */
   forum: string;
   /**
+   * Every path open for this decision, not only the one being worked through.
+   *
+   * Carried over from the separate "matter summary" this memo replaced on 2026-09-11. That
+   * document was thinner than the memo in every other respect, but it did list all the
+   * avenues — which is the first thing a duty lawyer wants to know, and the memo did not say.
+   */
+  paths?: { name: string; body: string; question: string; conditional: boolean }[];
+  /**
    * Build fingerprint of the knowledge layer this memo was composed from. Optional, because
    * the memo must still compose without it — a missing version is a missing line, never a
    * missing memo.
@@ -354,6 +362,20 @@ export function composeMemo(input: MemoInput): Memo {
         L.push(`  ${rule(g.whatItIsNot)}`);
       }
     });
+  }
+
+  // ---- Every path that is open -----------------------------------------------------
+  //
+  // The memo works through ONE approach — the one the person chose. A lawyer reading it
+  // needs to know what else was available, and whether the choice closed anything off.
+  // Names and bodies only: what each decides is set out above for the chosen path, and
+  // asserting it for the others would repeat the whole analysis three times.
+  if (input.paths && input.paths.length > 1) {
+    h(t("memoPathsTitle"));
+    L.push(t("memoPathsLead"));
+    for (const pp of input.paths) {
+      L.push(`  - ${pp.name}: ${pp.body}${pp.conditional ? ` — ${t("memoPathsConditional")}` : ""}`);
+    }
   }
 
   // ---- Close -----------------------------------------------------------------------

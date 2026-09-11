@@ -173,7 +173,7 @@ export function planFor({
       canDo: [],
       cannotDo: [],
       criteria: internalCriteria,
-      conditional: false,
+      conditional: avenue.irConditional ?? false,
       character: "internal",
       focusKey: "focusInternal",
     });
