@@ -110,6 +110,19 @@ export interface MemoInput {
    * missing memo.
    */
   corpusVersion?: string;
+  /**
+   * Base URL for links back into the app's own guides.
+   *
+   * The memo sets out the test for each point and the cases it comes from, then stopped —
+   * so a reader who wanted the full explanation of a ground had no way from the page they
+   * were holding to the page that explains it. Every ground already has one, and this is
+   * a plain-text document, so the link is written out in full rather than hidden in markup.
+   *
+   * Omitted in tests and anywhere a base URL is not known; the memo simply carries no links.
+   */
+  siteUrl?: string;
+  /** Where the chosen path is explained in the app, relative (e.g. "/learn/merits-review"). */
+  pathHref?: string;
   /** Section headings, so all customer prose stays in the i18n layer. */
   t: (key: string) => string;
 }
@@ -120,6 +133,10 @@ export interface Memo {
 }
 
 const rule = (s: string) => s.replace(/\s+/g, " ").trim();
+
+/** An absolute link into the app's own guides, or nothing when no base URL is known. */
+const guide = (base: string | undefined, path: string) =>
+  base ? `${base.replace(/\/+$/, "")}${path}` : "";
 
 /** A short, quoted extract of the person's own account — never paraphrased. */
 function quoted(story: string): string[] {
@@ -172,6 +189,10 @@ export function composeMemo(input: MemoInput): Memo {
   L.push(`${t("memoAbout")}: ${entry.title}`);
   if (decisionDate) L.push(`${t("memoDecisionDate")}: ${decisionDate}`);
   L.push(`${t("memoPath")}: ${pathName} (${forum})`);
+  {
+    const pHref = input.pathHref ? guide(input.siteUrl, input.pathHref) : "";
+    if (pHref) L.push(`${t("memoReadMore")}: ${pHref}`);
+  }
   L.push(`${t("memoPrepared")}: ${new Date().toISOString().slice(0, 10)}`);
   L.push("");
   L.push(t("memoNotAdvice"));
@@ -348,6 +369,11 @@ export function composeMemo(input: MemoInput): Memo {
       L.push(`${t("memoArgument")}:`);
       for (const w of g.whatRelates) L.push(`  - ${rule(w)}`);
       L.push(`  ${t("memoArgumentNote")}`);
+      const gHref = guide(input.siteUrl, `/learn/grounds/${g.id}`);
+      if (gHref) {
+        L.push("");
+        L.push(`${t("memoReadMore")}: ${gHref}`);
+      }
       // Their own words on this point, if they wrote any. Verbatim and unlabelled as
       // evidence — the reader of this memo decides what it is worth, not us.
       const note = (groundNotes[g.id] ?? "").trim().replace(/\s+/g, " ");

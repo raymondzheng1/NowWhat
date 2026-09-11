@@ -10,6 +10,7 @@ import { avenueView } from "@/lib/triage";
 import { planFor, midSentence } from "@/lib/analysis";
 import { AnalysisPanel } from "@/components/feature/AnalysisPanel";
 import { deadlineRuleView } from "@/lib/deadline/rule";
+import { siteUrl } from "@/lib/config";
 import { reasonsRequestTemplate, REASONS_CLOCK_WARNING } from "@/lib/reasons";
 import { type DraftKind } from "@/lib/draft/build";
 import { composeLetter, LETTER_GROUND_HEADINGS, LAWYER_NOTE_ONLY } from "@/lib/letter/compose";
@@ -1467,6 +1468,16 @@ function ResultStep({
       conditional: pp.conditional,
     })),
     corpusVersion: getDataIndex().builtAt,
+    // Links back into our own guides, so a reader holding the memo can reach the full
+    // explanation of any point in it. Absolute, because the memo is a plain-text file
+    // that leaves the site.
+    siteUrl: siteUrl(),
+    pathHref:
+      memoPathId === "internal-review"
+        ? "/learn/how-review-fits-together/internal-review"
+        : memoPathId === "judicial-review"
+          ? "/learn/judicial-review"
+          : "/learn/merits-review",
     t: (k) => t(k),
   });
 
@@ -2488,8 +2499,11 @@ function ResultStep({
         </div>
       )}
 
-      {/* The one foil on this screen (max one per page): the recommended next action is to
-          take the summary to a human service.
+      {/* The one foil on this screen (max one per page): the hand-over.
+
+          It does not RECOMMEND going to a service — it is one of the options, and which to
+          take is the person's. The app names what each option is and leaves the choice
+          alone, which is the same rule the result cards follow.
 
           This block and the help list under it used to render on EVERY view, so the first
           thing a person saw after telling us their situation was "take this to a human

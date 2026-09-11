@@ -423,3 +423,79 @@ describe("the memo lists every path, not only the one being worked through", () 
     }
   });
 });
+
+/**
+ * The memo links back into the app's own guides (2026-09-11).
+ *
+ * It set out the test for each point and the cases it comes from, then stopped — so someone
+ * holding the memo who wanted the full explanation of a ground had no route from the paper
+ * to the page that explains it. All 17 grounds already have one.
+ */
+describe("the memo points back at the knowledge base", () => {
+  const g = listGrounds().filter((x) => x.id === "procedural-fairness-hearing");
+  const base = {
+    entry: getDataEntry("cth-centrelink")!,
+    process: judicial,
+    grounds: g,
+    story: "",
+    goals: [],
+    goalOther: "",
+    forum: "the Federal Court",
+    t: (k: string) => k,
+  };
+
+  it("links each ground to its own explainer", () => {
+    const m = composeMemo({ ...base, siteUrl: "https://example.test" });
+    expect(m.body).toContain("https://example.test/learn/grounds/procedural-fairness-hearing");
+  });
+
+  it("links the path being worked through", () => {
+    const m = composeMemo({
+      ...base, siteUrl: "https://example.test/", pathHref: "/learn/judicial-review",
+    });
+    // Trailing slash on the base must not double up.
+    expect(m.body).toContain("https://example.test/learn/judicial-review");
+    expect(m.body).not.toContain("example.test//learn");
+  });
+
+  it("composes with no links at all when no base URL is known", () => {
+    const m = composeMemo({ ...base });
+    expect(m.body).not.toContain("memoReadMore");
+    expect(m.body).not.toContain("/learn/");
+  });
+
+  it("every ground the memo can name has a page to link to", () => {
+    // The link is built from the ground id, so a ground without a page would publish a 404
+    // into a document someone hands to a lawyer. The route generates one per listed ground,
+    // which is the invariant this pins.
+    const ids = new Set(listGrounds().map((x) => x.id));
+    const m = composeMemo({ ...base, grounds: listGrounds(), siteUrl: "https://example.test" });
+    const linked = [...m.body.matchAll(/\/learn\/grounds\/([a-z-]+)/g)].map((x) => x[1]!);
+    expect(linked.length).toBe(listGrounds().length);
+    for (const id of linked) expect(ids.has(id), id).toBe(true);
+  });
+
+  it("still predicts nothing, with the links attached", () => {
+    const rules = [...patterns.prediction, ...patterns.score] as { pattern: string; why: string }[];
+    const m = composeMemo({ ...base, grounds: listGrounds(), siteUrl: "https://example.test", t });
+    for (const r of rules) {
+      expect(new RegExp(r.pattern, "i").test(m.body.toLowerCase()), r.why).toBe(false);
+    }
+  });
+});
+
+/**
+ * Options, not a recommended course of action (2026-09-11, on the owner's instruction).
+ */
+describe("the memo offers options and recommends none of them", () => {
+  it("the closing section names what they CAN do, and does not tell them to do it", () => {
+    const r = messages.rights as unknown as Record<string, string>;
+    const close = r.memoNextBody!.toLowerCase();
+    expect(close).toContain("these are the options");
+    expect(close).toContain("not a recommendation");
+    // The old wording opened "Take these notes to a human legal service" — an instruction.
+    expect(close).not.toMatch(/^take these notes/);
+    // Doing nothing is a real option and is named as one.
+    expect(close).toMatch(/neither|or wait/);
+  });
+});
