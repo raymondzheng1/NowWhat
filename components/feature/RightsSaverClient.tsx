@@ -25,7 +25,8 @@ import {
 import { composeMemo } from "@/lib/memo/compose";
 import type { PathId } from "@/lib/analysis";
 import { Disclaimer } from "@/components/ui/Disclaimer";
-import { AutoTextarea } from "@/components/ui/AutoTextarea";
+import { MemoView } from "@/components/feature/MemoView";
+import { LetterView, LetterPlaceholderKey } from "@/components/feature/LetterView";
 import { GetHelp } from "@/components/ui/GetHelp";
 import { CallButton } from "@/components/ui/CallButton";
 import { PrivacyNote } from "@/components/ui/PrivacyNote";
@@ -177,23 +178,52 @@ const AREA_CHIP = [
  * come last, so this restores it. Same two colours as the base rule (#FFFFFF + --ink).
  */
 
+/**
+ * The tripwire questions, and where each one can honestly apply.
+ *
+ * They were one fixed list shown to everyone, so a person who had picked "fine or
+ * infringement notice" was asked whether their decision was about child protection,
+ * guardianship or a visa. None of those can be true of a fine, and a page of questions that
+ * obviously do not fit teaches the reader that this form is not about them — on the step
+ * where we most need them to answer carefully.
+ *
+ * SCOPED CONSERVATIVELY, because these are safety gates. Hiding a question that could apply
+ * is the dangerous error; showing a redundant one is only noise. So a flag is narrowed only
+ * where it is definitionally impossible for the chosen area, never where it is merely
+ * unlikely — someone in prison can have a Centrelink debt, and a fine can become a
+ * prosecution, so those stay everywhere.
+ */
 const FLAG_KEYS: {
   key: keyof TripwireFlags;
   label: string;
+  /** Used instead of `label` for Commonwealth decisions, where the example differs. */
+  labelCth?: string;
   hint?: string;
   /** Shown only for these jurisdictions. Omitted means every jurisdiction. */
   jurisdictions?: Jurisdiction[];
+  /**
+   * Shown only on the catch-all entries.
+   *
+   * These ask what the DECISION ITSELF is about. Once someone has picked a named area the
+   * answer is already known and cannot be yes — a public-housing decision is not a
+   * guardianship order — so the question is only live where we do not yet know what the
+   * decision is.
+   */
+  genericOnly?: boolean;
 }[] = [
   // The family/mental-health flag is the one people over-tick: it must read as "the
   // DECISION is one of these", not "my life involves one of these", or the Centrelink,
   // housing and fines users this service exists for get handed away.
-  { key: "family", label: "flagFamily", hint: "flagFamilyHint" },
+  { key: "family", label: "flagFamily", hint: "flagFamilyHint", genericOnly: true },
   { key: "criminal", label: "flagCriminal", hint: "flagCriminalHint" },
   { key: "detention", label: "flagDetention", hint: "flagDetentionHint" },
-  { key: "migration", label: "flagMigration", jurisdictions: ["Cth"] },
+  { key: "migration", label: "flagMigration", jurisdictions: ["Cth"], genericOnly: true },
   { key: "hearingBooked", label: "flagHearing" },
   { key: "deadlineImminentOrPassed", label: "flagDeadline" },
-  { key: "tribunalDecision", label: "flagTribunal", hint: "flagTribunalHint" },
+  // The example tribunal has to be one that could have decided THIS. VCAT cannot have
+  // decided a Centrelink matter, and naming it there reads as a form written for
+  // somebody else.
+  { key: "tribunalDecision", label: "flagTribunal", labelCth: "flagTribunalCth", hint: "flagTribunalHint" },
 ];
 
 export interface FaqLink {
@@ -641,6 +671,9 @@ function WhatStep({
   onBack: () => void;
   onContinue: () => void;
 }) {
+  // A catch-all entry means we do not yet know what the decision is about, which is the
+  // only state in which "is the decision itself about X?" is still an open question.
+  const isGenericArea = !areaId || (areas.find((a) => a.id === areaId)?.isFallback ?? false);
   const canContinue = !!areaId && consent;
   // The button used to be `disabled` with no explanation, while the thing blocking it (the
   // consent tick) was ~800px back up a long phone page. Keep it live, and when it can't
@@ -743,8 +776,10 @@ function WhatStep({
           <p className="clear-both text-[15.5px] leading-relaxed text-ink-soft">{t("checkHelp")}</p>
           <div className="mt-3 space-y-1">
             {FLAG_KEYS.filter(
-              (f) => !f.jurisdictions || (jurisdiction && f.jurisdictions.includes(jurisdiction)),
-            ).map(({ key, label, hint }) => (
+              (f) =>
+                (!f.jurisdictions || (jurisdiction && f.jurisdictions.includes(jurisdiction))) &&
+                (!f.genericOnly || isGenericArea),
+            ).map(({ key, label, labelCth, hint }) => (
               <label
                 key={key}
                 /* py + min-h keeps each row a >= 44px tap target on a phone. */
@@ -757,7 +792,7 @@ function WhatStep({
                   className="mt-0.5 h-5 w-5 shrink-0 accent-ink"
                 />
                 <span>
-                  {t(label)}
+                  {t(jurisdiction === "Cth" && labelCth ? labelCth : label)}
                   {hint && (
                     <span className="mt-1 block text-[14.5px] leading-snug text-ink-faint">
                       {t(hint)}
@@ -1391,11 +1426,14 @@ function ResultStep({
         ...(shownConcepts.length > 0 ? [{ id: "r-concepts", label: t("conceptsTitle") }] : []),
       ],
       grounds: groundsSectionShown ? [{ id: "r-grounds", label: t("groundsTitle") }] : [],
+      // In the order the sections actually appear. The memo moved to the top of this step
+      // when it stopped being the last thing under a letter template, and this list kept
+      // announcing it as item four — so the contents disagreed with the page it described.
       memo: [
-        { id: "r-reasons", label: t("reasonsTitle") },
-        ...(applyDraft ? [{ id: "r-apply", label: t("applyTitle") }] : []),
-        ...(faqs.length > 0 ? [{ id: "r-faq", label: t("faqTitle") }] : []),
         { id: "r-memo", label: t("memoSectionTitle") },
+        ...(applyDraft || noLetterForPath ? [{ id: "r-apply", label: t("applyTitle") }] : []),
+        { id: "r-reasons", label: t("reasonsTitle") },
+        ...(faqs.length > 0 ? [{ id: "r-faq", label: t("faqTitle") }] : []),
       ],
       help: [{ id: "r-handoff", label: t("handoffTitle") }],
     } as Record<ResultView, { id: string; label: string }[]>
@@ -1935,14 +1973,9 @@ function ResultStep({
         <section id="r-memo" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("memoSectionTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("memoSectionLead")}</p>
-          <textarea
-            id="memo-text"
-            readOnly
-            value={memo.body}
-            rows={18}
-            className="input mt-4 font-mono text-[13.5px] leading-relaxed"
-            aria-label={t("memoSectionTitle")}
-          />
+          <div id="memo-text" data-memo={memo.body}>
+            <MemoView blocks={memo.blocks} />
+          </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <button
               type="button"
@@ -2021,13 +2054,8 @@ function ResultStep({
           </p>
           <p className="mt-1.5 text-[14.5px] leading-relaxed text-ink-soft">{REASONS_CLOCK_WARNING}</p>
         </div>
-        <AutoTextarea
-          readOnly
-          value={template}
-          minRows={12}
-          className="input mt-4 font-mono text-[14.5px] leading-relaxed"
-          aria-label={t("reasonsTitle")}
-        />
+        <LetterView body={template} label={t("reasonsTitle")} />
+        <LetterPlaceholderKey text={t("letterPlaceholderKey")} />
         <button type="button" onClick={copyTemplate} className="btn btn-secondary mt-4">
           {copied ? t("reasonsCopied") : t("reasonsCopy")}
         </button>
@@ -2406,13 +2434,8 @@ function ResultStep({
             </Link>
           </p>
 
-          <AutoTextarea
-            readOnly
-            value={applyDraft.body}
-            minRows={12}
-            className="input mt-4 font-mono text-[14.5px] leading-relaxed"
-            aria-label={activeApply.label}
-          />
+          <LetterView body={applyDraft.body} label={activeApply.label} />
+          <LetterPlaceholderKey text={t("letterPlaceholderKey")} />
           <button
             type="button"
             onClick={() => {
@@ -2525,13 +2548,9 @@ function ResultStep({
               lib/handoff, so a person arrived at a legal service with a different paper from
               the one the app had just walked them through. And offering it only as a file
               meant someone on a phone with no easy way to open a .txt had nothing to read. */}
-          <AutoTextarea
-            readOnly
-            value={memo.body}
-            minRows={14}
-            className="input mt-4 font-mono text-[13.5px] leading-relaxed"
-            aria-label={t("handoffTitle")}
-          />
+          <div data-memo={memo.body}>
+            <MemoView blocks={memo.blocks} />
+          </div>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <button
               type="button"

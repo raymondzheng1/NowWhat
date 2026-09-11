@@ -164,7 +164,7 @@
     "goalOtherPlaceholder": "In your own words…",
     "goalNote": "This orders what we show you. It never hides an option — everything that applies to your decision stays on the next screen.",
     "memoSectionTitle": "Your memo",
-    "memoSectionLead": "This is the analysis of your situation, set out the way a lawyer would work through it: what the decision was, what the body you chose decides, and each point you raised with the argument back. Read it first. What to do with it comes after.",
+    "memoSectionLead": "This is your situation, set out the way a lawyer would work through it: what the decision was, what the body you chose decides, and each point you raised with the argument back. Read it first. What you can do with it comes after.",
     "memoCopy": "Copy these notes",
     "memoCopied": "Copied",
     "memoTitle": "Notes on your decision",
@@ -440,7 +440,9 @@
     "memoPathsTitle": "Every path open for this decision",
     "memoPathsLead": "The notes above work through the one that was chosen. These were the others.",
     "memoPathsConditional": "may not apply to this decision, check it",
-    "memoReadMore": "Read more about this in the guide"
+    "memoReadMore": "Read more about this in the guide",
+    "letterPlaceholderKey": "is something you fill in before you send it. Replace it, brackets and all.",
+    "flagTribunalCth": "The decision I want to challenge was made by a tribunal, such as the ART"
   },
   "ask": {
     "title": "Ask a question",

@@ -32,7 +32,6 @@ avenue:
     available: true
     forum: SCV-O56
     source: 'Supreme Court (General Civil Procedure) Rules, Order 56 — supremecourt.vic.gov.au'
-  pathsAre: alternatives
   noReviewEndpoint: >-
     If review options have closed, a payment plan or financial-hardship option
     may still be available through Fines Victoria, and a free service can help.
@@ -50,9 +49,6 @@ reasonsRequest:
 privativeClause: false
 forms: []
 irCriteria:
-  - >-
-    Internal review and asking for the matter to be heard in court are two
-    different choices, not steps in order.
   - The reviewing agency decides whether the fine should stand or be cancelled.
   - >-
     The grounds include a mistake of identity, and a decision that was contrary
@@ -62,9 +58,6 @@ irCriteria:
     as mental illness, disability, serious addiction, homelessness, or family
     violence.
 mrCriteria:
-  - >-
-    Internal review and asking for the matter to be heard in court are two
-    different choices, not steps in order.
   - If the matter goes to court instead, the court decides the charge itself.
 examples:
   - 'A parking or speeding fine'
@@ -152,3 +145,20 @@ it is about, so each was filed under the body it names. The ROUTING line — tha
 and electing to go to court are two different choices, not steps in order — appears on both,
 because a person reading either card needs it. It is the sentence that stops someone believing
 they must be refused a review before they can elect to go to court.
+
+**The routing line is withdrawn, 2026-09-12, on the owner's ruling.** It read "Internal review
+and asking for the matter to be heard in court are two different choices, not steps in order",
+and it sat on both criteria lists and in the "worth knowing" box above the points.
+
+It was never the supervising lawyer's — the note of 2026-08-23 above records it as written
+editorially, and put it on the list for the next cadence. The owner's view is that it is not
+right, and that is the better reading of this entry's own source: under the Infringements Act
+2006 (Vic) a person refused an internal review may still elect to have the matter heard in
+court while time remains, so "not steps in order" overstates a relationship the app cannot
+source either way.
+
+`avenue.pathsAre` went with it. It was set to "alternatives" on the strength of that sentence
+and nothing else, so with the sentence withdrawn the entry claims neither order nor
+alternation, and the panel falls back to saying only that the paths are listed in the order
+people usually consider them. The housing entry keeps its own "alternatives", which rests on
+the lawyer's line that which body applies "depends on the decision".

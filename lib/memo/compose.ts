@@ -127,9 +127,31 @@ export interface MemoInput {
   t: (key: string) => string;
 }
 
+/**
+ * One piece of the memo, in a form a page can render and a text file can print.
+ *
+ * The memo used to be a string, shown in a <textarea>. That made every link in it inert —
+ * the guides it points at arrived as text a reader had to retype — and it threw away the
+ * structure a legal note depends on, so headings, points and quotes all came out as the same
+ * grey monospace. Blocks are emitted once and the plain text is derived FROM the same calls,
+ * so the page and the downloaded file can never say different things.
+ */
+export type MemoBlock =
+  | { kind: "heading"; text: string }
+  | { kind: "subheading"; text: string }
+  | { kind: "para"; text: string }
+  | { kind: "meta"; label: string; value: string }
+  | { kind: "item"; text: string; detail?: string }
+  | { kind: "quote"; text: string; label?: string }
+  | { kind: "link"; text: string; href: string }
+  | { kind: "disclaimer"; text: string };
+
 export interface Memo {
   title: string;
+  /** The whole memo as plain text, for copying and for the downloaded file. */
   body: string;
+  /** The same memo as structure, for rendering on the page with live links. */
+  blocks: MemoBlock[];
 }
 
 const rule = (s: string) => s.replace(/\s+/g, " ").trim();
@@ -168,17 +190,48 @@ export function composeMemo(input: MemoInput): Memo {
     t,
   } = input;
   const L: string[] = [];
-  const h = (s: string) => {
+  const B: MemoBlock[] = [];
+  const h = (x: string) => {
     L.push("");
-    L.push(s.toUpperCase());
-    L.push("=".repeat(Math.min(s.length, 64)));
+    L.push(x.toUpperCase());
+    L.push("=".repeat(Math.min(x.length, 64)));
+    B.push({ kind: "heading", text: x });
   };
-  const sub = (s: string) => {
+  const sub = (x: string) => {
     L.push("");
-    L.push(s);
-    L.push("-".repeat(Math.min(s.length, 64)));
+    L.push(x);
+    L.push("-".repeat(Math.min(x.length, 64)));
+    B.push({ kind: "subheading", text: x });
   };
-
+  /** A plain line of prose. `indent` only affects the text form. */
+  const para = (x: string, indent = "") => {
+    L.push(`${indent}${x}`);
+    B.push({ kind: "para", text: x });
+  };
+  const meta = (label: string, value: string) => {
+    L.push(`${label}: ${value}`);
+    B.push({ kind: "meta", label, value });
+  };
+  const item = (x: string, detail?: string) => {
+    L.push(`  - ${x}`);
+    if (detail) L.push(`      ${detail}`);
+    B.push({ kind: "item", text: x, ...(detail ? { detail } : {}) });
+  };
+  /** The person's own words. Quoted in both forms, characterised in neither. */
+  const quote = (x: string, label?: string, indent = "  ") => {
+    if (label) L.push(`${indent === "  " ? "" : "      "}${label}:`);
+    L.push(`${indent}"${x}"`);
+    B.push({ kind: "quote", text: x, ...(label ? { label } : {}) });
+  };
+  const link = (label: string, href: string) => {
+    L.push(`${label}: ${href}`);
+    B.push({ kind: "link", text: label, href });
+  };
+  const blank = () => L.push("");
+  const disclaimer = (x: string) => {
+    L.push(x);
+    B.push({ kind: "disclaimer", text: x });
+  };
   // The name of the path, from whichever entry describes it. One of the two must be
   // present; the caller decides which, from the approach the person chose.
   const pathName = proc?.plainName ?? internal?.plainName ?? t("pathTitleInternal");
@@ -186,16 +239,16 @@ export function composeMemo(input: MemoInput): Memo {
   const title = `${t("memoTitle")} — ${entry.title}`;
   L.push(title);
   L.push("");
-  L.push(`${t("memoAbout")}: ${entry.title}`);
-  if (decisionDate) L.push(`${t("memoDecisionDate")}: ${decisionDate}`);
-  L.push(`${t("memoPath")}: ${pathName} (${forum})`);
+  meta(t("memoAbout"), entry.title);
+  if (decisionDate) meta(t("memoDecisionDate"), decisionDate);
+  meta(t("memoPath"), `${pathName} (${forum})`);
   {
     const pHref = input.pathHref ? guide(input.siteUrl, input.pathHref) : "";
-    if (pHref) L.push(`${t("memoReadMore")}: ${pHref}`);
+    if (pHref) link(t("memoReadMore"), pHref);
   }
-  L.push(`${t("memoPrepared")}: ${new Date().toISOString().slice(0, 10)}`);
-  L.push("");
-  L.push(t("memoNotAdvice"));
+  meta(t("memoPrepared"), new Date().toISOString().slice(0, 10));
+  blank();
+  disclaimer(t("memoNotAdvice"));
 
   // ---- Summary --------------------------------------------------------------------
   //
@@ -236,7 +289,7 @@ export function composeMemo(input: MemoInput): Memo {
           ? t("memoSummaryReadsInternal")
           : t("memoSummaryReadsInternalShort"),
     );
-    for (const b of bits) L.push(b);
+    for (const b of bits) para(b);
   }
 
   // ---- What they told us ----------------------------------------------------------
@@ -244,17 +297,17 @@ export function composeMemo(input: MemoInput): Memo {
   if (q.length || goals.length || goalOther.trim()) {
     h(t("memoWhatYouTold"));
     if (goals.length) {
-      L.push(`${t("memoYouWant")}:`);
-      for (const g of goals) L.push(`  - ${g}`);
+      para(`${t("memoYouWant")}:`);
+      for (const g of goals) item(g);
     }
     if (goalOther.trim()) {
-      L.push("");
-      L.push(`  "${goalOther.trim().replace(/\s+/g, " ")}"`);
+      blank();
+      quote(goalOther.trim().replace(/\s+/g, " "));
     }
     if (q.length) {
-      L.push("");
-      L.push(`${t("memoYourAccount")}:`);
-      L.push(...q);
+      blank();
+      para(`${t("memoYourAccount")}:`);
+      for (const x of q) quote(x.trim().replace(/^"|"$/g, ""));
     }
   }
 
@@ -266,16 +319,16 @@ export function composeMemo(input: MemoInput): Memo {
   // words about what they want looked at.
   if (!proc && internal) {
     h(t("memoIssue1Internal"));
-    L.push(t("memoIssue1QInternal"));
+    para(t("memoIssue1QInternal"));
     sub(t("memoRule"));
-    for (const k of internal.keyPoints) L.push(`  - ${rule(k)}`);
+    for (const k of internal.keyPoints) item(rule(k));
     sub(t("memoApplication"));
-    L.push(`  ${t("memoInternalBodyIs")} ${forum}.`);
-    if (entry.deadlineRule) L.push(`  ${rule(entry.deadlineRule)}`);
-    L.push(`  ${t("memoTimeCheck")}`);
+    para(`${t("memoInternalBodyIs")} ${forum}.`, "  ");
+    if (entry.deadlineRule) para(rule(entry.deadlineRule), "  ");
+    para(t("memoTimeCheck"), "  ");
 
     h(t("memoIssue2Internal"));
-    L.push(rule(internal.whatItMeans));
+    para(rule(internal.whatItMeans));
     // What the lawyer supplied for THIS scheme, where they supplied it. For a Victorian fine
     // that is the statutory review grounds the issuing agency applies — the part a duty
     // lawyer most needs, and the part that was sitting under the Magistrates' Court card
@@ -283,37 +336,33 @@ export function composeMemo(input: MemoInput): Memo {
     if (input.criteria && input.criteria.length) {
       sub(t("memoRule"));
       for (const c of input.criteria) {
-        L.push(`  - ${rule(c)}`);
+        item(rule(c));
         const n = (criteriaNotes[c] ?? "").trim().replace(/\s+/g, " ");
-        if (n) {
-          L.push(`      ${t("memoYourNote")}:`);
-          L.push(`        "${n}"`);
-        }
+        if (n) quote(n, t("memoYourNote"), "        ");
       }
     }
     if (internal.whatItIsNot) {
       sub(t("memoWhatItIsNot"));
-      L.push(`  ${rule(internal.whatItIsNot)}`);
+      para(rule(internal.whatItIsNot), "  ");
     }
 
     const askedFor = internalNote.trim().replace(/\s+/g, " ");
     if (askedFor) {
       h(t("memoIssue3Internal"));
-      L.push(`${t("memoYourNote")}:`);
-      L.push(`  "${askedFor}"`);
+      quote(askedFor, t("memoYourNote"));
     }
   }
 
   // ---- Issue 1: can you apply? -----------------------------------------------------
   if (proc) {
   h(t("memoIssue1"));
-  L.push(t("memoIssue1Q"));
+  para(t("memoIssue1Q"));
   sub(t("memoRule"));
-  for (const c of proc.canApply) L.push(`  - ${rule(c)}`);
+  for (const c of proc.canApply) item(rule(c));
   sub(t("memoApplication"));
-  L.push(`  ${t("memoForumIs")} ${forum}.`);
-  if (entry.deadlineRule) L.push(`  ${rule(entry.deadlineRule)}`);
-  L.push(`  ${t("memoTimeCheck")}`);
+  para(`${t("memoForumIs")} ${forum}.`, "  ");
+  if (entry.deadlineRule) para(rule(entry.deadlineRule), "  ");
+  para(t("memoTimeCheck"), "  ");
 
   // ---- Issue 2: what the forum decides ---------------------------------------------
   //
@@ -322,28 +371,25 @@ export function composeMemo(input: MemoInput): Memo {
   // court path carrying the court process's own question and remedies, not borrowed ones.
   const isTribunal = proc.id === "judicial-review" || character === "tribunal";
   h(t("memoIssue2"));
-  if (isTribunal) L.push(`${t("memoQuestionAsked")}: "${proc.question}"`);
-  else L.push(t("memoNotATribunal"));
+  if (isTribunal) para(`${t("memoQuestionAsked")}: "${proc.question}"`);
+  else para(t("memoNotATribunal"));
   const criteriaList = input.criteria ?? (proc.id === "merits-review" ? entry.mrCriteria : []);
   if (criteriaList.length) {
     sub(t("memoRule"));
     for (const c of criteriaList) {
-      L.push(`  - ${rule(c)}`);
+      item(rule(c));
       // Their own words against this criterion, verbatim and uncharacterised, exactly as
       // the ground notes are handled.
       const n = (criteriaNotes[c] ?? "").trim().replace(/\s+/g, " ");
-      if (n) {
-        L.push(`      ${t("memoYourNote")}:`);
-        L.push(`        "${n}"`);
-      }
+      if (n) quote(n, t("memoYourNote"), "        ");
     }
   }
   if (isTribunal) {
     sub(t("memoWhatItCanDo"));
-    for (const r of proc.remedies) L.push(`  - ${rule(r)}`);
+    for (const r of proc.remedies) item(rule(r));
     if (proc.limits.length) {
       sub(t("memoWhatItCannotDo"));
-      for (const r of proc.limits) L.push(`  - ${rule(r)}`);
+      for (const r of proc.limits) item(rule(r));
     }
   }
   }
@@ -351,41 +397,39 @@ export function composeMemo(input: MemoInput): Memo {
   // ---- Issue 3: the points raised, each argued both ways ---------------------------
   if (grounds.length) {
     h(t("memoIssue3"));
-    L.push(t("memoGroundsLead"));
+    para(t("memoGroundsLead"));
     grounds.forEach((g, i) => {
       sub(`${i + 1}. ${g.name}: ${g.plainName}`);
-      L.push(`${t("memoIssue")}: ${rule(g.oneLine)}`);
-      L.push("");
-      L.push(`${t("memoRule")}: ${rule(g.test)}`);
+      para(`${t("memoIssue")}: ${rule(g.oneLine)}`);
+      blank();
+      para(`${t("memoRule")}: ${rule(g.test)}`);
       if (g.leadingCases.length) {
-        L.push("");
-        L.push(`${t("memoWhereFrom")}:`);
+        blank();
+        para(`${t("memoWhereFrom")}:`);
         for (const c of g.leadingCases) {
-          L.push(`  - ${c.name}${c.pinpoint ? ` (${c.pinpoint})` : ""}`);
-          if (c.explains) L.push(`      ${rule(c.explains)}`);
+          item(`${c.name}${c.pinpoint ? ` (${c.pinpoint})` : ""}`, c.explains ? rule(c.explains) : undefined);
         }
       }
-      L.push("");
-      L.push(`${t("memoArgument")}:`);
-      for (const w of g.whatRelates) L.push(`  - ${rule(w)}`);
-      L.push(`  ${t("memoArgumentNote")}`);
+      blank();
+      para(`${t("memoArgument")}:`);
+      for (const w of g.whatRelates) item(rule(w));
+      para(t("memoArgumentNote"), "  ");
       const gHref = guide(input.siteUrl, `/learn/grounds/${g.id}`);
       if (gHref) {
-        L.push("");
-        L.push(`${t("memoReadMore")}: ${gHref}`);
+        blank();
+        link(t("memoReadMore"), gHref);
       }
       // Their own words on this point, if they wrote any. Verbatim and unlabelled as
       // evidence — the reader of this memo decides what it is worth, not us.
       const note = (groundNotes[g.id] ?? "").trim().replace(/\s+/g, " ");
       if (note) {
-        L.push("");
-        L.push(`${t("memoYourNote")}:`);
-        L.push(`  "${note}"`);
+        blank();
+        quote(note, t("memoYourNote"));
       }
       if (g.whatItIsNot) {
-        L.push("");
-        L.push(`${t("memoCounter")}:`);
-        L.push(`  ${rule(g.whatItIsNot)}`);
+        blank();
+        para(`${t("memoCounter")}:`);
+        para(rule(g.whatItIsNot), "  ");
       }
     });
   }
@@ -398,15 +442,15 @@ export function composeMemo(input: MemoInput): Memo {
   // asserting it for the others would repeat the whole analysis three times.
   if (input.paths && input.paths.length > 1) {
     h(t("memoPathsTitle"));
-    L.push(t("memoPathsLead"));
+    para(t("memoPathsLead"));
     for (const pp of input.paths) {
-      L.push(`  - ${pp.name}: ${pp.body}${pp.conditional ? ` — ${t("memoPathsConditional")}` : ""}`);
+      item(`${pp.name}: ${pp.body}${pp.conditional ? ` — ${t("memoPathsConditional")}` : ""}`);
     }
   }
 
   // ---- Close -----------------------------------------------------------------------
   h(t("memoNext"));
-  L.push(t("memoNextBody"));
+  para(t("memoNextBody"));
 
   // ---- Where this came from --------------------------------------------------------
   // Added 2026-08-23 after external legal review. The memo stamped the day it was prepared
@@ -416,12 +460,12 @@ export function composeMemo(input: MemoInput): Memo {
   // version is a build fingerprint, so a memo can always be tied back to the exact content
   // that produced it. Nothing here is about the person.
   h(t("memoSourceTitle"));
-  L.push(`${t("memoSourceOfficial")}: ${entry.sourceUrl}`);
-  L.push(`${t("memoSourceChecked")}: ${entry.verifiedAsAt}`);
-  if (corpusVersion) L.push(`${t("memoSourceVersion")}: ${corpusVersion}`);
+  link(t("memoSourceOfficial"), entry.sourceUrl);
+  meta(t("memoSourceChecked"), entry.verifiedAsAt);
+  if (corpusVersion) meta(t("memoSourceVersion"), corpusVersion);
 
-  L.push("");
-  L.push(t("memoNotAdvice"));
+  blank();
+  disclaimer(t("memoNotAdvice"));
 
-  return { title, body: L.join("\n") };
+  return { title, body: L.join("\n"), blocks: B };
 }

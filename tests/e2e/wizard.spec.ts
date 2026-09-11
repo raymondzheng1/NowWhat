@@ -215,22 +215,22 @@ test("internal review is its own path, and choosing it drives the rest of the fl
   await advance(page, /build my memo/i);
   const memo = page.locator("#memo-text");
   await expect(memo).toBeVisible({ timeout: 15_000 });
-  await expect(memo).toHaveValue(/They never got the medical certificate I sent in March\./);
-  await expect(memo).toHaveValue(/Housing Appeals Office/i);
+  await expect(memo).toContainText(/They never got the medical certificate I sent in March\./);
+  await expect(memo).toContainText(/Housing Appeals Office/i);
   await expect(memo, "a tribunal's test has no place in an internal-review memo")
-    .not.toHaveValue(/correct or preferable/i);
+    .not.toContainText(/correct or preferable/i);
 
   // …and so does the letter. Only the one for the chosen approach is offered, and it asks
   // for another look rather than naming a ground or asking for the preferable decision.
-  const draft = page.locator("#r-apply textarea");
+  const draft = page.locator("#r-apply .rounded-card");
   await expect(draft).toBeVisible();
-  await expect(draft).toHaveValue(/look at the decision described above again/i);
-  await expect(draft).toHaveValue(/time limit for any next step/i);
-  await expect(draft).not.toHaveValue(/afresh on the facts/i);
+  await expect(draft).toContainText(/look at the decision described above again/i);
+  await expect(draft).toContainText(/time limit for any next step/i);
+  await expect(draft).not.toContainText(/afresh on the facts/i);
   await expect(page.locator("#r-apply").getByRole("button", { name: /^judicial review$/i })).toHaveCount(0);
   // What they typed on the points step reaches the LETTER, not only the memo. It used to
   // reach the memo alone, so the draft they were about to send kept its placeholder.
-  await expect(draft).toHaveValue(/They never got the medical certificate I sent in March\./);
+  await expect(draft).toContainText(/They never got the medical certificate I sent in March\./);
 });
 
 /**
@@ -282,13 +282,13 @@ test("the fines court election is never dressed up as merits review", async ({ p
 
   await advance(page, /build my memo/i);
   await expect(page.locator("#r-apply")).toContainText(/There is no draft for this path/i);
-  await expect(page.locator("#r-apply textarea")).toHaveCount(0);
+  await expect(page.locator("#r-apply .rounded-card")).toHaveCount(0);
 
   // And the memo hands the duty lawyer no tribunal powers for that court either.
   const memo = page.locator("#memo-text");
   await expect(memo).toBeVisible();
-  await expect(memo).not.toHaveValue(/correct or preferable/i);
-  await expect(memo).toHaveValue(/not a tribunal conducting merits review/i);
+  await expect(memo).not.toContainText(/correct or preferable/i);
+  await expect(memo).toContainText(/not a tribunal conducting merits review/i);
 });
 
 test("tripwire: a sensitive matter shows the guidance first, and hands over at the end", async ({ page }) => {
@@ -299,7 +299,10 @@ test("tripwire: a sensitive matter shows the guidance first, and hands over at t
     await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });
   }).toPass({ timeout: 15_000 });
 
-  await page.getByRole("button", { name: /notice to vacate|renting/i }).first().click();
+  // The CATCH-ALL, because that is where "is the decision itself about child protection?" is
+  // still an open question. Once someone picks a named area — a fine, a notice to vacate —
+  // the answer is already known and cannot be yes, so the question is no longer asked there.
+  await page.getByRole("button", { name: /a victorian government decision/i }).first().click();
   await page.getByRole("checkbox", { name: /child protection, family law, guardianship/i }).check();
   await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
   await page.getByRole("button", { name: /see my next steps/i }).click();
@@ -516,7 +519,7 @@ test("the flow gives guidance first and hands over last", async ({ page }) => {
   await advance(page, /build my memo/i);
   const memo = page.locator("#memo-text");
   await expect(memo).toBeVisible({ timeout: 15_000 });
-  await expect(memo).toHaveValue(/They never showed me the report they relied on\./);
+  await expect(memo).toContainText(/They never showed me the report they relied on\./);
 
   // And only now, the hand-over to a person.
   await advance(page, /next: talk to a person/i);
@@ -573,10 +576,14 @@ test("Centrelink reads as a sequence; a fine reads as a choice", async ({ page }
   await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
   await toOptions(page);
 
-  await expect(panel).toContainText(/not steps in order/i);
-  await expect(panel).toContainText(/option 1/i);
-  await expect(panel, "choosing one can close another — say so").toContainText(/can close another/i);
-  await expect(panel, "a fine is not a sequence").not.toContainText(/these usually run in order/i);
+  // Fines claim NEITHER since 2026-09-12: the one sentence that said the two were "not steps
+  // in order" was editorial rather than the lawyer's, and the owner withdrew it as not right.
+  // So the panel falls back to the neutral line and asserts nothing about order.
+  await expect(panel).toContainText(/the usual order/i);
+  await expect(panel).toContainText(/depends on the law/i);
+  await expect(panel, "no order is claimed either way").not.toContainText(/these usually run in order/i);
+  await expect(panel).not.toContainText(/not stages/i);
+  await expect(panel).not.toContainText(/not steps in order/i);
 });
 
 /**
@@ -719,7 +726,10 @@ test("going out to a ground explainer and pressing Back keeps your place", async
  * same placeholder, about figures, under a fines point about mistaken identity.
  */
 test("routing lines are shown as context, not as questions", async ({ page }) => {
-  await page.goto("/start?jur=Vic&area=vic-fines");
+  // Housing, since 2026-09-12: the fines routing line was withdrawn as not right, so housing
+  // is where a genuine routing statement still lives — and it is the one that matters most,
+  // because it tells someone facing eviction that the Housing Appeals Office is not the path.
+  await page.goto("/start?jur=Vic&area=vic-public-housing");
   await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
   await page.getByRole("button", { name: /see my next steps/i }).click();
   await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
@@ -730,14 +740,14 @@ test("routing lines are shown as context, not as questions", async ({ page }) =>
   const step = page.locator("#r-grounds");
   // The routing line is context, and carries no box.
   await expect(step).toContainText(/worth knowing before you start/i);
-  await expect(step).toContainText(/two different choices, not steps in order/i);
+  await expect(step).toContainText(/Housing Appeals Office is not the path/i);
 
   // The answerable points are ticks, and nothing is asked until one is ticked.
-  await expect(step).toContainText(/mistake of identity/i);
+  await expect(step).toContainText(/correctly applied the relevant legislation/i);
   await expect(step.locator('textarea[id^="icn-"]')).toHaveCount(0);
   await expect(step.getByText(/what happened on this point/i)).toHaveCount(0);
 
-  const point = step.getByRole("checkbox", { name: /mistake of identity/i });
+  const point = step.getByRole("checkbox", { name: /correctly applied the relevant legislation/i });
   await point.check();
   await expect(step.getByText(/what happened on this point/i)).toBeVisible();
   const box = step.locator('textarea[id^="icn-"]').first();
@@ -834,20 +844,79 @@ test("the memo leads its step, regenerates, and is what the hand-over gives", as
 
   // It lists every avenue, which is the first thing a duty lawyer asks.
   const memo = page.locator("#memo-text");
-  await expect(memo).toHaveValue(/Internal review: /);
-  await expect(memo).toHaveValue(/Judicial review: /);
+  await expect(memo).toContainText(/Internal review: /);
+  await expect(memo).toContainText(/Judicial review: /);
 
   // Adding more re-composes it live — no model call, nothing sent.
-  await expect(memo).not.toHaveValue(/a letter they sent in June/i);
+  await expect(memo).not.toContainText(/a letter they sent in June/i);
   await page.locator("#memo-more").fill("There was a letter they sent in June I never saw.");
-  await expect(memo).toHaveValue(/a letter they sent in June I never saw/i);
+  await expect(memo).toContainText(/a letter they sent in June I never saw/i);
 
   // And the hand-over gives the SAME document, on screen, not a second thinner one.
   await advance(page, /next: talk to a person/i);
-  const handoff = page.locator("#r-handoff textarea");
+  const handoff = page.locator("#r-handoff [data-memo]");
   await expect(handoff).toBeVisible({ timeout: 15_000 });
-  await expect(handoff).toHaveValue(/a letter they sent in June I never saw/i);
-  await expect(handoff).toHaveValue(/MEMOPATHSTITLE|Every path open/i);
+  await expect(handoff).toContainText(/a letter they sent in June I never saw/i);
+  await expect(handoff).toContainText(/MEMOPATHSTITLE|Every path open/i);
   // …and the print button is gone from it.
   await expect(page.locator("#r-handoff").getByRole("button", { name: /print/i })).toHaveCount(0);
+});
+
+/**
+ * The questions fit the decision (2026-09-12).
+ *
+ * "Does any of these apply?" was one fixed list, so someone who had picked a fine was asked
+ * whether their decision was about child protection, guardianship or a visa. None can be true
+ * of a fine, and a page of questions that obviously do not fit teaches the reader the form is
+ * not about them — on the step where we most need a careful answer.
+ */
+test("the tripwire questions fit the decision that was chosen", async ({ page }) => {
+  await page.goto("/start?jur=Vic&area=vic-fines");
+  const fits = page.getByRole("checkbox", { name: /criminal case, a police matter/i });
+  await expect(fits, "a fine can become a prosecution, so this one stays").toBeVisible();
+  await expect(page.getByRole("checkbox", { name: /time limit is very soon/i })).toBeVisible();
+  // Impossible for a fine, and gone.
+  await expect(page.getByRole("checkbox", { name: /child protection, family law, guardianship/i })).toHaveCount(0);
+  await expect(page.getByRole("checkbox", { name: /visa or migration/i })).toHaveCount(0);
+
+  // Someone in prison can have a Centrelink debt, so that one is NOT narrowed away.
+  await page.goto("/start?jur=Cth&area=cth-centrelink");
+  await expect(page.getByRole("checkbox", { name: /prison, immigration detention/i })).toBeVisible();
+  await expect(page.getByRole("checkbox", { name: /child protection, family law, guardianship/i })).toHaveCount(0);
+
+  // The catch-all does not know what the decision is, so every question is still live there.
+  await page.goto("/start?jur=Cth&area=cth-generic");
+  await expect(page.getByRole("checkbox", { name: /child protection, family law, guardianship/i })).toBeVisible();
+  await expect(page.getByRole("checkbox", { name: /visa or migration/i })).toBeVisible();
+});
+
+/**
+ * The memo and the letters are documents, not textareas (2026-09-12).
+ */
+test("the memo renders as a document with live links, and the letter marks its blanks", async ({ page }) => {
+  await page.goto("/start?jur=Vic&area=vic-public-housing");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  await toOptions(page);
+  await chooseApproach(page, /^judicial review$/i);
+  await advance(page, /next: the points you raise/i);
+  await page.locator("#r-grounds").getByRole("checkbox").first().check();
+  await advance(page, /build my memo/i);
+
+  // Not a textarea any more, and the links are real links that open in a new tab.
+  await expect(page.locator("#memo-text textarea")).toHaveCount(0);
+  const link = page.locator("#memo-text a").first();
+  await expect(link).toBeVisible();
+  await expect(link).toHaveAttribute("target", "_blank");
+  await expect(link).toHaveAttribute("rel", /noopener/);
+  await expect(link).toHaveAttribute("href", /\/learn\//);
+  // Structure survived: headings and the person's own words are distinguishable.
+  await expect(page.locator("#memo-text h3").first()).toBeVisible();
+
+  // The letter marks what the person still has to fill in, rather than hiding brackets in a
+  // monospace box — sending it with the brackets still in is the common way to get it wrong.
+  await expect(page.locator("#r-apply mark").first()).toBeVisible();
+  await expect(page.locator("#r-apply")).toContainText(/is something you fill in before you send it/i);
+  await expect(page.locator("#r-apply textarea")).toHaveCount(0);
 });

@@ -340,12 +340,14 @@ describe("the criteria sit under the body they name", () => {
     expect(mr).toContain("the court decides the charge itself");
   });
 
-  it("the routing line appears on BOTH fines lists, because either card needs it", () => {
-    // It is the sentence that stops someone believing they must be refused a review before
-    // they can elect to go to court.
-    const line = /two\s+different choices, not steps in order/i;
-    expect(fines().irCriteria.join(" ")).toMatch(line);
-    expect(fines().mrCriteria.join(" ")).toMatch(line);
+  it("the fines lists carry only what each body decides, and no routing claim", () => {
+    // The routing sentence used to sit on both lists. Withdrawn 2026-09-12: it was editorial
+    // rather than the lawyer's, and it overstated the relationship between the two.
+    for (const list of [fines().irCriteria, fines().mrCriteria]) {
+      expect(list.join(" ")).not.toMatch(/not steps in order/i);
+    }
+    expect(fines().irCriteria.length).toBeGreaterThan(0);
+    expect(fines().mrCriteria.length).toBeGreaterThan(0);
   });
 
   it("the housing routing line reaches the Housing Appeals Office card", () => {
@@ -570,11 +572,18 @@ describe("a body that is not a tribunal does not borrow a tribunal's powers", ()
  * says nothing about order where it does not.
  */
 describe("whether the paths are steps or choices", () => {
-  it("fines are alternatives, because the lawyer's own criteria say so", () => {
+  it("fines claim NEITHER order nor alternation, since the line that said so was withdrawn", () => {
+    // It was marked "alternatives" on the strength of one editorial sentence — "internal
+    // review and asking for the matter to be heard in court are two different choices, not
+    // steps in order" — which the supervising lawyer never supplied and the owner withdrew
+    // on 2026-09-12 as not right. Under the Infringements Act someone refused a review may
+    // still elect to go to court while time remains, so the sentence overstated a
+    // relationship the app cannot source either way. With it gone, the app claims neither.
     const e = getDataEntry("vic-fines")!;
-    expect(e.avenue.pathsAre).toBe("alternatives");
-    // The claim traces to text already in this entry, not to a new assertion.
-    expect(e.irCriteria.join(" ")).toMatch(/not steps in order/i);
+    expect(e.avenue.pathsAre).toBeUndefined();
+    const prose = [...e.irCriteria, ...e.mrCriteria].join(" ");
+    expect(prose).not.toMatch(/not steps in order/i);
+    expect(prose).not.toMatch(/two different choices/i);
   });
 
   it("public housing is alternatives, chosen by the kind of decision", () => {
@@ -613,7 +622,9 @@ describe("whether the paths are steps or choices", () => {
   });
 
   it("it reaches the plan, so the panel can say what the numbering means", () => {
-    const e = getDataEntry("vic-fines")!;
+    // Housing, which still carries it: the lawyer's own line is that which body applies
+    // "depends on the decision". Fines lost theirs on 2026-09-12 and now claims neither.
+    const e = getDataEntry("vic-public-housing")!;
     const p = planFor({
       avenue: avenueView(e), meritsReview: merits, judicialReview: judicial,
       jurisdiction: e.jurisdiction,
@@ -621,6 +632,14 @@ describe("whether the paths are steps or choices", () => {
     expect(p.pathsAre).toBe("alternatives");
     // And the numbering itself is still 1..n, in the order people consider them.
     expect(p.paths.map((x) => x.order)).toEqual([1, 2, 3]);
+
+    const fines = getDataEntry("vic-fines")!;
+    expect(
+      planFor({
+        avenue: avenueView(fines), meritsReview: merits, judicialReview: judicial,
+        jurisdiction: fines.jurisdiction,
+      }).pathsAre,
+    ).toBeUndefined();
   });
 
   it("every line the panel can print for it exists, and the alternatives one denies order", () => {
