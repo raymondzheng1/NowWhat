@@ -8,6 +8,7 @@ import type { DataPathway, Jurisdiction } from "@/lib/schemas/data";
 import { groundAppliesIn, type Process, type Ground, type Concept } from "@/lib/schemas/legal";
 import { avenueView } from "@/lib/triage";
 import { planFor, midSentence } from "@/lib/analysis";
+import { questionsForScheme } from "@/lib/intake/scheme-questions";
 import { AnalysisPanel } from "@/components/feature/AnalysisPanel";
 import { deadlineRuleView } from "@/lib/deadline/rule";
 import { siteUrl } from "@/lib/config";
@@ -1131,6 +1132,15 @@ function ResultStep({
   });
   // Read off the plan so the points step, the memo and the card cannot disagree.
   const internalCriteria = entry.irCriteria ?? [];
+  const schemeQuestions = questionsForScheme(entry.id);
+  /** Their answers, keyed by the QUESTION so the memo prints them under it. */
+  const schemeAnswers: Record<string, string> = {};
+  for (const q of schemeQuestions) {
+    const v = (account[`sq-${q.id}`] ?? "").trim();
+    if (v) schemeAnswers[q.label] = v;
+  }
+  const schemeAnswerKey = JSON.stringify(schemeAnswers);
+  const groundKey = relatedGrounds.join("|");
   const meritsIsTribunal = (av.mrCharacter ?? "tribunal") === "tribunal";
 
   // ---- Which criteria are POINTS, and which are only orientation -------------------
@@ -1489,6 +1499,7 @@ function ResultStep({
     const notes: Record<string, string> = {};
     for (const [k, v] of Object.entries(groundNotes)) if (v.trim()) notes[k] = v;
     for (const [k, v] of Object.entries(criteriaNotes)) if (v.trim()) notes[k] = v;
+    for (const [k, v] of Object.entries(schemeAnswers)) notes[k] = v;
     fetch("/api/memo", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -1520,8 +1531,11 @@ function ResultStep({
     // Re-drafts when the approach, the marked points or their words change — the things the
     // analysis is actually about. Not on every keystroke: `q-more` is read when the step is
     // entered and when the path changes, which is what the deterministic memo already does.
+    // `schemeAnswers` is keyed by VALUE (`schemeAnswerKey`) rather than listed: the object is
+    // rebuilt every render, so listing it would re-draft on every keystroke anywhere on the
+    // page, and omitting it would leave the analysis written around answers since changed.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view, memoPathId, entry.id, relatedGrounds.join("|")]);
+  }, [view, memoPathId, entry.id, groundKey, schemeAnswerKey]);
 
   const memo = composeMemo({
     drafted,
@@ -1542,6 +1556,11 @@ function ResultStep({
         : [],
     groundNotes,
     criteriaNotes,
+    // Paired with the question that was asked, not merged into the criterion notes — those
+    // are looked up by criterion, so an answer keyed by its question matched nothing.
+    schemeAnswers: schemeQuestions
+      .map((q) => ({ question: q.label, answer: account[`sq-${q.id}`] ?? "" }))
+      .filter((x) => x.answer.trim()),
     // Their account, plus anything they added on the memo step itself. Quoted the same way
     // — as their own paragraphs — so adding to it improves the memo rather than appending a
     // differently-labelled afterthought.
@@ -1912,6 +1931,73 @@ function ResultStep({
               placeholder={t("goalOtherPlaceholder")}
             />
           </label>
+
+          {/* The few questions that are specific to THIS kind of decision.
+              The generic intake is enough to route someone and not enough to write a memo:
+              the fact that decides a housing matter — a notice to vacate, or a decision about
+              an application? — was never asked, so the memo could not say which body they
+              were actually in front of. Each question here is traced to a corpus sentence and
+              survived three adversarial reviews; a scheme with none simply asks nothing
+              extra, which is the right default. */}
+          {schemeQuestions.length > 0 && (
+            <div className="mt-6 border-t-2 border-line pt-5">
+              <h3 className="font-display text-[17px] font-black text-ink">{t("schemeQTitle")}</h3>
+              <p className="mt-1.5 text-[15px] leading-relaxed text-ink-soft">{t("schemeQLead")}</p>
+              <div className="mt-4 space-y-4">
+                {schemeQuestions.map((q) => (
+                  <div key={q.id}>
+                    <label
+                      htmlFor={`sq-${q.id}`}
+                      className="block text-[15.5px] font-semibold leading-snug text-ink"
+                    >
+                      {q.label}
+                    </label>
+                    {q.hint && (
+                      <span className="mt-0.5 block text-[14.5px] leading-snug text-ink-faint">
+                        {q.hint}
+                      </span>
+                    )}
+                    {q.kind === "yesno" ? (
+                      <div className="mt-2 flex flex-wrap gap-2.5">
+                        {["yes", "no", "notSure"].map((v) => {
+                          const on = (account[`sq-${q.id}`] ?? "") === t(`schemeQ_${v}`);
+                          return (
+                            <button
+                              key={v}
+                              type="button"
+                              aria-pressed={on}
+                              onClick={() =>
+                                setAccount((a) => ({
+                                  ...a,
+                                  [`sq-${q.id}`]: on ? "" : t(`schemeQ_${v}`),
+                                }))
+                              }
+                              className={`inline-flex min-h-[44px] items-center rounded-pill px-4 font-display text-[14px] font-extrabold ${
+                                on ? "bg-ink text-cream" : "border-2 border-line text-ink-faint hover:text-ink"
+                              }`}
+                            >
+                              {t(`schemeQ_${v}`)}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <input
+                        id={`sq-${q.id}`}
+                        type={q.kind === "date" ? "date" : "text"}
+                        value={account[`sq-${q.id}`] ?? ""}
+                        onChange={(e) =>
+                          setAccount((a) => ({ ...a, [`sq-${q.id}`]: e.target.value }))
+                        }
+                        className="input mt-2 w-full"
+                      />
+                    )}
+                  </div>
+                ))}
+              </div>
+              <p className="mt-3 text-[14.5px] leading-snug text-ink-faint">{t("schemeQOptional")}</p>
+            </div>
+          )}
 
           <p className="mt-4 text-[14.5px] leading-snug text-ink-faint">{t("goalNote")}</p>
         </section>

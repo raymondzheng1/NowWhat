@@ -447,7 +447,13 @@
     "memoDrafting": "Working through your situation…",
     "memoDraftedForThem": "What you have told us about this",
     "memoDraftedAgainst": "What they are likely to say back",
-    "memoDraftedToTest": "What a lawyer will want to see"
+    "memoDraftedToTest": "What a lawyer will want to see",
+    "schemeQTitle": "A few things about this kind of decision",
+    "schemeQLead": "These are the details that matter most for a decision like yours. They go into your memo.",
+    "schemeQOptional": "Leave anything blank if you are not sure. A memo with a gap in it is still useful.",
+    "schemeQ_yes": "Yes",
+    "schemeQ_no": "No",
+    "schemeQ_notSure": "Not sure"
   },
   "ask": {
     "title": "Ask a question",

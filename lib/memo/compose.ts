@@ -87,6 +87,15 @@ export interface MemoInput {
    * grounds that has nothing to do with what they are doing.
    */
   criteriaNotes?: Record<string, string>;
+  /**
+   * Their answers to the questions this SCHEME asks, paired with the question.
+   *
+   * They were briefly merged into `criteriaNotes`, which looks answers up by the CRITERION
+   * they sit under — so an answer keyed by its question matched nothing and printed nowhere.
+   * They are their own section: the question is the heading, because the answer means
+   * nothing without it.
+   */
+  schemeAnswers?: { question: string; answer: string }[];
   /** What they wrote about what happened. Quoted verbatim or omitted. */
   story: string;
   /** What they said they are hoping for, already rendered to plain labels. */
@@ -328,6 +337,16 @@ export function composeMemo(input: MemoInput): Memo {
       blank();
       para(`${t("memoYourAccount")}:`);
       for (const x of q) quote(x.trim().replace(/^"|"$/g, ""));
+    }
+    // What this scheme asked, and what they said. Under the question, because the answer is
+    // meaningless without it — "Notice of final demand" tells a reader nothing on its own.
+    const sa = (input.schemeAnswers ?? []).filter((x) => x.answer.trim());
+    if (sa.length) {
+      for (const x of sa) {
+        blank();
+        para(`${x.question}`);
+        quote(x.answer.trim().replace(/\s+/g, " "));
+      }
     }
   }
 

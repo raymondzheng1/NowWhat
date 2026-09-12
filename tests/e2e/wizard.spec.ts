@@ -920,3 +920,48 @@ test("the memo renders as a document with live links, and the letter marks its b
   await expect(page.locator("#r-apply")).toContainText(/is something you fill in before you send it/i);
   await expect(page.locator("#r-apply textarea")).toHaveCount(0);
 });
+
+/**
+ * Scheme-specific intake questions (2026-09-12).
+ *
+ * The generic intake was enough to route someone and not enough to write a memo. Twenty-six
+ * questions were drafted against the corpus and three survived three-lens adversarial review;
+ * a scheme with none grounded asks nothing extra, which is the right default.
+ */
+test("a fine is asked what stage it has reached, and the answer reaches the memo", async ({ page }) => {
+  await page.goto("/start?jur=Vic&area=vic-fines");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+
+  await page.locator("#r-account textarea").fill("I was not the driver that day.");
+  await advance(page, /next: what you want/i);
+
+  // The question is on the goal step, where the rest of the context is gathered.
+  const stage = page.locator("#sq-notice-stage");
+  await expect(stage).toBeVisible();
+  await expect(page.locator("#r-goal")).toContainText(/penalty reminder notice/i);
+  await stage.fill("Notice of final demand");
+  await page.locator("#r-goal").getByRole("checkbox").first().check();
+  await advance(page, /see my options/i);
+
+  await chooseApproach(page, /^internal review$/i);
+  await advance(page, /next: the points you raise/i);
+  await advance(page, /build my memo/i);
+
+  // It lands in the memo, under the question that was asked, in their words.
+  await expect(page.locator("#memo-text")).toContainText(/Notice of final demand/i);
+  await expect(page.locator("#memo-text")).toContainText(/What is your notice called/i);
+});
+
+test("a scheme with nothing grounded asks nothing extra", async ({ page }) => {
+  // Public housing drafted four questions and none survived review, so the step stays clean
+  // rather than carrying a question we cannot justify.
+  await page.goto("/start?jur=Vic&area=vic-public-housing");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+  await page.locator("#r-account textarea").fill("They refused my transfer.");
+  await advance(page, /next: what you want/i);
+  await expect(page.locator("#r-goal")).not.toContainText(/a few things about this kind of decision/i);
+});
