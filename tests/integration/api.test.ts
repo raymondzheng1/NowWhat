@@ -3,6 +3,7 @@ import { NextRequest } from "next/server";
 import { POST as askPost } from "@/app/api/ask/route";
 import { POST as decodePost } from "@/app/api/decode/route";
 import { POST as chatPost } from "@/app/api/chat/route";
+import { POST as memoPost } from "@/app/api/memo/route";
 import { __setKvForTests, MemoryKv } from "@/lib/kv/redis";
 import { __setModelForTests, __setVisionForTests, type ModelFn } from "@/lib/generation/anthropic";
 import { record } from "@/lib/cost/guard";
@@ -197,5 +198,121 @@ describe("/api/chat (conversational intake)", () => {
     const res = await chatPost(chatReq([{ role: "user", content: "hello" }]));
     const body = await res.json();
     expect(body.status).toBe("unavailable");
+  });
+});
+
+/**
+ * /api/memo — the one step of the guided flow that leaves the device.
+ *
+ * Everything here is about the SAFE DIRECTION of failure. The deterministic memo is the
+ * product's baseline and needs no model at all, so the only correct answer to "something went
+ * wrong" is not-covered: the client then keeps the memo it already composed. A draft that
+ * shipped despite a failed gate would be worse than no draft, because it is the one document
+ * a person hands to a lawyer.
+ */
+const memoBody = {
+  entryId: "cth-centrelink",
+  pathId: "judicial-review" as const,
+  forum: "the Federal Court",
+  pathName: "Judicial review",
+  groundIds: ["procedural-fairness-hearing"],
+  criteria: [],
+  story: "They cut my payment and never asked me about the medical certificate I sent.",
+  notes: {},
+};
+
+const memoModel = (over: Record<string, unknown> = {}): ModelFn => async (call) => ({
+  text: JSON.stringify({
+    covered: true,
+    summary: "This is about a Centrelink debt. You say you were never asked about a certificate.",
+    application: [
+      {
+        groundId: "procedural-fairness-hearing",
+        forThem: "You say you sent a medical certificate. You say nobody asked you about it.",
+        against: "They may say the letter invited a response. They may say the certificate arrived late.",
+        toTest: "A lawyer will want the date you sent it, and anything showing it arrived.",
+      },
+    ],
+    sources: ["servicesaustralia.gov.au — reviews and appeals"],
+    ...over,
+  }),
+  inputTokens: 60,
+  outputTokens: 60,
+  model: call.model,
+});
+
+describe("/api/memo (the drafted analysis)", () => {
+  it("returns a draft when the model answers within the gates", async () => {
+    __setModelForTests(memoModel());
+    const res = await memoPost(jsonReq("http://x/api/memo", memoBody));
+    const body = await res.json();
+    expect(body.status).toBe("answered");
+    expect(body.application[0].groundId).toBe("procedural-fairness-hearing");
+    // The person's own words are NOT echoed back — the client already has them.
+    expect(JSON.stringify(body)).not.toContain("medical certificate I sent");
+  });
+
+  it("falls back to not-covered when the draft invents a case", async () => {
+    // The gate that matters most. Craig v South Australia is a real case, and it is still
+    // refused, because the knowledge base did not hand it over.
+    __setModelForTests(
+      memoModel({
+        application: [
+          {
+            groundId: "procedural-fairness-hearing",
+            forThem: "As Craig v South Australia shows, the process was unfair.",
+            against: "They may disagree.",
+            toTest: "Dates.",
+          },
+        ],
+      }),
+    );
+    const res = await memoPost(jsonReq("http://x/api/memo", memoBody));
+    expect((await res.json()).status).toBe("not-covered");
+  });
+
+  it("falls back when the draft gives advice", async () => {
+    __setModelForTests(memoModel({ summary: "You should apply for judicial review straight away." }));
+    const res = await memoPost(jsonReq("http://x/api/memo", memoBody));
+    expect((await res.json()).status).toBe("not-covered");
+  });
+
+  it("falls back when the draft predicts an outcome", async () => {
+    __setModelForTests(
+      memoModel({ summary: "Your claim is very likely to succeed and the debt will be waived." }),
+    );
+    const res = await memoPost(jsonReq("http://x/api/memo", memoBody));
+    expect((await res.json()).status).toBe("not-covered");
+  });
+
+  it("never calls the model when the person has written nothing", async () => {
+    // No account means nothing to write an analysis around, and no reason to spend or to
+    // send anything at all.
+    __setModelForTests(throwingModel);
+    const res = await memoPost(jsonReq("http://x/api/memo", { ...memoBody, story: "  " }));
+    expect((await res.json()).status).toBe("not-covered");
+  });
+
+  it("never calls the model for an entry we do not have", async () => {
+    __setModelForTests(throwingModel);
+    const res = await memoPost(jsonReq("http://x/api/memo", { ...memoBody, entryId: "not-a-scheme" }));
+    expect((await res.json()).status).toBe("not-covered");
+  });
+
+  it("is blocked once the session cap is reached, and spends nothing more", async () => {
+    __setModelForTests(throwingModel);
+    await record({ sessionId: "memo-cap", ip: "9.9.9.9", byoKey: false }, SESSION_CAP_USD + 1);
+    const res = await memoPost(
+      jsonReq("http://x/api/memo", memoBody, "wn_sid=memo-cap"),
+    );
+    const body = await res.json();
+    expect(body.ok).toBe(false);
+    expect(body.status).toBe("blocked");
+  });
+
+  it("rejects a malformed request without spending", async () => {
+    __setModelForTests(throwingModel);
+    const res = await memoPost(jsonReq("http://x/api/memo", { nope: true }));
+    expect(res.status).toBe(400);
   });
 });

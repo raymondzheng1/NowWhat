@@ -37,6 +37,22 @@ export default function PrivacyPage() {
           a database or to our logs. If you close the tab, it&rsquo;s gone.
         </p>
 
+        <H2>Working out your options, step by step</H2>
+        <p className="mt-3 leading-relaxed">
+          Most of that tool runs on your own device. Picking who made the decision, seeing which
+          paths are open, marking the points you want to raise — none of that is sent to us, and
+          it works the same with the connection dropped.
+        </p>
+        <p className="mt-3 leading-relaxed">
+          <strong className="text-ink">One step is different, and this is it.</strong> To write
+          your memo — the notes you can take to a legal service — we send what you have told us to
+          our server, so the analysis can be written around your own words, and the notes come
+          straight back. It is read in the moment and discarded. It is not saved, it is not used to
+          train anything, and it is not used for anything else. The step says so on the page before
+          it happens. If that request cannot be made, or what comes back does not pass our checks,
+          you still get a full memo — it is simply written by the app instead.
+        </p>
+
         <H2>What we do use, and why</H2>
         <ul className="mt-3 list-disc space-y-2 pl-5 leading-relaxed">
           <li>

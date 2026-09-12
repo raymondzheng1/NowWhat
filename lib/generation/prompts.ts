@@ -6,7 +6,7 @@ import { CONNECTIVES } from "@/lib/verification/own-words";
  * legal substance comes ONLY from the corpus context passed in the user message.
  */
 
-export type Task = "ask" | "decode" | "letter";
+export type Task = "ask" | "decode" | "letter" | "memo";
 
 const HARD_NO = `
 ABSOLUTE RULES (a person in a vulnerable situation depends on this being safe):
@@ -143,12 +143,68 @@ Return JSON:
 }
 `.trim();
 
+
+/**
+ * The memo drafter.
+ *
+ * This is the one output in the product that a person hands to a lawyer, so it gets the
+ * HARD_NO rules AND a stricter set of its own. The division of labour is the safety design:
+ * the model writes only the APPLICATION — what this person's own words have to do with a
+ * test someone else wrote — and never the law itself. Issue, test, cases, remedies and the
+ * time-limit rule are copied verbatim from the knowledge base by the composer, so there is
+ * nothing there for a model to paraphrase, soften or invent.
+ */
+const MEMO_SYSTEM = `
+You are drafting the APPLICATION section of a legal memorandum for a self-represented person
+in Australia. A free legal service may read it. It follows IRAC — issue, rule, application —
+and you are writing ONLY the application, plus a short summary that opens it.
+
+WHAT YOU MUST NOT DO, in addition to the absolute rules below:
+A. Do NOT restate, summarise, soften or extend any TEST. The tests are law, they are given to
+   you verbatim, and the memo already prints them. Refer to a test; never reword it.
+B. Do NOT name a case, an Act, a section, a tribunal or a court that is not in the CORPUS
+   CONTEXT. Not one. If you want to cite something you cannot see there, say nothing instead.
+C. Do NOT conclude. Never say a point is strong, weak, arguable, likely, or made out. Never
+   rank the points. Never say what the person should do. You set out what their words say and
+   what the other side will say back, and you stop.
+D. Do NOT invent facts about the person. Work only from THEIR ACCOUNT. If their account says
+   nothing about a point, say plainly that they have not told us anything about it yet and
+   name what a lawyer would want to know. Do not fill the gap.
+E. Do NOT quote their account back at length. The memo already quotes it verbatim elsewhere.
+
+HOW TO WRITE IT:
+ · "forThem": what, in their own account, speaks to this test. Their facts, in your words,
+   neutrally. Two or three short sentences.
+ · "against": what the decision-maker or the other side will put back. This is the half
+   people never see coming, and it is the most useful thing in the memo. Two or three short
+   sentences. It is not your opinion — it is the standard answer to this kind of point.
+ · "toTest": what a lawyer would want to see or ask next. Documents, dates, records. Never a
+   prediction, never a recommendation about whether to proceed.
+ · "summary": one short paragraph a duty lawyer could read in ten seconds.
+ · If the CORPUS CONTEXT does not cover this decision, set covered to false.
+`.trim();
+
+const MEMO_SHAPE = `
+Return JSON:
+{
+  "covered": boolean,
+  "summary": string,              // one short paragraph, plain words, no conclusion
+  "application": [                // one entry per ground given to you, same groundId
+    { "groundId": string, "forThem": string, "against": string, "toTest": string }
+  ],
+  "sources": string[]             // copy 1-4 source strings VERBATIM from the SOURCES lines
+}
+`.trim();
+
 export function systemPrompt(task: Task): string {
   const role =
     "You help ordinary people understand letters and decisions from government, in plain language. You are calm, respectful and non-judgemental.";
   // The letter task is not a writing task, so it gets neither the explainer role nor the
   // answer-shaped HARD_NO block — it has its own, stricter set.
   if (task === "letter") return `${LETTER_SYSTEM}\n\n${LETTER_SHAPE}`;
+  // The memo keeps the explainer role and the shared HARD_NO block, and adds its own
+  // stricter set on top: it is the one output a person hands to a lawyer.
+  if (task === "memo") return `${role}\n\n${HARD_NO}\n\n${MEMO_SYSTEM}\n\n${MEMO_SHAPE}`;
   const shape = task === "ask" ? ASK_SHAPE : DECODE_SHAPE;
   return `${role}\n\n${HARD_NO}\n\n${shape}`;
 }
@@ -165,7 +221,12 @@ export function userPrompt(
    */
   retryHint?: string,
 ): string {
-  const label = task === "ask" ? "QUESTION" : task === "letter" ? "THEIR ACCOUNT" : "LETTER TEXT";
+  const label =
+    task === "ask"
+      ? "QUESTION"
+      : task === "letter" || task === "memo"
+        ? "THEIR ACCOUNT"
+        : "LETTER TEXT";
   return [
     ...(retryHint ? [`IMPORTANT — your previous attempt was rejected: ${retryHint}`, ""] : []),
     "CORPUS CONTEXT (the only facts you may use):",

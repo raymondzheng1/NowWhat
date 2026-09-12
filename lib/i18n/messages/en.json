@@ -359,7 +359,7 @@
     "groundNotesTitle": "What happened, on each point you marked",
     "groundNotesLead": "Write what happened in your own words. It goes into your memo under that point, exactly as you write it. Leave any of them blank if you would rather not.",
     "groundNotesPlaceholder": "For example: what you were told, when, and by whom.",
-    "groundNotesPrivacy": "This stays on your device. It is not sent anywhere.",
+    "groundNotesPrivacy": "This stays on your device while you write it. It is not sent anywhere from this step.",
     "memoYourNote": "What you told us about this point",
     "urgentBanner": "From what you ticked, this may not be able to wait. A free service can help you today.",
     "urgentBannerLink": "See who to call",
@@ -442,7 +442,12 @@
     "memoPathsConditional": "may not apply to this decision, check it",
     "memoReadMore": "Read more about this in the guide",
     "letterPlaceholderKey": "is something you fill in before you send it. Replace it, brackets and all.",
-    "flagTribunalCth": "The decision I want to challenge was made by a tribunal, such as the ART"
+    "flagTribunalCth": "The decision I want to challenge was made by a tribunal, such as the ART",
+    "memoSendNotice": "To write this analysis around your own words, this step sends what you have told us to our server and gets the notes straight back. It is not saved, and it is not used for anything else. Every other step works on your device alone.",
+    "memoDrafting": "Working through your situation…",
+    "memoDraftedForThem": "What you have told us about this",
+    "memoDraftedAgainst": "What they are likely to say back",
+    "memoDraftedToTest": "What a lawyer will want to see"
   },
   "ask": {
     "title": "Ask a question",

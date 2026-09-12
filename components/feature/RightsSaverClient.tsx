@@ -132,6 +132,12 @@ type ResultView = "story" | "goal" | "options" | "grounds" | "memo" | "help";
  */
 const RESULT_VIEWS: ResultView[] = ["story", "goal", "options", "grounds", "memo", "help"];
 
+/** What /api/memo hands back, once it has cleared every gate. */
+interface MemoDraft {
+  summary: string;
+  application: { groundId: string; forThem: string; against: string; toTest: string }[];
+}
+
 /** The key the internal-review note is filed under, so the memo can find it. */
 const INTERNAL_NOTE_KEY = "What you are asking them to look at again";
 
@@ -1461,7 +1467,64 @@ function ResultStep({
         : meritsReview;
   const memoPath = plan.paths.find((pp) => pp.id === memoPathId);
   const memoPathBody = memoPath?.body ?? plan.primary?.body ?? "";
+  // ---- The drafted application ------------------------------------------------------
+  //
+  // The ONE step of this flow that leaves the device. Everything before it is computed here
+  // and sent nowhere; on this step the person's own words go to our server so the analysis
+  // can be written around them, and come straight back. Nothing is stored: there is no
+  // database behind it, and the request is discarded on response.
+  //
+  // Fails silently ON PURPOSE. A blocked cost guard, a missing key, a gate rejection or a
+  // dropped connection all end the same way — `drafted` stays null and the deterministic
+  // memo is what the person reads. That memo needs no model at all, so the worst outcome
+  // here is the product as it was before this existed, never a blank page or an error.
+  const [drafted, setDrafted] = useState<MemoDraft | null>(null);
+  const [drafting, setDrafting] = useState(false);
+  useEffect(() => {
+    if (view !== "memo") return;
+    const story = (account["q-story"] ?? "").trim();
+    if (!story) return;
+    let live = true;
+    setDrafting(true);
+    const notes: Record<string, string> = {};
+    for (const [k, v] of Object.entries(groundNotes)) if (v.trim()) notes[k] = v;
+    for (const [k, v] of Object.entries(criteriaNotes)) if (v.trim()) notes[k] = v;
+    fetch("/api/memo", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        entryId: entry.id,
+        pathId: memoPathId,
+        forum: memoPathBody,
+        pathName: memoProcess?.plainName ?? internalReview?.plainName ?? "",
+        groundIds: relatedGrounds,
+        criteria: memoPath?.criteria ?? [],
+        story: [story, (account["q-more"] ?? "").trim()].filter(Boolean).join("\n\n"),
+        notes,
+      }),
+    })
+      .then((r) => r.json())
+      .then((d: { status?: string; summary?: string; application?: MemoDraft["application"] }) => {
+        if (!live || d?.status !== "answered") return;
+        setDrafted({ summary: d.summary ?? "", application: d.application ?? [] });
+      })
+      .catch(() => {
+        /* offline, blocked, or rejected — the composed memo stands on its own */
+      })
+      .finally(() => {
+        if (live) setDrafting(false);
+      });
+    return () => {
+      live = false;
+    };
+    // Re-drafts when the approach, the marked points or their words change — the things the
+    // analysis is actually about. Not on every keystroke: `q-more` is read when the step is
+    // entered and when the path changes, which is what the deterministic memo already does.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, memoPathId, entry.id, relatedGrounds.join("|")]);
+
   const memo = composeMemo({
+    drafted,
     entry,
     process: memoProcess,
     internal: memoPathId === "internal-review" ? (internalReview ?? null) : null,
@@ -1973,6 +2036,19 @@ function ResultStep({
         <section id="r-memo" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("memoSectionTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("memoSectionLead")}</p>
+          {/* Said plainly, on the step it applies to, BEFORE the thing it describes. Every
+              other step of this flow computes on the device and sends nothing, and the app
+              says so repeatedly — so the one step where that stops being true has to say so
+              just as plainly, rather than leaving an old promise to cover it. */}
+          <p className="mt-3 flex items-start gap-2.5 rounded-sticker border-2 border-line bg-cream px-4 py-3 text-[14.5px] leading-relaxed text-ink-soft">
+            <Icon.Lock className="mt-[3px] h-4 w-4 shrink-0 text-ink-faint" strokeWidth={2} aria-hidden />
+            <span>{t("memoSendNotice")}</span>
+          </p>
+          {drafting && (
+            <p aria-live="polite" className="mt-2 text-[14.5px] font-semibold text-help-ink">
+              {t("memoDrafting")}
+            </p>
+          )}
           <div id="memo-text" data-memo={memo.body}>
             <MemoView blocks={memo.blocks} />
           </div>
@@ -2000,7 +2076,8 @@ function ResultStep({
           {/* Anything else? The memo is composed from what they have told us, so the way to
               improve it is to tell us more — and until now the only route to that was
               walking back through the steps. Typing here re-composes the memo above as they
-              go: there is no model call and nothing is sent, so it is genuinely live. */}
+              go. The memo re-composes on the device; adding to it also re-drafts the
+              analysis, which is the one part of this flow that goes to our server. */}
           <div className="mt-6 border-t-2 border-line pt-5">
             <h3 className="font-display text-[17px] font-black text-ink">{t("memoMoreTitle")}</h3>
             <p className="mt-1.5 text-[15px] leading-relaxed text-ink-soft">{t("memoMoreLead")}</p>

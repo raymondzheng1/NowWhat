@@ -123,6 +123,18 @@ export interface MemoInput {
   siteUrl?: string;
   /** Where the chosen path is explained in the app, relative (e.g. "/learn/merits-review"). */
   pathHref?: string;
+  /**
+   * The drafted application, when one came back from /api/memo and passed every gate.
+   *
+   * It replaces the generic "what tends to relate to this" list with what THIS person's
+   * account has to do with the test, and adds the answer they will get back. Absent — no
+   * key, a blocked cost guard, a failed gate — the memo composes exactly as it always did,
+   * so this can only ever add to what a person gets, never subtract.
+   */
+  drafted?: {
+    summary?: string;
+    application?: { groundId: string; forThem: string; against: string; toTest: string }[];
+  } | null;
   /** Section headings, so all customer prose stays in the i18n layer. */
   t: (key: string) => string;
 }
@@ -289,7 +301,15 @@ export function composeMemo(input: MemoInput): Memo {
           ? t("memoSummaryReadsInternal")
           : t("memoSummaryReadsInternalShort"),
     );
-    for (const b of bits) para(b);
+    // A drafted paragraph reads better than four assembled sentences, but it never replaces
+    // the facts: the decision, the date, the path and the count are stated either way.
+    const draftedSummary = input.drafted?.summary?.trim();
+    if (draftedSummary) {
+      para(bits[0]!);
+      para(draftedSummary);
+    } else {
+      for (const b of bits) para(b);
+    }
   }
 
   // ---- What they told us ----------------------------------------------------------
@@ -414,6 +434,27 @@ export function composeMemo(input: MemoInput): Memo {
       para(`${t("memoArgument")}:`);
       for (const w of g.whatRelates) item(rule(w));
       para(t("memoArgumentNote"), "  ");
+      // What their account has to do with THIS test, and the answer they will get back.
+      // The generic list above stays: it is what the corpus says relates to the ground in
+      // general, and it is true whether or not a draft arrived.
+      const d = input.drafted?.application?.find((a) => a.groundId === g.id);
+      if (d) {
+        if (d.forThem.trim()) {
+          blank();
+          sub(t("memoDraftedForThem"));
+          para(rule(d.forThem));
+        }
+        if (d.against.trim()) {
+          blank();
+          sub(t("memoDraftedAgainst"));
+          para(rule(d.against));
+        }
+        if (d.toTest.trim()) {
+          blank();
+          sub(t("memoDraftedToTest"));
+          para(rule(d.toTest));
+        }
+      }
       const gHref = guide(input.siteUrl, `/learn/grounds/${g.id}`);
       if (gHref) {
         blank();

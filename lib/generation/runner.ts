@@ -9,8 +9,10 @@ import type { PathwayEntry } from "@/lib/schemas/corpus";
 import {
   GeneratedAnswerSchema,
   GeneratedDecodeSchema,
+  GeneratedMemoSchema,
   type GeneratedAnswer,
   type GeneratedDecode,
+  type GeneratedMemo,
 } from "@/lib/schemas/generation";
 
 /**
@@ -100,6 +102,13 @@ interface RunOpts<T> {
   guard: GuardContext;
   byoKeyValue?: string;
   schema: z.ZodTypeAny;
+  /**
+   * Sources this task may legitimately rely on beyond the pathway entry — the grounds and
+   * processes it was actually given. `verifyOutput` has taken these since the legal corpus
+   * arrived; the runner simply never passed them, so a memo citing a ground's own source
+   * would have been rejected for citing something it was entitled to cite.
+   */
+  extraSources?: string[];
   /** Pull the verifiable prose + declared sources + covered flag out of the parsed shape. */
   extract: (data: T) => { covered: boolean; text: string; declaredSources: string[] };
 }
@@ -148,7 +157,12 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
     const { covered, text, declaredSources } = opts.extract(data);
     if (!covered) return { status: "not-covered", attempts, reason: "not-in-corpus" };
 
-    const verdict = verifyOutput({ text, declaredSources, entry: opts.entry });
+    const verdict = verifyOutput({
+      text,
+      declaredSources,
+      entry: opts.entry,
+      extraSources: opts.extraSources,
+    });
     if (verdict.ok) return { status: "answered", data, attempts };
     lastFailures = verdict.failures; // diagnostic only — never contains PII
     await recordBlockedOutput(opts.task, verdict.failures.map((f) => f.gate));
@@ -212,6 +226,36 @@ export function runDecode(
     extract: (d) => ({
       covered: d.covered,
       text: [d.whatItIs, d.whatItMeans, ...d.options].filter(Boolean).join(" "),
+      declaredSources: d.sources,
+    }),
+  });
+}
+
+/**
+ * Draft the application section of a memo.
+ *
+ * Same pipeline as every other task — cost guard, clean regeneration, the verifier, and a
+ * fall to "not-covered" rather than shipping something that failed a gate. The caller treats
+ * not-covered as "keep the deterministic memo", so a rejected draft costs the person nothing:
+ * they still get the composed memo that needs no model at all.
+ */
+export function runMemo(
+  args: Omit<RunOpts<GeneratedMemo>, "task" | "schema" | "extract">,
+): Promise<GenerationResult<GeneratedMemo>> {
+  return runGeneration<GeneratedMemo>({
+    ...args,
+    task: "memo",
+    schema: GeneratedMemoSchema,
+    extract: (d) => ({
+      covered: d.covered,
+      // EVERY sentence the model wrote goes to the verifier. Missing one here would be a
+      // hole in the allow-list, the no-advice gate and the reading-level gate at once.
+      text: [
+        d.summary,
+        ...d.application.flatMap((a) => [a.forThem, a.against, a.toTest]),
+      ]
+        .filter(Boolean)
+        .join(" "),
       declaredSources: d.sources,
     }),
   });
