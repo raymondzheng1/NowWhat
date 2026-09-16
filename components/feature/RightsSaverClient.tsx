@@ -1505,8 +1505,36 @@ function ResultStep({
   const [polished, setPolished] = useState<Record<string, string>>({});
   const [polishing, setPolishing] = useState(false);
   const rawDraftBody = applyDraft?.body ?? "";
+  // Asked for only when the person is actually heading for the letter.
+  //
+  // The letter sits well below the fold of this step, and plenty of people read the analysis
+  // and leave without ever scrolling to it. Firing on entry to the step bought a rewrite that
+  // nobody read. The observer fires well before the section arrives, so the better wording is
+  // normally already there when they reach it, and someone who never scrolls costs nothing.
+  const letterRef = useRef<HTMLElement | null>(null);
+  const [letterNear, setLetterNear] = useState(false);
   useEffect(() => {
-    if (view !== "memo" || !rawDraftBody || !activeApply) return;
+    if (letterNear) return;
+    // No observer at all (an older browser, or jsdom): ask straight away, exactly as this
+    // behaved before. Saving a few cents is not worth a letter that never improves.
+    if (typeof IntersectionObserver === "undefined") {
+      setLetterNear(true);
+      return;
+    }
+    const el = letterRef.current;
+    // Null because the section is not on this step yet — not a reason to give up and ask.
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) setLetterNear(true);
+      },
+      { rootMargin: "800px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [letterNear, view, rawDraftBody]);
+  useEffect(() => {
+    if (view !== "memo" || !rawDraftBody || !activeApply || !letterNear) return;
     if (polished[rawDraftBody] !== undefined) return;
     let live = true;
     setPolishing(true);
@@ -1536,7 +1564,7 @@ function ResultStep({
       live = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view, rawDraftBody, entry.id]);
+  }, [view, rawDraftBody, entry.id, letterNear]);
   /** The letter as shown and copied: polished where one came back, the draft otherwise. */
   const letterBody = (rawDraftBody && polished[rawDraftBody]) || rawDraftBody;
 
@@ -1551,12 +1579,31 @@ function ResultStep({
   // dropped connection all end the same way — `drafted` stays null and the deterministic
   // memo is what the person reads. That memo needs no model at all, so the worst outcome
   // here is the product as it was before this existed, never a blank page or an error.
-  const [drafted, setDrafted] = useState<MemoDraft | null>(null);
+  // CACHED BY INPUT, not just held in state.
+  //
+  // `view` is in this effect's dependencies, so it re-fires every time the person comes back
+  // to the memo step — and they do, constantly: to the letter and back, to the points and
+  // back, out to a guide and back. Without a cache that is a fresh model call each time, for
+  // an identical answer. One curious reader could spend a dollar wandering.
+  //
+  // The key is everything the draft is built from, so a real change still re-drafts and a
+  // return visit never does.
+  const [draftCache, setDraftCache] = useState<Record<string, MemoDraft | null>>({});
+  const draftKey = [
+    entry.id,
+    memoPathId,
+    groundKey,
+    schemeAnswerKey,
+    (account["q-story"] ?? "").trim(),
+    (account["q-more"] ?? "").trim(),
+  ].join(" ");
+  const drafted = draftCache[draftKey] ?? null;
   const [drafting, setDrafting] = useState(false);
   useEffect(() => {
     if (view !== "memo") return;
     const story = (account["q-story"] ?? "").trim();
     if (!story) return;
+    if (draftKey in draftCache) return;
     let live = true;
     setDrafting(true);
     const notes: Record<string, string> = {};
@@ -1579,11 +1626,20 @@ function ResultStep({
     })
       .then((r) => r.json())
       .then((d: { status?: string; summary?: string; application?: MemoDraft["application"] }) => {
-        if (!live || d?.status !== "answered") return;
-        setDrafted({ summary: d.summary ?? "", application: d.application ?? [] });
+        if (!live) return;
+        // A refusal is cached too. It means the gates rejected this exact input, and asking
+        // again with the same input would spend money to be refused again.
+        setDraftCache((prev) => ({
+          ...prev,
+          [draftKey]:
+            d?.status === "answered"
+              ? { summary: d.summary ?? "", application: d.application ?? [] }
+              : null,
+        }));
       })
       .catch(() => {
-        /* offline, blocked, or rejected — the composed memo stands on its own */
+        /* offline, blocked, or rejected — the composed memo stands on its own. NOT cached:
+           a dropped connection is worth retrying, unlike a refusal. */
       })
       .finally(() => {
         if (live) setDrafting(false);
@@ -1598,7 +1654,7 @@ function ResultStep({
     // rebuilt every render, so listing it would re-draft on every keystroke anywhere on the
     // page, and omitting it would leave the analysis written around answers since changed.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view, memoPathId, entry.id, groundKey, schemeAnswerKey]);
+  }, [view, draftKey, draftCache]);
 
   const memo = composeMemo({
     drafted,
@@ -2631,7 +2687,7 @@ function ResultStep({
       )}
 
       {view === "memo" && applyDraft && activeApply && (
-        <section id="r-apply" data-tour="apply" className="card">
+        <section id="r-apply" data-tour="apply" ref={letterRef} className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("applyTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
             {chosenPath ? t("applyLeadChosen") : t("applyLead")}
