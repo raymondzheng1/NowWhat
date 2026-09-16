@@ -3,12 +3,40 @@
  * Never hardcode these values elsewhere; import from here.
  */
 
+/**
+ * Read a dollar amount from the environment.
+ *
+ * `Number(process.env.X ?? "5")` looks equivalent and is not, because `??` only catches a
+ * variable that is UNSET. Two things a person does while wiring up a hosting dashboard both
+ * get through it, and both are silent:
+ *
+ *   · A variable CREATED AND LEFT BLANK is the empty string, not undefined. `Number("")`
+ *     is 0, and the guard compares `spent >= cap` — so a blank box denies every model call
+ *     from the first request of the day, and the visitor is told we have reached today's
+ *     limit. On day one. With nothing spent.
+ *   · A value written the way people write money — "$50", "50 USD" — is `NaN`, and
+ *     `spent >= NaN` is false forever. The kill switch never fires. That is the failure that
+ *     costs money rather than availability.
+ *
+ * So: blank means unset, a value that is not a real number falls back to the default rather
+ * than becoming it, and an explicit `0` is honoured — that one is deliberate, and it is the
+ * only way to switch model spend off without a redeploy. `/api/health` reports what actually
+ * took effect, so a typo is visible from outside instead of being inferred from behaviour.
+ */
+function usdFromEnv(raw: string | undefined, fallback: number): number {
+  const s = (raw ?? "").trim();
+  if (s === "") return fallback;
+  const n = Number(s);
+  return Number.isFinite(n) && n >= 0 ? n : fallback;
+}
+
 /** Hard per-session model-spend cap in USD (PRD §6.9). Overridable by env. */
-export const SESSION_CAP_USD = Number(process.env.SESSION_CAP_USD ?? "5");
+export const SESSION_CAP_USD = usdFromEnv(process.env.SESSION_CAP_USD, 5);
 
 /** Global daily budget kill-switch in USD. */
-export const GLOBAL_DAILY_BUDGET_USD = Number(
-  process.env.GLOBAL_DAILY_BUDGET_USD ?? "50",
+export const GLOBAL_DAILY_BUDGET_USD = usdFromEnv(
+  process.env.GLOBAL_DAILY_BUDGET_USD,
+  50,
 );
 
 /** Per-IP request ceiling per rolling window (rate limit, fail-closed). */
