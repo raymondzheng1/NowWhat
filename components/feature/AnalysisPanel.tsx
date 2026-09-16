@@ -162,11 +162,13 @@ export function AnalysisPanel({
             <h3 className="mt-1.5 font-display text-[19px] font-black text-ink">
               {p.id === "internal-review"
                 ? t("pathTitleInternal")
-                : p.id === "judicial-review"
-                  ? judicialReview.name
-                  : p.character === "tribunal"
-                    ? meritsReview.name
-                    : t("pathTitleNotTribunal")}
+                : p.id === "court-election"
+                  ? t("pathTitleCourtElection")
+                  : p.id === "judicial-review"
+                    ? judicialReview.name
+                    : p.character === "tribunal"
+                      ? meritsReview.name
+                      : t("pathTitleNotTribunal")}
             </h3>
 
             {/* The question the forum decides — the foundation the whole path rests on.

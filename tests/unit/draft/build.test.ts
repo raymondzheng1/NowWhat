@@ -93,7 +93,7 @@ describe("the internal-review letter asks for another look, and claims nothing e
 
   it("asks the decision-maker to look again, in the person's own voice", () => {
     const d = buildDraft(entry, "internal-review-request");
-    expect(d.body).toContain("I am writing to ask you to look at the decision described above again.");
+    expect(d.body).toContain("I am writing to ask you to review the decision described above.");
     expect(d.filename).toContain("internal-review");
     expect(d.title.toLowerCase()).toContain("internal review");
   });
@@ -111,7 +111,7 @@ describe("the internal-review letter asks for another look, and claims nothing e
     // for the next step". Someone who writes this letter and then waits can lose a tribunal
     // or a court they still had, so the letter asks the question for them.
     const body = buildDraft(entry, "internal-review-request").body;
-    expect(body).toContain("time limit for any next step");
+    expect(body).toContain("time limit that applies to that next step");
     expect(body).toContain("If an internal review is not available");
   });
 
@@ -129,6 +129,64 @@ describe("the internal-review letter asks for another look, and claims nothing e
     expect(checkNoAiMentions(body).ok).toBe(true);
     for (const banned of ["you should", "you will win", "we recommend", "guarantee", "likely"]) {
       expect(body.toLowerCase(), banned).not.toContain(banned);
+    }
+  });
+});
+
+/**
+ * The letters are read as LETTERS now, not as text in a monospace box (2026-09-16).
+ *
+ * Two faults came with that change, and both were invisible while the draft lived in a
+ * <textarea>: the templates were hand-wrapped at about eighty characters, so a rendered
+ * letter broke mid-sentence between paragraphs; and the person's reason for writing was a
+ * bracketed prompt even when they had told us at length what it was.
+ */
+describe("a draft reads as a letter", () => {
+  const entry = verifiedEntry;
+  const KINDS = [
+    "reasons-request",
+    "internal-review-request",
+    "merits-review-application",
+    "judicial-review-application",
+  ] as const;
+
+  it("never breaks a sentence across two paragraphs", () => {
+    // A line that ends without terminal punctuation and is followed by more prose is a
+    // hand-wrap: in a rendered letter those become two <p> elements mid-sentence.
+    for (const kind of KINDS) {
+      const ls = buildDraft(entry, kind).body.split("\n");
+      ls.forEach((line, i) => {
+        const next = ls[i + 1] ?? "";
+        const isProse = /[a-z]/.test(line) && !line.startsWith("  - ") && !line.startsWith("To:");
+        const wrapped =
+          isProse && !/[.:?\]]$/.test(line.trim()) && /^[a-z]/.test(next.trim());
+        expect(wrapped, `${kind} wraps: "${line}" → "${next}"`).toBe(false);
+      });
+    }
+  });
+
+  it("uses the person's own reason when they gave one", () => {
+    const why = "They never told me the review had been decided, and I only found out in June.";
+    for (const kind of ["internal-review-request", "merits-review-application", "judicial-review-application"] as const) {
+      const body = buildDraft(entry, kind, why).body;
+      expect(body, kind).toContain(why);
+      // …and the prompt it replaces is gone, so nothing bracketed is left to send.
+      expect(body, kind).not.toMatch(/\[(set out|explain briefly|describe what you were told)/);
+    }
+  });
+
+  it("falls back to a bracketed prompt only when they gave nothing", () => {
+    // A bracket is the app admitting it does not know. It must never masquerade as a
+    // sentence to send, which is why it keeps its brackets and the renderer highlights it.
+    const body = buildDraft(entry, "internal-review-request").body;
+    expect(body).toMatch(/\[set out what you think was missed/);
+  });
+
+  it("still gives no advice and predicts nothing, in any kind", () => {
+    for (const kind of KINDS) {
+      const body = buildDraft(entry, kind, "I disagree with what they did.").body;
+      expect(checkNoAdvice(body).ok, kind).toBe(true);
+      expect(checkNoAiMentions(body).ok, kind).toBe(true);
     }
   });
 });

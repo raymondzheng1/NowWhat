@@ -24,8 +24,11 @@ avenue:
     body: the agency that issued the fine, or Fines Victoria
     source: 'fines.vic.gov.au — request a review; Infringements Act 2006 (Vic)'
   mr:
+    available: false
+    body: ''
+    source: ''
+  court:
     available: true
-    character: court
     body: "the Magistrates' Court, if you elect to have it heard there"
     source: 'fines.vic.gov.au — go to court; Infringements Act 2006 (Vic)'
   jr:
@@ -57,7 +60,8 @@ irCriteria:
     They also include exceptional circumstances, and special circumstances such
     as mental illness, disability, serious addiction, homelessness, or family
     violence.
-mrCriteria:
+mrCriteria: []
+courtCriteria:
   - If the matter goes to court instead, the court decides the charge itself.
 examples:
   - 'A parking or speeding fine'
@@ -162,3 +166,21 @@ and nothing else, so with the sentence withdrawn the entry claims neither order 
 alternation, and the panel falls back to saying only that the paths are listed in the order
 people usually consider them. The housing entry keeps its own "alternatives", which rests on
 the lawyer's line that which body applies "depends on the decision".
+
+**The Magistrates' Court leaves the merits-review slot, 2026-09-16, on the owner's ruling.**
+VCAT is the merits-review body in Victoria. The Magistrates' Court does not conduct merits
+review of administrative decisions, and electing to have an infringement heard there puts the
+CHARGE before a court, which then decides the charge — an original criminal hearing, not a
+review of the decision at all.
+
+It had been sitting in `avenue.mr` since this entry was written, and every surface downstream
+inherited the mis-label. Each was patched in turn as it was noticed: the card was given a
+neutral title on 2026-08-23, `character: court` on 2026-09-10, its own focus paragraph and a
+memo that stops handing it a tribunal's question on 2026-09-11, and the hand-off on the same
+day. Four patches to one wrong field.
+
+The field is now correct instead. `avenue.court` is its own avenue and its own path, this
+scheme's `mr.available` is false — it has no tribunal step, which this entry's own first note
+has said since 2026-06-30 — and the court's criterion moved to `courtCriteria` with it. The
+neutral-title machinery for a non-tribunal in the merits slot stays, because the housing entry
+still needs it.

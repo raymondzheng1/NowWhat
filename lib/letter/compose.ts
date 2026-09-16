@@ -75,9 +75,16 @@ export interface ComposeInput {
  * nothing, this is exactly the letter they would have got before — never a blank page.
  */
 export function composeLetter(input: ComposeInput): Draft {
-  const base = buildDraft(input.entry, input.kind);
   const { answers, groundIds } = input.account;
   const said = (id: string) => (answers[id] ?? "").trim();
+  // Their reason for writing, into the letter's own "why" sentence.
+  //
+  // `buildDraft` has always taken a `context`, and this never passed one — so the template's
+  // bracketed prompt ("[set out what you think was missed]") survived into the draft of
+  // every person who had just spent a step telling us exactly that, and their account was
+  // appended further down instead. The prompt is the app admitting it does not know; it
+  // should not be there when it does.
+  const base = buildDraft(input.entry, input.kind, said("q-story") || undefined);
 
   const parts: string[] = [];
 

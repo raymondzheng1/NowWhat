@@ -224,8 +224,8 @@ test("internal review is its own path, and choosing it drives the rest of the fl
   // for another look rather than naming a ground or asking for the preferable decision.
   const draft = page.locator("#r-apply .rounded-card");
   await expect(draft).toBeVisible();
-  await expect(draft).toContainText(/look at the decision described above again/i);
-  await expect(draft).toContainText(/time limit for any next step/i);
+  await expect(draft).toContainText(/I am writing to ask you to review the decision described above/i);
+  await expect(draft).toContainText(/time limit that applies to that next step/i);
   await expect(draft).not.toContainText(/afresh on the facts/i);
   await expect(page.locator("#r-apply").getByRole("button", { name: /^judicial review$/i })).toHaveCount(0);
   // What they typed on the points step reaches the LETTER, not only the memo. It used to
@@ -256,7 +256,9 @@ test("the fines court election is never dressed up as merits review", async ({ p
   await expect(cards).toHaveCount(3, { timeout: 15_000 });
 
   // No card anywhere on this decision may be headed "Merits review" — this scheme has no
-  // tribunal step at all, and the entry's own note says so.
+  // tribunal step at all, and the entry's own note has said so since 2026-06-30. Since
+  // 2026-09-16 there is no merits AVENUE either: the Magistrates' Court left that slot and
+  // became its own path, so nothing can inherit a tribunal's label by sitting there.
   await expect(page.getByRole("heading", { name: /^merits review$/i })).toHaveCount(0);
 
   // The statutory review grounds belong to the agency that reviews the fine, not to a court
@@ -265,7 +267,7 @@ test("the fines court election is never dressed up as merits review", async ({ p
   const internal = cards.filter({ has: page.getByRole("heading", { name: /^internal review$/i }) });
   await expect(internal).toContainText(/mistake of identity/i);
   await expect(internal).toContainText(/special circumstances/i);
-  const courtCard = cards.filter({ has: page.getByRole("heading", { name: /having the decision looked at again/i }) });
+  const courtCard = cards.filter({ has: page.getByRole("heading", { name: /a court hearing, if you elect it/i }) });
   await expect(courtCard).toHaveCount(1);
   await expect(courtCard).not.toContainText(/mistake of identity/i);
   await expect(courtCard).not.toContainText(/correct or preferable/i);
@@ -857,7 +859,7 @@ test("the memo leads its step, regenerates, and is what the hand-over gives", as
   const handoff = page.locator("#r-handoff [data-memo]");
   await expect(handoff).toBeVisible({ timeout: 15_000 });
   await expect(handoff).toContainText(/a letter they sent in June I never saw/i);
-  await expect(handoff).toContainText(/MEMOPATHSTITLE|Every path open/i);
+  await expect(handoff).toContainText(/Avenues available/i);
   // …and the print button is gone from it.
   await expect(page.locator("#r-handoff").getByRole("button", { name: /print/i })).toHaveCount(0);
 });

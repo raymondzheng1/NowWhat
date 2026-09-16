@@ -14,6 +14,9 @@ const AV = {
   irAvailable: false,
   irBody: "",
   irConditional: false,
+  courtAvailable: false,
+  courtBody: "",
+  courtConditional: false,
   mrAvailable: true,
   mrConditional: false,
   mrCharacter: "tribunal" as const,
@@ -191,37 +194,51 @@ describe("the merits-review body is the one the lawyer verified for THAT decisio
   const meritsBody = (id: string) => bodyFor(id, "merits-review");
   const internalBody = (id: string) => bodyFor(id, "internal-review");
 
-  it("Victorian fines go to the Magistrates' Court on election, and never to VCAT", () => {
-    // Three corrections live in this one entry. The forum is not VCAT — that was the original
-    // defect, and naming the wrong forum is the most damaging thing this product can do. The
-    // review and the court are alternatives, not a sequence: the wording said "internal review
-    // then Magistrates' Court", which told someone they had to exhaust the first before
-    // electing to go to court. And on 2026-09-10 they stopped sharing one field, so the review
-    // is its own path and the court no longer sits under a heading that calls it merits review.
-    const body = meritsBody("vic-fines")!;
-    expect(body).not.toMatch(/VCAT/i);
-    expect(body).toMatch(/Magistrates' Court/);
-    expect(body, "the review is a separate path now, not part of this string").not.toMatch(
-      /internal review/i,
-    );
-    expect(body, "the two paths are alternatives, not a sequence").not.toMatch(/\bthen\b/);
+  it("Victorian fines have NO merits review, and the court is its own avenue", () => {
+    // Three corrections live in this entry, and the last one removed the cause of the other
+    // two. The forum was never VCAT — that was the original defect, and naming the wrong
+    // forum is the most damaging thing this product can do. The internal review stopped
+    // sharing a field with it on 2026-09-10. And on 2026-09-16 the Magistrates' Court left
+    // the merits slot altogether: VCAT is Victoria's merits-review body, a court hearing an
+    // infringement on election decides the CHARGE, and this scheme has no tribunal step at
+    // all — which this entry's own first note has said since 2026-06-30.
+    const e = getDataEntry("vic-fines")!;
+    expect(e.avenue.mr.available).toBe(false);
+    expect(e.avenue.court.available).toBe(true);
+    expect(e.avenue.court.body).toMatch(/Magistrates' Court/);
+    expect(e.avenue.court.body).not.toMatch(/VCAT/i);
     expect(internalBody("vic-fines")).toMatch(/Fines Victoria|issued the fine/i);
+
+    const p = planFor({
+      avenue: avenueView(e), meritsReview: merits, judicialReview: judicial,
+      jurisdiction: e.jurisdiction, courtCriteria: e.courtCriteria,
+    });
+    expect(p.paths.map((x) => x.id)).toEqual([
+      "internal-review",
+      "court-election",
+      "judicial-review",
+    ]);
+    // No merits card at all, so nothing can inherit a tribunal's question by sitting there.
+    expect(p.paths.some((x) => x.id === "merits-review")).toBe(false);
   });
 
-  it("a court hearing a fine on election is typed as a court, not as merits review", () => {
-    // "Internal review, or the Magistrates' Court instead" sat under a card headed MERITS
-    // REVIEW. A court hearing the charge decides the charge; it is not reviewing an
-    // administrative decision on its merits, and it does not have a tribunal's remedies.
+  it("the court path claims no tribunal powers, and keeps the lawyer's own line", () => {
+    // It used to sit under a card headed MERITS REVIEW. Four separate patches followed — a
+    // neutral title, a character flag, its own focus paragraph, a memo fix — before the
+    // field itself was corrected. The path now carries no borrowed question and no borrowed
+    // remedies because there is nothing to borrow from: it is not one of the two processes.
     const e = getDataEntry("vic-fines")!;
-    expect(e.avenue.mr.character).toBe("court");
-    const mr = planFor({
+    const court = planFor({
       avenue: avenueView(e), meritsReview: merits, judicialReview: judicial,
-      jurisdiction: e.jurisdiction, criteria: e.mrCriteria,
-    }).paths.find((x) => x.id === "merits-review")!;
-    expect(mr.question).toBe("");
-    expect(mr.canDo).toEqual([]);
-    // What the lawyer supplied per scheme is sourced, and stays.
-    expect(mr.criteria.length).toBeGreaterThan(0);
+      jurisdiction: e.jurisdiction, courtCriteria: e.courtCriteria,
+    }).paths.find((x) => x.id === "court-election")!;
+    expect(court.question).toBe("");
+    expect(court.canDo).toEqual([]);
+    expect(court.cannotDo).toEqual([]);
+    expect(court.character).toBe("court");
+    expect(court.focusKey).toBe("focusCourt");
+    // What the lawyer supplied per scheme is sourced, and travels with the body it names.
+    expect(court.criteria.join(" ")).toMatch(/the court decides the charge itself/);
   });
 
   it("public housing keeps the Housing Appeals Office step — now as its own path", () => {
@@ -275,10 +292,17 @@ describe("the merits-review body is the one the lawyer verified for THAT decisio
  * field had no consumer at all, so these assert the wiring as much as the content.
  */
 describe("merits-review criteria (what the tribunal decides for THIS decision)", () => {
-  it("every decision type now carries criteria, and none leaks a placeholder", () => {
+  it("every decision type carries criteria for a body it actually has", () => {
+    // Asserted per AVENUE, not on mrCriteria alone. Victorian fines have no merits review
+    // since 2026-09-16 — the Magistrates' Court moved to its own avenue — so an empty
+    // mrCriteria there is correct, and demanding one would push the court's line back into
+    // the slot the whole change was about emptying.
     for (const e of listDataEntries()) {
-      expect(e.mrCriteria.length, e.id).toBeGreaterThan(0);
-      for (const c of e.mrCriteria) expect(c, e.id).not.toContain("VERIFY");
+      const any = [...e.irCriteria, ...e.mrCriteria, ...e.courtCriteria];
+      expect(any.length, e.id).toBeGreaterThan(0);
+      for (const c of any) expect(c, e.id).not.toContain("VERIFY");
+      if (e.avenue.mr.available) expect(e.mrCriteria.length, `${e.id} mr`).toBeGreaterThan(0);
+      if (e.avenue.court.available) expect(e.courtCriteria.length, `${e.id} court`).toBeGreaterThan(0);
     }
   });
 
@@ -331,23 +355,24 @@ describe("the criteria sit under the body they name", () => {
 
   it("the fines review grounds are the internal reviewer's, not the court's", () => {
     const ir = fines().irCriteria.join(" ").toLowerCase();
-    const mr = fines().mrCriteria.join(" ").toLowerCase();
+    const court = fines().courtCriteria.join(" ").toLowerCase();
     for (const grounds of ["mistake of identity", "contrary to law", "special circumstances"]) {
       expect(ir, grounds).toContain(grounds);
-      expect(mr, `${grounds} must not be attributed to the court`).not.toContain(grounds);
+      expect(court, `${grounds} must not be attributed to the court`).not.toContain(grounds);
     }
-    // What the court does is the court's line, and it stays.
-    expect(mr).toContain("the court decides the charge itself");
+    // What the court does is the court's line, and it moved with the court.
+    expect(court).toContain("the court decides the charge itself");
+    expect(fines().mrCriteria, "there is no merits review to describe").toEqual([]);
   });
 
   it("the fines lists carry only what each body decides, and no routing claim", () => {
     // The routing sentence used to sit on both lists. Withdrawn 2026-09-12: it was editorial
     // rather than the lawyer's, and it overstated the relationship between the two.
-    for (const list of [fines().irCriteria, fines().mrCriteria]) {
+    for (const list of [fines().irCriteria, fines().courtCriteria]) {
       expect(list.join(" ")).not.toMatch(/not steps in order/i);
     }
     expect(fines().irCriteria.length).toBeGreaterThan(0);
-    expect(fines().mrCriteria.length).toBeGreaterThan(0);
+    expect(fines().courtCriteria.length).toBeGreaterThan(0);
   });
 
   it("the housing routing line reaches the Housing Appeals Office card", () => {
@@ -370,10 +395,11 @@ describe("the criteria sit under the body they name", () => {
     const e = fines();
     const p = planFor({
       avenue: avenueView(e), meritsReview: merits, judicialReview: judicial,
-      jurisdiction: e.jurisdiction, criteria: e.mrCriteria, internalCriteria: e.irCriteria,
+      jurisdiction: e.jurisdiction, criteria: e.mrCriteria,
+      internalCriteria: e.irCriteria, courtCriteria: e.courtCriteria,
     });
     expect(p.paths.find((x) => x.id === "internal-review")!.criteria).toEqual(e.irCriteria);
-    expect(p.paths.find((x) => x.id === "merits-review")!.criteria).toEqual(e.mrCriteria);
+    expect(p.paths.find((x) => x.id === "court-election")!.criteria).toEqual(e.courtCriteria);
     expect(p.paths.find((x) => x.id === "judicial-review")!.criteria).toEqual([]);
   });
 

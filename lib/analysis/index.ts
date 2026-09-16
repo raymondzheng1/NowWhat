@@ -24,7 +24,7 @@ import type { Jurisdiction } from "@/lib/schemas/data";
  * merits review is usually what people want when they disagree with the result."
  */
 
-export type PathId = "internal-review" | "merits-review" | "judicial-review";
+export type PathId = "internal-review" | "merits-review" | "court-election" | "judicial-review";
 
 export interface PathPlan {
   id: PathId;
@@ -137,6 +137,7 @@ export function planFor({
   jurisdiction,
   criteria = [],
   internalCriteria = [],
+  courtCriteria = [],
 }: {
   avenue: AvenueView;
   meritsReview: Process;
@@ -147,6 +148,8 @@ export function planFor({
   criteria?: string[];
   /** `irCriteria` — what the INTERNAL reviewer considers for this decision type. */
   internalCriteria?: string[];
+  /** `courtCriteria` — what a court hearing the matter itself decides. */
+  courtCriteria?: string[];
 }): ResultPlan {
   const paths: PathPlan[] = [];
 
@@ -213,6 +216,28 @@ export function planFor({
           : "focusInternal",
     });
   }
+  // A court hearing the matter ITSELF. Its own path since 2026-09-16, because it is not
+  // merits review and the body that hears it is not a merits-review body: it was sitting in
+  // `avenue.mr` and every surface downstream inherited that mis-label.
+  //
+  // It carries no corpus question and no remedies. The two PROCESSES in the corpus are merits
+  // review and judicial review; a court hearing a charge on election is neither, and giving
+  // it either one's powers is the defect this path exists to end.
+  if (avenue.courtAvailable && avenue.courtBody) {
+    paths.push({
+      id: "court-election",
+      order: paths.length + 1,
+      body: avenue.courtBody,
+      question: "",
+      canDo: [],
+      cannotDo: [],
+      criteria: courtCriteria,
+      conditional: avenue.courtConditional ?? false,
+      character: "court",
+      focusKey: "focusCourt",
+    });
+  }
+
   if (avenue.jrAvailable) {
     paths.push({
       id: "judicial-review",
@@ -234,16 +259,20 @@ export function planFor({
   // and all three landed on "Two paths are open for this decision" with a hedged card beneath.
   // A reader met the confident sentence first and had to work out which to believe.
   const anyConditional = paths.some((p) => p.conditional);
+  // Keyed on HOW MANY paths there are, not on which two fields were set. It used to read
+  // mrAvailable/jrAvailable only, so a scheme with internal review and a court election but
+  // no tribunal — Victorian fines, once the court moved out of the merits slot — was
+  // described by the judicial-review lead alone, and the other two cards went unmentioned.
   const leadKey: ResultPlan["leadKey"] =
-    avenue.mrAvailable && avenue.jrAvailable
+    paths.length > 1
       ? anyConditional
         ? "analysisLeadBothConditional"
         : "analysisLeadBoth"
-      : avenue.mrAvailable
-        ? "analysisLeadMerits"
-        : avenue.jrAvailable
+      : paths.length === 1
+        ? paths[0]!.id === "judicial-review"
           ? "analysisLeadJudicial"
-          : "analysisLeadNone";
+          : "analysisLeadMerits"
+        : "analysisLeadNone";
 
   return { paths, primary: paths[0] ?? null, leadKey, pathsAre: avenue.pathsAre };
 }

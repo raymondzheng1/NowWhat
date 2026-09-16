@@ -28,6 +28,10 @@ export interface AvenueView {
   irBody: string;
   /** Set where the scheme may not offer one at all — the catch-all entries. */
   irConditional: boolean;
+  /** A court hearing the matter itself, on election. NOT merits review. */
+  courtAvailable: boolean;
+  courtBody: string;
+  courtConditional: boolean;
   mrBody: string;
   jrAvailable: boolean;
   /** Set where the entry covers decision-makers this path may not reach. */
@@ -67,6 +71,9 @@ export function avenueView(entry: DataPathway): AvenueView {
     irAvailable: entry.avenue.ir?.available ?? false,
     irBody: cleanForDisplay(entry.avenue.ir?.body ?? ""),
     irConditional: entry.avenue.ir?.conditional ?? false,
+    courtAvailable: entry.avenue.court?.available ?? false,
+    courtBody: cleanForDisplay(entry.avenue.court?.body ?? ""),
+    courtConditional: entry.avenue.court?.conditional ?? false,
     mrAvailable: entry.avenue.mr.available,
     mrConditional: entry.avenue.mr.conditional ?? false,
     mrCharacter: entry.avenue.mr.character ?? "tribunal",

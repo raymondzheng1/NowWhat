@@ -42,6 +42,7 @@ export function analysisForCorpusEntry(
       jurisdiction: entry.jurisdiction,
       criteria: entry.mrCriteria ?? [],
       internalCriteria: entry.irCriteria ?? [],
+      courtCriteria: entry.courtCriteria ?? [],
     }),
     avenue,
     deadline: { rule: dl.rule, sourceUrl: dl.sourceUrl },

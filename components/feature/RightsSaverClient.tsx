@@ -1129,6 +1129,7 @@ function ResultStep({
     jurisdiction,
     criteria: entry.mrCriteria ?? [],
     internalCriteria: entry.irCriteria ?? [],
+    courtCriteria: entry.courtCriteria ?? [],
   });
   // Read off the plan so the points step, the memo and the card cannot disagree.
   const internalCriteria = entry.irCriteria ?? [];
@@ -1179,6 +1180,15 @@ function ResultStep({
       hint: t("applyMeritsHint"),
       href: "/learn/merits-review",
     },
+    // No letter for a court election. It is a formal step under the scheme's own Act, with
+    // its own form, and we hold no checked version of it — the memo step says so rather than
+    // drafting something that looks official and is not.
+    "court-election": {
+      id: "merits-review-application" as DraftKind,
+      label: t("applyCourt"),
+      hint: t("applyCourtHint"),
+      href: "/learn/judicial-review",
+    },
     "judicial-review": {
       id: "judicial-review-application" as DraftKind,
       label: t("applyJudicial"),
@@ -1194,6 +1204,7 @@ function ResultStep({
     // go to court is a formal step under the scheme's own Act; we hold no verified form for
     // it, so the app says so and routes to a free service rather than drafting something
     // that looks official and is not.
+    .filter((pp) => pp.id !== "court-election")
     .filter((pp) => !(pp.id === "merits-review" && pp.character !== "tribunal"))
     .map((pp) => ({ ...APPLY_BY_PATH[pp.id], pathId: pp.id }));
   // Only the application for the approach they chose. Offering both put a judicial-review
@@ -1204,7 +1215,8 @@ function ResultStep({
   // True when the person chose a path we deliberately hold no letter for, so the memo view
   // can say that rather than silently dropping the section.
   const noLetterForPath =
-    chosenPath === "merits-review" && !meritsIsTribunal && plan.paths.some((p) => p.id === "merits-review");
+    chosenPath === "court-election" ||
+    (chosenPath === "merits-review" && !meritsIsTribunal && plan.paths.some((p) => p.id === "merits-review"));
   // ONE box. Five labelled questions read as a form to fill in, and a frightened person on a
   // phone abandons forms; they will tell the story once, in their own order, if asked once.
   // The prompts that were the question labels become hints under the box, so nothing is lost.
@@ -1270,11 +1282,13 @@ function ResultStep({
   const groundsSectionShown =
     chosenPath === "merits-review"
       ? entry.mrCriteria.length > 0
-      : chosenPath === "internal-review"
-        ? true
-        : chosenPath === "judicial-review"
-          ? shownGrounds.length > 0
-          : false;
+      : chosenPath === "court-election"
+        ? (entry.courtCriteria ?? []).length > 0
+        : chosenPath === "internal-review"
+          ? true
+          : chosenPath === "judicial-review"
+            ? shownGrounds.length > 0
+            : false;
   // ---- The points step, built from what they have already told us -------------------
   //
   // The step used to open on a static list with no sign it was about this person's matter:
@@ -2121,18 +2135,21 @@ function ResultStep({
       {view === "memo" && (
         <section id="r-memo" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("memoSectionTitle")}</h2>
-          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("memoSectionLead")}</p>
-          {/* Said plainly, on the step it applies to, BEFORE the thing it describes. Every
-              other step of this flow computes on the device and sends nothing, and the app
-              says so repeatedly — so the one step where that stops being true has to say so
-              just as plainly, rather than leaving an old promise to cover it. */}
-          <p className="mt-3 flex items-start gap-2.5 rounded-sticker border-2 border-line bg-cream px-4 py-3 text-[14.5px] leading-relaxed text-ink-soft">
-            <Icon.Lock className="mt-[3px] h-4 w-4 shrink-0 text-ink-faint" strokeWidth={2} aria-hidden />
-            <span>{t("memoSendNotice")}</span>
-          </p>
-          {drafting && (
+          {/* The explanatory lead is gone on the owner's instruction: the document explains
+              itself, and a paragraph telling the reader how to read it was in the way.
+
+              The DISCLOSURE stays, reduced to one quiet line. Every other step of this flow
+              computes on the device and sends nothing, and the app says so repeatedly — so
+              the one step where that stops being true cannot go silent about it and leave an
+              old promise standing. It is a footnote now rather than a panel. */}
+          {drafting ? (
             <p aria-live="polite" className="mt-2 text-[14.5px] font-semibold text-help-ink">
               {t("memoDrafting")}
+            </p>
+          ) : (
+            <p className="mt-1.5 flex items-start gap-2 text-[13.5px] leading-snug text-ink-faint">
+              <Icon.Lock className="mt-[2px] h-3.5 w-3.5 shrink-0" strokeWidth={2} aria-hidden />
+              <span>{t("memoSendNotice")}</span>
             </p>
           )}
           <div id="memo-text" data-memo={memo.body}>
@@ -2256,6 +2273,19 @@ function ResultStep({
           </p>
           {pointsContext}
           {renderPoints(entry.mrCriteria, "cn")}
+          <p className="mt-4 text-[14.5px] leading-snug text-ink-faint">{t("groundNotesPrivacy")}</p>
+        </section>
+      )}
+
+      {/* A court hearing the matter itself. Same shape as the merits branch and the same
+          heading, because the heading's whole job is to avoid calling a non-tribunal a
+          tribunal — which is what this path exists to stop. */}
+      {view === "grounds" && chosenPath === "court-election" && (entry.courtCriteria ?? []).length > 0 && (
+        <section id="r-grounds" className="card">
+          <h2 className="font-display text-[21px] font-black text-ink">{t("criteriaTitleOther")}</h2>
+          <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("criteriaLeadOther")}</p>
+          {pointsContext}
+          {renderPoints(entry.courtCriteria ?? [], "ccn")}
           <p className="mt-4 text-[14.5px] leading-snug text-ink-faint">{t("groundNotesPrivacy")}</p>
         </section>
       )}

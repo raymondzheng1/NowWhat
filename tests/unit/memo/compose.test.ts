@@ -305,7 +305,11 @@ describe("the memo does not lend a tribunal's powers to a body that is not one",
       ...shared,
       process: merits,
       character: "court",
-      criteria: fines.mrCriteria,
+      // The scheme that prompted this rule, vic-fines, no longer has a merits path at all:
+      // the Magistrates' Court became its own avenue on 2026-09-16. The RULE still matters —
+      // housing still puts a non-tribunal in that slot — so the example is the character,
+      // with the court's own criterion standing in for whatever sits there.
+      criteria: fines.courtCriteria,
     });
     expect(m.body).not.toContain("correct or preferable");
     expect(m.body).not.toContain("memoWhatItCanDo");

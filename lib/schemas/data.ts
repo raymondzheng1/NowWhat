@@ -78,6 +78,27 @@ export const AvenueIRSchema = z.object({
   source: z.string().default(""),
 });
 
+/**
+ * Having the matter heard by a COURT in its own right — not a review of the decision.
+ *
+ * Victorian fines are the case this exists for. Electing to have an infringement heard in
+ * the Magistrates' Court puts the CHARGE before a court, which then decides the charge. That
+ * is not merits review, and the Magistrates' Court is not a merits-review body: in Victoria
+ * that is VCAT. It sat in `avenue.mr` anyway, and every surface downstream inherited the
+ * mis-label — the card said MERITS REVIEW, the memo handed it a tribunal's question, the
+ * hand-off told a duty lawyer it could substitute a decision.
+ *
+ * Each of those was patched in turn. This removes the cause: the court gets its own avenue,
+ * and `mr` goes back to meaning what it says.
+ */
+export const AvenueCourtSchema = z.object({
+  available: z.boolean().default(false),
+  /** The court, and what makes it available — usually an election the person makes. */
+  body: z.string().default(""),
+  conditional: z.boolean().default(false),
+  source: z.string().default(""),
+});
+
 export const AvenueJRSchema = z.object({
   available: z.boolean(),
   /**
@@ -194,6 +215,7 @@ export const DataPathwaySchema = z.object({
   avenue: z.object({
     /** Internal review — the first step for most decisions, where a source names one. */
     ir: AvenueIRSchema.default({ available: false, body: "", source: "" }),
+    court: AvenueCourtSchema.default({ available: false, body: "", conditional: false, source: "" }),
     /**
      * How the paths for THIS scheme relate to each other.
      *
@@ -244,6 +266,8 @@ export const DataPathwaySchema = z.object({
    * ROUTING between the two appears on both, because a person on either card needs it.
    */
   irCriteria: z.array(z.string()).default([]),
+  /** What the COURT decides, where a court hearing is an avenue for this scheme. */
+  courtCriteria: z.array(z.string()).default([]),
   /**
    * Kinds of decision this pathway covers, in the words a person would use. Shown as chips
    * on the tile so someone recognises their own situation instead of guessing.
