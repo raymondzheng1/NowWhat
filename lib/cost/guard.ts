@@ -33,13 +33,35 @@ const ipKey = (ip: string) => `ip:${ip}`;
 
 const isProd = () => process.env.NODE_ENV === "production";
 
+/**
+ * The price used when the model is not in our table.
+ *
+ * It used to be Sonnet’s. That reads as a sensible middle, and it is the one choice that
+ * cannot be safe: ANTHROPIC_MODEL exists so the model can be changed without a deploy, and
+ * the only model you would point it at that we have not priced is a NEWER, DEARER one. Every
+ * such call would then be metered at a fraction of what it cost, the day’s budget would
+ * count far too slowly, and the kill switch would fire long after the money was gone.
+ *
+ * So an unpriced model bills at the highest price we know. Over-metering trips the budget
+ * early, which costs some answers; under-metering costs money that is already spent. The
+ * effective values are on /api/health, so the real fix — add the model to the table — is
+ * visible from outside.
+ */
+const UNPRICED_MODEL_USD_PER_MTOK = Object.values(MODEL_PRICES_USD_PER_MTOK).reduce(
+  (worst, p) => ({
+    input: Math.max(worst.input, p.input),
+    output: Math.max(worst.output, p.output),
+  }),
+  { input: 0, output: 0 },
+);
+
 /** Estimate USD cost of one model call from token usage. */
 export function estimateCostUsd(
   model: string,
   inputTokens: number,
   outputTokens: number,
 ): number {
-  const p = MODEL_PRICES_USD_PER_MTOK[model] ?? { input: 3, output: 15 };
+  const p = MODEL_PRICES_USD_PER_MTOK[model] ?? UNPRICED_MODEL_USD_PER_MTOK;
   return (inputTokens / 1_000_000) * p.input + (outputTokens / 1_000_000) * p.output;
 }
 

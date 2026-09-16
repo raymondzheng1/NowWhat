@@ -61,9 +61,31 @@ export class MemoryKv implements KvLike {
   }
 }
 
+/**
+ * Read a credential under either of its two names.
+ *
+ * `A ?? B` is wrong here, and wrong in the most expensive direction. `??` falls through only
+ * when A is ABSENT — so a variable that was created in the hosting dashboard and left blank
+ * is "", which is present, which wins, and which then fails the truthiness test below. The
+ * host’s own KV integration injects the `KV_REST_API_*` pair, so the exact sequence is:
+ * add the integration, also create an empty `UPSTASH_REDIS_REST_URL` box because our
+ * .env.example lists that name first, and the blank box silently shadows working credentials.
+ *
+ * What that costs is the whole model layer. No store means no safe metering, so the cost
+ * guard fails closed in production and every model-backed request answers "Service is
+ * temporarily unavailable" — with the credentials sitting right there in the dashboard.
+ */
+function cred(...names: (string | undefined)[]): string | undefined {
+  for (const v of names) {
+    const t = v?.trim();
+    if (t) return t;
+  }
+  return undefined;
+}
+
 function resolveCreds(): { url: string; token: string } | null {
-  const url = process.env.UPSTASH_REDIS_REST_URL ?? process.env.KV_REST_API_URL;
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? process.env.KV_REST_API_TOKEN;
+  const url = cred(process.env.UPSTASH_REDIS_REST_URL, process.env.KV_REST_API_URL);
+  const token = cred(process.env.UPSTASH_REDIS_REST_TOKEN, process.env.KV_REST_API_TOKEN);
   if (url && token) return { url, token };
   return null;
 }

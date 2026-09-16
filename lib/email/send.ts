@@ -28,8 +28,15 @@ export function operatorEmail(): string | undefined {
   return process.env.ADMIN_NOTIFY_EMAIL?.trim() || process.env.CONTACT_TO_EMAIL?.trim();
 }
 
+/** The API key, or undefined — trimmed, because a key pasted with a trailing space is not a
+ *  key. Untrimmed it was truthy, so the form passed its own "is email set up?" gate, burned a
+ *  rate-limit slot and failed at the provider, which reads to the visitor as a lost message. */
+function resendKey(): string | undefined {
+  return process.env.RESEND_API_KEY?.trim() || undefined;
+}
+
 export function isEmailConfigured(): boolean {
-  return Boolean(process.env.RESEND_API_KEY && operatorEmail());
+  return Boolean(resendKey() && operatorEmail());
 }
 
 export async function sendEmail(opts: {
@@ -40,7 +47,7 @@ export async function sendEmail(opts: {
   replyTo?: string;
   tag?: string;
 }): Promise<SendResult> {
-  const apiKey = process.env.RESEND_API_KEY;
+  const apiKey = resendKey();
   if (!apiKey) return { ok: false, error: "email-not-configured" };
   try {
     const res = await fetch("https://api.resend.com/emails", {
