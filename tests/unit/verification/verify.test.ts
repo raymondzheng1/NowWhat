@@ -121,3 +121,49 @@ describe("verifier — grounded-or-silent + info-not-advice", () => {
     expect(r.failures.some((f) => f.gate === "jurisdiction")).toBe(true);
   });
 });
+
+/**
+ * `citesNothing`, added 2026-09-16 with the letter-polish task.
+ *
+ * Provenance exists because an ANSWER that states the law must say where the law came from.
+ * A LETTER states none — it is the person telling an agency what happened and asking them to
+ * look again — so demanding a citation would reject every honest draft, and the only way to
+ * satisfy it would be to attach a source the letter does not rely on.
+ */
+describe("an output that asserts no law is not asked to cite one", () => {
+  const letter = "I am writing to request a review of the decision described above. They cut it off in March.";
+
+  it("fails source-binding without the flag", () => {
+    // Proof the gate is real, so the pass below means something.
+    const v = verifyOutput({ text: letter, declaredSources: [], entry: verifiedEntry });
+    expect(v.ok).toBe(false);
+    expect(v.failures.map((f) => f.gate)).toContain("source-binding");
+  });
+
+  it("passes with it", () => {
+    const v = verifyOutput({ text: letter, declaredSources: [], entry: verifiedEntry, citesNothing: true });
+    expect(v.failures.map((f) => f.gate)).not.toContain("source-binding");
+  });
+
+  it("turns off ONLY that gate — advice is still refused", () => {
+    const v = verifyOutput({
+      text: "You should apply for judicial review, and you will certainly win.",
+      declaredSources: [],
+      entry: verifiedEntry,
+      citesNothing: true,
+    });
+    expect(v.ok).toBe(false);
+    expect(v.failures.length).toBeGreaterThan(0);
+    expect(v.failures.map((f) => f.gate)).not.toContain("source-binding");
+  });
+
+  it("and an out-of-corpus citation is still refused", () => {
+    const v = verifyOutput({
+      text: letter,
+      declaredSources: ["Some Act 1999 nobody gave us"],
+      entry: verifiedEntry,
+      citesNothing: true,
+    });
+    expect(v.ok).toBe(false);
+  });
+});

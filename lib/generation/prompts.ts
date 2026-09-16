@@ -6,7 +6,7 @@ import { CONNECTIVES } from "@/lib/verification/own-words";
  * legal substance comes ONLY from the corpus context passed in the user message.
  */
 
-export type Task = "ask" | "decode" | "letter" | "memo";
+export type Task = "ask" | "decode" | "letter" | "memo" | "letter-polish";
 
 const HARD_NO = `
 ABSOLUTE RULES (a person in a vulnerable situation depends on this being safe):
@@ -196,6 +196,60 @@ Return JSON:
 }
 `.trim();
 
+
+/**
+ * Polishing a draft letter.
+ *
+ * Distinct from the `letter` task above, and the difference is the whole safety design. That
+ * one decides which of the PERSON'S OWN WORDS go under which heading, and may not add an
+ * adverb. This one rewrites OUR framing — the template sentences around their account, which
+ * are ours to word — and may not touch the substance of what they said happened.
+ *
+ * Everything it produces is still sent to a government office over that person's name, so the
+ * old warning holds: they must be able to answer "what makes you say that?" from memory. A
+ * fact they did not give us is a fact they cannot defend.
+ */
+const LETTER_POLISH_SYSTEM = `
+You are improving the wording of a draft letter that a member of the public will send to a
+government office about a decision that affects them. It goes over THEIR name, not yours.
+
+WHAT YOU MAY CHANGE
+ · The framing sentences — the ones that open, join and close the letter. Make them read as a
+   competent adult wrote them: courteous, direct, specific, no padding, no pleading, no
+   indignation. Plain English, short sentences. A review officer should find it easy to act on.
+ · The order of the paragraphs, where a different order reads better.
+ · Grammar, punctuation and capitalisation anywhere.
+
+WHAT YOU MAY NOT CHANGE, EVER
+ · THE SUBSTANCE OF WHAT THEY SAID HAPPENED. You may tidy their sentences. You may not add a
+   fact, a name, a place, a date, a number, a reason, a motive or a feeling they did not give
+   you. Do not sharpen a vague detail. Do not fill a gap. Do not make a number more exact. If
+   they wrote "a couple of weeks", it stays "a couple of weeks".
+ · ANY TEXT IN SQUARE BRACKETS. Copy every one across exactly, brackets included. They are
+   the blanks the person still has to fill in, and the app highlights them. Do not add a new
+   bracket of your own, and do not answer one.
+ · Do not add a law, a section number, a case, a tribunal, a court, a deadline or a figure.
+   Not one, however obviously true it seems. If it is not in the draft you were given, it does
+   not go in.
+ · Do not argue the law. Do not say a decision was unlawful, unfair, unreasonable or wrong in
+   law. The person may say what happened to them; they may not be made to allege a legal
+   conclusion they did not reach.
+ · Do not add a threat, a deadline of their own, or a demand.
+ · Keep the letter's bones: the addressee line, the subject line, and the sign-off.
+
+If you cannot improve it without breaking one of those, set "covered" to false and return the
+draft unchanged. That is a good answer, not a failure.
+`.trim();
+
+const LETTER_POLISH_SHAPE = `
+Return JSON:
+{
+  "covered": boolean,   // false if you could not improve it safely
+  "letter": string,     // the whole letter, plain text, newlines preserved
+  "sources": []         // always empty — a letter cites nothing
+}
+`.trim();
+
 export function systemPrompt(task: Task): string {
   const role =
     "You help ordinary people understand letters and decisions from government, in plain language. You are calm, respectful and non-judgemental.";
@@ -205,6 +259,9 @@ export function systemPrompt(task: Task): string {
   // The memo keeps the explainer role and the shared HARD_NO block, and adds its own
   // stricter set on top: it is the one output a person hands to a lawyer.
   if (task === "memo") return `${role}\n\n${HARD_NO}\n\n${MEMO_SYSTEM}\n\n${MEMO_SHAPE}`;
+  // No HARD_NO: that block is shaped for an ANSWER, and this task returns a letter in
+  // the person\u2019s own voice. Its own rules are stricter where it matters.
+  if (task === "letter-polish") return `${LETTER_POLISH_SYSTEM}\n\n${LETTER_POLISH_SHAPE}`;
   const shape = task === "ask" ? ASK_SHAPE : DECODE_SHAPE;
   return `${role}\n\n${HARD_NO}\n\n${shape}`;
 }
@@ -226,6 +283,8 @@ export function userPrompt(
       ? "QUESTION"
       : task === "letter" || task === "memo"
         ? "THEIR ACCOUNT"
+        : task === "letter-polish"
+          ? "THE DRAFT TO IMPROVE"
         : "LETTER TEXT";
   return [
     ...(retryHint ? [`IMPORTANT — your previous attempt was rejected: ${retryHint}`, ""] : []),

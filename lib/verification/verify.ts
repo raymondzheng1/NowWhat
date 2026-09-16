@@ -30,6 +30,19 @@ export interface VerifyInput {
    * working from corpus/legal pass the sources of the grounds they actually used.
    */
   extraSources?: string[];
+  /**
+   * This output makes no legal claim, so it has nothing to cite.
+   *
+   * Provenance exists because an ANSWER that states the law must say where the law came
+   * from. A LETTER states none: it is the person telling an agency what happened to them and
+   * asking them to look again. Demanding a citation there would reject every honest draft,
+   * and the only way to satisfy it would be to attach a source the letter does not rely on —
+   * provenance theatre, which is worse than none.
+   *
+   * Every other gate still runs. This turns off one check, for outputs that assert nothing
+   * to check it against.
+   */
+  citesNothing?: boolean;
 }
 
 export interface VerifyFailure {
@@ -159,8 +172,9 @@ export function verifyOutput(input: VerifyInput): VerifyResult {
     }
   }
 
-  // 2. Provenance — a covered answer must declare at least one source.
-  if (text.trim().length > 0 && declaredSources.filter((s) => s.trim()).length === 0) {
+  // 2. Provenance — a covered answer must declare at least one source. Skipped only for
+  //    outputs that make no legal claim at all; see `citesNothing`.
+  if (!input.citesNothing && text.trim().length > 0 && declaredSources.filter((s) => s.trim()).length === 0) {
     failures.push({ gate: "source-binding", detail: "no source cited (content without provenance)" });
   }
 

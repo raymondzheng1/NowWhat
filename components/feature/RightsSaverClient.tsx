@@ -1491,6 +1491,55 @@ function ResultStep({
         : meritsReview;
   const memoPath = plan.paths.find((pp) => pp.id === memoPathId);
   const memoPathBody = memoPath?.body ?? plan.primary?.body ?? "";
+  // ---- The polished letter ------------------------------------------------------------
+  //
+  // The deterministic draft is correct and a little wooden — templates written to be safe
+  // rather than to read well. This asks for the same letter in better English, and keeps the
+  // original unless every gate passes: the blanks must survive, no figure may appear that is
+  // not already in the draft or in their own words, and the letter must still have its
+  // addressee, subject line and sign-off.
+  //
+  // What it may NOT do is change what they said happened. That rule is older than this
+  // feature and is not relaxed by it: the letter goes to an office over their name, and they
+  // have to be able to answer for every sentence in it.
+  const [polished, setPolished] = useState<Record<string, string>>({});
+  const [polishing, setPolishing] = useState(false);
+  const rawDraftBody = applyDraft?.body ?? "";
+  useEffect(() => {
+    if (view !== "memo" || !rawDraftBody || !activeApply) return;
+    if (polished[rawDraftBody] !== undefined) return;
+    let live = true;
+    setPolishing(true);
+    fetch("/api/letter-polish", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        entryId: entry.id,
+        draft: rawDraftBody,
+        theirWords: account["q-story"] ?? "",
+      }),
+    })
+      .then((r) => r.json())
+      .then((d: { status?: string; letter?: string }) => {
+        if (!live) return;
+        // Cached against the draft it came from, so switching path or editing the account
+        // asks again, and re-entering the step does not.
+        setPolished((prev) => ({ ...prev, [rawDraftBody]: d?.status === "answered" && d.letter ? d.letter : "" }));
+      })
+      .catch(() => {
+        /* offline, blocked or rejected — the deterministic draft is what they get */
+      })
+      .finally(() => {
+        if (live) setPolishing(false);
+      });
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, rawDraftBody, entry.id]);
+  /** The letter as shown and copied: polished where one came back, the draft otherwise. */
+  const letterBody = (rawDraftBody && polished[rawDraftBody]) || rawDraftBody;
+
   // ---- The drafted application ------------------------------------------------------
   //
   // The ONE step of this flow that leaves the device. Everything before it is computed here
@@ -2135,21 +2184,13 @@ function ResultStep({
       {view === "memo" && (
         <section id="r-memo" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("memoSectionTitle")}</h2>
-          {/* The explanatory lead is gone on the owner's instruction: the document explains
-              itself, and a paragraph telling the reader how to read it was in the way.
-
-              The DISCLOSURE stays, reduced to one quiet line. Every other step of this flow
-              computes on the device and sends nothing, and the app says so repeatedly — so
-              the one step where that stops being true cannot go silent about it and leave an
-              old promise standing. It is a footnote now rather than a panel. */}
-          {drafting ? (
+          {/* No lead and no per-step notice, on the owner's instruction (2026-09-16): the
+              document explains itself, and the step says nothing about where the drafting
+              happens. The disclosure lives on the privacy page, which describes the guided
+              flow and this step in it. */}
+          {drafting && (
             <p aria-live="polite" className="mt-2 text-[14.5px] font-semibold text-help-ink">
               {t("memoDrafting")}
-            </p>
-          ) : (
-            <p className="mt-1.5 flex items-start gap-2 text-[13.5px] leading-snug text-ink-faint">
-              <Icon.Lock className="mt-[2px] h-3.5 w-3.5 shrink-0" strokeWidth={2} aria-hidden />
-              <span>{t("memoSendNotice")}</span>
             </p>
           )}
           <div id="memo-text" data-memo={memo.body}>
@@ -2627,12 +2668,17 @@ function ResultStep({
             </Link>
           </p>
 
-          <LetterView body={applyDraft.body} label={activeApply.label} />
+          {polishing && (
+            <p aria-live="polite" className="mt-3 text-[14.5px] font-semibold text-help-ink">
+              {t("letterPolishing")}
+            </p>
+          )}
+          <LetterView body={letterBody} label={activeApply.label} />
           <LetterPlaceholderKey text={t("letterPlaceholderKey")} />
           <button
             type="button"
             onClick={() => {
-              void navigator.clipboard.writeText(applyDraft.body).then(() => {
+              void navigator.clipboard.writeText(letterBody).then(() => {
                 setApplyCopied(true);
                 window.setTimeout(() => setApplyCopied(false), 2000);
               });

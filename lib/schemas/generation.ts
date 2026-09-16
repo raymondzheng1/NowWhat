@@ -64,3 +64,18 @@ export const GeneratedMemoSchema = z.object({
   sources: z.array(z.string()),
 });
 export type GeneratedMemo = z.infer<typeof GeneratedMemoSchema>;
+
+/**
+ * A polished letter.
+ *
+ * One field, because the output IS the letter — there is nothing to assemble around it, and
+ * every extra field would be another place for the model to put something the person did not
+ * say. `covered` is the escape hatch: it says "I could not do this safely", and the caller
+ * then keeps the deterministic draft.
+ */
+export const GeneratedLetterSchema = z.object({
+  covered: z.boolean(),
+  letter: z.string(),
+  sources: z.array(z.string()).default([]),
+});
+export type GeneratedLetter = z.infer<typeof GeneratedLetterSchema>;

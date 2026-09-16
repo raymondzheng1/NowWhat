@@ -4,6 +4,7 @@ import { POST as askPost } from "@/app/api/ask/route";
 import { POST as decodePost } from "@/app/api/decode/route";
 import { POST as chatPost } from "@/app/api/chat/route";
 import { POST as memoPost } from "@/app/api/memo/route";
+import { POST as polishPost } from "@/app/api/letter-polish/route";
 import { __setKvForTests, MemoryKv } from "@/lib/kv/redis";
 import { __setModelForTests, __setVisionForTests, type ModelFn } from "@/lib/generation/anthropic";
 import { record } from "@/lib/cost/guard";
@@ -314,5 +315,108 @@ describe("/api/memo (the drafted analysis)", () => {
     __setModelForTests(throwingModel);
     const res = await memoPost(jsonReq("http://x/api/memo", { nope: true }));
     expect(res.status).toBe(400);
+  });
+});
+
+/**
+ * /api/letter-polish — rewriting a draft letter to read professionally.
+ *
+ * The draft is the benchmark. Every gate measures the rewrite against it, and any failure
+ * returns not-covered so the person keeps the deterministic draft — which is correct, just
+ * wooden. The rewrite can only ever improve; it can never be the reason a letter is worse.
+ */
+const polishBody = {
+  entryId: "vic-renting",
+  draft: [
+    "[Your name]",
+    "",
+    "To: the rental provider",
+    "",
+    "Re: Request for an internal review",
+    "",
+    "Reference number: [reference number from your letter, if any]",
+    "",
+    "I am writing to ask you to review the decision described above.",
+    "",
+    "My reasons are as follows. They cut it off in March.",
+    "",
+    "Yours faithfully,",
+    "[Your name]",
+  ].join("\n"),
+  theirWords: "They cut it off in March.",
+};
+
+const polishModel = (letter: string, covered = true): ModelFn => async (call) => ({
+  text: JSON.stringify({ covered, letter, sources: [] }),
+  inputTokens: 40,
+  outputTokens: 40,
+  model: call.model,
+});
+
+describe("/api/letter-polish (a better-worded draft)", () => {
+  it("returns the rewrite when it keeps faith with the draft", async () => {
+    const better = polishBody.draft.replace(
+      "I am writing to ask you to review the decision described above.",
+      "I am writing to request a review of the decision described above.",
+    );
+    __setModelForTests(polishModel(better));
+    const res = await polishPost(jsonReq("http://x/api/letter-polish", polishBody));
+    const body = await res.json();
+    expect(body.status).toBe("answered");
+    expect(body.letter).toContain("I am writing to request a review");
+  });
+
+  it("refuses a rewrite that drops a blank the person still has to fill", async () => {
+    __setModelForTests(polishModel(polishBody.draft.replaceAll("[Your name]", "")));
+    const res = await polishPost(jsonReq("http://x/api/letter-polish", polishBody));
+    expect((await res.json()).status).toBe("not-covered");
+  });
+
+  it("refuses a rewrite that invents a date", async () => {
+    // The kind of invention a model supplies most helpfully, and the kind that does the most
+    // damage in a letter about a decision.
+    __setModelForTests(
+      polishModel(polishBody.draft.replace("Yours faithfully,", "I wrote to you on 14 April.\n\nYours faithfully,")),
+    );
+    const res = await polishPost(jsonReq("http://x/api/letter-polish", polishBody));
+    expect((await res.json()).status).toBe("not-covered");
+  });
+
+  it("refuses a rewrite that argues the law", async () => {
+    __setModelForTests(
+      polishModel(
+        polishBody.draft.replace(
+          "I am writing to ask you to review the decision described above.",
+          "You should review this decision because it was unlawful and I will certainly succeed.",
+        ),
+      ),
+    );
+    const res = await polishPost(jsonReq("http://x/api/letter-polish", polishBody));
+    expect((await res.json()).status).toBe("not-covered");
+  });
+
+  it("refuses a rewrite that cites a case the draft never mentioned", async () => {
+    __setModelForTests(
+      polishModel(polishBody.draft.replace("Yours faithfully,", "See Kioa v West.\n\nYours faithfully,")),
+    );
+    const res = await polishPost(jsonReq("http://x/api/letter-polish", polishBody));
+    expect((await res.json()).status).toBe("not-covered");
+  });
+
+  it("keeps the draft when the model says it could not improve it safely", async () => {
+    __setModelForTests(polishModel(polishBody.draft, false));
+    const res = await polishPost(jsonReq("http://x/api/letter-polish", polishBody));
+    expect((await res.json()).status).toBe("not-covered");
+  });
+
+  it("is blocked once the session cap is reached, and spends nothing more", async () => {
+    __setModelForTests(throwingModel);
+    await record({ sessionId: "polish-cap", ip: "9.9.9.9", byoKey: false }, SESSION_CAP_USD + 1);
+    const res = await polishPost(
+      jsonReq("http://x/api/letter-polish", polishBody, "wn_sid=polish-cap"),
+    );
+    const body = await res.json();
+    expect(body.ok).toBe(false);
+    expect(body.status).toBe("blocked");
   });
 });

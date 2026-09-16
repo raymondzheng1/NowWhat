@@ -10,9 +10,11 @@ import {
   GeneratedAnswerSchema,
   GeneratedDecodeSchema,
   GeneratedMemoSchema,
+  GeneratedLetterSchema,
   type GeneratedAnswer,
   type GeneratedDecode,
   type GeneratedMemo,
+  type GeneratedLetter,
 } from "@/lib/schemas/generation";
 
 /**
@@ -109,6 +111,8 @@ interface RunOpts<T> {
    * would have been rejected for citing something it was entitled to cite.
    */
   extraSources?: string[];
+  /** See `citesNothing` in the verifier: for outputs that assert no law. */
+  citesNothing?: boolean;
   /** Pull the verifiable prose + declared sources + covered flag out of the parsed shape. */
   extract: (data: T) => { covered: boolean; text: string; declaredSources: string[] };
 }
@@ -162,6 +166,7 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
       declaredSources,
       entry: opts.entry,
       extraSources: opts.extraSources,
+      citesNothing: opts.citesNothing,
     });
     if (verdict.ok) return { status: "answered", data, attempts };
     lastFailures = verdict.failures; // diagnostic only — never contains PII
@@ -258,5 +263,25 @@ export function runMemo(
         .join(" "),
       declaredSources: d.sources,
     }),
+  });
+}
+
+/**
+ * Improve the wording of a draft letter.
+ *
+ * The verifier sees the WHOLE letter, because in this task every sentence is customer-visible
+ * output — there is no envelope to strip. `lib/letter/fidelity` then checks what a general
+ * gate cannot: that the blanks survived and no figure appeared from nowhere.
+ */
+export function runLetterPolish(
+  args: Omit<RunOpts<GeneratedLetter>, "task" | "schema" | "extract">,
+): Promise<GenerationResult<GeneratedLetter>> {
+  return runGeneration<GeneratedLetter>({
+    ...args,
+    task: "letter-polish",
+    // A letter cites nothing: it says what happened to this person and asks for a review.
+    citesNothing: true,
+    schema: GeneratedLetterSchema,
+    extract: (d) => ({ covered: d.covered, text: d.letter, declaredSources: d.sources }),
   });
 }

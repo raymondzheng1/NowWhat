@@ -442,7 +442,6 @@
     "memoReadMore": "Read more about this in the guide",
     "letterPlaceholderKey": "is something you fill in before you send it. Replace it, brackets and all.",
     "flagTribunalCth": "The decision I want to challenge was made by a tribunal, such as the ART",
-    "memoSendNotice": "Written on our server from what you told us, and not saved. Every other step stays on your device.",
     "memoDrafting": "Working through your situation…",
     "memoDraftedForThem": "Application — what you have told us",
     "memoDraftedAgainst": "The answer likely to be given",
@@ -455,7 +454,8 @@
     "schemeQ_notSure": "Not sure",
     "pathTitleCourtElection": "A court hearing, if you elect it",
     "applyCourt": "Court hearing",
-    "applyCourtHint": "Electing to have the matter heard in court is a formal step with its own form."
+    "applyCourtHint": "Electing to have the matter heard in court is a formal step with its own form.",
+    "letterPolishing": "Putting this into better words…"
   },
   "ask": {
     "title": "Ask a question",
