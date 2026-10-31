@@ -1,5 +1,5 @@
 {
-  "builtAt": "ed18049f993019cb",
+  "builtAt": "4572c7c1c47ca6d1",
   "processes": [
     {
       "id": "judicial-review",
@@ -1534,7 +1534,7 @@
       "id": "ombudsman",
       "name": "The Ombudsman",
       "plainName": "A free complaint about how you were treated",
-      "oneLine": "Merits review asks if the decision was wrong. The Ombudsman asks if the agency handled you badly.",
+      "oneLine": "A review asks if the decision was wrong. The Ombudsman asks if the agency handled you badly.",
       "order": 60,
       "appliesTo": [
         "complaint"

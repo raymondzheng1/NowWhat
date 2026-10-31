@@ -2185,6 +2185,51 @@ function ResultStep({
                 </div>
               </details>
             )}
+            {/* A COURT HEARING ON ELECTION. This section says it explains "these options",
+                and for a Victorian fine it listed two of the three — the court election had a
+                numbered card of its own and no explainer anywhere above it. Someone reading
+                down met two definitions and then three choices, and the one with no
+                definition is the one that puts a charge before a court.
+
+                It is neither of the corpus's two processes, so like internal review it has
+                no ProcessExplainer. What it shows instead is the text its own card already
+                shows — this path's focus paragraph and the entry's `courtCriteria` — so it
+                adds no legal claim, states no figure, and names no power. That matters here
+                more than anywhere: the whole reason this path exists is that it used to
+                inherit a tribunal's claims. */}
+            {av.courtAvailable && av.courtBody && (
+              <details className="rounded-sticker border-2 border-line bg-cream px-4 py-3">
+                <summary className="cursor-pointer py-2.5 font-display text-[17px] font-extrabold text-ink">
+                  {t("pathTitleCourtElection")} — {t("pathGlossCourtElection")}
+                </summary>
+                <div className="mt-4 space-y-3.5">
+                  <p className="text-[16px] leading-[1.6] text-ink">{t("focusCourt")}</p>
+                  {(entry.courtCriteria ?? []).length > 0 && (
+                    <div>
+                      <p className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-red-ink">
+                        {t("learnKeyPoints")}
+                      </p>
+                      <ul className="mt-2 space-y-1.5 text-[15.5px] leading-[1.55] text-ink-soft">
+                        {(entry.courtCriteria ?? []).map((c) => (
+                          <li key={c} className="flex gap-2.5">
+                            <span aria-hidden className="mt-[9px] h-1.5 w-1.5 flex-none rounded-[2px] bg-red" />
+                            <span>{c}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                  <div>
+                    <p className="font-display text-[12.5px] font-black uppercase tracking-[0.12em] text-ink-faint">
+                      {t("learnWhatItIsNot")}
+                    </p>
+                    <p className="mt-1.5 text-[15.5px] leading-[1.55] text-ink-soft">
+                      {t("courtIsNot")}
+                    </p>
+                  </div>
+                </div>
+              </details>
+            )}
             {av.jrAvailable && (
               <details className="rounded-sticker border-2 border-line bg-cream px-4 py-3">
                 <summary className="cursor-pointer py-2.5 font-display text-[17px] font-extrabold text-ink">

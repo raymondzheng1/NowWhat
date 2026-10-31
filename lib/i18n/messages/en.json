@@ -455,7 +455,9 @@
     "pathTitleCourtElection": "A court hearing, if you elect it",
     "applyCourt": "Court hearing",
     "applyCourtHint": "Electing to have the matter heard in court is a formal step with its own form.",
-    "letterPolishing": "Putting this into better words…"
+    "letterPolishing": "Putting this into better words…",
+    "pathGlossCourtElection": "Asking a court to hear the matter itself, instead of a review",
+    "courtIsNot": "This is not a review of the decision. The court does not look at whether the decision was right or wrong. It hears the matter itself and decides it. That can end better than the decision you have, or worse, and it can carry costs. Whether this is open to you, and by when, is set by the Act your notice was issued under — so check your notice, or ask the official body or a free legal service, before you rely on any of it."
   },
   "ask": {
     "title": "Ask a question",

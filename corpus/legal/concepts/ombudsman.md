@@ -2,7 +2,7 @@
 id: ombudsman
 name: The Ombudsman
 plainName: A free complaint about how you were treated
-oneLine: Merits review asks if the decision was wrong. The Ombudsman asks if the agency handled you badly.
+oneLine: A review asks if the decision was wrong. The Ombudsman asks if the agency handled you badly.
 order: 60
 appliesTo:
   - complaint
@@ -148,3 +148,15 @@ is sourced.
 The same "no strict time limit" sentence is published in four legacy pathway entries
 (`corpus/pathways/cth-centrelink.md`, `cth-generic.md`, `vic-fines.md`, `vic-public-housing.md`).
 They are outside this entry and were not touched here; they need the same edit.
+
+**The contrast stopped naming merits review, 2026-10-31.** `oneLine` opened "Merits review asks
+if the decision was wrong", and it is the teaser shown on the result page under "the bits around
+the edges" — on every scheme, including the ones that have no merits review at all. A Victorian
+fine has none: its paths are internal review, a court hearing on election, and judicial review.
+So the one sentence on that page that said the words "merits review" was describing a path the
+person had just been shown they could not use, which reads as an option that went missing.
+
+The distinction the line draws is review versus complaint, and that holds whichever review the
+scheme provides, so the first three words now say "A review". Nothing else changed: `whatItMeans`
+and `whatItIsNot` still say the Ombudsman is not merits review, which is the correct
+characterisation of the Ombudsman and is read in context inside the open card, not as the lead.
