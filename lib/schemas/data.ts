@@ -195,20 +195,18 @@ export const StageSchema = z.object({
 });
 export type Stage = z.infer<typeof StageSchema>;
 
-/**
- * Who maintains an entry, and who signed it. Separate people, separate acts.
+/*
+ * NO SCHEMA HERE FOR WHO SIGNED WHAT, and that is the point.
  *
- * This types the LOCAL ledger (`data/approvals.local.json`), not a shipped entry. The name of
- * a supervising lawyer is a private individual's, this repository is public, and
- * `data/index.json` is bundled into a client chunk — so the record is held off both.
+ * There was one — an `ApprovalSchema` with `contentOwner`, `lawyerApprover` and
+ * `lawyerApprovedAt`. Nothing used it: the only consumer of the record is
+ * `scripts/data-check.mjs`, which is plain node and reads JSON directly. But this file is
+ * reachable from a client component, so those three field names were sitting in the public
+ * bundle — verified by fetching the live site's own chunks — as an empty shape inviting
+ * someone to fill it. One commit filling it would have published a private individual's name.
+ *
+ * The ledger's shape is documented where the ledger is: `data/approvals.example.json`.
  */
-export const ApprovalSchema = z.object({
-  /** Who keeps the entry current. Operational, not legal. */
-  contentOwner: z.string().default(""),
-  /** The supervising lawyer who approved it, and when. Empty means NOT approved. */
-  lawyerApprover: z.string().default(""),
-  lawyerApprovedAt: z.string().default(""),
-});
 
 export const DataPathwaySchema = z.object({
   id: z.string().min(1),
@@ -297,7 +295,7 @@ export const DataPathwaySchema = z.object({
   // This schema types `data/index.json`, which is bundled into a client chunk any visitor can
   // download — proved against the live site. Who signed an entry off is a named private
   // individual, so the record lives in `data/approvals.local.json`: gitignored (the repository
-  // is public), read only by `scripts/data-check.mjs`, typed by `ApprovalSchema` above. The
+  // is public), and read only by `scripts/data-check.mjs`. The
   // build deletes an approval block if one appears in frontmatter and `data-check` fails on
   // it, so the only way to hold this is the way that does not publish it.
   /** True for the generic per-jurisdiction fallback entries. */

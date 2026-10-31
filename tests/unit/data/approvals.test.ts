@@ -81,10 +81,19 @@ describe("the sign-off ledger never reaches the public artefacts", () => {
     }
   });
 
-  it("the shipped entry type has no approval field at all", () => {
-    // Belt and braces on the test above: if the type offered one, something would eventually
-    // fill it, and the build strips it silently.
+  it("the shipped entry type offers no approval shape at all", () => {
+    // Belt and braces on the tests above, and it caught something: removing the field from
+    // DataPathwaySchema was not enough, because `ApprovalSchema` itself still stood in a
+    // file a client component imports — so `lawyerApprover` and `lawyerApprovedAt` were in
+    // the live bundle as an empty shape, with nothing using them. An empty shape in a public
+    // file is an invitation; one commit filling it publishes a private individual's name.
     const schema = read("lib/schemas/data.ts");
-    expect(schema).not.toMatch(/^\s*approval:\s*ApprovalSchema/m);
+    expect(schema).not.toMatch(/^\s*approval:/m);
+    expect(schema).not.toContain("ApprovalSchema = z.object");
+    for (const field of ["lawyerApprover:", "lawyerApprovedAt:", "contentOwner:"]) {
+      expect(schema, `${field} must not be declared in a client-reachable file`).not.toMatch(
+        new RegExp(`^\s*${field.replace(":", ":")}\s`, "m"),
+      );
+    }
   });
 });
