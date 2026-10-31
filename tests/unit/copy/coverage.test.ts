@@ -88,3 +88,53 @@ describe("Victoria is named as the example, and the limit travels with it", () =
     expect(landing).toContain('t("coverageLead")');
   });
 });
+
+/**
+ * A COURT ELECTION IS NOT A REVIEW, INCLUDING IN THE HEADING ABOVE IT.
+ *
+ * Reported from the live site: on a Victorian fine, the explainer list's second item is the
+ * court election, where a reader expects merits review. The list is right — `vic-fines` has
+ * `avenue.mr.available: false` and `avenue.court.available: true`, lawyer-verified, sourced
+ * to the Infringements Act — but two headings above it said otherwise:
+ *
+ *   · "The ways a decision gets looked at again", over a panel whose own text reads "This is
+ *     not a review of the decision. The court does not look at whether the decision was right
+ *     or wrong. It hears the matter itself."
+ *   · "Apply for review", over the letter for that same election.
+ *
+ * This is the fifth and sixth place that one mis-label has had to be removed — the card, the
+ * plan, the hand-off, the memo heading, and now these. A heading that spans four paths may
+ * not name what only two of them do.
+ */
+describe("no heading calls every path a review", () => {
+  const spansEveryPath = ["learnTitle", "learnLead", "applyTitle", "learnMore"];
+
+  it("does not say review, or looked at again, over a court election", () => {
+    for (const key of spansEveryPath) {
+      const text = rights[key]!;
+      expect(text, `rights.${key} spans all four paths`).not.toMatch(/looked at again/i);
+    }
+    // The two headings themselves must not name a review at all.
+    expect(rights.learnTitle).not.toMatch(/\breview/i);
+    expect(rights.applyTitle).not.toMatch(/\breview/i);
+  });
+
+  it("still says plainly, where it matters, that the court is not reviewing anything", () => {
+    // The guard on the test above: this is an absence that must not become a silence.
+    expect(rights.courtIsNot).toMatch(/not a review of the decision/i);
+    expect(rights.pathGlossCourtElection).toMatch(/instead of a review/i);
+  });
+
+  it("explains the gap where a tribunal would be", () => {
+    expect(rights.learnNoTribunal).toMatch(/tribunal/i);
+    // It states what our rules list, not what the law forbids, and it routes to a person.
+    expect(rights.learnNoTribunal).toMatch(/our checked rules|not one of the paths/i);
+    expect(rights.learnNoTribunal).toMatch(/free legal service/i);
+  });
+
+  it("renders that note only where no tribunal is available", () => {
+    const client = read("components/feature/RightsSaverClient.tsx");
+    expect(client).toContain('{!av.mrAvailable && (');
+    expect(client).toContain('t("learnNoTribunal")');
+  });
+});
