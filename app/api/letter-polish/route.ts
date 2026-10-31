@@ -117,6 +117,11 @@ export async function POST(req: NextRequest) {
       // person was left with the draft and no word why — the memo's lesson, again. The
       // fidelity gate's "too-long" is what keeps the letter short; this only keeps it whole.
       maxTokens: 2000,
+      // An Act or a figure the person named is in the draft, so it is theirs to keep: the
+      // verifier refused the owner's judicial-review letter for repeating "Animal Welfare Act
+      // 2002" from their own account. The fidelity gate below still refuses anything NEW.
+      groundedText: body.draft,
+      accountText: body.theirWords,
     });
   } catch {
     return { gates: ["error"] };

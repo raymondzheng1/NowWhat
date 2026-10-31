@@ -524,6 +524,26 @@ const polishModel = (letter: string, covered = true): ModelFn => async (call) =>
 });
 
 describe("/api/letter-polish (a better-worded draft)", () => {
+  // The owner's judicial-review letter was refused for keeping "Animal Welfare Act 2002" — an
+  // Act the person named in their own account. Theirs to keep; a NEW Act is still refused.
+  it("keeps an Act the person named, and still refuses one they did not", async () => {
+    const theirs = "They said I was convicted under the Animal Welfare Act 2002. I never was.";
+    const draft = polishBody.draft.replace("They cut it off in March.", theirs);
+    const body = { ...polishBody, draft, theirWords: theirs };
+    const kept = draft.replace(
+      "I am writing to ask you to review the decision described above.",
+      "I am writing to request a review of the decision described above.",
+    );
+    __setModelForTests(polishModel(kept));
+    const ok = await (await polishPost(jsonReq("http://x/api/letter-polish", body))).json();
+    expect(ok.status).toBe("answered");
+
+    const added = kept.replace("I never was.", "I never was, as the Charter of Human Rights Act 2006 protects me.");
+    __setModelForTests(polishModel(added));
+    const refused = await (await polishPost(jsonReq("http://x/api/letter-polish", body))).json();
+    expect(refused.status).toBe("not-covered");
+  });
+
   it("returns the rewrite when it keeps faith with the draft", async () => {
     const better = polishBody.draft.replace(
       "I am writing to ask you to review the decision described above.",
