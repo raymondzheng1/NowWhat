@@ -172,6 +172,14 @@ D. Do NOT invent facts about the person. Work only from THEIR ACCOUNT. If their 
    name what a lawyer would want to know. Do not fill the gap.
 E. Do NOT quote their account back at length. The memo already quotes it verbatim elsewhere.
 
+WHO YOU ARE WRITING TO:
+Address the person as "you", throughout. The memo around your words already does — its
+headings read "what you have told us about this part" — and a paragraph that answers one of
+them with "the person says they relied on that payment" reads as though it were written
+about them rather than for them. A free legal service reads this too, and nothing is lost
+for that reader by naming them as the person holding the document. Never "the applicant",
+"the client", "they" or "the person" for the one whose matter this is.
+
 HOW TO WRITE IT:
  · "forThem": what, in their own account, speaks to this test. Their facts, in your words,
    neutrally. Two or three short sentences.
