@@ -7,6 +7,7 @@ import { listDataEntries, getDataEntry, getDataIndex } from "@/lib/data";
 import type { DataPathway, Jurisdiction } from "@/lib/schemas/data";
 import { groundAppliesIn, type Process, type Ground, type Concept } from "@/lib/schemas/legal";
 import { avenueView } from "@/lib/triage";
+import { flowForMatter, matterKey } from "@/lib/flow/matter";
 import { planFor, midSentence } from "@/lib/analysis";
 import { questionsForScheme } from "@/lib/intake/scheme-questions";
 import { AnalysisPanel } from "@/components/feature/AnalysisPanel";
@@ -62,6 +63,11 @@ const CONSENT_KEY = "wn-consented";
  */
 const FLOW_KEY = "wn-flow";
 interface FlowState {
+  /**
+   * Which decision these answers were written for (`matterKey`). Answers are restored only
+   * into the matter they belong to; changing the decision starts from scratch.
+   */
+  matter: string;
   chosenPath: PathId | null;
   goals: GoalId[];
   goalOther: string;
@@ -436,6 +442,27 @@ export function RightsSaverClient({
     : [];
   const entry = areaId ? getDataEntry(areaId) ?? null : null;
 
+  /**
+   * Changing the decision starts the account from scratch.
+   *
+   * The owner's call, and the reason is what the answers are for: what someone writes is
+   * about ONE letter, and it is read back into the analysis and into the memo. Carrying it
+   * across a change of area put a fine's analysis on a housing story. The cost — re-typing
+   * — is accepted, and it is the cheaper of the two mistakes by a long way.
+   *
+   * `relatedGrounds` lives up here and this component does not remount, so clearing the
+   * stored flow is not enough on its own: the points they ticked have to go with it.
+   */
+  function startFreshMatter() {
+    forgetFlow();
+    setRelatedGrounds([]);
+  }
+
+  function pickArea(id: string) {
+    if (areaId && areaId !== id) startFreshMatter();
+    setAreaId(id);
+  }
+
   function reset() {
     setStep("who");
     setJurisdiction(null);
@@ -497,7 +524,7 @@ export function RightsSaverClient({
               jurisdiction={jurisdiction}
               areas={areas}
               areaId={areaId}
-              setAreaId={setAreaId}
+              setAreaId={pickArea}
               decisionDate={decisionDate}
               setDecisionDate={setDecisionDate}
               today={today}
@@ -512,6 +539,10 @@ export function RightsSaverClient({
 
           {step === "result" && entry && jurisdiction && (
             <ResultStep
+              // A different decision is a different component. Every route into the result
+              // remounts it today, so this changes nothing now — it is what keeps the last
+              // matter's answers out of the next one if one ever does not.
+              key={entry.id}
               t={t}
               entry={entry}
               jurisdiction={jurisdiction}
@@ -1005,7 +1036,19 @@ function ResultStep({
       if (RESULT_VIEWS.includes(v as ResultView)) setView(v as ResultView);
       const raw = window.sessionStorage.getItem(FLOW_KEY);
       if (!raw) return;
-      const f = JSON.parse(raw) as Partial<FlowState>;
+      // ANOTHER MATTER'S ANSWERS ARE NOT THIS MATTER'S ANSWERS.
+      //
+      // Held under one key with nothing to say what it was about, the blob restored the last
+      // decision's account into this one — so a fine was analysed on a story about a
+      // Centrelink debt, and those words went on into the memo. A blob for anything but the
+      // decision in hand is dropped rather than read, and dropped from storage too: the
+      // person has left that matter, and their words about it should not sit in the tab.
+      const f = flowForMatter<FlowState>(raw, matterKey(entry));
+      if (!f) {
+        forgetFlow();
+        onRestoreGrounds([]);
+        return;
+      }
       if (f.chosenPath) setChosenPath(f.chosenPath);
       if (f.goals) setGoals(f.goals);
       if (typeof f.goalOther === "string") setGoalOther(f.goalOther);
@@ -1049,6 +1092,7 @@ function ResultStep({
     }
     try {
       const f: FlowState = {
+        matter: matterKey(entry),
         chosenPath,
         goals,
         goalOther,
@@ -1062,7 +1106,7 @@ function ResultStep({
     } catch {
       /* quota or private mode — losing the restore is not worth breaking the step */
     }
-  }, [chosenPath, goals, goalOther, account, relatedGrounds, groundNotes, criteriaNotes, pickedCriteria]);
+  }, [entry, chosenPath, goals, goalOther, account, relatedGrounds, groundNotes, criteriaNotes, pickedCriteria]);
   // Lines the model selected FROM the person's own words, and which of them they have ticked.
   // Only ticked lines reach the letter, so nothing is ever sent that they have not read.
   const [picked, setPicked] = useState<

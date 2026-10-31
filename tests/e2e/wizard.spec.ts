@@ -110,7 +110,7 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
   await expect(page.getByRole("heading", { name: /what the tribunal decides/i })).toBeVisible({
     timeout: 15_000,
   });
-  await advance(page, /build my memo/i);
+  await advance(page, /build my analysis/i);
   // Asking for written reasons is opt-in now, so it is a disclosure rather than a section
   // sitting open for everyone.
   await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible({
@@ -212,7 +212,7 @@ test("internal review is its own path, and choosing it drives the rest of the fl
   await box.fill("They never got the medical certificate I sent in March.");
 
   // The memo follows the approach they chose, in their words.
-  await advance(page, /build my memo/i);
+  await advance(page, /build my analysis/i);
   const memo = page.locator("#memo-text");
   await expect(memo).toBeVisible({ timeout: 15_000 });
   await expect(memo).toContainText(/They never got the medical certificate I sent in March\./);
@@ -282,7 +282,7 @@ test("the fines court election is never dressed up as merits review", async ({ p
     .toBeVisible({ timeout: 15_000 });
   await expect(page.getByRole("heading", { name: /what the tribunal decides/i })).toHaveCount(0);
 
-  await advance(page, /build my memo/i);
+  await advance(page, /build my analysis/i);
   await expect(page.locator("#r-apply")).toContainText(/There is no draft for this path/i);
   await expect(page.locator("#r-apply .rounded-card")).toHaveCount(0);
 
@@ -322,7 +322,7 @@ test("tripwire: a sensitive matter shows the guidance first, and hands over at t
 
   // …and the full hand-over is there at the end.
   await advance(page, /next: the points you raise/i);
-  await advance(page, /build my memo/i);
+  await advance(page, /build my analysis/i);
   await advance(page, /next: talk to a person/i);
   await expect(page.getByRole("heading", { name: /some extra rules apply/i })).toBeVisible({ timeout: 15_000 });
 });
@@ -351,7 +351,7 @@ test("urgent timing does NOT dead-end: the person still gets their options", asy
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
   await chooseApproach(page, /^merits review$|having the decision looked at again/i);
   await advance(page, /next: the points you raise/i);
-  await advance(page, /build my memo/i);
+  await advance(page, /build my analysis/i);
   await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible({
     timeout: 15_000,
   });
@@ -394,6 +394,89 @@ test("leaving to read a Learn page and coming back keeps your place", async ({ p
     timeout: 15_000,
   });
   await expect(page).toHaveURL(/view=options/);
+});
+
+test("coming back to the SAME decision keeps what you wrote", async ({ page }) => {
+  // The other side of the test below: scoping the restore to one matter must not break the
+  // restore itself, which is the whole reason the answers are held per tab.
+  const words = "They stopped my payment and the letter went to my old address.";
+  await page.goto("/start?jur=Vic&area=vic-public-housing");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  const story = page.locator("#r-account textarea");
+  await expect(story).toBeVisible({ timeout: 15_000 });
+  await story.fill(words);
+
+  await page.goto("/learn");
+  await page.goBack();
+
+  await expect(page.locator("#r-account textarea")).toHaveValue(words, { timeout: 15_000 });
+});
+
+test("changing the decision starts the account from scratch", async ({ page }) => {
+  // The answers were held under ONE key for the whole tab with nothing to say what decision
+  // they were about, so changing area restored the previous matter's account into the new
+  // one — and those words go into the analysis and on into the memo. A fine was analysed on
+  // a housing story. Changing the decision now clears it.
+  await page.goto("/start?jur=Vic&area=vic-public-housing");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  const story = page.locator("#r-account textarea");
+  await expect(story).toBeVisible({ timeout: 15_000 });
+  await story.fill("They refused my housing application and never told me why.");
+
+  // Back to the question, and pick a different decision — the route a person actually takes.
+  await page.goBack();
+  await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({
+    timeout: 15_000,
+  });
+  await page.getByRole("button", { name: /fine or infringement/i }).first().click();
+
+  // Gone from the tab at the moment they leave the matter, not merely refused later: this is
+  // the person's own account of what happened to them, and the app's promise is that it is
+  // held no longer than it is being used.
+  await expect
+    .poll(() => page.evaluate(() => window.sessionStorage.getItem("wn-flow")), { timeout: 10_000 })
+    .toBeNull();
+
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+
+  const fresh = page.locator("#r-account textarea");
+  await expect(fresh).toBeVisible({ timeout: 15_000 });
+  await expect(fresh).toHaveValue("");
+  // And nothing about the housing matter is left anywhere on the step.
+  await expect(page.getByText(/refused my housing application/i)).toHaveCount(0);
+});
+
+test("going back to the first question and picking elsewhere starts fresh too", async ({ page }) => {
+  // The second route to a new matter, and the one no explicit clear sees: answering question
+  // one again drops the chosen area to nothing, so by the time a decision is picked there is
+  // no previous area to compare it to. What stops the old account arriving here is that the
+  // stored answers record which decision they were written for, and are read back only for
+  // that decision.
+  await page.goto("/start?jur=Vic&area=vic-public-housing");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  const story = page.locator("#r-account textarea");
+  await expect(story).toBeVisible({ timeout: 15_000 });
+  await story.fill("They refused my housing application and never told me why.");
+
+  await page.goBack();
+  await page.getByRole("button", { name: /back$/i }).first().click();
+  await expect(page.getByRole("heading", { name: /who made the decision/i })).toBeVisible({
+    timeout: 15_000,
+  });
+  const vic = page.getByRole("button", { name: /victorian state body/i });
+  await expect(async () => {
+    await vic.click();
+    await expect(page.getByRole("heading", { name: /what is the decision about/i })).toBeVisible({ timeout: 1500 });
+  }).toPass({ timeout: 15_000 });
+  await page.getByRole("button", { name: /fine or infringement/i }).first().click();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+
+  const fresh = page.locator("#r-account textarea");
+  await expect(fresh).toBeVisible({ timeout: 15_000 });
+  await expect(fresh).toHaveValue("");
 });
 
 test("the returning-user restore does not let a shared link skip consent", async ({ page }) => {
@@ -518,7 +601,7 @@ test("the flow gives guidance first and hands over last", async ({ page }) => {
   await expect(page.getByRole("button", { name: /put my words into the letter/i })).toBeVisible();
 
   // Then the memo — carrying the person's own words on that point, verbatim.
-  await advance(page, /build my memo/i);
+  await advance(page, /build my analysis/i);
   const memo = page.locator("#memo-text");
   await expect(memo).toBeVisible({ timeout: 15_000 });
   await expect(memo).toContainText(/They never showed me the report they relied on\./);
@@ -672,7 +755,7 @@ test("the first two steps must be answered, and say why", async ({ page }) => {
   // And the steps AFTER the choice are not gated — the points are optional.
   await chooseApproach(page, /^merits review$/i);
   await advance(page, /next: the points you raise/i);
-  await expect(page.getByRole("button", { name: /build my memo/i })).toBeEnabled();
+  await expect(page.getByRole("button", { name: /build my analysis/i })).toBeEnabled();
 });
 
 /**
@@ -836,7 +919,7 @@ test("the memo leads its step, regenerates, and is what the hand-over gives", as
   await toOptions(page);
   await chooseApproach(page, /^merits review$/i);
   await advance(page, /next: the points you raise/i);
-  await advance(page, /build my memo/i);
+  await advance(page, /build my analysis/i);
 
   // The analysis comes FIRST. It used to be last, under the reasons draft, the application
   // letter and a list of FAQ links.
@@ -904,7 +987,7 @@ test("the memo renders as a document with live links, and the letter marks its b
   await chooseApproach(page, /^judicial review$/i);
   await advance(page, /next: the points you raise/i);
   await page.locator("#r-grounds").getByRole("checkbox").first().check();
-  await advance(page, /build my memo/i);
+  await advance(page, /build my analysis/i);
 
   // Not a textarea any more, and the links are real links that open in a new tab.
   await expect(page.locator("#memo-text textarea")).toHaveCount(0);
@@ -949,7 +1032,7 @@ test("a fine is asked what stage it has reached, and the answer reaches the memo
 
   await chooseApproach(page, /^internal review$/i);
   await advance(page, /next: the points you raise/i);
-  await advance(page, /build my memo/i);
+  await advance(page, /build my analysis/i);
 
   // It lands in the memo, under the question that was asked, in their words.
   await expect(page.locator("#memo-text")).toContainText(/Notice of final demand/i);
