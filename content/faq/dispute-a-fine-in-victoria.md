@@ -2,7 +2,7 @@
 title: "How do I dispute a fine in Victoria?"
 description: "If you disagree with a Victorian fine or can't pay it, you have options: ask for a review, nominate the driver, go to court, or get help to pay. Here's how, and the time limits."
 question: "How do I dispute a fine or infringement notice in Victoria?"
-answer: "You have several options: ask for a review on set grounds, nominate the real driver, ask to have it heard in court, or get help to pay. What you can do depends on the stage your fine has reached, so it helps to act early — before it becomes a 'Notice of Final Demand'. If you only just found out about a fine, ask for a review as soon as you can — a short time limit applies. Free help is available from Victoria Legal Aid and financial counsellors."
+answer: "You have several options: ask for a review on set grounds, nominate the real driver, ask to have it heard in court, or get help to pay. What you can do depends on the stage your fine has reached, so it helps to act early: most options close once the fine is registered with Fines Victoria, which can happen before any Notice of Final Demand arrives. If you only just found out about a fine, ask for a review as soon as you can — a short time limit applies. Free help is available from Victoria Legal Aid and financial counsellors."
 entryId: vic-fines
 category: "Fines"
 sources:
@@ -21,9 +21,11 @@ reached.
 ## The stages
 
 A fine moves through stages. First an Infringement Notice, then a Penalty Reminder
-Notice, then a Notice of Final Demand, then enforcement. Some options, like going to
-court or nominating another driver, only work before the fine is registered. That is
-before the Notice of Final Demand. So acting early keeps more options open.
+Notice, then registration with Fines Victoria, then a Notice of Final Demand, then
+enforcement. Some options, like going to court or nominating another driver, only work
+until the fine is registered. A fine can be registered once the time to pay on the
+Penalty Reminder Notice has passed, so do not wait for a Notice of Final Demand. By
+then it may be too late.
 
 ## Ask for a review
 
@@ -38,7 +40,13 @@ short time limit applies to that ground.
 
 You can nominate the person who was actually responsible, ask to have the matter heard in
 court, or ask Fines Victoria for a payment plan or a Work and Development Permit if you
-are in hardship.
+are in hardship. If you go to court, the court can dismiss the charge. If you are found
+guilty, it can record a conviction, order you to pay more or less than the fine, and
+order you to pay costs.
+
+Excessive-speed, drink-driving and drug-driving fines work differently. There is no
+review. You object in writing, and if you do not object in time the notice takes effect
+as a conviction. Get free legal help quickly.
 
 ## Get free help
 

@@ -168,7 +168,8 @@ export function buildDraft(
   // THIS IS NOT THE ELECTION, AND IT MUST NOT READ LIKE IT. Electing to have an
   // infringement heard in court is a formal step under the scheme's own Act. It has a
   // prescribed form, a time limit we do not verify, and a consequence: it puts the CHARGE
-  // before a court, which can end worse than the notice and can carry costs. We hold no
+  // before a court, which can dismiss it or convict, order more or less than the notice,
+  // and order costs (VLA, 19 May 2026; Criminal Procedure Act 2009 ss 401, 403). We hold no
   // checked version of that form, so we draft no version of it — a document of ours that
   // looked official would be read as one by the person least able to absorb a rejected
   // filing, which is the whole reason this app does not do that.
@@ -189,7 +190,7 @@ export function buildDraft(
         "Date of the notice: [date on your notice]",
         "",
         "NOTE TO YOURSELF — PLEASE READ FIRST",
-        "This letter is not the election, and sending it does not elect anything. Asking for a matter to be heard in court is a formal step with its own form and its own time limit, and this letter only asks what that form is and when it is due. Please talk to a free legal service before you elect. A court hearing decides the matter itself, so it can end better than the notice you have, or worse, and it can carry costs.",
+        "This letter is not the election, and sending it does not elect anything. Asking for a matter to be heard in court is a formal step with its own form and its own time limit, and this letter only asks what that form is and when it is due. Please talk to a free legal service before you elect. A court hearing decides the charge itself. The court can dismiss it, or find you guilty, record a conviction, and order you to pay more or less than the fine, plus costs.",
         "",
         "I am writing about the notice described above. I am considering asking for this matter to be heard in court, and I would like to know what I need to do.",
         "",

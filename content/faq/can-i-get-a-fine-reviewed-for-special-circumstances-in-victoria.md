@@ -40,7 +40,7 @@ You will generally need to show something that backs up your claim. Useful docum
 - The **original fine or notice**, including its infringement number
 - Any **letters showing what stage your fine has reached**
 
-Acting early is important — what you can do depends on the stage your fine has reached, so it helps to start before your fine becomes a **Notice of Final Demand**.
+Acting early is important — what you can do depends on the stage your fine has reached, so it helps to start before your fine is **registered with Fines Victoria**. That can happen as soon as the time to pay on the Penalty Reminder Notice has passed, before any Notice of Final Demand arrives.
 
 ## Who reviews a special circumstances claim?
 

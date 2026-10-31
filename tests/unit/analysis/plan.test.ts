@@ -163,7 +163,10 @@ describe("analysis plan (what this means, and in what order)", () => {
     expect(focusOf("mixed")).toBe("focusInternal");
     // The court's paragraph must not assert the tribunal's test.
     expect(r.focusCourt!.toLowerCase()).not.toContain("correct or preferable");
-    expect(r.focusCourt!.toLowerCase()).toContain("hears the matter itself");
+    // "Charge", not "matter": the Act's own word. The agency's information is "deemed to be a
+    // charge-sheet ... charging the offence" (Infringements Act 2006 (Vic) s 40(1)(b)).
+    expect(r.focusCourt!.toLowerCase()).toContain("hears the charge itself");
+    expect(r.focusCourt!.toLowerCase()).toContain("rather than reviewing the decision");
     // Judicial review is never touched by this: it is a court by design, with the corpus's
     // own question, not a borrowed one.
     expect(

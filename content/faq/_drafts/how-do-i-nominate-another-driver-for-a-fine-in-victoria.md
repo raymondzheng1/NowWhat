@@ -8,7 +8,7 @@ answer: >-
   If you got a fine in Victoria but you were not the person responsible, you can
   ask for a review on the ground of 'mistake of identity'. You will need to show
   proof that you were not the driver or owner. Acting early — before your fine
-  becomes a 'Notice of Final Demand' — gives you more options.
+  is registered with Fines Victoria — gives you more options.
 entryId: vic-fines
 category: Fines
 sources:
@@ -37,7 +37,7 @@ It helps to gather your evidence before you apply.
 
 ## When should you act?
 
-You can generally ask for a review **before your fine is registered** — that is, before you receive a 'Notice of Final Demand'. Acting early gives you more choices. Once a fine reaches the Notice of Final Demand stage, your options are more limited.
+You can generally ask for a review **before your fine is registered** with Fines Victoria. A fine can be registered once the time to pay on the Penalty Reminder Notice has passed, which is before any Notice of Final Demand arrives. Acting early gives you more choices.
 
 For excessive-speed, drink-driving, or drug-driving offences, different deadlines apply — ask for help early to make sure you do not miss them.
 

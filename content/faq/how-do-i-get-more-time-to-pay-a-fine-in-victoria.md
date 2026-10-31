@@ -16,7 +16,7 @@ updated: "2026-06-16"
 ---
 
 If a Victorian fine is more than you can pay right now, you have options. Acting early —
-before the fine becomes a "Notice of Final Demand" — keeps more of them open.
+before the fine is registered with Fines Victoria — keeps more of them open.
 
 ## Ask for a payment plan
 

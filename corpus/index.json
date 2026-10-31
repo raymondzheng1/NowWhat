@@ -1,5 +1,5 @@
 {
-  "builtAt": "60b364fdcd37c46b",
+  "builtAt": "786e7d19c97de316",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -300,12 +300,12 @@
           "deadlineDays": null,
           "deadlineVerified": false,
           "cost": "free",
-          "howCounted": "before the fine is registered (before a Notice of Final Demand)",
+          "howCounted": "until the fine is registered, which can happen once the Penalty Reminder Notice due date has passed",
           "name": "Ask for a review (on one of the five grounds)",
           "body": "the agency that issued the fine, or Fines Victoria",
-          "deadline": "You can usually ask before your fine is registered — that is, before a 'Notice of Final Demand'. Usually only one review is allowed per fine.",
+          "deadline": "You can usually ask any time until your fine is registered with Fines Victoria. A fine can be registered once the time to pay on the Penalty Reminder Notice has passed, which is before any Notice of Final Demand is sent. Only one review is allowed per fine. Review is not available for excessive-speed, drink-driving or drug-driving fines.",
           "howToStart": "apply for a review and choose a ground",
-          "source": "fines.vic.gov.au — request a review; Infringements Act 2006 (Vic)"
+          "source": "fines.vic.gov.au — request a review; Infringements Act 2006 (Vic) ss 21, 22"
         },
         {
           "deadlineDays": 14,
@@ -314,30 +314,30 @@
           "howCounted": "from the day you found out about the fine",
           "name": "Ask for a review because you did not know about the fine",
           "body": "the agency that issued the fine, or Fines Victoria",
-          "deadline": "Apply within 14 days of finding out about the fine.",
+          "deadline": "Apply within 14 days of finding out about the fine. This ground is only open if the notice was not handed to you in person. If the review is refused, you then have 14 days to pay, arrange to pay, or ask to have the matter heard in court.",
           "howToStart": "apply for a review on the 'person was unaware' ground (you may need a statutory declaration)",
-          "source": "fines.vic.gov.au — if you didn't know about your fine"
+          "source": "fines.vic.gov.au — if you didn't know about your fine; Infringements Act 2006 (Vic) ss 22, 25"
         },
         {
           "deadlineDays": null,
           "deadlineVerified": false,
-          "cost": "no fee to ask. Going to court can lead to a different penalty, so free legal help is available.",
-          "name": "Ask to have the matter heard in court (excessive speed, drink-driving or drug-driving)",
-          "body": "Magistrates' Court of Victoria (Children's Court if you are under 18)",
-          "deadline": "For excessive-speed, drink-driving or drug-driving offences a short time limit runs from the notice. Check it with Fines Victoria or a free service as soon as you can.",
-          "howToStart": "ask to have the matter heard in court",
-          "source": "fines.vic.gov.au — go to court; Infringements Act 2006 (Vic)"
+          "cost": "No fee to object. The court can dismiss the charge. If you are found guilty, it can record a conviction, order you to pay more or less than the fine, and order you to pay costs. Free legal help is available.",
+          "name": "Object, and have the matter heard in court (excessive speed, drink-driving or drug-driving)",
+          "body": "Magistrates' Court of Victoria (Children's Court if you were under 18 when the offence happened)",
+          "deadline": "For excessive-speed, drink-driving or drug-driving offences you object in writing to the person named on the notice. Unless you object within 28 days after the date on the notice, the notice takes effect as a conviction for the offence. There is no review for these fines. Free legal help is available.",
+          "howToStart": "give a written notice of objection to the person named on the notice, saying you refuse to pay and want a court to deal with it",
+          "source": "fines.vic.gov.au — go to court; Road Safety Act 1986 (Vic) s 89A"
         },
         {
           "deadlineDays": null,
           "deadlineVerified": false,
-          "cost": "no fee to ask. Going to court can lead to a different penalty, so free legal help is available.",
-          "howCounted": "before the fine is registered (before a Notice of Final Demand)",
+          "cost": "No fee to ask. The court can dismiss the charge. If you are found guilty, it can record a conviction, order you to pay more or less than the fine, and order you to pay costs. Free legal help is available.",
+          "howCounted": "until the fine is registered, which can happen once the Penalty Reminder Notice due date has passed",
           "name": "Ask to have the matter heard in court (any other fine)",
-          "body": "Magistrates' Court of Victoria (Children's Court if you are under 18)",
-          "deadline": "For fines other than excessive speed, drink-driving or drug-driving: before the fine is registered — that is, before a 'Notice of Final Demand'.",
-          "howToStart": "ask to have the matter heard in court",
-          "source": "fines.vic.gov.au — go to court; Infringements Act 2006 (Vic)"
+          "body": "Magistrates' Court of Victoria (Children's Court if you were under 18 when the offence happened)",
+          "deadline": "For fines other than excessive speed, drink-driving or drug-driving: any time until the fine is registered with Fines Victoria. A fine can be registered once the time to pay on the Penalty Reminder Notice has passed, which is before any Notice of Final Demand is sent. Once you ask, any review you asked for ends.",
+          "howToStart": "tell the agency named on the notice, in writing or through Fines Victoria, that you want the matter heard in court",
+          "source": "fines.vic.gov.au — go to court; Infringements Act 2006 (Vic) s 16; Fines Reform Act 2014 (Vic) ss 16, 23"
         },
         {
           "deadlineDays": null,
@@ -407,15 +407,15 @@
           "link": "https://ndh.org.au/debt-problems/fines/"
         }
       ],
-      "plainLanguageExplainer": "If you got a fine or infringement notice in Victoria and you disagree with it, or you can't pay, you have options. You can ask for a review on set grounds, nominate the real driver, ask to go to court, or get help to pay. What you can do depends on the stage your fine has reached, so it helps to act early, before it becomes a 'Notice of Final Demand'. Free help is available.",
+      "plainLanguageExplainer": "If you got a fine or infringement notice in Victoria and you disagree with it, or you can't pay, you have options. You can ask for a review on set grounds, nominate the real driver, ask to go to court, or get help to pay. What you can do depends on the stage your fine has reached, so it helps to act early. Most options close once the fine is registered with Fines Victoria, and that can happen before any Notice of Final Demand arrives. Free help is available.",
       "sources": [
         "Fines Victoria — online.fines.vic.gov.au",
         "Infringements Act 2006 (Vic) — legislation.vic.gov.au",
         "Victoria Legal Aid — Fines and infringements — legalaid.vic.gov.au",
         "Victorian Ombudsman — ombudsman.vic.gov.au"
       ],
-      "lastVerified": "2026-06-16",
-      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. The owner\nconfirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day\nreview cycle.\n\nThe old note said a lawyer should confirm the figures before launch. That clashed with the\nverified status. The renting twin in the data layer had already recorded the confirmation.\nAnd the note was not inert. This text feeds the chat grounding set and the safety checker.\nSo the app read a pre-launch caveat as verified content.\n\nVictorian fines move through stages: an Infringement Notice, then a Penalty Reminder\nNotice, then a Notice of Final Demand, then enforcement. Some options — like going to\ncourt or nominating another driver — are only available before the fine is registered\n(before the Notice of Final Demand). The exact date to pay is the due date printed on\nyour own notice, so check the notice itself.\n\n**The court-election figure generalised 2026-08-23 on the owner's instruction.** It carried the\nsame doubt as the 'person unaware' figure removed above — our procedural layer named them\ntogether as unpublishable until we can say which Act carries which stage — and the owner ruled to\nstop stating a period we cannot confirm.\n\nThe DISTINCTION stays, because it is the useful part: the driving offences have their own short\nwindow running from the notice, while other fines run to registration. What goes is the number.\n`deadlineDays` is null on both court pathways now, so no date can be computed for either — which\nalso closes the defect that started this thread, where a verified figure for one class of fine\ncould attach a concrete date to a parking ticket.",
+      "lastVerified": "2026-10-31",
+      "body": "Figures here were checked against the cited Victorian sources on 2026-06-16. The owner\nconfirmed them on 2026-08-17. The entry is verified on that basis. It stays on the 90-day\nreview cycle.\n\nThe old note said a lawyer should confirm the figures before launch. That clashed with the\nverified status. The renting twin in the data layer had already recorded the confirmation.\nAnd the note was not inert. This text feeds the chat grounding set and the safety checker.\nSo the app read a pre-launch caveat as verified content.\n\nVictorian fines move through stages: an Infringement Notice, then a Penalty Reminder\nNotice, then registration with Fines Victoria, then a Notice of Final Demand, then\nenforcement. Some options — like going to court or nominating another driver — are only\navailable until the fine is registered. Registration comes BEFORE the Notice of Final\nDemand: it can happen once the time to pay on the Penalty Reminder Notice has passed.\nThe exact date to pay is the due date printed on your own notice, so check the notice\nitself.\n\n**Court-hearing QA against the Acts, 2026-10-31.** Every court-hearing statement was\nchecked against the authorised versions on legislation.vic.gov.au — Infringements Act\n2006 (v067), Fines Reform Act 2014 (v035), Road Safety Act 1986 (v237), Criminal\nProcedure Act 2009 (v115) — and Victoria Legal Aid (updated 19 May 2026). Corrected: the\ndeadline for court and for review is REGISTRATION (IA ss 16(1), 22(2)(a)), which comes\nbefore the Final Demand (FRA ss 16(2), 23(1)) — the old 'that is, before a Notice of\nFinal Demand' told people they had time they may not have; excessive-speed,\ndrink-driving and drug-driving fines use a written objection within 28 days of the\nnotice date or become a conviction (RSA s 89A(2), (4)-(5)), and internal review does not\napply to them (IA s 21(1)(a)); the 'unaware' ground needs non-personal service and a\nrefusal leaves 14 days (IA ss 22(1)(d), 25(6)-(7)); the Children's Court test is age at\nthe offence (IA s 3(1)); and the court's outcomes and costs are now stated and sourced\n(VLA; CPA ss 401, 403). The 28-day figure is stated as prose only — `deadlineDays` stays\nnull and no date is computed — pending the supervising lawyer's confirmation.\n\n**The court-election figure generalised 2026-08-23 on the owner's instruction.** It carried the\nsame doubt as the 'person unaware' figure removed above — our procedural layer named them\ntogether as unpublishable until we can say which Act carries which stage — and the owner ruled to\nstop stating a period we cannot confirm.\n\nThe DISTINCTION stays, because it is the useful part: the driving offences have their own short\nwindow running from the notice, while other fines run to registration. What goes is the number.\n`deadlineDays` is null on both court pathways now, so no date can be computed for either — which\nalso closes the defect that started this thread, where a verified figure for one class of fine\ncould attach a concrete date to a parking ticket.",
       "isFallback": false
     },
     {
