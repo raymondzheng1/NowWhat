@@ -1,4 +1,9 @@
 import type { PathwayEntry } from "@/lib/schemas/corpus";
+import {
+  SELF_WARNING_HEADING,
+  SELF_WARNING_JUDICIAL_REVIEW,
+  SELF_WARNING_COURT_ELECTION,
+} from "@/lib/draft/warnings";
 
 /**
  * Deterministic draft skeletons (PRD §6.6). Built from the corpus entry — no model
@@ -143,8 +148,8 @@ export function buildDraft(
         "Reference number: [reference number from your letter, if any]",
         "Date of the decision: [date on your letter]",
         "",
-        "NOTE TO YOURSELF — PLEASE READ FIRST",
-        "Judicial review is a court process, and it is technical. Court time limits are usually strict, and asking for reasons does not always pause them. Please talk to a free legal service before you file anything. This draft is a starting point for that conversation, not a court document.",
+        SELF_WARNING_HEADING,
+        SELF_WARNING_JUDICIAL_REVIEW,
         "",
         "I am writing about the decision described above. My concern is with the way the decision was made, rather than with the outcome alone.",
         "",
@@ -188,8 +193,8 @@ export function buildDraft(
         "Reference number: [reference number from your notice, if any]",
         "Date of the notice: [date on your notice]",
         "",
-        "NOTE TO YOURSELF — PLEASE READ FIRST",
-        "This letter is not the election, and sending it does not elect anything. Asking for a matter to be heard in court is a formal step with its own form and its own time limit, and this letter only asks what that form is and when it is due. Please talk to a free legal service before you elect. A court hearing decides the matter itself, so it can end better than the notice you have, or worse, and it can carry costs.",
+        SELF_WARNING_HEADING,
+        SELF_WARNING_COURT_ELECTION,
         "",
         "I am writing about the notice described above. I am considering asking for this matter to be heard in court, and I would like to know what I need to do.",
         "",

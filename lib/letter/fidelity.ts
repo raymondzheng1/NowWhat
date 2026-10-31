@@ -18,7 +18,14 @@
  *     proxy for "no invented facts", and numbers are where invention does the most damage in
  *     a letter about a decision: a date, an amount, a reference.
  *   · The letter must still be a letter — the parts that make it one cannot be polished away.
+ *   · A block addressed to the PERSON rather than to the agency comes back word for word.
+ *     These are the lines that stop the document being mistaken for a step it is not, and
+ *     "make it more professional" is exactly the instruction that softens them away. The
+ *     prompt forbids touching them; this is what makes that real, because a prompt is a
+ *     request and a gate is a rule.
  */
+
+import { SELF_WARNING_BLOCKS } from "@/lib/draft/warnings";
 
 const PLACEHOLDER = /\[([^\]]+)\]/g;
 /** Any figure: amounts, dates, reference numbers, periods. */
@@ -34,22 +41,16 @@ export interface LetterFidelityFailure {
   detail: string;
 }
 
-/**
- * Blocks a draft addresses to the person rather than to the agency, and which the rewrite
- * may not touch.
- *
- * Two templates carry one: the judicial-review draft says a court process is technical and
- * to get help before filing anything, and the court-election enquiry says in its first line
- * that the letter does not elect anything. Both exist because the document could otherwise
- * be mistaken for a step it is not.
- *
- * "More professional" is exactly the instruction under which a warning gets softened into a
- * clause or dropped as redundant. The prompt forbids touching it; this is what makes that
- * real, because a prompt is a request and a gate is a rule.
- */
-const SELF_WARNINGS = ["NOTE TO YOURSELF"] as const;
-
 const norm = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
+
+/**
+ * Whitespace flattened, case and words kept.
+ *
+ * The renderer wraps, so a rewrite that only reflows a block has changed nothing and must
+ * still pass. Anything else about it is a wording change, and a wording change to a warning
+ * is what this gate is for.
+ */
+const flat = (s: string) => s.replace(/\s+/g, " ").trim();
 
 export function checkLetterFidelity(
   original: string,
@@ -96,10 +97,29 @@ export function checkLetterFidelity(
     failures.push({ gate: "invented-figure", detail: n });
   }
 
-  // A warning written TO THE PERSON survives verbatim, or the rewrite is refused.
-  for (const w of SELF_WARNINGS) {
-    if (original.includes(w) && !rewritten.includes(w)) {
-      failures.push({ gate: "warning-dropped", detail: w });
+  // A warning written TO THE PERSON survives verbatim, or the rewrite is refused — the
+  // heading AND the sentences under it.
+  //
+  // This used to check the string "NOTE TO YOURSELF" and nothing else, which is a weaker
+  // rule than its own comment claimed. A rewrite that kept the heading and softened
+  // "Please talk to a free legal service before you elect" into "you may wish to seek
+  // advice", or dropped "it can carry costs" as alarming, passed every gate and shipped a
+  // letter that no longer said the thing it exists to say. Nobody would have noticed,
+  // because the letter still read well. Checked against the whole block now.
+  //
+  // WHAT THIS STILL DOES NOT CHECK: where the block sits. The prompt also asks for it "in
+  // the same place", and a rewrite that moved an intact block below the body would pass
+  // here, which matters because the heading says PLEASE READ FIRST. There is no honest cheap
+  // check for it — every sentence around the block is ours to reword, so there is no stable
+  // anchor to measure position against, and a weak proxy (before the sign-off, say) would
+  // catch only the absurd case while reading like real cover. Said out loud rather than
+  // implied, because a comment claiming more than its code is what went wrong here before.
+  const flatOriginal = flat(original);
+  const flatRewritten = flat(rewritten);
+  for (const w of SELF_WARNING_BLOCKS) {
+    const needle = flat(w.text);
+    if (flatOriginal.includes(needle) && !flatRewritten.includes(needle)) {
+      failures.push({ gate: "warning-dropped", detail: w.label });
     }
   }
 

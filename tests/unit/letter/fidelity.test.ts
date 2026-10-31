@@ -2,6 +2,11 @@ import { describe, it, expect } from "vitest";
 import { checkLetterFidelity } from "@/lib/letter/fidelity";
 import { buildDraft } from "@/lib/draft/build";
 import { verifiedEntry } from "@/tests/fixtures/entries";
+import {
+  SELF_WARNING_HEADING,
+  SELF_WARNING_JUDICIAL_REVIEW,
+  SELF_WARNING_COURT_ELECTION,
+} from "@/lib/draft/warnings";
 
 /**
  * The letter-polish gate, added 2026-09-16 when the drafts began to be rewritten by a model.
@@ -118,49 +123,114 @@ describe("a polished letter is still a letter", () => {
 });
 
 describe("a warning written to the person, not the office", () => {
-  // Two templates carry a NOTE TO YOURSELF block, and both exist because the document could
-  // otherwise be mistaken for a step it is not: the judicial-review draft is not a court
-  // filing, and the court-election enquiry does not elect anything. "Make it more
-  // professional" is exactly the instruction under which such a block gets softened into a
-  // clause or dropped as repetitive, so the gate refuses the rewrite rather than trusting
-  // the prompt. A prompt is a request; a gate is a rule.
-  const draft = [
-    "[Your name]",
-    "",
-    "To: Fines Victoria",
-    "",
-    "Re: Enquiry about having this matter heard in court",
-    "",
-    "NOTE TO YOURSELF — PLEASE READ FIRST",
-    "This letter is not the election, and sending it does not elect anything.",
-    "",
-    "I am writing about the notice described above.",
-    "",
-    "Yours faithfully,",
-    "[Your name]",
-  ].join("\n");
+  // Built from the REAL templates, not from a stand-in draft written in this file. The gate
+  // and the drafts now share `lib/draft/warnings.ts`, and these tests are what makes the
+  // share worth having: a warning reworded in the template and still waved through by the
+  // gate is exactly the failure the gate exists to prevent, and it would be invisible,
+  // because the letter would still read well.
+  const THEIRS_FINE = "They fined me in March.";
+  const COURT = buildDraft(verifiedEntry, "court-election-enquiry", THEIRS_FINE);
+  const JR = buildDraft(verifiedEntry, "judicial-review-application", THEIRS_FINE);
 
-  it("refuses a rewrite that drops the block", () => {
-    const rewritten = draft.replace(/NOTE TO YOURSELF.*\n.*\n\n/s, "");
-    const f = checkLetterFidelity(draft, "", rewritten);
-    expect(f.some((x) => x.gate === "warning-dropped")).toBe(true);
+  it("the templates still carry the blocks the gate is holding", () => {
+    // Without this, a template that stopped using the constant would make every test below
+    // pass vacuously — the gate would be guarding a string no letter contains.
+    expect(COURT.body).toContain(SELF_WARNING_HEADING);
+    expect(COURT.body).toContain(SELF_WARNING_COURT_ELECTION);
+    expect(JR.body).toContain(SELF_WARNING_HEADING);
+    expect(JR.body).toContain(SELF_WARNING_JUDICIAL_REVIEW);
   });
 
-  it("refuses a rewrite that softens the heading away", () => {
-    const rewritten = draft.replace("NOTE TO YOURSELF — PLEASE READ FIRST", "A note before you begin");
-    expect(checkLetterFidelity(draft, "", rewritten).some((x) => x.gate === "warning-dropped")).toBe(true);
+  it("passes the untouched drafts, so an honest no-op is never refused", () => {
+    expect(checkLetterFidelity(COURT.body, THEIRS_FINE, COURT.body)).toEqual([]);
+    expect(checkLetterFidelity(JR.body, THEIRS_FINE, JR.body)).toEqual([]);
   });
 
-  it("allows a rewrite that keeps it", () => {
-    const rewritten = draft.replace(
+  it("allows a rewrite that only reflows the block", () => {
+    // The renderer wraps, so re-wrapping has changed nothing. If this failed, the gate would
+    // be refusing rewrites over whitespace and nobody would ever see a polished letter.
+    const reflowed = COURT.body.replace(
+      SELF_WARNING_COURT_ELECTION,
+      SELF_WARNING_COURT_ELECTION.replace(/\. /g, ".\n"),
+    );
+    expect(reflowed).not.toBe(COURT.body);
+    expect(checkLetterFidelity(COURT.body, THEIRS_FINE, reflowed)).toEqual([]);
+  });
+
+  it("allows a rewrite that polishes the sentences around the block", () => {
+    const ok = COURT.body.replace(
       "I am writing about the notice described above.",
       "I am writing in relation to the notice described above.",
     );
-    expect(checkLetterFidelity(draft, "", rewritten)).toHaveLength(0);
+    expect(checkLetterFidelity(COURT.body, THEIRS_FINE, ok)).toEqual([]);
+  });
+
+  it("refuses a rewrite that drops the block", () => {
+    const rewritten = COURT.body.replace(
+      `${SELF_WARNING_HEADING}\n${SELF_WARNING_COURT_ELECTION}\n`,
+      "",
+    );
+    expect(rewritten).not.toContain(SELF_WARNING_HEADING);
+    expect(
+      checkLetterFidelity(COURT.body, THEIRS_FINE, rewritten).some((x) => x.gate === "warning-dropped"),
+    ).toBe(true);
+  });
+
+  it("refuses a rewrite that softens the heading away", () => {
+    const rewritten = COURT.body.replace(SELF_WARNING_HEADING, "A note before you begin");
+    const bad = checkLetterFidelity(COURT.body, THEIRS_FINE, rewritten);
+    expect(bad.map((f) => f.gate)).toContain("warning-dropped");
+    expect(bad.map((f) => f.detail)).toContain("the NOTE TO YOURSELF heading");
+  });
+
+  // ---- THE GAP THIS SUITE WAS WRITTEN FOR -------------------------------------------
+  //
+  // Until 2026-10-31 the gate checked the string "NOTE TO YOURSELF" and nothing else, so
+  // every case below PASSED: the heading stayed, the sentences under it stopped saying what
+  // they exist to say, and the letter still read well enough that nobody would look. Each
+  // one asserts the heading survived first, because that is all the old gate ever asked.
+
+  it("refuses a rewrite that keeps the heading and softens the warning", () => {
+    const softened = COURT.body.replace(
+      "Please talk to a free legal service before you elect.",
+      "You may wish to seek advice before proceeding.",
+    );
+    expect(softened).toContain(SELF_WARNING_HEADING);
+    const bad = checkLetterFidelity(COURT.body, THEIRS_FINE, softened);
+    expect(bad.map((f) => f.gate)).toContain("warning-dropped");
+    expect(bad.map((f) => f.detail)).toContain("the court-election warning");
+  });
+
+  it("refuses a rewrite that drops the consequence for being alarming", () => {
+    // The sentence a person needs most, and the first one a "warmer" rewrite cuts: a court
+    // hearing can end worse than the notice they already have, and it can carry costs.
+    const trimmed = COURT.body.replace(
+      " A court hearing decides the matter itself, so it can end better than the notice you have, or worse, and it can carry costs.",
+      "",
+    );
+    expect(trimmed).toContain(SELF_WARNING_HEADING);
+    expect(trimmed).not.toBe(COURT.body);
+    expect(
+      checkLetterFidelity(COURT.body, THEIRS_FINE, trimmed).map((f) => f.gate),
+    ).toContain("warning-dropped");
+  });
+
+  it("refuses a rewrite that stops the judicial-review draft saying it is not a filing", () => {
+    const softened = JR.body.replace(
+      "This draft is a starting point for that conversation, not a court document.",
+      "This draft is a helpful starting point.",
+    );
+    expect(softened).toContain(SELF_WARNING_HEADING);
+    const bad = checkLetterFidelity(JR.body, THEIRS_FINE, softened);
+    expect(bad.map((f) => f.gate)).toContain("warning-dropped");
+    expect(bad.map((f) => f.detail)).toContain("the judicial-review warning");
   });
 
   it("says nothing about letters that carry no such block", () => {
-    const plain = draft.replace(/NOTE TO YOURSELF.*\n.*\n\n/s, "");
-    expect(checkLetterFidelity(plain, "", plain)).toHaveLength(0);
+    // The internal-review request is addressed wholly to the agency. A gate that fired here
+    // would refuse every rewrite of the letter most people actually send.
+    const plain = buildDraft(verifiedEntry, "internal-review-request", THEIRS_FINE);
+    expect(plain.body).not.toContain(SELF_WARNING_HEADING);
+    expect(checkLetterFidelity(plain.body, THEIRS_FINE, plain.body)).toEqual([]);
   });
 });
