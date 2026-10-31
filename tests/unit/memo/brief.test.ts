@@ -104,3 +104,14 @@ describe("the short analysis keeps the law and the time limit ours", () => {
     expect(b).toContain(housing.sourceUrl);
   });
 });
+
+describe("the brief's sources are ones a person can look up", () => {
+  it("leaves out the corpus's internal provenance line", () => {
+    const b = doc({
+      ...BRIEF,
+      sources: ["Owner's administrative-law knowledge base (Combined MR/JR Framework, 2026-08-22)", "https://www.vcat.vic.gov.au"],
+    }).body;
+    expect(b).not.toMatch(/knowledge base/i);
+    expect(b).toContain("https://www.vcat.vic.gov.au");
+  });
+});

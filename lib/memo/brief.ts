@@ -53,6 +53,9 @@ const MAX_GATHER = 4;
 
 const clean = (s: string) => s.replace(/\s+/g, " ").trim();
 
+/** The corpus's own provenance line for synthesised entries — the same match legal-check uses. */
+const KB_PROVENANCE = /owner'?s administrative-law knowledge base/i;
+
 /**
  * The corpus's words for each id the model may cite.
  *
@@ -181,6 +184,10 @@ export function composeBrief(input: BriefInput): Memo {
     h(t("memoSourceTitle"));
     const listed = new Set<string>();
     for (const s of brief.sources.map(clean).filter(Boolean)) {
+      // Internal provenance, not a source a member of the public can look up. The corpus cites
+      // the owner's knowledge base for the entries it synthesises, and the verifier rightly
+      // allows it — but printed under "Sources" it reads as a reference to something private.
+      if (KB_PROVENANCE.test(s)) continue;
       if (listed.has(s)) continue;
       listed.add(s);
       item(s);
