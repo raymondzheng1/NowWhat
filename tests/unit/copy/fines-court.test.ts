@@ -96,7 +96,7 @@ describe("what a court hearing can do, stated and sourced", () => {
     expect(rights.focusCourt).toMatch(OUTCOMES);
     expect(pathway(/any other fine/).cost).toMatch(OUTCOMES);
     expect(pathway(/drink-driving/).cost).toMatch(OUTCOMES);
-    expect(read("lib/draft/build.ts")).toMatch(
+    expect(read("lib/draft/warnings.ts")).toMatch(
       /The court can dismiss it, or find you guilty, record a conviction, and order you to pay more or less than the fine, plus costs\./,
     );
   });
@@ -182,6 +182,6 @@ describe("second QA round, checked against the Acts", () => {
   });
 
   it("tells the court-enquiry letter's reader not to wait for a reply (IA s 16(1))", () => {
-    expect(read("lib/draft/build.ts")).toMatch(/Do not wait for their reply to act/);
+    expect(read("lib/draft/warnings.ts")).toMatch(/Do not wait for their reply to act/);
   });
 });
