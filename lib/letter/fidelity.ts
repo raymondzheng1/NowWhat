@@ -25,9 +25,29 @@ const PLACEHOLDER = /\[([^\]]+)\]/g;
 const NUMBER = /\b\d[\d,.\/-]*\b/g;
 
 export interface LetterFidelityFailure {
-  gate: "placeholder-dropped" | "placeholder-invented" | "invented-figure" | "not-a-letter";
+  gate:
+    | "placeholder-dropped"
+    | "placeholder-invented"
+    | "invented-figure"
+    | "not-a-letter"
+    | "warning-dropped";
   detail: string;
 }
+
+/**
+ * Blocks a draft addresses to the person rather than to the agency, and which the rewrite
+ * may not touch.
+ *
+ * Two templates carry one: the judicial-review draft says a court process is technical and
+ * to get help before filing anything, and the court-election enquiry says in its first line
+ * that the letter does not elect anything. Both exist because the document could otherwise
+ * be mistaken for a step it is not.
+ *
+ * "More professional" is exactly the instruction under which a warning gets softened into a
+ * clause or dropped as redundant. The prompt forbids touching it; this is what makes that
+ * real, because a prompt is a request and a gate is a rule.
+ */
+const SELF_WARNINGS = ["NOTE TO YOURSELF"] as const;
 
 const norm = (s: string) => s.toLowerCase().replace(/\s+/g, " ").trim();
 
@@ -74,6 +94,13 @@ export function checkLetterFidelity(
     if (seen.has(n) || allowed.has(n)) continue;
     seen.add(n);
     failures.push({ gate: "invented-figure", detail: n });
+  }
+
+  // A warning written TO THE PERSON survives verbatim, or the rewrite is refused.
+  for (const w of SELF_WARNINGS) {
+    if (original.includes(w) && !rewritten.includes(w)) {
+      failures.push({ gate: "warning-dropped", detail: w });
+    }
   }
 
   // The structural bones. A "more professional" rewrite that drops the sign-off or the

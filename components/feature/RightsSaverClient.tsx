@@ -1180,14 +1180,23 @@ function ResultStep({
       hint: t("applyMeritsHint"),
       href: "/learn/merits-review",
     },
-    // No letter for a court election. It is a formal step under the scheme's own Act, with
-    // its own form, and we hold no checked version of it — the memo step says so rather than
-    // drafting something that looks official and is not.
+    // THE STEP BEFORE THE STEP. We still draft no election: it is a formal step under the
+    // scheme's own Act with a prescribed form we hold no checked version of, and a document
+    // of ours that looked official would be read as one. What this drafts instead is the
+    // letter a free service would tell them to send first — which form, where, by when —
+    // carrying their account so the enquiry is not empty. It says in its own first line
+    // that it elects nothing, and `checkLetterFidelity` refuses any rewrite that drops
+    // that line.
+    //
+    // It used to point at the merits-review draft, which asks a body to look at a decision
+    // "afresh on the facts, so that the correct or preferable decision can be made" —
+    // neither what an election is nor what that court does — and was then filtered out, so
+    // the step showed nothing at all.
     "court-election": {
-      id: "merits-review-application" as DraftKind,
+      id: "court-election-enquiry" as DraftKind,
       label: t("applyCourt"),
       hint: t("applyCourtHint"),
-      href: "/learn/judicial-review",
+      href: "/learn/how-review-fits-together",
     },
     "judicial-review": {
       id: "judicial-review-application" as DraftKind,
@@ -1204,7 +1213,6 @@ function ResultStep({
     // go to court is a formal step under the scheme's own Act; we hold no verified form for
     // it, so the app says so and routes to a free service rather than drafting something
     // that looks official and is not.
-    .filter((pp) => pp.id !== "court-election")
     .filter((pp) => !(pp.id === "merits-review" && pp.character !== "tribunal"))
     .map((pp) => ({ ...APPLY_BY_PATH[pp.id], pathId: pp.id }));
   // Only the application for the approach they chose. Offering both put a judicial-review
@@ -1215,8 +1223,7 @@ function ResultStep({
   // True when the person chose a path we deliberately hold no letter for, so the memo view
   // can say that rather than silently dropping the section.
   const noLetterForPath =
-    chosenPath === "court-election" ||
-    (chosenPath === "merits-review" && !meritsIsTribunal && plan.paths.some((p) => p.id === "merits-review"));
+    chosenPath === "merits-review" && !meritsIsTribunal && plan.paths.some((p) => p.id === "merits-review");
   // ONE box. Five labelled questions read as a form to fill in, and a frightened person on a
   // phone abandons forms; they will tell the story once, in their own order, if asked once.
   // The prompts that were the question labels become hints under the box, so nothing is lost.

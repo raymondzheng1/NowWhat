@@ -116,3 +116,51 @@ describe("a polished letter is still a letter", () => {
     expect(checkLetterFidelity(DRAFT.body, THEIRS, DRAFT.body)).toEqual([]);
   });
 });
+
+describe("a warning written to the person, not the office", () => {
+  // Two templates carry a NOTE TO YOURSELF block, and both exist because the document could
+  // otherwise be mistaken for a step it is not: the judicial-review draft is not a court
+  // filing, and the court-election enquiry does not elect anything. "Make it more
+  // professional" is exactly the instruction under which such a block gets softened into a
+  // clause or dropped as repetitive, so the gate refuses the rewrite rather than trusting
+  // the prompt. A prompt is a request; a gate is a rule.
+  const draft = [
+    "[Your name]",
+    "",
+    "To: Fines Victoria",
+    "",
+    "Re: Enquiry about having this matter heard in court",
+    "",
+    "NOTE TO YOURSELF — PLEASE READ FIRST",
+    "This letter is not the election, and sending it does not elect anything.",
+    "",
+    "I am writing about the notice described above.",
+    "",
+    "Yours faithfully,",
+    "[Your name]",
+  ].join("\n");
+
+  it("refuses a rewrite that drops the block", () => {
+    const rewritten = draft.replace(/NOTE TO YOURSELF.*\n.*\n\n/s, "");
+    const f = checkLetterFidelity(draft, "", rewritten);
+    expect(f.some((x) => x.gate === "warning-dropped")).toBe(true);
+  });
+
+  it("refuses a rewrite that softens the heading away", () => {
+    const rewritten = draft.replace("NOTE TO YOURSELF — PLEASE READ FIRST", "A note before you begin");
+    expect(checkLetterFidelity(draft, "", rewritten).some((x) => x.gate === "warning-dropped")).toBe(true);
+  });
+
+  it("allows a rewrite that keeps it", () => {
+    const rewritten = draft.replace(
+      "I am writing about the notice described above.",
+      "I am writing in relation to the notice described above.",
+    );
+    expect(checkLetterFidelity(draft, "", rewritten)).toHaveLength(0);
+  });
+
+  it("says nothing about letters that carry no such block", () => {
+    const plain = draft.replace(/NOTE TO YOURSELF.*\n.*\n\n/s, "");
+    expect(checkLetterFidelity(plain, "", plain)).toHaveLength(0);
+  });
+});

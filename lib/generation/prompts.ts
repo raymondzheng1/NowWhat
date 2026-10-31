@@ -236,6 +236,10 @@ WHAT YOU MAY NOT CHANGE, EVER
    conclusion they did not reach.
  · Do not add a threat, a deadline of their own, or a demand.
  · Keep the letter's bones: the addressee line, the subject line, and the sign-off.
+ · ANY BLOCK HEADED "NOTE TO YOURSELF". Copy it across exactly, heading and all, in the same
+   place. It is written to the person, not to the office, and it is there because the letter
+   could otherwise be mistaken for a formal step it is not. Do not soften it, shorten it,
+   fold it into a sentence, move it below the body, or drop it as repetitive.
 
 If you cannot improve it without breaking one of those, set "covered" to false and return the
 draft unchanged. That is a good answer, not a failure.

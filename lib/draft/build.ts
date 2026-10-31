@@ -16,7 +16,8 @@ export type DraftKind =
   | "internal-review-request"
   | "review-application"
   | "merits-review-application"
-  | "judicial-review-application";
+  | "judicial-review-application"
+  | "court-election-enquiry";
 
 function isVerify(s: string | undefined): boolean {
   return !s || /\bverify\b/i.test(s);
@@ -155,6 +156,50 @@ export function buildDraft(
         "I ask that the decision be looked at again and made according to law.",
         "",
         "Please let me know what information you need from me. Thank you.",
+        "",
+        SIGN_OFF,
+      ),
+    };
+  }
+
+
+  // ---- Electing to have the matter heard in court ----------------------------------
+  //
+  // THIS IS NOT THE ELECTION, AND IT MUST NOT READ LIKE IT. Electing to have an
+  // infringement heard in court is a formal step under the scheme's own Act. It has a
+  // prescribed form, a time limit we do not verify, and a consequence: it puts the CHARGE
+  // before a court, which can end worse than the notice and can carry costs. We hold no
+  // checked version of that form, so we draft no version of it — a document of ours that
+  // looked official would be read as one by the person least able to absorb a rejected
+  // filing, which is the whole reason this app does not do that.
+  //
+  // What a person in that position actually needs first is what a free legal service would
+  // tell them to get: which form, where it goes, and by when. So this letter asks for
+  // exactly that, carries their account so the enquiry is not empty, and says in its own
+  // first line that it does not elect anything. It is the step before the step.
+  if (kind === "court-election-enquiry") {
+    return {
+      title: "Asking how to have the matter heard in court",
+      filename: `${entry.id}-court-enquiry.txt`,
+      body: lines(
+        header,
+        "Re: Enquiry about having this matter heard in court",
+        "",
+        "Reference number: [reference number from your notice, if any]",
+        "Date of the notice: [date on your notice]",
+        "",
+        "NOTE TO YOURSELF — PLEASE READ FIRST",
+        "This letter is not the election, and sending it does not elect anything. Asking for a matter to be heard in court is a formal step with its own form and its own time limit, and this letter only asks what that form is and when it is due. Please talk to a free legal service before you elect. A court hearing decides the matter itself, so it can end better than the notice you have, or worse, and it can carry costs.",
+        "",
+        "I am writing about the notice described above. I am considering asking for this matter to be heard in court, and I would like to know what I need to do.",
+        "",
+        "Please tell me which form I need to complete, where it should be sent, and the date by which it must be received.",
+        "",
+        "Please also tell me whether anything I have already sent you changes that date, and whether any other option is open to me.",
+        "",
+        `What happened, in my own words. ${inTheirWords("describe what the notice was about, what you told them and when, and anything that has changed since")}`,
+        "",
+        "I would be grateful if you would confirm that you have received this letter. Thank you for your help.",
         "",
         SIGN_OFF,
       ),
