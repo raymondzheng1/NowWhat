@@ -31,7 +31,7 @@
   "home": {
     "heroEyebrow": "Understand · Know your options · Get help",
     "heroTitle": "They said no.",
-    "heroLead": "Many government decisions can be reviewed, depending on the law the decision was made under. We cover decisions by the Australian Government (Commonwealth) and the State of Victoria. What Now? turns your letter into plain English, your options into a numbered list, and your next step into a letter — free, no account, your letter is not stored.",
+    "heroLead": "Many government decisions can be reviewed, depending on the law the decision was made under. We cover decisions by the Australian Government (Commonwealth) and the State of Victoria. Victoria is our worked example of a state. Every state sets review up in much the same way, under its own laws. What Now? turns your letter into plain English, your options into a numbered list, and your next step into a letter — free, no account, your letter is not stored.",
     "ctaStart": "Start now",
     "ctaScan": "Scan or paste the letter",
     "ctaAsk": "Ask a question",
@@ -104,15 +104,15 @@
     "humansPill3": "Tribunal registries",
     "humansCta": "Find free help near you",
     "coverageNote": "who we cover →",
-    "coverageTitle": "Commonwealth and Victorian decisions",
-    "coverageLead": "We cover two governments in detail. If your letter came from either one, you are in the right place. Each one has its own review bodies and its own courts. Whether you can ask for review, and where, depends on the law your decision was made under.",
+    "coverageTitle": "Commonwealth decisions, and Victoria as our state example",
+    "coverageLead": "We cover two governments in detail: the Australian Government, and Victoria as our worked example of a state. If your letter came from either one, you are in the right place. Each one has its own review bodies and its own courts. Whether you can ask for review, and where, depends on the law your decision was made under.",
     "covCthLabel": "Federal",
     "covCthTitle": "Australian Government (Commonwealth)",
     "covCthBody": "Centrelink and Services Australia, child support, the tax office, and other federal agencies. Merits review is at the Administrative Review Tribunal (ART). Judicial review is in the federal courts.",
-    "covVicLabel": "State",
-    "covVicTitle": "Victoria (state government)",
+    "covVicLabel": "State example",
+    "covVicTitle": "Victoria (our state example)",
     "covVicBody": "Fines and infringements, renting and notices to vacate, public and social housing, councils and state departments. Merits review is at VCAT. A housing decision starts with an appeal to the Housing Appeals Office. A fine can be reviewed by the agency that issued it, or you can elect to have the matter heard in the Magistrates’ Court, which decides the charge rather than reviewing the decision. Judicial review is in the Supreme Court of Victoria.",
-    "covFoot": "In another state? Other states have their own review bodies and their own rules. The guides still explain the ideas, but check the rules where you live — and we always point you to a human service near you."
+    "covFoot": "In another state or territory? The shape is much the same wherever you are. You ask the decision-maker to look again. Then a tribunal can look at the facts afresh. Then a court can check that the decision was made lawfully. What changes is the detail: each state names its own bodies, uses its own forms, and sets its own time limits in its own laws. So read Victoria here as the example, use the guides for the ideas, and check the rules where you live. No date on this site is a time limit for another state. We always point you to a human service near you."
   },
   "rights": {
     "stepOf": "Step {n} of {total}",
@@ -578,6 +578,8 @@
     "title": "About this service",
     "intro": "This is a free self-help tool that helps people understand and respond to government decisions.",
     "infoNotAdvice": "This service gives general information, not legal advice, and cannot tell you what will happen in your case. For advice about your own situation, talk to a human legal service.",
+    "coverageTitle": "Where this applies",
+    "coverageBody": "This covers decisions made by the Australian Government (Commonwealth) and by the State of Victoria. Victoria stands as the worked example of a state. Every state and territory sets review up in much the same way: you ask the decision-maker to look again, a tribunal can look at the facts afresh, and a court can check that the decision was made lawfully. What each state sets for itself is the detail \u2014 which body hears what, which form to use, and how long you have. Those come from that state's own laws, so no time limit on this site is a time limit for another state. Wherever you are, you are pointed to a free service near you.",
     "groundedTitle": "Grounded in the rules",
     "groundedBody": "Every answer is grounded in a checked set of rules and points to where it comes from. When something isn't covered, the service says so and points you to a person who can help — it never guesses.",
     "currencyTitle": "Keeping it current",

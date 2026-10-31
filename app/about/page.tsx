@@ -21,7 +21,19 @@ export default function AboutPage() {
       <PageHeader kicker={t("kicker")} title={t("title")} lead={t("intro")} />
 
       <div className="mt-10 border-t-2 border-ink pt-8">
+        {/*
+          WHERE THIS APPLIES, said first.
+          Victoria is the worked example of a state, and the shape of review repeats
+          elsewhere — but which body, which form and how long are set by each state's own
+          laws. The two halves of that are never separated: a reader who took the first
+          without the second would read a Victorian date as their own.
+        */}
         <section>
+          <h2 className="text-h2">{t("coverageTitle")}</h2>
+          <p className="mt-3 text-body leading-relaxed text-ink-soft">{t("coverageBody")}</p>
+        </section>
+
+        <section className="mt-9 border-t border-line pt-8">
           <h2 className="text-h2">{t("groundedTitle")}</h2>
           <p className="mt-3 text-body leading-relaxed text-ink-soft">{t("groundedBody")}</p>
         </section>
