@@ -1,5 +1,5 @@
 {
-  "builtAt": "4572c7c1c47ca6d1",
+  "builtAt": "23b8d4962a8051f3",
   "processes": [
     {
       "id": "judicial-review",
@@ -61,7 +61,7 @@
         "Federal Court of Australia — fedcourt.gov.au"
       ],
       "status": "verified",
-      "lawyerApproved": false
+      "lawyerApproved": true
     },
     {
       "id": "merits-review",
@@ -117,7 +117,7 @@
         "Administrative Review Tribunal — art.gov.au"
       ],
       "status": "verified",
-      "lawyerApproved": false
+      "lawyerApproved": true
     }
   ],
   "comparison": {
@@ -277,6 +277,7 @@
         "Owner's administrative-law knowledge base (Combined MR/JR Framework; JR Hypo, 2026-08-19)"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Bare v IBAC",
@@ -293,8 +294,7 @@
           "pinpoint": "",
           "explains": "If a right is limited, the Charter has its own test for whether the limit is justified. It is for the state to show that."
         }
-      ],
-      "lawyerApproved": false
+      ]
     },
     {
       "id": "delegated-legislation",
@@ -344,6 +344,7 @@
         "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "R v Toohey; Ex parte Northern Land Council (1981) 151 CLR 170",
@@ -356,8 +357,7 @@
           "explains": "Such a rule has to be appropriate and adapted to the Act's purpose."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "error-of-law",
@@ -393,6 +393,7 @@
         "Administrative Law Act 1978 (Vic) s 10 — legislation.vic.gov.au"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Craig v South Australia (1995) 184 CLR 163",
@@ -405,8 +406,7 @@
           "explains": "An error that shows on the face of the record can be corrected, even where it did not go to the power itself."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "improper-purpose",
@@ -448,6 +448,7 @@
         "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "R v Toohey; Ex parte Northern Land Council (1981) 151 CLR 170",
@@ -465,8 +466,7 @@
           "explains": "The improper purpose need not be the only purpose, only a substantial one."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "inflexible-policy",
@@ -503,6 +503,7 @@
         "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Re Drake (No 2)",
@@ -515,8 +516,7 @@
           "explains": "A general rule was applied so rigidly that it stopped the person from being considered at all."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "invalid-delegation",
@@ -557,6 +557,7 @@
         "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Minister for Aboriginal Affairs v Peko-Wallsend Ltd (1986) 162 CLR 24",
@@ -569,8 +570,7 @@
           "explains": "Whether a subordinate may sign in the named person's place depends on the Act."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "irrelevant-considerations",
@@ -606,6 +606,7 @@
         "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Minister for Aboriginal Affairs v Peko-Wallsend Ltd (1986) 162 CLR 24",
@@ -613,8 +614,7 @@
           "explains": "The same Act can also imply which matters must be left out."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "jurisdictional-error",
@@ -649,6 +649,7 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Craig v South Australia (1995) 184 CLR 163",
@@ -666,8 +667,7 @@
           "explains": "A law can say a decision is final. That still does not protect a decision made outside the power."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "no-evidence",
@@ -702,6 +702,7 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Australian Broadcasting Tribunal v Bond (1990) 170 CLR 321",
@@ -709,8 +710,7 @@
           "explains": "Findings have to rest on evidence that actually proves something, not on nothing."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "objective-jurisdictional-fact",
@@ -750,6 +750,7 @@
         "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-17)"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Plaintiff M70/2011 v Minister for Immigration and Citizenship (2011) 244 CLR 144",
@@ -762,8 +763,7 @@
           "explains": "A court can decide such a fact for itself, not just review the view taken."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "procedural-fairness-bias",
@@ -805,6 +805,7 @@
         "Owner's administrative-law knowledge base (JR Hypo, 2026-08-19)"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Minister for Immigration and Multicultural Affairs v Jia Legeng (2001) 205 CLR 507",
@@ -817,8 +818,7 @@
           "explains": "The other version asks what a fair-minded onlooker might think. It has two steps. First, name the thing that might pull the decision off course. Then show how it connects to this decision."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "procedural-fairness-hearing",
@@ -866,6 +866,7 @@
         "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Badari v Minister for Territory Families and Urban Housing [2025] HCA 47",
@@ -893,8 +894,7 @@
           "explains": "Deciding on a new issue without notice can deny a fair hearing."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "relevant-considerations",
@@ -930,6 +930,7 @@
         "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Certain Children v Minister for Families and Children (No 2) (2017) 52 VR 441",
@@ -957,8 +958,7 @@
           "explains": "A Victorian court applied that human rights duty to prison conditions."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "subjective-jurisdictional-fact",
@@ -1005,6 +1005,7 @@
         "Owner's administrative-law knowledge base (JR Hypo; Review Notes, 2026-08-23)"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Minister for Immigration and Citizenship v SZMDS (2010) 240 CLR 611",
@@ -1022,8 +1023,7 @@
           "explains": "How the decision-maker got to their view can be looked at, not only what they decided. A view with nothing to show how it was reached can be questioned."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "unlawful-policy",
@@ -1065,6 +1065,7 @@
         "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Re Drake (No 2)",
@@ -1077,8 +1078,7 @@
           "explains": "A general rule was applied so rigidly that it stopped the person from being considered at all."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "unreasonableness",
@@ -1113,6 +1113,7 @@
         "Victoria Legal Aid — legalaid.vic.gov.au"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1 KB 223",
@@ -1135,8 +1136,7 @@
           "explains": "Heard with a second case that went the other way. Whether a failure is unreasonable turns on the statute and on what actually went wrong."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     },
     {
       "id": "without-authority",
@@ -1177,6 +1177,7 @@
         "Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)"
       ],
       "status": "verified",
+      "lawyerApproved": true,
       "leadingCases": [
         {
           "name": "ABC Developmental Learning Centres Pty Ltd v Secretary, Department of Human Services [2007] VSC 37",
@@ -1204,8 +1205,7 @@
           "explains": "A court checks whether a decision was lawful, not whether it was right."
         }
       ],
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "jurisdictions": []
     }
   ],
   "concepts": [
@@ -1233,8 +1233,8 @@
         "Owner's administrative-law knowledge base (Combined MR/JR Framework, 2026-08-22)"
       ],
       "status": "verified",
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "lawyerApproved": true,
+      "jurisdictions": []
     },
     {
       "id": "justiciability",
@@ -1271,8 +1271,8 @@
         "Owner's administrative-law knowledge base (Review Notes; JR Hypo, 2026-08-19)"
       ],
       "status": "verified",
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "lawyerApproved": true,
+      "jurisdictions": []
     },
     {
       "id": "adjr-or-common-law",
@@ -1327,7 +1327,7 @@
         "Owner's administrative-law knowledge base (JR Hypo, 2026-08-19)"
       ],
       "status": "verified",
-      "lawyerApproved": false
+      "lawyerApproved": true
     },
     {
       "id": "remedies",
@@ -1397,8 +1397,8 @@
         "Owner's administrative-law knowledge base (JR Hypo; Combined MR/JR Framework, 2026-08-19)"
       ],
       "status": "verified",
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "lawyerApproved": true,
+      "jurisdictions": []
     },
     {
       "id": "standing",
@@ -1471,8 +1471,8 @@
         "Owner's administrative-law knowledge base (JR Hypo; Review Notes, 2026-08-19)"
       ],
       "status": "verified",
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "lawyerApproved": true,
+      "jurisdictions": []
     },
     {
       "id": "information-commissioner",
@@ -1527,8 +1527,8 @@
         "Owner's administrative-law knowledge base (Combined MR/JR Framework; Venture Concepts, 2026-08-19)"
       ],
       "status": "verified",
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "lawyerApproved": true,
+      "jurisdictions": []
     },
     {
       "id": "ombudsman",
@@ -1575,8 +1575,8 @@
         "Owner's administrative-law knowledge base (Combined MR/JR Framework, 2026-08-19)"
       ],
       "status": "verified",
-      "jurisdictions": [],
-      "lawyerApproved": false
+      "lawyerApproved": true,
+      "jurisdictions": []
     }
   ],
   "triage": {

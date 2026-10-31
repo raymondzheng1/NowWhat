@@ -36,6 +36,7 @@ sources:
   - Owner's administrative-law knowledge base (judicial review memorandum, 2026-08-22)
   - Victoria Legal Aid — legalaid.vic.gov.au
 status: verified
+lawyerApproved: true
 leadingCases:
   - name: Australian Broadcasting Tribunal v Bond (1990) 170 CLR 321
     pinpoint: ''

@@ -41,6 +41,7 @@ elements:
 sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
+lawyerApproved: true
 leadingCases:
   - name: >-
       R v Toohey; Ex parte Northern Land Council (1981) 151 CLR 170

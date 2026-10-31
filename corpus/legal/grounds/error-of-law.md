@@ -42,6 +42,7 @@ sources:
   - Victoria Legal Aid — legalaid.vic.gov.au
   - Administrative Law Act 1978 (Vic) s 10 — legislation.vic.gov.au
 status: verified
+lawyerApproved: true
 leadingCases:
   - name: Craig v South Australia (1995) 184 CLR 163
     pinpoint: ''

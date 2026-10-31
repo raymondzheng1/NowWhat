@@ -54,6 +54,7 @@ elements:
 sources:
   - Owner's administrative-law knowledge base (Combined MR/JR Framework; JR Hypo, 2026-08-19)
 status: verified
+lawyerApproved: true
 leadingCases:
   - name: Bare v IBAC
     pinpoint: ''

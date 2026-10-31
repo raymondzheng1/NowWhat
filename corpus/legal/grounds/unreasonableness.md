@@ -50,6 +50,7 @@ elements:
 sources:
   - Victoria Legal Aid — legalaid.vic.gov.au
 status: verified
+lawyerApproved: true
 leadingCases:
   - name: >-
       Associated Provincial Picture Houses Ltd v Wednesbury Corporation [1948] 1

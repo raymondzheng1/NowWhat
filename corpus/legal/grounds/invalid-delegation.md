@@ -48,6 +48,7 @@ elements:
 sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
+lawyerApproved: true
 leadingCases:
   - name: Minister for Aboriginal Affairs v Peko-Wallsend Ltd (1986) 162 CLR 24
     pinpoint: Mason J

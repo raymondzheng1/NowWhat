@@ -80,6 +80,7 @@ sources:
   - VCAT — vcat.vic.gov.au
   - Administrative Review Tribunal — art.gov.au
 status: verified
+lawyerApproved: true
 ---
 
 Explainer reviewed and confirmed by a supervising lawyer (2026-06-30). General information, not advice.

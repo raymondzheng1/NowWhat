@@ -51,6 +51,7 @@ elements:
 sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
+lawyerApproved: true
 leadingCases:
   - name: >-
       Badari v Minister for Territory Families and Urban Housing [2025] HCA 47

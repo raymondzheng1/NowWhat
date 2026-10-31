@@ -71,6 +71,7 @@ leadingCases:
 sources:
   - Owner's administrative-law knowledge base (JR Hypo, 2026-08-19)
 status: verified
+lawyerApproved: true
 ---
 
 The mind map's "AD(JR)" versus "Common Law" split.

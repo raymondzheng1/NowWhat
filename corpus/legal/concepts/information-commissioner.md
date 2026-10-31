@@ -85,6 +85,7 @@ sources:
   - Administrative Law Act 1978 (Vic) — legislation.vic.gov.au
   - Owner's administrative-law knowledge base (Combined MR/JR Framework; Venture Concepts, 2026-08-19)
 status: verified
+lawyerApproved: true
 ---
 
 The mind map's fourth top-level avenue.

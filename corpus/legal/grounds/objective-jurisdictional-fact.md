@@ -47,6 +47,7 @@ elements:
 sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-17)
 status: verified
+lawyerApproved: true
 leadingCases:
   - name: >-
       Plaintiff M70/2011 v Minister for Immigration and Citizenship (2011) 244

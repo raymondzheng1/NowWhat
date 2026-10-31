@@ -34,6 +34,7 @@ leadingCases: []
 sources:
   - Owner's administrative-law knowledge base (Combined MR/JR Framework, 2026-08-22)
 status: verified
+lawyerApproved: true
 ---
 
 Added 2026-08-22 at the owner's direction. The app modelled merits review and judicial review and

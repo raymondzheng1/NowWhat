@@ -86,6 +86,7 @@ leadingCases:
 sources:
   - Owner's administrative-law knowledge base (JR Hypo; Combined MR/JR Framework, 2026-08-19)
 status: verified
+lawyerApproved: true
 ---
 
 The mind map's "Remedy sought" node, which drives both the forum and the standing test.

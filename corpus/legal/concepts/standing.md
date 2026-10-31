@@ -82,6 +82,7 @@ leadingCases:
 sources:
   - Owner's administrative-law knowledge base (JR Hypo; Review Notes, 2026-08-19)
 status: verified
+lawyerApproved: true
 ---
 
 The mind map's standing node, which it ties to the remedy sought: "Standing to bring judicial

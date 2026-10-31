@@ -54,6 +54,7 @@ elements:
 sources:
   - Owner's administrative-law knowledge base (JR Hypo; Review Notes, 2026-08-23)
 status: verified
+lawyerApproved: true
 leadingCases:
   - name: >-
       Minister for Immigration and Citizenship v SZMDS (2010) 240 CLR 611

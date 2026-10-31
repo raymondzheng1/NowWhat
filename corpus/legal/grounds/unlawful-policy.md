@@ -41,6 +41,7 @@ elements:
 sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified
+lawyerApproved: true
 leadingCases:
   - name: Re Drake (No 2)
     pinpoint: ''

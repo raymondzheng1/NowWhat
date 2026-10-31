@@ -92,6 +92,7 @@ sources:
   - Supreme Court of Victoria — supremecourt.vic.gov.au
   - Federal Court of Australia — fedcourt.gov.au
 status: verified
+lawyerApproved: true
 ---
 
 Explainer reviewed and confirmed by a supervising lawyer (2026-06-30). General information, not advice.

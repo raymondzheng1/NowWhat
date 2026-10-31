@@ -63,6 +63,7 @@ sources:
   - Victorian Ombudsman — ombudsman.vic.gov.au
   - Owner's administrative-law knowledge base (Combined MR/JR Framework, 2026-08-19)
 status: verified
+lawyerApproved: true
 ---
 
 A top-level avenue in the owner's mind map, a sibling of merits review and judicial review.
