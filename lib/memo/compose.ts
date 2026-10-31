@@ -1,5 +1,6 @@
 import type { Concept, Ground, Process } from "@/lib/schemas/legal";
 import type { DataPathway } from "@/lib/schemas/data";
+import { answerableCriteria, withCriterionIds } from "@/lib/memo/criteria";
 
 /**
  * The memo.
@@ -173,6 +174,16 @@ export interface MemoInput {
        */
       elements?: { elementId: string; says: string; missing: string }[];
     }[];
+    /**
+     * The same work against WHAT THE BODY DECIDES, keyed by the criterion's own id.
+     *
+     * Not nested in `application`: a criterion belongs to the forum, not to any ground, and
+     * on the paths where these are written there are no grounds at all. Matched by id on the
+     * same terms as the parts above — an id we did not supply finds no criterion and prints
+     * nowhere, which is why the ids are derived from the criteria's words rather than their
+     * position in a list that is built twice.
+     */
+    criteria?: { criterionId: string; says: string; missing: string }[];
   } | null;
   /** Section headings, so all customer prose stays in the i18n layer. */
   t: (key: string) => string;
@@ -327,6 +338,38 @@ export function composeMemo(input: MemoInput): Memo {
     L.push(`${indent}${label}: ${text}`);
     B.push({ kind: "note", label, text });
   };
+  /**
+   * One criterion: the lawyer's line, their own words under it, then the drafted analysis.
+   *
+   * THE ANALYSIS AGAINST WHAT THE BODY ACTUALLY DECIDES. The memo listed these lines and
+   * stopped — and on every path except judicial review that list was the whole of the legal
+   * substance, so the document named what the body looks at and did none of the work. This
+   * is the element walk, applied where most people actually are.
+   *
+   * Written once and called from both places criteria appear (an internal review's issue 2,
+   * and the forum's issue 2) so the two cannot drift into saying it differently. Matched by
+   * an id derived from the criterion's own words: this list is built here and in the
+   * context separately, and an id from a list that differs finds nothing rather than filing
+   * someone's facts under a line they were never shown.
+   *
+   * `noteLine`, not `quote`: these are OUR words about what they said. Quoting is for theirs.
+   */
+  const criterion = (text: string, id: string | null) => {
+    item(rule(text));
+    const n = (criteriaNotes[text] ?? "").trim().replace(/\s+/g, " ");
+    if (n) quote(n, t("memoYourNote"), "        ");
+    if (!id) return;
+    const d = input.drafted?.criteria?.find((x) => x.criterionId === id);
+    const says = (d?.says ?? "").trim();
+    const missing = (d?.missing ?? "").trim();
+    if (says) noteLine(t("memoCriterionSays"), rule(says));
+    if (missing) noteLine(t("memoCriterionMissing"), rule(missing));
+  };
+  /** The ids for a criteria list, on the same two rules the context uses. */
+  const criterionIds = (list: string[]) => {
+    const ided = withCriterionIds(answerableCriteria(entry, list));
+    return (c: string) => ided.find((x) => x.text === c)?.id ?? null;
+  };
   const link = (label: string, href: string) => {
     L.push(`${label}: ${href}`);
     B.push({ kind: "link", text: label, href });
@@ -477,11 +520,8 @@ export function composeMemo(input: MemoInput): Memo {
     // until the criteria were split to follow the avenue.
     if (input.criteria && input.criteria.length) {
       sub(t("memoRule"));
-      for (const c of input.criteria) {
-        item(rule(c));
-        const n = (criteriaNotes[c] ?? "").trim().replace(/\s+/g, " ");
-        if (n) quote(n, t("memoYourNote"), "        ");
-      }
+      const idOf = criterionIds(input.criteria);
+      for (const c of input.criteria) criterion(c, idOf(c));
     }
     if (internal.whatItIsNot) {
       sub(t("memoWhatItIsNot"));
@@ -537,13 +577,8 @@ export function composeMemo(input: MemoInput): Memo {
   const criteriaList = input.criteria ?? (proc.id === "merits-review" ? entry.mrCriteria : []);
   if (criteriaList.length) {
     sub(t("memoRule"));
-    for (const c of criteriaList) {
-      item(rule(c));
-      // Their own words against this criterion, verbatim and uncharacterised, exactly as
-      // the ground notes are handled.
-      const n = (criteriaNotes[c] ?? "").trim().replace(/\s+/g, " ");
-      if (n) quote(n, t("memoYourNote"), "        ");
-    }
+    const idOf = criterionIds(criteriaList);
+    for (const c of criteriaList) criterion(c, idOf(c));
   }
   if (isTribunal) {
     sub(t("memoWhatItCanDo"));

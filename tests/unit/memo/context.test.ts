@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { buildMemoContext, memoExtraSources } from "@/lib/memo/context";
 import { getProcess, listGrounds } from "@/lib/legal";
 import { getDataEntry } from "@/lib/data";
+import { withCriterionIds, answerableCriteria, isOrientation } from "@/lib/memo/criteria";
 
 const entry = getDataEntry("cth-centrelink")!;
 const judicial = getProcess("judicial-review")!;
@@ -121,5 +122,56 @@ describe("a court election is not described as a review", () => {
     });
     expect(wrong).toContain(merits.question);
     expect(wrong).toContain(merits.remedies[0]!);
+  });
+});
+
+describe("the criteria go over with an id each", () => {
+  const housing = getDataEntry("vic-public-housing")!;
+  const merits = getProcess("merits-review")!;
+
+  const criteriaContext = (criteria: string[]) =>
+    buildMemoContext({
+      entry: housing,
+      process: merits,
+      internal: null,
+      grounds: [],
+      criteria,
+      forum: "VCAT",
+      pathName: merits.plainName,
+    });
+
+  // The same defect as the grounds, one layer out: the criteria were handed over as prose,
+  // the answer has to say which line it is about, and there was no id to say it with. On
+  // every path except judicial review these criteria ARE the legal substance, so this is
+  // the common case, not the rare one.
+  it("gives every answerable criterion an id, verbatim", () => {
+    const c = criteriaContext(housing.mrCriteria!);
+    for (const { id, text } of withCriterionIds(answerableCriteria(housing, housing.mrCriteria!))) {
+      expect(c, id).toContain(id);
+      expect(c).toContain(text);
+    }
+  });
+
+  it("lists the routing lines without one, and says not to answer them", () => {
+    const c = criteriaContext(housing.mrCriteria!);
+    const routing = (housing.mrCriteria ?? []).filter((x) => isOrientation(housing, x));
+    expect(routing.length).toBeGreaterThan(0);
+    for (const r of routing) {
+      expect(c).toContain(r);
+      // Present as context, but with no id — so nothing can be drafted against it.
+      expect(c).not.toContain(`id: ${withCriterionIds([r])[0]!.id}`);
+    }
+    expect(c).toContain("write nothing against these");
+  });
+
+  it("asks for one entry per line and says to copy the id exactly", () => {
+    const c = criteriaContext(housing.mrCriteria!);
+    expect(c).toContain("one entry per line in your answer, id copied exactly");
+  });
+
+  it("says nothing about criteria when the path has none", () => {
+    const c = criteriaContext([]);
+    expect(c).not.toContain("WHAT THIS BODY DECIDES");
+    expect(c).not.toContain("HOW THE PATHS FIT TOGETHER");
   });
 });

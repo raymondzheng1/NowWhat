@@ -281,6 +281,10 @@ export function runMemo(
           a.toTest,
           ...a.elements.flatMap((e) => [e.says, e.missing]),
         ]),
+        // And the per-criterion lines, for the same reason and with more riding on it: on
+        // every path except judicial review this is the whole of the drafted analysis, so a
+        // field missing from this list would be the only prose on the page no gate had read.
+        ...d.criteria.flatMap((c) => [c.says, c.missing]),
       ]
         .filter(Boolean)
         .join(" "),

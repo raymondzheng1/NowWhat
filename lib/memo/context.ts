@@ -1,4 +1,5 @@
 import type { DataPathway } from "@/lib/schemas/data";
+import { answerableCriteria, withCriterionIds } from "@/lib/memo/criteria";
 import type { Concept, Ground, Process } from "@/lib/schemas/legal";
 
 /**
@@ -54,8 +55,24 @@ export function buildMemoContext(input: {
   }
 
   if (criteria.length) {
-    L.push("WHAT THIS BODY DECIDES FOR THIS KIND OF DECISION:");
-    for (const c of criteria) L.push(`  - ${c}`);
+    // THE CRITERIA, WITH THEIR IDS — the same move the grounds' elements needed.
+    //
+    // These lines were handed over as prose and nothing came back about them, because there
+    // was no way to say which line an answer belonged to. The ids come from the criteria's
+    // own words, and the routing lines ("these are two different paths") are listed without
+    // one: there is nothing in anyone's account that speaks to which path applies, and
+    // asking for it invites an answer about a line that has no answer.
+    const answerable = withCriterionIds(answerableCriteria(entry, criteria));
+    const orientation = criteria.filter((c) => !answerable.some((a) => a.text === c));
+    if (answerable.length) {
+      L.push("WHAT THIS BODY DECIDES FOR THIS KIND OF DECISION");
+      L.push("(one entry per line in your answer, id copied exactly):");
+      for (const c of answerable) L.push(`  - id: ${c.id} | ${c.text}`);
+    }
+    if (orientation.length) {
+      L.push("HOW THE PATHS FIT TOGETHER (context only — write nothing against these):");
+      for (const c of orientation) L.push(`  - ${c}`);
+    }
     L.push("");
   }
 

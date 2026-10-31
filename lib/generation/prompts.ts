@@ -206,6 +206,20 @@ HOW TO WRITE IT:
    proved, made out, or sufficient — and never that it is not. Whether a fact goes far enough
    is for a lawyer, and then for the body deciding. Saying it here is the one thing this
    document must never do, and a draft that says it is thrown away whole.
+ · "criteria": THE SAME WORK, where there are no grounds of review. Most people are not in a
+   court — they are asking an agency to look again, or a tribunal to decide, or electing to
+   have a charge heard. On those paths the context gives you no grounds at all. What the
+   matter turns on is WHAT THIS BODY DECIDES, listed in the context with an id on each line.
+   Write ONE entry for every line you are given an id for, in the order given, with
+   "criterionId" copied EXACTLY. Lines listed under HOW THE PATHS FIT TOGETHER have no id and
+   you write nothing against them.
+     – "says": what in THEIR ACCOUNT relates to this criterion. One or two short sentences,
+       their facts in your words. IF THEIR ACCOUNT SAYS NOTHING ABOUT IT, LEAVE IT EMPTY.
+     – "missing": what a lawyer would want to know about this criterion. A document, a date,
+       a record, a question to put to them. Never whether the criterion is met.
+   The same word applies here: "RELATES TO". A criterion is what the body decides, not a test
+   you can tell someone they pass. Never write that one is satisfied, met, established,
+   proved, made out or sufficient, and never that it is not.
  · "summary": one short paragraph a duty lawyer could read in ten seconds.
  · If the CORPUS CONTEXT does not cover this decision, set covered to false.
 `.trim();
@@ -225,6 +239,13 @@ Return JSON:
         { "elementId": string, "says": string, "missing": string }
       ]
     }
+  ],
+  "criteria": [                   // one entry per criterion GIVEN AN ID in the context.
+    // Usually the whole answer: on an internal review, a tribunal or a court election there
+    // are no grounds, so "application" is empty and this is where the work goes.
+    // "criterionId" is COPIED CHARACTER FOR CHARACTER. An id that is not in the context
+    // matches nothing and the entry is silently dropped.
+    { "criterionId": string, "says": string, "missing": string }
   ],
   "sources": string[]             // copy 1-4 source strings VERBATIM from the SOURCES lines
 }

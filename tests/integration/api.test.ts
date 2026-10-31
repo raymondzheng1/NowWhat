@@ -7,6 +7,8 @@ import { POST as memoPost } from "@/app/api/memo/route";
 import { POST as polishPost } from "@/app/api/letter-polish/route";
 import { __setKvForTests, MemoryKv } from "@/lib/kv/redis";
 import { __setModelForTests, __setVisionForTests, type ModelFn } from "@/lib/generation/anthropic";
+import { getDataEntry } from "@/lib/data";
+import { answerableCriteria, withCriterionIds } from "@/lib/memo/criteria";
 import { record } from "@/lib/cost/guard";
 import { SESSION_CAP_USD } from "@/lib/config";
 
@@ -588,5 +590,147 @@ describe("/api/letter-polish (a better-worded draft)", () => {
     const body = await res.json();
     expect(body.ok).toBe(false);
     expect(body.status).toBe("blocked");
+  });
+});
+
+/**
+ * The drafted analysis against WHAT THE BODY DECIDES.
+ *
+ * The element walk only ever reached judicial review, because elements belong to grounds of
+ * review and grounds of review belong to a court. The paths people actually take — an
+ * internal review, a tribunal, electing to have a charge heard — have no grounds at all, and
+ * on those the drafted analysis was a summary paragraph and a list of criteria with nothing
+ * said about any of them.
+ *
+ * What these tests prove is not that the feature works. It is that the new prose passes
+ * through every gate the old prose did: the verifier's text, the no-score gate, and the
+ * memo's own citation scan. This is now the only drafted analysis most readers will see, so a
+ * field missing from one of those lists would be the common case going unread, not the rare.
+ */
+describe("/api/memo — the per-criterion analysis", () => {
+  const housing = getDataEntry("vic-public-housing")!;
+  const answerable = answerableCriteria(housing, housing.mrCriteria!);
+  const ids = withCriterionIds(answerable);
+
+  const meritsBody = {
+    entryId: "vic-public-housing",
+    pathId: "merits-review" as const,
+    forum: "VCAT",
+    pathName: "Asking for a fresh look at the decision",
+    groundIds: [],
+    criteria: housing.mrCriteria!,
+    story: "They gave me a notice to vacate and I have nowhere else to go.",
+    notes: {},
+  };
+
+  const criteriaModel =
+    (criteria: { criterionId: string; says: string; missing: string }[]): ModelFn =>
+    async (call) => ({
+      text: JSON.stringify({
+        covered: true,
+        summary: "This is about a notice to vacate. You say you have nowhere else to go.",
+        application: [],
+        criteria,
+        sources: [housing.sourceUrl],
+      }),
+      inputTokens: 50,
+      outputTokens: 50,
+      model: call.model,
+    });
+
+  it("passes the per-criterion analysis through once it clears the gates", async () => {
+    __setModelForTests(
+      criteriaModel([
+        {
+          criterionId: ids[0]!.id,
+          says: "You say the notice gave you ten days to leave.",
+          missing: "A lawyer will want the notice itself.",
+        },
+      ]),
+    );
+    const body = await (await memoPost(jsonReq("http://x/api/memo", meritsBody))).json();
+    expect(body.status).toBe("answered");
+    expect(body.criteria[0].criterionId).toBe(ids[0]!.id);
+    expect(body.criteria[0].says).toContain("ten days");
+  });
+
+  it("hands the model every answerable criterion with its id", async () => {
+    let prompt = "";
+    __setModelForTests(async (call) => {
+      prompt = call.user;
+      return criteriaModel([])(call);
+    });
+    await memoPost(jsonReq("http://x/api/memo", meritsBody));
+    for (const c of ids) {
+      expect(prompt, c.id).toContain(c.id);
+      expect(prompt).toContain(c.text);
+    }
+  });
+
+  it("falls back when a criterion is called satisfied", async () => {
+    // The sentence this document may never contain. A criterion is what the body decides,
+    // not a test anyone can be told they pass.
+    __setModelForTests(
+      criteriaModel([
+        { criterionId: ids[0]!.id, says: "This criterion is satisfied on your facts.", missing: "" },
+      ]),
+    );
+    const body = await (await memoPost(jsonReq("http://x/api/memo", meritsBody))).json();
+    expect(body.status).toBe("not-covered");
+  });
+
+  it("falls back when a criterion line invents a case", async () => {
+    __setModelForTests(
+      criteriaModel([
+        { criterionId: ids[0]!.id, says: "", missing: "Compare Craig v South Australia here." },
+      ]),
+    );
+    const body = await (await memoPost(jsonReq("http://x/api/memo", meritsBody))).json();
+    expect(body.status).toBe("not-covered");
+  });
+
+  it("falls back when a criterion line predicts the outcome", async () => {
+    __setModelForTests(
+      criteriaModel([
+        { criterionId: ids[0]!.id, says: "You will win on this at VCAT.", missing: "" },
+      ]),
+    );
+    const body = await (await memoPost(jsonReq("http://x/api/memo", meritsBody))).json();
+    expect(body.status).toBe("not-covered");
+  });
+
+  it("asks for room that grows with the criteria, not only with the grounds", async () => {
+    // The same defect as the elements, and it would land on the path with no grounds: a
+    // request with four criteria and no grounds asked for the bare 1200 and overran it.
+    const seen: number[] = [];
+    const spy: ModelFn = async (call) => {
+      seen.push(call.maxTokens);
+      return { text: "{}", inputTokens: 10, outputTokens: 10, model: call.model };
+    };
+    __setModelForTests(spy);
+    await memoPost(jsonReq("http://x/api/memo", { ...meritsBody, criteria: [] }));
+    const none = Math.max(...seen);
+    seen.length = 0;
+    await memoPost(jsonReq("http://x/api/memo", meritsBody));
+    const some = Math.max(...seen);
+    expect(none).toBe(1200);
+    expect(some).toBeGreaterThan(none);
+    expect(some).toBeLessThanOrEqual(8000);
+  });
+
+  it("does not ask for room for a routing line", async () => {
+    // A line that appears in both lists says which path applies. It gets no id and no
+    // answer, so it may not inflate the budget either.
+    const seen: number[] = [];
+    __setModelForTests(async (call) => {
+      seen.push(call.maxTokens);
+      return { text: "{}", inputTokens: 10, outputTokens: 10, model: call.model };
+    });
+    const routing = (housing.mrCriteria ?? []).filter((c) =>
+      (housing.irCriteria ?? []).includes(c),
+    );
+    expect(routing.length).toBeGreaterThan(0);
+    await memoPost(jsonReq("http://x/api/memo", { ...meritsBody, criteria: routing }));
+    expect(Math.max(...seen)).toBe(1200);
   });
 });

@@ -91,6 +91,36 @@ export const GeneratedMemoSchema = z.object({
         .default([]),
     }),
   ),
+  /**
+   * The same work, against what the BODY decides rather than against a ground of review.
+   *
+   * Grounds of review belong to judicial review, and almost nobody arrives there: the paths
+   * people actually take are an internal review, a tribunal, or electing to have a charge
+   * heard. On those there are no grounds and no elements — what the decision turns on is the
+   * lawyer-supplied criteria for that scheme, and the memo listed them and did none of the
+   * work. This is the element walk applied to the criteria, which is where most readers of
+   * this document will meet it.
+   *
+   * Top-level rather than nested in `application`, because a criterion belongs to the forum
+   * and not to any one ground; on the paths where these are written, `application` is empty.
+   * Defaulted to empty for the same reason as `elements`: this draft may only ever add.
+   */
+  criteria: z
+    .array(
+      z.object({
+        /**
+         * The criterion's id, copied from the context. Derived from the criterion's own
+         * words (`lib/memo/criteria.ts`), so an id we did not supply matches nothing and is
+         * dropped rather than filed under the wrong line.
+         */
+        criterionId: z.string(),
+        /** What in their account RELATES to this criterion. Empty is a correct answer. */
+        says: z.string().default(""),
+        /** What a lawyer would want to know about it. Never whether it is met. */
+        missing: z.string().default(""),
+      }),
+    )
+    .default([]),
   sources: z.array(z.string()),
 });
 export type GeneratedMemo = z.infer<typeof GeneratedMemoSchema>;

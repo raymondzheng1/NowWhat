@@ -2,6 +2,7 @@ import { describe, it, expect } from "vitest";
 import { composeMemo, memoPathName } from "@/lib/memo/compose";
 import { getConcept, getProcess, listGrounds } from "@/lib/legal";
 import { getDataEntry } from "@/lib/data";
+import { withCriterionIds, answerableCriteria, isOrientation } from "@/lib/memo/criteria";
 import messages from "@/lib/i18n/messages/en.json";
 import patterns from "@/lib/safety/no-advice-patterns.json";
 import { checkNoAdvice, checkNoScore } from "@/lib/safety/no-advice";
@@ -916,5 +917,171 @@ describe("what the path is called, worked out once", () => {
     const m = composeMemo({ ...base, process: merits, character: "court" });
     expect(m.body).toContain(memoPathName({ process: merits, character: "court", t }));
     expect(m.body).not.toContain(merits.plainName);
+  });
+});
+
+describe("the drafted analysis is written against what the body decides", () => {
+  // The upgrade this covers, and the one that reaches the most people. The element walk
+  // applies to grounds of review, which belong to judicial review — a path almost nobody
+  // takes. An internal review and a tribunal have no grounds at all: what the matter turns
+  // on is the lawyer-supplied criteria for that scheme, and the memo listed them and did
+  // none of the work. So for nearly every reader, the drafted analysis was a summary
+  // paragraph and a list.
+  const housing = getDataEntry("vic-public-housing")!;
+  const fines = getDataEntry("vic-fines")!;
+  const internal = getConcept("internal-review")!;
+
+  const mrPoints = answerableCriteria(housing, housing.mrCriteria!);
+  const idOf = (entryFor: typeof housing, list: string[], text: string) =>
+    withCriterionIds(answerableCriteria(entryFor, list)).find((c) => c.text === text)!.id;
+
+  const meritsMemo = (criteria: { criterionId: string; says: string; missing: string }[]) =>
+    composeMemo({
+      ...base,
+      entry: housing,
+      process: merits,
+      forum: "VCAT",
+      criteria: housing.mrCriteria!,
+      story: "They say my notice to vacate is valid and I have nowhere else to go.",
+      drafted: { summary: "This is about a notice to vacate.", application: [], criteria },
+    });
+
+  it("prints what their account relates to under the criterion it belongs to", () => {
+    const first = mrPoints[0]!;
+    const m = meritsMemo([
+      {
+        criterionId: idOf(housing, housing.mrCriteria!, first),
+        says: "You say the notice gave you ten days.",
+        missing: "A lawyer will want the notice itself.",
+      },
+    ]);
+    const b = m.body;
+    const criterionAt = b.indexOf(first.slice(0, 40));
+    const saysAt = b.indexOf("You say the notice gave you ten days.");
+    expect(criterionAt).toBeGreaterThan(-1);
+    expect(saysAt).toBeGreaterThan(criterionAt);
+    expect(b).toContain(t("memoCriterionSays"));
+    expect(b).toContain(t("memoCriterionMissing"));
+    expect(b).toContain("A lawyer will want the notice itself.");
+  });
+
+  it("works the same way on an internal review, which has no process at all", () => {
+    const point = answerableCriteria(fines, fines.irCriteria!)[0]!;
+    const m = composeMemo({
+      ...base,
+      entry: fines,
+      process: null,
+      internal,
+      forum: "Fines Victoria",
+      criteria: fines.irCriteria!,
+      story: "I was not driving and the notice went to my old address.",
+      drafted: {
+        summary: "This is about a fine.",
+        application: [],
+        criteria: [
+          {
+            criterionId: idOf(fines, fines.irCriteria!, point),
+            says: "You say you were not the driver.",
+            missing: "",
+          },
+        ],
+      },
+    });
+    expect(m.body).toContain("You say you were not the driver.");
+  });
+
+  it("works on a court election, where there is neither a ground nor a process", () => {
+    const point = fines.courtCriteria![0]!;
+    const m = composeMemo({
+      ...base,
+      entry: fines,
+      process: merits,
+      character: "court" as const,
+      forum: fines.avenue.court!.body,
+      criteria: fines.courtCriteria!,
+      story: "I want to tell a court what happened.",
+      drafted: {
+        summary: "This is about a fine.",
+        application: [],
+        criteria: [
+          {
+            criterionId: idOf(fines, fines.courtCriteria!, point),
+            says: "You say you want the charge itself decided.",
+            missing: "",
+          },
+        ],
+      },
+    });
+    expect(m.body).toContain("You say you want the charge itself decided.");
+  });
+
+  // The groundId lesson, one layer out. An id we never supplied must find nothing — never
+  // the criterion that happens to sit at the same index, which is why the ids are derived
+  // from the criteria's own words.
+  it("drops an answer whose id we never supplied", () => {
+    const m = meritsMemo([
+      { criterionId: "c-made-this-up", says: "This must not appear anywhere.", missing: "" },
+    ]);
+    expect(m.body).not.toContain("This must not appear anywhere.");
+  });
+
+  it("never attaches an answer to a routing line", () => {
+    // "These are two different paths" is orientation: it gets no id in the context, so there
+    // is nothing to answer it with. If a draft invents an id for it, it finds nothing.
+    const routing = (housing.mrCriteria ?? []).find((c) => isOrientation(housing, c))!;
+    const m = meritsMemo([
+      {
+        criterionId: withCriterionIds([routing])[0]!.id,
+        says: "This belongs to no criterion.",
+        missing: "",
+      },
+    ]);
+    expect(m.body).toContain(routing);
+    expect(m.body).not.toContain("This belongs to no criterion.");
+  });
+
+  it("keeps our words out of their quotation marks", () => {
+    const first = mrPoints[0]!;
+    const m = meritsMemo([
+      {
+        criterionId: idOf(housing, housing.mrCriteria!, first),
+        says: "You say the notice gave you ten days.",
+        missing: "",
+      },
+    ]);
+    // Their own words are quoted; ours are not. Blurring that line is how a memo ends up
+    // attributing a sentence to someone who never wrote it.
+    expect(m.body).not.toContain('"You say the notice gave you ten days."');
+    expect(m.blocks.some((b) => b.kind === "note" && b.text.includes("ten days"))).toBe(true);
+    expect(m.blocks.some((b) => b.kind === "quote" && b.text.includes("ten days"))).toBe(false);
+  });
+
+  it("composes exactly as before when no draft arrives", () => {
+    const withDraft = meritsMemo([]);
+    const without = composeMemo({
+      ...base,
+      entry: housing,
+      process: merits,
+      forum: "VCAT",
+      criteria: housing.mrCriteria!,
+      story: "They say my notice to vacate is valid and I have nowhere else to go.",
+    });
+    // Every criterion still printed, with no drafted lines and no empty headings.
+    for (const c of housing.mrCriteria!) expect(without.body).toContain(c);
+    expect(without.body).not.toContain(t("memoCriterionSays"));
+    expect(withDraft.body).not.toContain(t("memoCriterionSays"));
+  });
+
+  it("still passes the no-advice and no-score gates with drafted lines in it", () => {
+    const first = mrPoints[0]!;
+    const m = meritsMemo([
+      {
+        criterionId: idOf(housing, housing.mrCriteria!, first),
+        says: "You say the notice gave you ten days.",
+        missing: "A lawyer will want the notice itself.",
+      },
+    ]);
+    expect(checkNoAdvice(m.body).ok).toBe(true);
+    expect(checkNoScore(m.body).ok).toBe(true);
   });
 });

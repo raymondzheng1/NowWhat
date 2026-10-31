@@ -9,6 +9,7 @@ import { getConcept, getGround, getProcess } from "@/lib/legal";
 import { runMemo } from "@/lib/generation/runner";
 import { isModelConfigured } from "@/lib/generation/anthropic";
 import { buildMemoContext, memoExtraSources } from "@/lib/memo/context";
+import { answerableCriteria } from "@/lib/memo/criteria";
 import { checkMemoCitations } from "@/lib/memo/qa";
 
 export const runtime = "nodejs";
@@ -43,9 +44,9 @@ export const dynamic = "force-dynamic";
  * Output budget for one memo, from the number of points and the parts of their tests.
  * Capped, so a request that marks every ground cannot ask for an unbounded answer.
  */
-function memoTokenBudget(grounds: { elements: unknown[] }[]): number {
+function memoTokenBudget(grounds: { elements: unknown[] }[], criteria: number): number {
   const parts = grounds.reduce((n, g) => n + g.elements.length, 0);
-  return Math.min(8000, 1200 + 300 * grounds.length + 220 * parts);
+  return Math.min(8000, 1200 + 300 * grounds.length + 220 * parts + 220 * criteria);
 }
 
 const BodySchema = z.object({
@@ -156,7 +157,7 @@ export async function POST(req: NextRequest) {
       // memo — it produces half a JSON object, which fails to parse and ends as "not
       // covered". Billing is on tokens USED, so a ceiling that is never reached costs
       // nothing; the only thing a low one buys is a silently missing analysis.
-      maxTokens: memoTokenBudget(grounds),
+      maxTokens: memoTokenBudget(grounds, answerableCriteria(entry, body.criteria).length),
     });
   } catch {
     return notCovered();
@@ -177,6 +178,10 @@ export async function POST(req: NextRequest) {
       // under one part of a test instead of under the whole of it.
       ...a.elements.flatMap((e) => [e.says, e.missing]),
     ]),
+    // And the per-criterion lines. This is the only drafted analysis most people will see —
+    // an internal review and a tribunal have no grounds — so leaving it out of the citation
+    // scan would exempt the common case and gate the rare one.
+    ...result.data.criteria.flatMap((c) => [c.says, c.missing]),
   ].join("\n");
   const invented = checkMemoCitations(drafted, `${context}\n${entry.deadlineRule}`);
   if (invented.length > 0) return notCovered();
@@ -189,6 +194,7 @@ export async function POST(req: NextRequest) {
       status: "answered" as const,
       summary: result.data.summary,
       application: result.data.application,
+      criteria: result.data.criteria,
       sources: result.data.sources,
     },
     ctx,

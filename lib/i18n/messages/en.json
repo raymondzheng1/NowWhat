@@ -465,6 +465,8 @@
     "memoElementAsked": "The question",
     "memoElementSays": "What you have told us about this part",
     "memoElementMissing": "What is still needed here",
+    "memoCriterionSays": "What you have told us about this",
+    "memoCriterionMissing": "What is still needed here",
     "memoOpenNote": "A gap is not a problem with your case. It usually means nobody has asked you the question yet. A free legal service can tell you which of these matters here.",
     "memoNoWeight": "This memo does not say how strong any of this is, or what the outcome will be. It sets out what the law asks, and what you have said, so that a person who can advise you has both in one place.",
     "memoStanding": "Standing — whether this is yours to bring",

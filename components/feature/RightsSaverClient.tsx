@@ -150,6 +150,11 @@ interface MemoDraft {
     /** The same work, one part of the test at a time. Absent on an older draft. */
     elements?: { elementId: string; says: string; missing: string }[];
   }[];
+  /**
+   * The same work against what the BODY decides, for the paths that have no grounds of
+   * review — which is every path except judicial review, and so nearly every reader.
+   */
+  criteria?: { criterionId: string; says: string; missing: string }[];
 }
 
 /** The key the internal-review note is filed under, so the memo can find it. */
@@ -1699,7 +1704,13 @@ function ResultStep({
       }),
     })
       .then((r) => r.json())
-      .then((d: { status?: string; summary?: string; application?: MemoDraft["application"] }) => {
+      .then(
+        (d: {
+          status?: string;
+          summary?: string;
+          application?: MemoDraft["application"];
+          criteria?: MemoDraft["criteria"];
+        }) => {
         if (!live) return;
         // A refusal is cached too. It means the gates rejected this exact input, and asking
         // again with the same input would spend money to be refused again.
@@ -1707,10 +1718,15 @@ function ResultStep({
           ...prev,
           [draftKey]:
             d?.status === "answered"
-              ? { summary: d.summary ?? "", application: d.application ?? [] }
+              ? {
+                  summary: d.summary ?? "",
+                  application: d.application ?? [],
+                  criteria: d.criteria ?? [],
+                }
               : null,
         }));
-      })
+      },
+      )
       .catch(() => {
         /* offline, blocked, or rejected — the composed memo stands on its own. NOT cached:
            a dropped connection is worth retrying, unlike a refusal. */
