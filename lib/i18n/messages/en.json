@@ -457,7 +457,21 @@
     "applyCourtHint": "Electing to have the matter heard in court is a formal step with its own form.",
     "letterPolishing": "Putting this into better words…",
     "pathGlossCourtElection": "Asking a court to hear the matter itself, instead of a review",
-    "courtIsNot": "This is not a review of the decision. The court does not look at whether the decision was right or wrong. It hears the matter itself and decides it. That can end better than the decision you have, or worse, and it can carry costs. Whether this is open to you, and by when, is set by the Act your notice was issued under — so check your notice, or ask the official body or a free legal service, before you rely on any of it."
+    "courtIsNot": "This is not a review of the decision. The court does not look at whether the decision was right or wrong. It hears the matter itself and decides it. That can end better than the decision you have, or worse, and it can carry costs. Whether this is open to you, and by when, is set by the Act your notice was issued under — so check your notice, or ask the official body or a free legal service, before you rely on any of it.",
+    "memoAnswer": "In short",
+    "memoConclusion": "Where that leaves this point",
+    "memoElements": "What has to be shown",
+    "memoElementsLead": "A point like this is made up of parts. Each one has to hold up. Here they are, with what you have told us so far.",
+    "memoElementAsked": "The question",
+    "memoOpenNote": "A gap is not a problem with your case. It usually means nobody has asked you the question yet. A free legal service can tell you which of these matters here.",
+    "memoNoWeight": "This memo does not say how strong any of this is, or what the outcome will be. It sets out what the law asks, and what you have said, so that a person who can advise you has both in one place.",
+    "memoStanding": "Standing — whether this is yours to bring",
+    "memoStandingQ": "Before anything else, the body has to accept that this is yours to bring.",
+    "memoPrivative": "Issue: does the Act try to limit review?",
+    "memoPrivativeQ": "Some Acts contain a clause that tries to shut out review. What such a clause can actually do is a legal question in itself.",
+    "memoPrivativeYes": "The procedural layer records that this scheme has such a clause. That makes early advice from a free legal service more important, not less.",
+    "memoGroundWritten": "You have written something about this point. The questions above are the parts a person will work through with you.",
+    "memoGroundBlank": "You have not written about this point yet. The questions above are what to think about before you do."
   },
   "ask": {
     "title": "Ask a question",

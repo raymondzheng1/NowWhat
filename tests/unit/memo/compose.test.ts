@@ -4,6 +4,7 @@ import { getConcept, getProcess, listGrounds } from "@/lib/legal";
 import { getDataEntry } from "@/lib/data";
 import messages from "@/lib/i18n/messages/en.json";
 import patterns from "@/lib/safety/no-advice-patterns.json";
+import { checkNoAdvice, checkNoScore } from "@/lib/safety/no-advice";
 
 const merits = getProcess("merits-review")!;
 const judicial = getProcess("judicial-review")!;
@@ -501,5 +502,113 @@ describe("the memo offers options and recommends none of them", () => {
     expect(close).not.toMatch(/^take these notes/);
     // Doing nothing is a real option and is named as one.
     expect(close).toMatch(/neither|or wait/);
+  });
+});
+
+describe("the professional structure the owner's worked memoranda use", () => {
+  const pf = listGrounds().filter((g) => g.id === "procedural-fairness-hearing");
+
+  // THE ELEMENT-BY-ELEMENT PASS. Both reference memoranda do their real work here: the
+  // merits one walks s17(1)(a), (b) and (f)(viii) one at a time, the judicial one gives each
+  // ground its own numbered sub-section. Every ground in the corpus has carried `elements`
+  // since it was written and nothing read them, so the memo stated a test and then never
+  // applied it — which is the difference between naming a rule and using one.
+  it("breaks each point into the parts that have to be shown, with the question for each", () => {
+    const m = composeMemo({ ...base, process: judicial, grounds: pf });
+    expect(m.body).toContain(t("memoElements"));
+    const g = pf[0]!;
+    expect(g.elements.length).toBeGreaterThan(1);
+    for (const el of g.elements) {
+      expect(m.body).toContain(el.name);
+      if (el.layPrompt) expect(m.body).toContain(el.layPrompt);
+    }
+  });
+
+  // Every issue in both reference memoranda closes. Ours closes too — in the one register
+  // we are allowed, which is what is answered, what is open, and who can tell them which
+  // of it matters.
+  it("closes every point, without saying how strong it is", () => {
+    const m = composeMemo({ ...base, process: judicial, grounds: pf });
+    expect(m.body).toContain(t("memoConclusion"));
+    expect(m.body).toContain(t("memoOpenNote"));
+    expect(m.body).toContain(t("memoNoWeight"));
+  });
+
+  it("says whether they have written on a point, and never that a gap is a weakness", () => {
+    const written = composeMemo({
+      ...base,
+      process: judicial,
+      grounds: pf,
+      groundNotes: { "procedural-fairness-hearing": "They used a report I never saw." },
+    });
+    const blank = composeMemo({ ...base, process: judicial, grounds: pf });
+    expect(written.body).toContain(t("memoGroundWritten"));
+    expect(blank.body).toContain(t("memoGroundBlank"));
+    expect(blank.body).not.toContain(t("memoGroundWritten"));
+  });
+
+  // STANDING. Its own issue in both reference memoranda, and a sub-issue of eligibility
+  // here because our section 1 is already "whether this can be taken there, BY YOU, in
+  // time" and its own Rule names standing in a clause before dropping it.
+  it("asks whether the application is theirs to bring", () => {
+    const standing = getConcept("standing")!;
+    const m = composeMemo({ ...base, process: judicial, grounds: pf, standing });
+    expect(m.body).toContain(t("memoStanding"));
+    expect(m.body).toContain(standing.whatItMeans.slice(0, 40));
+    // Under eligibility, so the numbered sections stay 1, 2, 3.
+    expect(m.body.indexOf(t("memoStanding"))).toBeGreaterThan(m.body.indexOf(t("memoIssue1").toUpperCase()));
+    expect(m.body.indexOf(t("memoStanding"))).toBeLessThan(m.body.indexOf(t("memoIssue2").toUpperCase()));
+  });
+
+  it("leaves standing out when it is not passed, so old callers are unchanged", () => {
+    const m = composeMemo({ ...base, process: judicial, grounds: pf });
+    expect(m.body).not.toContain(t("memoStanding"));
+  });
+
+  // The privative clause is dormant: no data entry records one today. The section must fire
+  // the moment the lawyer sets the flag, and must stay silent until then.
+  it("raises a privative clause only where the data records one", () => {
+    const off = composeMemo({ ...base, process: judicial, grounds: pf });
+    expect(off.body).not.toContain(t("memoPrivative").toUpperCase());
+    const on = composeMemo({
+      ...base,
+      entry: { ...entry, privativeClause: true },
+      process: judicial,
+      grounds: pf,
+      justiciability: getConcept("justiciability")!,
+    });
+    // Emitted by h(), which uppercases.
+    expect(on.body).toContain(t("memoPrivative").toUpperCase());
+    expect(on.body).toContain(t("memoPrivativeYes"));
+  });
+
+  // The whole point of the register choice, asserted on the NEW sections specifically.
+  it("adds no predictive language with any of the new sections turned on", () => {
+    const m = composeMemo({
+      ...base,
+      entry: { ...entry, privativeClause: true },
+      process: judicial,
+      grounds: listGrounds(),
+      standing: getConcept("standing")!,
+      justiciability: getConcept("justiciability")!,
+      groundNotes: { "procedural-fairness-hearing": "They used a report I never saw." },
+    });
+    for (const bad of [
+      /prospects? of success/i,
+      /highly likely/i,
+      /likely to succeed/i,
+      /strongest ground/i,
+      /your best (point|argument|ground)/i,
+      /you (will|should) win/i,
+      /good chance/i,
+    ]) {
+      expect(m.body).not.toMatch(bad);
+    }
+    // And the real gate agrees. Read through the SAME helpers the runtime uses rather than
+    // re-implementing them: my first attempt passed the pattern OBJECTS to RegExp, which
+    // stringifies to "[object Object]" — a character class that matches almost any text, so
+    // the assertion failed on the title and would have "caught" anything at all.
+    expect(checkNoAdvice(m.body).ok).toBe(true);
+    expect(checkNoScore(m.body).ok).toBe(true);
   });
 });

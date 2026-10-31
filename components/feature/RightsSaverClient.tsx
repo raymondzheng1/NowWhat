@@ -1471,6 +1471,12 @@ function ResultStep({
   // The internal-review concept, read by the in-place explainer above the cards and by the
   // memo. Taken from the corpus so this wording and the page behind it cannot drift apart.
   const internalReview = shownConcepts.find((c) => c.id === "internal-review");
+  // Standing and justiciability, for the memo's own issues. Both were already in the corpus
+  // and both were reachable only through "the bits around the edges" — so the one document
+  // a duty lawyer reads said nothing about whether the application was the person's to
+  // bring, or about a clause the procedural layer had already recorded.
+  const standingConcept = shownConcepts.find((c) => c.id === "standing");
+  const justiciabilityConcept = shownConcepts.find((c) => c.id === "justiciability");
 
   const dl = deadlineRuleView(entry);
   const template = reasonsRequestTemplate(entry, {
@@ -1662,6 +1668,10 @@ function ResultStep({
     process: memoProcess,
     internal: memoPathId === "internal-review" ? (internalReview ?? null) : null,
     internalNote: criteriaNotes[INTERNAL_NOTE_KEY] ?? "",
+    // Standing is a live question wherever a body has to accept the application. It is not
+    // one for an internal review, where the decision-maker is already dealing with them.
+    standing: memoPathId === "internal-review" ? null : (standingConcept ?? null),
+    justiciability: justiciabilityConcept ?? null,
     // Both come from the plan, so the memo cannot disagree with the card the person read.
     // Re-deriving them from the process is what gave the fines Magistrates' Court a
     // tribunal's question and remedies in the one document a lawyer actually reads.

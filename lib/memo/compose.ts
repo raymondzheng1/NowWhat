@@ -46,6 +46,22 @@ export interface MemoInput {
   /** Their own words on what they are asking the decision-maker to look at again. */
   internalNote?: string;
   /**
+   * The standing concept, when one is available.
+   *
+   * The reference memos give standing its own issue, before the grounds, because a body that
+   * does not accept the application never reaches them. We had the concept in the corpus and
+   * the memo never opened it. Optional, so a caller that does not pass it loses nothing.
+   */
+  standing?: Concept | null;
+  /**
+   * The justiciability concept, read only where the scheme records a privative clause.
+   *
+   * What such a clause can actually do is a question in itself, and it is the one the
+   * reference memo keeps to the end as a discrete issue. We state only that the scheme has
+   * one, and send them to a person — we do not construe it.
+   */
+  justiciability?: Concept | null;
+  /**
    * What kind of body the chosen path actually is, from `planFor`.
    *
    * The card and the plan stopped attributing a tribunal's question and remedies to a
@@ -402,6 +418,19 @@ export function composeMemo(input: MemoInput): Memo {
   para(`${t("memoForumIs")} ${forum}.`, "  ");
   if (entry.deadlineRule) para(rule(entry.deadlineRule), "  ");
   para(t("memoTimeCheck"), "  ");
+  // STANDING, as a sub-issue of eligibility. The Rule above already names it in one clause
+  // and then never returned to it, so the one document a duty lawyer reads said nothing
+  // about whether the application was this person's to bring. Every word is the corpus
+  // concept's own, so no new rule is stated.
+  if (input.standing) {
+    sub(t("memoStanding"));
+    para(t("memoStandingQ"), "  ");
+    para(rule(input.standing.whatItMeans), "  ");
+    for (const k of input.standing.keyPoints) item(rule(k));
+    if (input.standing.whatItIsNot) {
+      para(`${t("memoWhatItIsNot")}: ${rule(input.standing.whatItIsNot)}`, "  ");
+    }
+  }
 
   // ---- Issue 2: what the forum decides ---------------------------------------------
   //
@@ -449,6 +478,20 @@ export function composeMemo(input: MemoInput): Memo {
           item(`${c.name}${c.pinpoint ? ` (${c.pinpoint})` : ""}`, c.explains ? rule(c.explains) : undefined);
         }
       }
+      // WHAT THE POINT BREAKS INTO. `elements` has been on every ground since the corpus
+      // was written and nothing read it, so the memo stated a test and then never worked
+      // through it — which is the difference between naming a rule and applying one. Each
+      // element carries its own `layPrompt`, a question already written for a lay reader
+      // and already inside the reading-level gate, so this adds no new claim and no new
+      // prose of ours.
+      if (g.elements.length) {
+        blank();
+        sub(t("memoElements"));
+        para(t("memoElementsLead"), "  ");
+        for (const el of g.elements) {
+          item(rule(el.name), el.layPrompt ? `${t("memoElementAsked")}: ${rule(el.layPrompt)}` : undefined);
+        }
+      }
       blank();
       para(`${t("memoArgument")}:`);
       for (const w of g.whatRelates) item(rule(w));
@@ -491,7 +534,39 @@ export function composeMemo(input: MemoInput): Memo {
         para(`${t("memoCounter")}:`);
         para(rule(g.whatItIsNot), "  ");
       }
+      // WHERE THAT LEAVES IT. The reference memos close every issue, and this is the one
+      // place the register had to change rather than be copied. Theirs closes with
+      // "prospects of success are high"; ours may not, and not only because a gate forbids
+      // it — we are not advising a client, we are handing someone their own matter.
+      //
+      // So the close says what is true and checkable: whether they have written on this
+      // point, that the questions above are its parts, and that a gap is a question nobody
+      // has asked them yet rather than a weakness. It names no strength and no outcome.
+      blank();
+      sub(t("memoConclusion"));
+      para(note ? t("memoGroundWritten") : t("memoGroundBlank"), "  ");
+      para(t("memoOpenNote"), "  ");
     });
+    blank();
+    para(t("memoNoWeight"));
+  }
+
+  // ---- The privative clause, where the scheme records one --------------------------
+  //
+  // The reference memo keeps this to the end as a discrete question, and so does this. We
+  // state only that the scheme has such a clause and that it makes early advice matter
+  // more. We do not construe it: what a privative clause can actually do is the hardest
+  // question in the subject, and the one place where a confident sentence from us would do
+  // the most damage.
+  if (entry.privativeClause) {
+    h(t("memoPrivative"));
+    para(t("memoPrivativeQ"));
+    sub(t("memoApplication"));
+    para(t("memoPrivativeYes"), "  ");
+    if (input.justiciability?.whatItMeans) {
+      sub(t("memoRule"));
+      para(rule(input.justiciability.whatItMeans), "  ");
+    }
   }
 
   // ---- Every path that is open -----------------------------------------------------
