@@ -45,7 +45,19 @@ const BodySchema = z.object({
 
 export async function POST(req: NextRequest) {
   const ctx = getRequestContext(req);
-  const notCovered = () => apiJson({ ok: true, status: "not-covered" as const }, ctx);
+  // WHICH GATE REFUSED, by name. A refusal looked exactly like a missing key from outside —
+  // the page silently kept the long version and nobody could say why, which is how the
+  // shorter letter failed on a real account without anyone noticing. Gate names are a fixed
+  // set of identifiers, never the model's text, so nothing about the person travels here.
+  const notCovered = (gates: string[] = []) =>
+    apiJson(
+      {
+        ok: true,
+        status: "not-covered" as const,
+        ...(gates.length ? { gates: [...new Set(gates)] } : {}),
+      },
+      ctx,
+    );
 
   let body: z.infer<typeof BodySchema>;
   try {
@@ -90,11 +102,15 @@ export async function POST(req: NextRequest) {
     return notCovered();
   }
 
-  if (result.status !== "answered" || !result.data || !result.data.covered) return notCovered();
+  if (result.status !== "answered" || !result.data) {
+    return notCovered(result.rejectedGates ?? (result.reason ? [result.reason] : []));
+  }
+  if (!result.data.covered) return notCovered(["model-declined"]);
 
   const rewritten = result.data.letter;
-  if (checkLetterFidelity(body.draft, body.theirWords, rewritten).length > 0) return notCovered();
-  if (checkMemoCitations(rewritten, body.draft).length > 0) return notCovered();
+  const fidelity = checkLetterFidelity(body.draft, body.theirWords, rewritten);
+  if (fidelity.length > 0) return notCovered(fidelity.map((f) => f.gate));
+  if (checkMemoCitations(rewritten, body.draft).length > 0) return notCovered(["out-of-corpus-citation"]);
 
   return apiJson({ ok: true, status: "answered" as const, letter: rewritten }, ctx);
 }

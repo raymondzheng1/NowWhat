@@ -75,7 +75,19 @@ const BodySchema = z.object({
 
 export async function POST(req: NextRequest) {
   const ctx = getRequestContext(req);
-  const notCovered = () => apiJson({ ok: true, status: "not-covered" as const }, ctx);
+  // WHICH GATE REFUSED, by name. A refusal looked exactly like a missing key from outside —
+  // the page silently kept the long version and nobody could say why, which is how the
+  // shorter letter failed on a real account without anyone noticing. Gate names are a fixed
+  // set of identifiers, never the model's text, so nothing about the person travels here.
+  const notCovered = (gates: string[] = []) =>
+    apiJson(
+      {
+        ok: true,
+        status: "not-covered" as const,
+        ...(gates.length ? { gates: [...new Set(gates)] } : {}),
+      },
+      ctx,
+    );
 
   let body: z.infer<typeof BodySchema>;
   try {
@@ -169,18 +181,20 @@ export async function POST(req: NextRequest) {
   }
   // `theirWords` and `body` go out of scope here. Nothing is written anywhere.
 
-  if (result.status !== "answered" || !result.data) return notCovered();
-  if (!result.data.covered) return notCovered();
+  if (result.status !== "answered" || !result.data) {
+    return notCovered(result.rejectedGates ?? (result.reason ? [result.reason] : []));
+  }
+  if (!result.data.covered) return notCovered(["model-declined"]);
 
   const prose = briefProse(result.data);
 
   // The memo's own citation gate, on top of the verifier: a case, Act or section that did not
   // come from our knowledge base never ships, even if it happens to be real.
   const invented = checkMemoCitations(prose, `${context}\n${entry.deadlineRule}`);
-  if (invented.length > 0) return notCovered();
+  if (invented.length > 0) return notCovered(["out-of-corpus-citation"]);
 
   // Short is the point of it. A brief that ran long is refused rather than shown as the short one.
-  if (prose.split(/\s+/).filter(Boolean).length > BRIEF_MAX_WORDS) return notCovered();
+  if (prose.split(/\s+/).filter(Boolean).length > BRIEF_MAX_WORDS) return notCovered(["too-long"]);
 
   return apiJson(
     {

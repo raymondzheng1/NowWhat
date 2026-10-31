@@ -543,3 +543,33 @@ describe("/api/letter-polish (a better-worded draft)", () => {
     expect(body.status).toBe("blocked");
   });
 });
+
+describe("a refusal says which gate refused — and nothing else", () => {
+  // Found on the live site: the shorter letter was refused on a real account and the page
+  // silently kept the long one. From outside, a refusal looked exactly like a missing key.
+  // The routes now name the gate. Names only: never the model's text, never the person's.
+  it("names the letter gate that refused, without the letter", async () => {
+    const invented = polishBody.draft.replace("[Your name]\n", "[Your name]\nOn 99 March I phoned you.\n");
+    __setModelForTests(polishModel(invented));
+    const body = await (await polishPost(jsonReq("http://x/api/letter-polish", polishBody))).json();
+    expect(body.status).toBe("not-covered");
+    expect(body.gates).toContain("invented-figure");
+    expect(JSON.stringify(body)).not.toContain("phoned");
+  });
+
+  it("names a model that declined", async () => {
+    // The runner reports covered:false as "not-in-corpus" — the model said it could not do
+    // this safely, which is a different event from a gate refusing what it wrote.
+    __setModelForTests(polishModel(polishBody.draft, false));
+    const body = await (await polishPost(jsonReq("http://x/api/letter-polish", polishBody))).json();
+    expect(body.gates).toEqual(["not-in-corpus"]);
+  });
+
+  it("names the analysis gate that refused, without the analysis", async () => {
+    __setModelForTests(briefModel({ otherSide: "As Craig v South Australia shows, they will rely on the letter." }));
+    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+    expect(body.status).toBe("not-covered");
+    expect(Array.isArray(body.gates) && body.gates.length > 0).toBe(true);
+    expect(JSON.stringify(body)).not.toContain("Craig");
+  });
+});
