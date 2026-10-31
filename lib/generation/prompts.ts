@@ -360,8 +360,15 @@ WHAT YOU MAY NOT DO, EVER
  · Touch any block headed "NOTE TO YOURSELF". Copy it across exactly, heading and all, in the same
    place. It is written to the person, not to the office.
 
-If you cannot do this without breaking one of those rules, set "covered" to false and return the
-draft unchanged. That is a good answer, not a failure.
+THESE ARE NOT REASONS TO DECLINE — handle them and write the letter:
+ · A long account. Shortening it is the job.
+ · An account that argues the law in their own words, or names a law themselves. Keep their
+   argument, shortened, in their voice. It is their claim to make; you are not adding it.
+ · Notes they left for themselves in round brackets, such as "(Insert Rego)". Copy them as
+   they are.
+
+Set "covered" to false ONLY if the draft is not a letter, or if every way of shortening it would
+break one of the rules above. Then return the draft unchanged.
 `.trim();
 
 const LETTER_POLISH_SHAPE = `
