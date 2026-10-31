@@ -171,6 +171,9 @@ export function memoExtraSources(input: {
   const { entry, process: proc, internal, grounds } = input;
   return [
     entry.sourceUrl,
+    // The per-path official links the context offers (`officialSourceForPath`). Offered and not
+    // allowed, a brief that copied one back verbatim was refused for it.
+    ...PATHS.map((p) => officialSourceForPath(entry, p) ?? ""),
     entry.avenue.ir?.source ?? "",
     entry.avenue.mr.source,
     entry.avenue.court?.source ?? "",
@@ -182,6 +185,8 @@ export function memoExtraSources(input: {
     ...grounds.flatMap((g) => g.leadingCases.map((c) => c.name)),
   ].filter(Boolean);
 }
+
+const PATHS: RulePath[] = ["internal-review", "merits-review", "court-election", "judicial-review"];
 
 /** The corpus's own provenance line for synthesised entries — not a source anyone can look up. */
 const KB_PROVENANCE = /owner'?s administrative-law knowledge base/i;

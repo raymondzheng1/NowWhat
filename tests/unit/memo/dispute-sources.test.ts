@@ -99,3 +99,35 @@ describe("the analysis is offered the sources for its own path and jurisdiction"
     expect(full).toMatch(/best and most current information/);
   });
 });
+
+import { listDataEntries } from "@/lib/data";
+import { getEntry } from "@/lib/corpus/index";
+import { verifyOutput } from "@/lib/verification/verify";
+import { memoExtraSources } from "@/lib/memo/context";
+
+/** Every source line the analysis is OFFERED must be one it is ALLOWED to cite back. */
+describe("offered sources are allowed sources, for every decision and path", () => {
+  for (const entry of listDataEntries()) {
+    for (const pathId of ["internal-review", "merits-review", "court-election", "judicial-review"] as const) {
+      it(`${entry.id} / ${pathId}`, () => {
+        const process = pathId === "merits-review" ? merits : pathId === "judicial-review" ? judicial : null;
+        const context = buildMemoContext({
+          entry, process, internal: null, grounds: [], criteria: [], forum: "x", pathName: "x", pathId,
+        });
+        const offered = context
+          .slice(context.indexOf("SOURCES ("))
+          .split("\n")
+          .slice(1)
+          .map((l) => l.replace(/^\s*-\s*/, "").trim())
+          .filter(Boolean);
+        const v = verifyOutput({
+          text: "You can ask for the decision to be looked at again.",
+          declaredSources: offered,
+          entry: getEntry(entry.id)!,
+          extraSources: memoExtraSources({ entry, process, internal: null, grounds: [] }),
+        });
+        expect(v.failures.filter((f) => f.gate === "source-allowlist")).toEqual([]);
+      });
+    }
+  }
+});

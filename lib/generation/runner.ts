@@ -130,6 +130,17 @@ interface RunOpts<T> {
   /** See the verifier: the corpus material this task was given, and the person's own words. */
   groundedText?: string;
   accountText?: string;
+  /**
+   * Ask again when the model declines, instead of stopping at once.
+   *
+   * For `ask`, a decline is the honest "our corpus does not cover this" and must end the run.
+   * For the brief and the letter it is not: the route has already matched the decision to our
+   * corpus before calling, so a decline means the model talked itself out of a task it was
+   * given everything for — and one decline ended the attempt. Measured on the owner's
+   * judicial-review case: refused with "not-in-corpus" on 17 marked points. One more try, told
+   * plainly that this is covered.
+   */
+  retryDecline?: boolean;
   /** Pull the verifiable prose + declared sources + covered flag out of the parsed shape. */
   extract: (data: T) => { covered: boolean; text: string; declaredSources: string[] };
 }
@@ -146,6 +157,7 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
   // pattern — three attempts can fail three different ways, and fixing the one we were told
   // about left the other two in place.
   const everyGate = new Set<string>();
+  let declined = 0;
 
   while (attempts < MAX_GENERATION_ATTEMPTS) {
     attempts++;
@@ -181,7 +193,16 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
     const data = safe.data as T;
 
     const { covered, text, declaredSources } = opts.extract(data);
-    if (!covered) return { status: "not-covered", attempts, reason: "not-in-corpus" };
+    if (!covered) {
+      everyGate.add("model-declined");
+      if (!opts.retryDecline || declined++ > 0 || attempts >= MAX_GENERATION_ATTEMPTS) {
+        return { status: "not-covered", attempts, reason: "not-in-corpus", rejectedGates: [...everyGate] };
+      }
+      retryHint =
+        'You set "covered" to false. This decision IS covered: the CORPUS CONTEXT was chosen for it. ' +
+        "Write the answer. Leave out anything you cannot say within the rules; do not decline.";
+      continue;
+    }
 
     const verdict = verifyOutput({
       text,
@@ -311,16 +332,21 @@ export function runMemo(
  * had read, and on this output it is the prose people read first.
  */
 export function runBrief(
-  args: Omit<RunOpts<GeneratedBrief>, "task" | "schema" | "extract">,
+  args: Omit<RunOpts<GeneratedBrief>, "task" | "schema" | "extract"> & { contextSources?: string[] },
 ): Promise<GenerationResult<GeneratedBrief>> {
   return runGeneration<GeneratedBrief>({
     ...args,
     task: "brief",
     schema: GeneratedBriefSchema,
+    retryDecline: true,
     extract: (d) => ({
       covered: d.covered,
       text: briefProse(d),
-      declaredSources: d.sources,
+      // The brief can only say what its context gave it — the citation gates hold it to that —
+      // so when it copies no source line back, the context's own sources are what it relied
+      // on. Refusing it for that ("source-binding") refused a sound analysis over a field the
+      // page does not even print from the model (the judicial-review benchmark).
+      declaredSources: d.sources.length ? d.sources : (args.contextSources ?? []),
     }),
   });
 }
@@ -353,6 +379,7 @@ export function runLetterPolish(
     task: "letter-polish",
     // A letter cites nothing: it says what happened to this person and asks for a review.
     citesNothing: true,
+    retryDecline: true,
     schema: GeneratedLetterSchema,
     extract: (d) => ({ covered: d.covered, text: d.letter, declaredSources: d.sources }),
   });

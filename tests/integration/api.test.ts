@@ -312,6 +312,39 @@ describe("/api/memo (the short analysis)", () => {
     expect((await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json()).status).toBe("not-covered");
   });
 
+  // The route has matched the decision to our corpus before it calls, so a decline is the
+  // model talking itself out of the job. One decline used to end the attempt (the owner's
+  // judicial-review case, 17 marked points). It now gets one more try; two declines stop.
+  it("asks once more when the model declines, and answers", async () => {
+    let calls = 0;
+    __setModelForTests(async (call) => {
+      calls++;
+      return calls === 1 ? briefModel({ covered: false })(call) : briefModel()(call);
+    });
+    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+    expect(body.status).toBe("answered");
+    expect(calls).toBe(2);
+  });
+
+  it("two declines are a decline", async () => {
+    let calls = 0;
+    __setModelForTests(async (call) => {
+      calls++;
+      return briefModel({ covered: false })(call);
+    });
+    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+    expect(body.status).toBe("not-covered");
+    expect(body.gates).toContain("model-declined");
+    expect(calls).toBe(2);
+  });
+
+  it("a brief that copies back no source line relies on its context's sources", async () => {
+    __setModelForTests(briefModel({ sources: [] }));
+    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+    expect(body.gates).toBeUndefined();
+    expect(body.status).toBe("answered");
+  });
+
   it("still answers when the brief names no points at all", async () => {
     __setModelForTests(briefModel({ points: [] }));
     const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
@@ -558,11 +591,11 @@ describe("a refusal says which gate refused — and nothing else", () => {
   });
 
   it("names a model that declined", async () => {
-    // The runner reports covered:false as "not-in-corpus" — the model said it could not do
-    // this safely, which is a different event from a gate refusing what it wrote.
+    // covered:false is reported as "model-declined" — the model said it could not do this
+    // safely, which is a different event from a gate refusing what it wrote.
     __setModelForTests(polishModel(polishBody.draft, false));
     const body = await (await polishPost(jsonReq("http://x/api/letter-polish", polishBody))).json();
-    expect(body.gates).toEqual(["not-in-corpus"]);
+    expect(body.gates).toEqual(["model-declined"]);
   });
 
   it("names the analysis gate that refused, without the analysis", async () => {

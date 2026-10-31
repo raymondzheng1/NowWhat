@@ -308,7 +308,9 @@ YOU MUST NOT:
     in double quotes and say who said them: the officer said "...".
 
 WHEN TO SET "covered" TO FALSE: only when the CORPUS CONTEXT is about a different kind of
-decision, or their account is empty or says nothing about any decision. THESE ARE NOT REASONS
+decision, or their account is empty or says nothing about any decision. A general decision type
+— "a Victorian government decision", "an Australian Government decision" — covers decisions
+by any of that government's departments, agencies, councils and officers. THESE ARE NOT REASONS
 TO SET IT FALSE: they marked many points (choose the four their account says most about); they
 name an Act, a case or a figure that is not in the context (leave it out, or say they mention
 it); their account is long, upset or uses legal words; some of what they say is beside the
@@ -382,6 +384,9 @@ THESE ARE NOT REASONS TO DECLINE — handle them and write the letter:
    argument, shortened, in their voice. It is their claim to make; you are not adding it.
  · Notes they left for themselves in round brackets, such as "(Insert Rego)". Copy them as
    they are.
+ · Names of officials, quotes from emails or posts, several headed points, or a court warning
+   block. Keep the names and quotes they gave, shorten around them, copy the warning block.
+ · Not being sure how much to cut. Cut less; never decline for that.
 
 Set "covered" to false ONLY if the draft is not a letter, or if every way of shortening it would
 break one of the rules above. Then return the draft unchanged.

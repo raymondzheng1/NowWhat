@@ -75,6 +75,18 @@ const BodySchema = z.object({
   goals: z.array(z.string().max(300)).max(12).default([]),
 });
 
+/** The SOURCES lines of a context, as the brief may cite them. */
+function contextSourceLines(context: string): string[] {
+  const at = context.indexOf("SOURCES (");
+  if (at === -1) return [];
+  return context
+    .slice(at)
+    .split("\n")
+    .slice(1)
+    .map((l) => l.replace(/^\s*-\s*/, "").trim())
+    .filter(Boolean);
+}
+
 export async function POST(req: NextRequest) {
   const ctx = getRequestContext(req);
   // WHICH GATE REFUSED, by name. A refusal looked exactly like a missing key from outside —
@@ -189,6 +201,7 @@ export async function POST(req: NextRequest) {
       // What it was given and what they said — see the verifier. Grounded either way.
       groundedText: context,
       accountText: theirWords,
+      contextSources: contextSourceLines(context),
       maxTokens: BRIEF_TOKENS,
     });
   } catch {

@@ -35,6 +35,22 @@ describe("their own words are theirs", () => {
     expect(gatesFor(text, { accountText: account })).toContain("no-advice");
   });
 
+  // Writing to "you", the analysis reports the officer's post in second person. Not verbatim,
+  // so the quote allowance missed it — but it says who said it, in words they wrote.
+  it("reported speech from their account, attributed, is not our advice", () => {
+    const acct =
+      'He posted that "people who put profit before animals, like the Lotus Cattery operator, should never be allowed to breed animals in this city".';
+    const text = "Mr Boyle posted that you should never be allowed to breed animals in this city.";
+    expect(gatesFor(text)).toContain("no-advice");
+    expect(gatesFor(text, { accountText: acct })).not.toContain("no-advice");
+  });
+
+  it("an unattributed 'you should', or one in words they never wrote, is still advice", () => {
+    const acct = "He posted that I should never be allowed to breed animals in this city.";
+    expect(gatesFor("You should never be allowed to breed animals in this city.", { accountText: acct })).toContain("no-advice");
+    expect(gatesFor("He said you should apply to the court quickly.", { accountText: acct })).toContain("no-advice");
+  });
+
   it("an Act they named may be repeated", () => {
     const text = "You say the council relied on the Animal Welfare Act 2002.";
     expect(gatesFor(text)).toContain("no-out-of-corpus-citation");

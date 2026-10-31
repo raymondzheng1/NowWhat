@@ -123,6 +123,37 @@ function withoutTheirQuotes(text: string, theirs: string): string {
   return text.replace(QUOTED_RE, (whole, inner: string) => (theirs.includes(norm(inner)) ? " " : whole));
 }
 
+/** Words only: lower case, punctuation gone, single spaces. */
+const bare = (s: string) => s.toLowerCase().replace(/[^a-z0-9\s]/g, " ").replace(/\s+/g, " ").trim();
+
+const REPORTING = /\b(said|says|told|tells|wrote|writes|posted|posts|emailed|stated|states|claimed|claims|called|reported|according to)\b/i;
+const MODAL_RUN = /\b(should|must|ought to|need to)\b(?:\s+[^\s.!?]+){3}/gi;
+
+/**
+ * The output with REPORTED SPEECH from their account taken out — a sentence that says who
+ * said it, and whose "should …" continues in words they wrote.
+ *
+ * Writing to "you", the analysis turns an officer's post — that the Lotus Cattery operator
+ * "should never be allowed to breed animals" — into "he posted that you should never be
+ * allowed to breed". That is reporting what someone else said, but it no longer matches
+ * their account word for word, so the quote allowance missed it and the analysis was refused
+ * (the judicial-review benchmark, re-run 2026-11-01). Both conditions are needed: a reporting
+ * verb in the sentence, and the modal and the three words after it found in their account.
+ * "You should apply to VCAT" has neither.
+ */
+function withoutReportedSpeech(text: string, theirs: string): string {
+  if (!theirs) return text;
+  const theirsBare = bare(theirs);
+  return text
+    .split(/(?<=[.!?])\s+/)
+    .map((s) => {
+      if (!REPORTING.test(s)) return s;
+      const runs = [...s.matchAll(MODAL_RUN)].map((m) => bare(m[0]));
+      return runs.length && runs.every((r) => theirsBare.includes(r)) ? " " : s;
+    })
+    .join(" ");
+}
+
 const DOMAIN_RE = /\b[a-z0-9-]+(?:\.[a-z0-9-]+)+\b/g;
 
 /**
@@ -267,7 +298,7 @@ export function verifyOutput(input: VerifyInput): VerifyResult {
 
   // 6. No advice / no prediction (the tone gate) — the most important.
   // Their words, reported in quotes, are not our advice (see `accountText`).
-  const advice = checkNoAdvice(withoutTheirQuotes(text, theirs));
+  const advice = checkNoAdvice(withoutReportedSpeech(withoutTheirQuotes(text, theirs), theirs));
   for (const h of advice.hits) {
     failures.push({ gate: "no-advice", detail: `${h.why}: "${h.match}"` });
   }
