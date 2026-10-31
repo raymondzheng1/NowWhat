@@ -205,13 +205,17 @@ describe("/api/chat (conversational intake)", () => {
 });
 
 /**
- * /api/memo — the one step of the guided flow that leaves the device.
+ * /api/memo — the short analysis (the brief). The one step of the guided flow that leaves the
+ * device.
  *
- * Everything here is about the SAFE DIRECTION of failure. The deterministic memo is the
- * product's baseline and needs no model at all, so the only correct answer to "something went
- * wrong" is not-covered: the client then keeps the memo it already composed. A draft that
- * shipped despite a failed gate would be worse than no draft, because it is the one document
- * a person hands to a lawyer.
+ * Everything here is about the SAFE DIRECTION of failure. The full notes are composed with no
+ * model at all, so the only correct answer to "something went wrong" is not-covered: the page
+ * then shows the full notes, open, exactly as it did before the brief existed. A brief that
+ * shipped despite a failed gate would be worse than none — it is what a person reads first.
+ *
+ * Since 2026-10-31 the model writes the whole of what a person reads first, so these prove the
+ * new prose passes every gate the old inserts did: no advice, no prediction, no "satisfied",
+ * no invented case, no unsourced time limit — and that it stays short.
  */
 const memoBody = {
   entryId: "cth-centrelink",
@@ -224,18 +228,20 @@ const memoBody = {
   notes: {},
 };
 
-const memoModel = (over: Record<string, unknown> = {}): ModelFn => async (call) => ({
+const briefModel = (over: Record<string, unknown> = {}): ModelFn => async (call) => ({
   text: JSON.stringify({
     covered: true,
-    summary: "This is about a Centrelink debt. You say you were never asked about a certificate.",
-    application: [
+    situation: "Centrelink cut your payment. You say you sent a medical certificate. You say nobody asked you about it.",
+    path: "Judicial review asks whether the decision was made lawfully.",
+    points: [
       {
-        groundId: "procedural-fairness-hearing",
-        forThem: "You say you sent a medical certificate. You say nobody asked you about it.",
-        against: "They may say the letter invited a response. They may say the certificate arrived late.",
-        toTest: "A lawyer will want the date you sent it, and anything showing it arrived.",
+        ref: "procedural-fairness-hearing/notice",
+        relates: "You say no letter came before the decision.",
+        needed: "The date the decision was made.",
       },
     ],
+    otherSide: "They may say the letter invited a response.",
+    toGather: ["the decision letter", "proof you sent the certificate"],
     sources: ["servicesaustralia.gov.au — reviews and appeals"],
     ...over,
   }),
@@ -244,53 +250,93 @@ const memoModel = (over: Record<string, unknown> = {}): ModelFn => async (call) 
   model: call.model,
 });
 
-describe("/api/memo (the drafted analysis)", () => {
-  it("returns a draft when the model answers within the gates", async () => {
-    __setModelForTests(memoModel());
-    const res = await memoPost(jsonReq("http://x/api/memo", memoBody));
-    const body = await res.json();
+describe("/api/memo (the short analysis)", () => {
+  it("returns the brief when the model answers within the gates", async () => {
+    __setModelForTests(briefModel());
+    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
     expect(body.status).toBe("answered");
-    expect(body.application[0].groundId).toBe("procedural-fairness-hearing");
+    expect(body.brief.points[0].ref).toBe("procedural-fairness-hearing/notice");
+    expect(body.brief.toGather).toContain("the decision letter");
     // The person's own words are NOT echoed back — the client already has them.
     expect(JSON.stringify(body)).not.toContain("medical certificate I sent");
   });
 
-  it("falls back to not-covered when the draft invents a case", async () => {
-    // The gate that matters most. Craig v South Australia is a real case, and it is still
-    // refused, because the knowledge base did not hand it over.
+  it("asks the model for the short analysis, not the old inserts", async () => {
+    let system = "";
+    __setModelForTests(async (call) => {
+      system = call.system;
+      return briefModel()(call);
+    });
+    await memoPost(jsonReq("http://x/api/memo", memoBody));
+    expect(system).toContain("SHORT analysis");
+    expect(system).toMatch(/State a time limit or deadline/);
+  });
+
+  it("falls back when the brief invents a case", async () => {
+    // Craig v South Australia is a real case, and it is still refused, because the knowledge
+    // base did not hand it over.
+    __setModelForTests(briefModel({ otherSide: "As Craig v South Australia shows, they will rely on the letter." }));
+    expect((await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json()).status).toBe("not-covered");
+  });
+
+  it("falls back when the brief gives advice", async () => {
+    __setModelForTests(briefModel({ situation: "You should apply for judicial review straight away." }));
+    expect((await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json()).status).toBe("not-covered");
+  });
+
+  it("falls back when the brief predicts an outcome", async () => {
+    __setModelForTests(briefModel({ path: "Your claim is very likely to succeed and the debt will be waived." }));
+    expect((await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json()).status).toBe("not-covered");
+  });
+
+  it("falls back when a point is called satisfied", async () => {
     __setModelForTests(
-      memoModel({
-        application: [
-          {
-            groundId: "procedural-fairness-hearing",
-            forThem: "As Craig v South Australia shows, the process was unfair.",
-            against: "They may disagree.",
-            toTest: "Dates.",
-          },
+      briefModel({
+        points: [
+          { ref: "procedural-fairness-hearing/notice", relates: "This element is satisfied on your facts.", needed: "" },
         ],
       }),
     );
-    const res = await memoPost(jsonReq("http://x/api/memo", memoBody));
-    expect((await res.json()).status).toBe("not-covered");
+    expect((await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json()).status).toBe("not-covered");
   });
 
-  it("falls back when the draft gives advice", async () => {
-    __setModelForTests(memoModel({ summary: "You should apply for judicial review straight away." }));
-    const res = await memoPost(jsonReq("http://x/api/memo", memoBody));
-    expect((await res.json()).status).toBe("not-covered");
+  it("falls back when the brief states a time limit we do not hold", async () => {
+    // The page prints the verified rule beside the brief; the model may not supply its own.
+    __setModelForTests(briefModel({ path: "You have 17 days to apply to the court." }));
+    expect((await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json()).status).toBe("not-covered");
   });
 
-  it("falls back when the draft predicts an outcome", async () => {
-    __setModelForTests(
-      memoModel({ summary: "Your claim is very likely to succeed and the debt will be waived." }),
+  it("falls back when the 'short' analysis is not short", async () => {
+    const long = Array.from({ length: 60 }, () => "You say they did not ask you first.").join(" ");
+    __setModelForTests(briefModel({ situation: long }));
+    expect((await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json()).status).toBe("not-covered");
+  });
+
+  it("still answers when the brief names no points at all", async () => {
+    __setModelForTests(briefModel({ points: [] }));
+    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+    expect(body.status).toBe("answered");
+    expect(body.brief.points).toEqual([]);
+  });
+
+  it("asks for the same room however many points were marked", async () => {
+    // Capped at four points, so it does not grow with the input — but it must never be the
+    // shared 1200 that truncated the memo's JSON.
+    const seen: number[] = [];
+    __setModelForTests(async (call) => {
+      seen.push(call.maxTokens);
+      return { text: "{}", inputTokens: 10, outputTokens: 10, model: call.model };
+    });
+    await memoPost(
+      jsonReq("http://x/api/memo", {
+        ...memoBody,
+        groundIds: ["procedural-fairness-hearing", "relevant-considerations"],
+      }),
     );
-    const res = await memoPost(jsonReq("http://x/api/memo", memoBody));
-    expect((await res.json()).status).toBe("not-covered");
+    expect(Math.max(...seen)).toBeGreaterThan(1200);
   });
 
   it("never calls the model when the person has written nothing", async () => {
-    // No account means nothing to write an analysis around, and no reason to spend or to
-    // send anything at all.
     __setModelForTests(throwingModel);
     const res = await memoPost(jsonReq("http://x/api/memo", { ...memoBody, story: "  " }));
     expect((await res.json()).status).toBe("not-covered");
@@ -305,9 +351,7 @@ describe("/api/memo (the drafted analysis)", () => {
   it("is blocked once the session cap is reached, and spends nothing more", async () => {
     __setModelForTests(throwingModel);
     await record({ sessionId: "memo-cap", ip: "9.9.9.9", byoKey: false }, SESSION_CAP_USD + 1);
-    const res = await memoPost(
-      jsonReq("http://x/api/memo", memoBody, "wn_sid=memo-cap"),
-    );
+    const res = await memoPost(jsonReq("http://x/api/memo", memoBody, "wn_sid=memo-cap"));
     const body = await res.json();
     expect(body.ok).toBe(false);
     expect(body.status).toBe("blocked");
@@ -319,103 +363,32 @@ describe("/api/memo (the drafted analysis)", () => {
     expect(res.status).toBe(400);
   });
 
-  // ---- the application, written one part of a test at a time ------------------------
-  //
-  // The draft now works through each PART of a ground's test, not the ground as a whole.
-  // That is more prose, written in the place where a model is most tempted to say a part is
-  // satisfied — so the thing these tests prove is not that the feature works, but that the
-  // new prose passes through every gate the old prose did. A field left out of the
-  // verifier's text or the citation scan would be customer-visible output no gate ever read.
-  const withElements = (
-    elements: { elementId: string; says: string; missing: string }[],
-  ) =>
-    memoModel({
-      application: [
-        {
-          groundId: "procedural-fairness-hearing",
-          forThem: "You say you sent a medical certificate.",
-          against: "They may say the letter invited a response.",
-          toTest: "A lawyer will want the date you sent it.",
-          elements,
-        },
-      ],
+  // ---- what the model is given -------------------------------------------------------
+  it("hands the model every id a point may cite, verbatim", async () => {
+    // The groundId lesson: anything the model has to echo back must be in front of it.
+    const housing = getDataEntry("vic-public-housing")!;
+    let prompt = "";
+    __setModelForTests(async (call) => {
+      prompt = call.user;
+      return briefModel({ points: [] })(call);
     });
-
-  it("passes the per-part application through once it clears the gates", async () => {
-    __setModelForTests(
-      withElements([
-        { elementId: "notice", says: "You say no letter came first.", missing: "The date it was sent." },
-      ]),
-    );
-    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
-    expect(body.status).toBe("answered");
-    expect(body.application[0].elements[0].elementId).toBe("notice");
-    expect(body.application[0].elements[0].says).toContain("no letter came first");
-  });
-
-  it("falls back when a part of the test is called satisfied", async () => {
-    // The sentence this document may never contain, in the one place it reads as natural.
-    // A fact may RELATE TO a part; whether it goes far enough is not ours to say.
-    __setModelForTests(
-      withElements([
-        { elementId: "notice", says: "This satisfies the element of notice.", missing: "" },
-      ]),
-    );
-    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
-    expect(body.status).toBe("not-covered");
-  });
-
-  it("falls back when a part of the test invents a case", async () => {
-    __setModelForTests(
-      withElements([
-        { elementId: "notice", says: "", missing: "Compare Craig v South Australia on this part." },
-      ]),
-    );
-    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
-    expect(body.status).toBe("not-covered");
-  });
-
-  it("asks for room that grows with the points marked", async () => {
-    // THE DEFECT THIS EXISTS FOR, and it was mine: writing to each part made the answer
-    // longer, and every task shared one 1200-token ceiling. One point fitted. Two did not,
-    // and an overrun is not a shorter memo — it is half a JSON object, which fails to parse,
-    // and the repair pass shared the same ceiling so it could not close it either. The live
-    // site answered a one-point request and returned "not covered" for a two-point one every
-    // single time, with nothing anywhere to say why.
-    const seen: number[] = [];
-    const spy: ModelFn = async (call) => {
-      seen.push(call.maxTokens);
-      return { text: "{}", inputTokens: 10, outputTokens: 10, model: call.model };
-    };
-    __setModelForTests(spy);
-    await memoPost(jsonReq("http://x/api/memo", { ...memoBody, groundIds: ["procedural-fairness-hearing"] }));
-    const one = Math.max(...seen);
-    seen.length = 0;
     await memoPost(
       jsonReq("http://x/api/memo", {
         ...memoBody,
-        groundIds: ["procedural-fairness-hearing", "relevant-considerations"],
+        entryId: "vic-public-housing",
+        pathId: "merits-review",
+        groundIds: [],
+        criteria: housing.mrCriteria!,
       }),
     );
-    const two = Math.max(...seen);
-    expect(one).toBeGreaterThan(1200);
-    expect(two).toBeGreaterThan(one);
-    // Bounded, so marking every point cannot ask for an unbounded answer.
-    expect(two).toBeLessThanOrEqual(8000);
+    for (const c of withCriterionIds(answerableCriteria(housing, housing.mrCriteria!))) {
+      expect(prompt, c.id).toContain(c.id);
+    }
   });
 
-  // ---- the court election ----------------------------------------------------------
-  //
-  // The Magistrates' Court hearing a fine on election decides the CHARGE. The route used to
-  // reject the path outright, so the request 400'd, the client cached a refusal, and the one
-  // path with no grounds of review also had no drafted paragraph — silently, because a
-  // rejected request and a missing key look identical from the page.
-  //
-  // Accepting it is the easy half. The half that matters is what the model is TOLD: the
-  // corpus holds two processes, this is neither, and handing it the merits one would have it
-  // write that the body asks "Is this the correct or preferable decision?" and can substitute
-  // its own decision. No gate could catch that, because the sentence is true of some other
-  // body. So the prompt itself is asserted.
+  // ---- the court election ------------------------------------------------------------
+  // The Magistrates' Court hearing a fine on election decides the CHARGE. The model must never
+  // be told it is a review, because no gate can catch a sentence that is true of another body.
   const courtBody = {
     entryId: "vic-fines",
     pathId: "court-election",
@@ -426,29 +399,20 @@ describe("/api/memo (the drafted analysis)", () => {
     story: "The notice came to my old address and I only saw it after the date on it.",
     notes: {},
   };
-
-  const courtModel = (): ModelFn => async (call) => ({
-    text: JSON.stringify({
-      covered: true,
-      summary: "You say the notice went to your old address. You say you saw it after the date on it.",
-      application: [],
+  const courtModel = (): ModelFn =>
+    briefModel({
+      situation: "You say the notice went to your old address. You say you saw it after the date on it.",
+      path: "If the matter goes to court, the court decides the charge itself.",
+      points: [],
+      otherSide: "They may say the notice was sent to the address they held.",
       sources: ["https://www.fines.vic.gov.au"],
-    }),
-    inputTokens: 40,
-    outputTokens: 40,
-    model: call.model,
-  });
+    });
 
-  it("drafts for a court election instead of rejecting the request", async () => {
+  it("writes a brief for a court election", async () => {
     __setModelForTests(courtModel());
     const res = await memoPost(jsonReq("http://x/api/memo", courtBody));
-    const body = await res.json();
     expect(res.status).toBe(200);
-    expect(body.status).toBe("answered");
-    expect(body.summary).toContain("old address");
-    // No grounds of review on this path, so no per-point application. That is parity with
-    // internal and merits review, not a lesser outcome.
-    expect(body.application).toEqual([]);
+    expect((await res.json()).status).toBe("answered");
   });
 
   it("never tells the model a court election is a review", async () => {
@@ -459,9 +423,7 @@ describe("/api/memo (the drafted analysis)", () => {
     });
     await memoPost(jsonReq("http://x/api/memo", courtBody));
     expect(prompt).toContain("the Magistrates' Court");
-    // The source that says the election exists, so it can be cited.
     expect(prompt).toContain("Infringements Act 2006 (Vic)");
-    // And nothing whatever from the merits process.
     expect(prompt).not.toContain("Is this the correct or preferable decision?");
     expect(prompt).not.toContain("Affirm — keep the decision the same.");
     expect(prompt).not.toContain("Asking for a fresh look at the decision");
@@ -474,19 +436,8 @@ describe("/api/memo (the drafted analysis)", () => {
       prompt = call.user;
       return courtModel()(call);
     });
-    await memoPost(
-      jsonReq("http://x/api/memo", { ...memoBody, pathId: "merits-review", groundIds: [] }),
-    );
+    await memoPost(jsonReq("http://x/api/memo", { ...memoBody, pathId: "merits-review", groundIds: [] }));
     expect(prompt).toContain("Is this the correct or preferable decision?");
-  });
-
-  it("still answers when a draft returns no parts at all", async () => {
-    // Nothing about this upgrade may make the memo worse than it was. A draft with the four
-    // ground-level fields and no parts is the old shape, and it must still ship.
-    __setModelForTests(memoModel());
-    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
-    expect(body.status).toBe("answered");
-    expect(body.application[0].elements).toEqual([]);
   });
 });
 
@@ -590,147 +541,5 @@ describe("/api/letter-polish (a better-worded draft)", () => {
     const body = await res.json();
     expect(body.ok).toBe(false);
     expect(body.status).toBe("blocked");
-  });
-});
-
-/**
- * The drafted analysis against WHAT THE BODY DECIDES.
- *
- * The element walk only ever reached judicial review, because elements belong to grounds of
- * review and grounds of review belong to a court. The paths people actually take — an
- * internal review, a tribunal, electing to have a charge heard — have no grounds at all, and
- * on those the drafted analysis was a summary paragraph and a list of criteria with nothing
- * said about any of them.
- *
- * What these tests prove is not that the feature works. It is that the new prose passes
- * through every gate the old prose did: the verifier's text, the no-score gate, and the
- * memo's own citation scan. This is now the only drafted analysis most readers will see, so a
- * field missing from one of those lists would be the common case going unread, not the rare.
- */
-describe("/api/memo — the per-criterion analysis", () => {
-  const housing = getDataEntry("vic-public-housing")!;
-  const answerable = answerableCriteria(housing, housing.mrCriteria!);
-  const ids = withCriterionIds(answerable);
-
-  const meritsBody = {
-    entryId: "vic-public-housing",
-    pathId: "merits-review" as const,
-    forum: "VCAT",
-    pathName: "Asking for a fresh look at the decision",
-    groundIds: [],
-    criteria: housing.mrCriteria!,
-    story: "They gave me a notice to vacate and I have nowhere else to go.",
-    notes: {},
-  };
-
-  const criteriaModel =
-    (criteria: { criterionId: string; says: string; missing: string }[]): ModelFn =>
-    async (call) => ({
-      text: JSON.stringify({
-        covered: true,
-        summary: "This is about a notice to vacate. You say you have nowhere else to go.",
-        application: [],
-        criteria,
-        sources: [housing.sourceUrl],
-      }),
-      inputTokens: 50,
-      outputTokens: 50,
-      model: call.model,
-    });
-
-  it("passes the per-criterion analysis through once it clears the gates", async () => {
-    __setModelForTests(
-      criteriaModel([
-        {
-          criterionId: ids[0]!.id,
-          says: "You say the notice gave you ten days to leave.",
-          missing: "A lawyer will want the notice itself.",
-        },
-      ]),
-    );
-    const body = await (await memoPost(jsonReq("http://x/api/memo", meritsBody))).json();
-    expect(body.status).toBe("answered");
-    expect(body.criteria[0].criterionId).toBe(ids[0]!.id);
-    expect(body.criteria[0].says).toContain("ten days");
-  });
-
-  it("hands the model every answerable criterion with its id", async () => {
-    let prompt = "";
-    __setModelForTests(async (call) => {
-      prompt = call.user;
-      return criteriaModel([])(call);
-    });
-    await memoPost(jsonReq("http://x/api/memo", meritsBody));
-    for (const c of ids) {
-      expect(prompt, c.id).toContain(c.id);
-      expect(prompt).toContain(c.text);
-    }
-  });
-
-  it("falls back when a criterion is called satisfied", async () => {
-    // The sentence this document may never contain. A criterion is what the body decides,
-    // not a test anyone can be told they pass.
-    __setModelForTests(
-      criteriaModel([
-        { criterionId: ids[0]!.id, says: "This criterion is satisfied on your facts.", missing: "" },
-      ]),
-    );
-    const body = await (await memoPost(jsonReq("http://x/api/memo", meritsBody))).json();
-    expect(body.status).toBe("not-covered");
-  });
-
-  it("falls back when a criterion line invents a case", async () => {
-    __setModelForTests(
-      criteriaModel([
-        { criterionId: ids[0]!.id, says: "", missing: "Compare Craig v South Australia here." },
-      ]),
-    );
-    const body = await (await memoPost(jsonReq("http://x/api/memo", meritsBody))).json();
-    expect(body.status).toBe("not-covered");
-  });
-
-  it("falls back when a criterion line predicts the outcome", async () => {
-    __setModelForTests(
-      criteriaModel([
-        { criterionId: ids[0]!.id, says: "You will win on this at VCAT.", missing: "" },
-      ]),
-    );
-    const body = await (await memoPost(jsonReq("http://x/api/memo", meritsBody))).json();
-    expect(body.status).toBe("not-covered");
-  });
-
-  it("asks for room that grows with the criteria, not only with the grounds", async () => {
-    // The same defect as the elements, and it would land on the path with no grounds: a
-    // request with four criteria and no grounds asked for the bare 1200 and overran it.
-    const seen: number[] = [];
-    const spy: ModelFn = async (call) => {
-      seen.push(call.maxTokens);
-      return { text: "{}", inputTokens: 10, outputTokens: 10, model: call.model };
-    };
-    __setModelForTests(spy);
-    await memoPost(jsonReq("http://x/api/memo", { ...meritsBody, criteria: [] }));
-    const none = Math.max(...seen);
-    seen.length = 0;
-    await memoPost(jsonReq("http://x/api/memo", meritsBody));
-    const some = Math.max(...seen);
-    expect(none).toBe(1200);
-    expect(some).toBeGreaterThan(none);
-    expect(some).toBeLessThanOrEqual(8000);
-  });
-
-  it("does not ask for room for a routing line", async () => {
-    // A line that appears in both lists says which path applies. It gets no id and no
-    // answer, so it may not inflate the budget either.
-    const seen: number[] = [];
-    __setModelForTests(async (call) => {
-      seen.push(call.maxTokens);
-      return { text: "{}", inputTokens: 10, outputTokens: 10, model: call.model };
-    });
-    const routing = (housing.mrCriteria ?? []).filter((c) =>
-      (housing.irCriteria ?? []).includes(c),
-    );
-    expect(routing.length).toBeGreaterThan(0);
-    await memoPost(jsonReq("http://x/api/memo", { ...meritsBody, criteria: routing }));
-    expect(Math.max(...seen)).toBe(1200);
   });
 });

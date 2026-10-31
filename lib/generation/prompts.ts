@@ -6,7 +6,7 @@ import { CONNECTIVES } from "@/lib/verification/own-words";
  * legal substance comes ONLY from the corpus context passed in the user message.
  */
 
-export type Task = "ask" | "decode" | "letter" | "memo" | "letter-polish";
+export type Task = "ask" | "decode" | "letter" | "memo" | "letter-polish" | "brief";
 
 const HARD_NO = `
 ABSOLUTE RULES (a person in a vulnerable situation depends on this being safe):
@@ -253,6 +253,71 @@ Return JSON:
 
 
 /**
+ * The short analysis.
+ *
+ * The owner's call, 2026-10-31: the long memo reads as verbatim, and the value the person came
+ * for is what matters in THEIR matter, said briefly. So this writes the whole of what they read
+ * first — but still never the law itself. Each point names a part of a test or a criterion by
+ * the id the context gives it, and the page prints the corpus's own words for that part beside
+ * it. The time limit, the sources and the disclaimer are placed by the page, not by the model,
+ * which is why rule C forbids stating a time limit at all.
+ */
+const BRIEF_SYSTEM = `
+You are writing a SHORT analysis for a member of the public in Australia about a government
+decision that affects them. A free legal service may read it too. It is the most useful thing
+they will read, so it must say what matters for THEIR matter and nothing else.
+
+WRITE IT TO THEM. Use "you" throughout. Never "the applicant", "the client", "they" or "the
+person" for the one whose matter this is.
+
+FILL THESE PARTS:
+ · "situation": two or three short sentences. What happened, using only their account, and what
+   they want.
+ · "path": one or two short sentences. The path they chose and what that body looks at. Take
+   this from the CORPUS CONTEXT only.
+ · "points": the parts of the test, or the criteria, that THEIR ACCOUNT actually relates to. At
+   most four. LEAVE OUT every part their account says nothing about — choosing is the job.
+     – "ref": the id COPIED EXACTLY from the context. A criterion id ("c-..."), a ground id, or a
+       part of a ground's test written as groundId/partId. An id that is not in the context is
+       thrown away.
+     – "relates": one or two sentences on which of their facts relates to it.
+     – "needed": one sentence on what a lawyer or the reviewer would want to see about it.
+ · "otherSide": one or two sentences on what the decision-maker will usually say back.
+ · "toGather": up to four short noun phrases — documents or records that would help, such as
+   "the notice itself". Not instructions.
+ · "sources": one to three source strings, copied VERBATIM from the SOURCES lines.
+
+KEEP IT SHORT: about 200 words across all the text. Short sentences. Plain words.
+
+YOU MUST NOT:
+ A. Restate, soften or extend a legal test. The page prints the law beside your words. Name a
+    part by its id; do not reword it.
+ B. Name a case, Act, section, tribunal or court that is not in the CORPUS CONTEXT.
+ C. State a time limit or deadline, or any number of days, weeks, months or years. The page shows
+    the checked time limit. Dates and amounts from their own account are fine.
+ D. Say a point is strong, weak, likely, made out, satisfied, met or sufficient, or that it is
+    not. Never rank the points. Never say what will happen. The words to use are "relates to".
+ E. Tell them what to do. No "you should", "you must" or "I recommend". Set things out; do not
+    advise.
+ F. Invent a fact. Use only their account. If the CORPUS CONTEXT does not cover this decision, or
+    their account gives you nothing to work with, set "covered" to false.
+`.trim();
+
+const BRIEF_SHAPE = `
+Return JSON:
+{
+  "covered": boolean,
+  "situation": string,
+  "path": string,
+  "points": [ { "ref": string, "relates": string, "needed": string } ],   // at most 4
+  "otherSide": string,
+  "toGather": string[],                                                // at most 4
+  "sources": string[]                       // copy 1-3 VERBATIM from the SOURCES lines
+}
+`.trim();
+
+
+/**
  * Polishing a draft letter.
  *
  * Distinct from the `letter` task above, and the difference is the whole safety design. That
@@ -265,38 +330,37 @@ Return JSON:
  * fact they did not give us is a fact they cannot defend.
  */
 const LETTER_POLISH_SYSTEM = `
-You are improving the wording of a draft letter that a member of the public will send to a
+You are writing the final version of a letter that a member of the public will send to a
 government office about a decision that affects them. It goes over THEIR name, not yours.
 
-WHAT YOU MAY CHANGE
- · The framing sentences — the ones that open, join and close the letter. Make them read as a
-   competent adult wrote them: courteous, direct, specific, no padding, no pleading, no
-   indignation. Plain English, short sentences. A review officer should find it easy to act on.
- · The order of the paragraphs, where a different order reads better.
- · Grammar, punctuation and capitalisation anywhere.
+THE JOB: the shortest courteous letter that does what this letter is for. A review officer
+should be able to read it in a minute and act on it.
 
-WHAT YOU MAY NOT CHANGE, EVER
- · THE SUBSTANCE OF WHAT THEY SAID HAPPENED. You may tidy their sentences. You may not add a
-   fact, a name, a place, a date, a number, a reason, a motive or a feeling they did not give
-   you. Do not sharpen a vague detail. Do not fill a gap. Do not make a number more exact. If
-   they wrote "a couple of weeks", it stays "a couple of weeks".
- · ANY TEXT IN SQUARE BRACKETS. Copy every one across exactly, brackets included. They are
-   the blanks the person still has to fill in, and the app highlights them. Do not add a new
-   bracket of your own, and do not answer one.
- · Do not add a law, a section number, a case, a tribunal, a court, a deadline or a figure.
-   Not one, however obviously true it seems. If it is not in the draft you were given, it does
-   not go in.
- · Do not argue the law. Do not say a decision was unlawful, unfair, unreasonable or wrong in
-   law. The person may say what happened to them; they may not be made to allege a legal
-   conclusion they did not reach.
- · Do not add a threat, a deadline of their own, or a demand.
- · Keep the letter's bones: the addressee line, the subject line, and the sign-off.
- · ANY BLOCK HEADED "NOTE TO YOURSELF". Copy it across exactly, heading and all, in the same
-   place. It is written to the person, not to the office, and it is there because the letter
-   could otherwise be mistaken for a formal step it is not. Do not soften it, shorten it,
-   fold it into a sentence, move it below the body, or drop it as repetitive.
+WHAT YOU MAY DO
+ · Rewrite the framing sentences — the ones that open, join and close the letter. Courteous,
+   direct, specific. No padding, no pleading, no indignation. Short sentences.
+ · SHORTEN THEIR ACCOUNT to the facts that matter for this letter. Aim for about 180 words for
+   their account. Keep it in the first person ("I", "my"). You may condense, merge and reorder
+   their facts, and leave out ones that do not matter here.
+ · Fix grammar, punctuation and capitalisation anywhere.
 
-If you cannot improve it without breaking one of those, set "covered" to false and return the
+WHAT YOU MAY NOT DO, EVER
+ · ADD ANYTHING TO WHAT THEY SAID HAPPENED. Not a fact, a name, a place, a date, a number, a
+   reason, a motive or a feeling they did not give you. Do not sharpen a vague detail or fill a
+   gap. If they wrote "a couple of weeks", it stays "a couple of weeks". Every sentence about
+   what happened must be something they told you, so they can answer "what makes you say that?".
+ · ANY TEXT IN SQUARE BRACKETS. Copy every one across exactly, brackets included. They are the
+   blanks the person still has to fill in. Do not add a bracket, and do not answer one.
+ · Add a law, a section number, a case, a tribunal, a court, a deadline or a figure that is not
+   already in the draft. Keep a law THEY named only if it matters for this letter.
+ · Make them allege a legal conclusion they did not reach. Do not say a decision was unlawful,
+   unfair or unreasonable unless they said so.
+ · Add a threat, a deadline of their own, or a demand.
+ · Drop the letter's bones: the addressee line, the "Re:" subject line and the sign-off.
+ · Touch any block headed "NOTE TO YOURSELF". Copy it across exactly, heading and all, in the same
+   place. It is written to the person, not to the office.
+
+If you cannot do this without breaking one of those rules, set "covered" to false and return the
 draft unchanged. That is a good answer, not a failure.
 `.trim();
 
@@ -321,6 +385,8 @@ export function systemPrompt(task: Task): string {
   // No HARD_NO: that block is shaped for an ANSWER, and this task returns a letter in
   // the person\u2019s own voice. Its own rules are stricter where it matters.
   if (task === "letter-polish") return `${LETTER_POLISH_SYSTEM}\n\n${LETTER_POLISH_SHAPE}`;
+  // The brief keeps the explainer role and the shared HARD_NO block, like the memo it leads.
+  if (task === "brief") return `${role}\n\n${HARD_NO}\n\n${BRIEF_SYSTEM}\n\n${BRIEF_SHAPE}`;
   const shape = task === "ask" ? ASK_SHAPE : DECODE_SHAPE;
   return `${role}\n\n${HARD_NO}\n\n${shape}`;
 }
@@ -340,7 +406,7 @@ export function userPrompt(
   const label =
     task === "ask"
       ? "QUESTION"
-      : task === "letter" || task === "memo"
+      : task === "letter" || task === "memo" || task === "brief"
         ? "THEIR ACCOUNT"
         : task === "letter-polish"
           ? "THE DRAFT TO IMPROVE"
@@ -361,7 +427,22 @@ export function userPrompt(
 
 /** Repair prompt — fixes ONLY the JSON envelope, never the substance (harness §11). */
 export function repairPrompt(badOutput: string, task: Task): string {
-  const shape = task === "ask" ? ASK_SHAPE : DECODE_SHAPE;
+  // Each task repaired against ITS OWN shape. This handed every task other than "ask" the
+  // decode shape, so a memo or a letter that came back as broken JSON was "repaired" into a
+  // decode — which then failed its schema and was thrown away. A repair that cannot succeed
+  // is a model call billed for nothing, and a silently missing analysis.
+  const shape =
+    task === "ask"
+      ? ASK_SHAPE
+      : task === "memo"
+        ? MEMO_SHAPE
+        : task === "brief"
+          ? BRIEF_SHAPE
+          : task === "letter"
+            ? LETTER_SHAPE
+            : task === "letter-polish"
+              ? LETTER_POLISH_SHAPE
+              : DECODE_SHAPE;
   return [
     "The following text was supposed to be a single valid JSON object but could not be parsed.",
     "Return the SAME content as valid JSON only. Do not add, remove, or change any wording — only fix the JSON structure. No code fences.",

@@ -80,6 +80,11 @@ export async function POST(req: NextRequest) {
       userInput: body.draft,
       guard: ctx.guard,
       byoKeyValue: ctx.byoKeyValue,
+      // Room for the whole letter. The shared 1200 is a TRUNCATION, not a length limit: a
+      // letter around a long account overran it, came back as half a JSON object, and the
+      // person was left with the draft and no word why — the memo's lesson, again. The
+      // fidelity gate's "too-long" is what keeps the letter short; this only keeps it whole.
+      maxTokens: 2000,
     });
   } catch {
     return notCovered();

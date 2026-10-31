@@ -98,7 +98,7 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
   await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
   await expect(page.getByText(/time limits:/i)).toBeVisible(); // brief generic note, not a headline
-  await expect(page.getByRole("heading", { name: /the ways a decision gets looked at again/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /the ways a decision can be taken further/i })).toBeVisible();
   await expect(page.getByText(/not legal advice/i)).toBeVisible(); // disclaimer
   await expect(page.getByText(/free help/i).first()).toBeVisible();
 
@@ -567,7 +567,7 @@ test("the flow gives guidance first and hands over last", async ({ page }) => {
   // The options view explains the three approaches BEFORE the person's own paths. Someone
   // who has had a letter does not already know that tribunal, review and court are
   // different things.
-  await expect(page.getByRole("heading", { name: /the ways a decision gets looked at again/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /the ways a decision can be taken further/i })).toBeVisible();
   // Explained IN PLACE, above the cards. This was a second list of the same three approaches
   // whose items were links out of the flow — the same navigation that stranded people.
   await expect(page.locator("#r-learn")).toContainText(/internal review/i);

@@ -26,6 +26,7 @@ import {
   type TripwireFlags,
 } from "@/lib/tripwire";
 import { composeMemo, memoPathName } from "@/lib/memo/compose";
+import { composeBrief, type BriefDraft } from "@/lib/memo/brief";
 import type { PathId } from "@/lib/analysis";
 import { Disclaimer } from "@/components/ui/Disclaimer";
 import { MemoView } from "@/components/feature/MemoView";
@@ -140,23 +141,12 @@ type ResultView = "story" | "goal" | "options" | "grounds" | "memo" | "help";
  */
 const RESULT_VIEWS: ResultView[] = ["story", "goal", "options", "grounds", "memo", "help"];
 
-/** What /api/memo hands back, once it has cleared every gate. */
-interface MemoDraft {
-  summary: string;
-  application: {
-    groundId: string;
-    forThem: string;
-    against: string;
-    toTest: string;
-    /** The same work, one part of the test at a time. Absent on an older draft. */
-    elements?: { elementId: string; says: string; missing: string }[];
-  }[];
-  /**
-   * The same work against what the BODY decides, for the paths that have no grounds of
-   * review — which is every path except judicial review, and so nearly every reader.
-   */
-  criteria?: { criterionId: string; says: string; missing: string }[];
-}
+/**
+ * What /api/memo hands back, once it has cleared every gate: the SHORT analysis, written by the
+ * model and laid out by `composeBrief`. Since 2026-10-31 it no longer returns inserts for the
+ * long memo; that memo is composed without a model and folds under this as the full notes.
+ */
+type MemoDraft = BriefDraft;
 
 /** The key the internal-review note is filed under, so the memo can find it. */
 const INTERNAL_NOTE_KEY = "What you are asking them to look at again";
@@ -1714,8 +1704,12 @@ function ResultStep({
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, rawDraftBody, entry.id, letterNear]);
-  /** The letter as shown and copied: polished where one came back, the draft otherwise. */
-  const letterBody = (rawDraftBody && polished[rawDraftBody]) || rawDraftBody;
+  // The shorter letter summarises their account; the full one carries every word of it. The
+  // person decides which goes out over their name, and is told to check every sentence.
+  const [useFullLetter, setUseFullLetter] = useState(false);
+  const shortLetter = (rawDraftBody && polished[rawDraftBody]) || "";
+  /** The letter as shown and copied: the shorter one where it came back, unless they chose theirs in full. */
+  const letterBody = (!useFullLetter && shortLetter) || rawDraftBody;
 
   // ---- The drafted application ------------------------------------------------------
   //
@@ -1785,23 +1779,21 @@ function ResultStep({
     })
       .then((r) => r.json())
       .then(
-        (d: {
-          status?: string;
-          summary?: string;
-          application?: MemoDraft["application"];
-          criteria?: MemoDraft["criteria"];
-        }) => {
+        (d: { status?: string; brief?: Partial<MemoDraft> }) => {
         if (!live) return;
         // A refusal is cached too. It means the gates rejected this exact input, and asking
         // again with the same input would spend money to be refused again.
         setDraftCache((prev) => ({
           ...prev,
           [draftKey]:
-            d?.status === "answered"
+            d?.status === "answered" && d.brief
               ? {
-                  summary: d.summary ?? "",
-                  application: d.application ?? [],
-                  criteria: d.criteria ?? [],
+                  situation: d.brief.situation ?? "",
+                  path: d.brief.path ?? "",
+                  points: d.brief.points ?? [],
+                  otherSide: d.brief.otherSide ?? "",
+                  toGather: d.brief.toGather ?? [],
+                  sources: d.brief.sources ?? [],
                 }
               : null,
         }));
@@ -1826,8 +1818,9 @@ function ResultStep({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, draftKey, draftCache]);
 
+  // THE FULL NOTES. No `drafted` any more: the model writes the short brief instead, and these
+  // are the corpus's own words, composed on the device, for a lawyer who wants the detail.
   const memo = composeMemo({
-    drafted,
     entry,
     process: memoProcess,
     internal: memoPathId === "internal-review" ? (internalReview ?? null) : null,
@@ -1900,6 +1893,60 @@ function ResultStep({
     t: (k) => t(k),
   });
 
+  // ---- The short analysis, and what is shown -------------------------------------------
+  //
+  // The owner's call, 2026-10-31: the long memo reads as verbatim, and the value is what
+  // matters in THIS person's matter, said briefly. So the brief leads, and the long memo
+  // folds under it as the full notes a lawyer can open. Whatever the model is doing, the
+  // header, the time limit and free help show at once — the brief's frame never waits.
+  const memoGrounds =
+    memoPathId === "judicial-review" ? shownGrounds.filter((g) => relatedGrounds.includes(g.id)) : [];
+  const briefDoc = composeBrief({
+    brief: drafted,
+    entry,
+    pathName: memoPathName({
+      process: memoProcess,
+      internal: memoPathId === "internal-review" ? (internalReview ?? null) : null,
+      character: memoPath?.character ?? "tribunal",
+      t,
+    }),
+    forum: memoPathBody || memoProcess?.plainName || t("pathTitleInternal"),
+    decisionDate: decisionDate || undefined,
+    grounds: memoGrounds,
+    criteria: memoPath?.criteria ?? [],
+    t: (k) => t(k),
+  });
+  /** The brief, or the frame of one while it is written. False once it has failed. */
+  const briefShown = !!drafted || drafting;
+  /** What is copied and downloaded: the brief, then the full notes; or the full notes alone. */
+  const analysisText = drafted
+    ? `${briefDoc.body}\n\n${"-".repeat(48)}\n${t("fullNotesTitle").toUpperCase()}\n\n${memo.body}`
+    : memo.body;
+  const analysisView = (
+    <>
+      {briefShown && <MemoView blocks={briefDoc.blocks} />}
+      {drafting && !drafted && (
+        <p aria-live="polite" className="mt-4 text-[15px] font-semibold text-help-ink">
+          {t("memoWriting")}
+        </p>
+      )}
+      {briefShown ? (
+        // Keyed by state, so it opens or closes when the brief arrives, not only on a click.
+        <details key={drafted ? "folded" : "pending"} className="mt-6 rounded-sticker border-2 border-line px-4 py-3">
+          <summary className="cursor-pointer py-2.5 font-display text-[17px] font-extrabold text-ink">
+            {t("fullNotesTitle")}
+          </summary>
+          <p className="mt-2 text-[15px] leading-relaxed text-ink-soft">{t("fullNotesLead")}</p>
+          <MemoView blocks={memo.blocks} />
+        </details>
+      ) : (
+        // No model, a blocked guard, or a gate that refused the brief: the full notes, open —
+        // exactly what this step showed before the brief existed. Never worse than that.
+        <MemoView blocks={memo.blocks} />
+      )}
+    </>
+  );
+
   /**
    * The one document, downloaded.
    *
@@ -1910,7 +1957,7 @@ function ResultStep({
    * moved into it.
    */
   function downloadMemo() {
-    const blob = new Blob([memo.body], { type: "text/plain;charset=utf-8" });
+    const blob = new Blob([analysisText], { type: "text/plain;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -2494,13 +2541,8 @@ function ResultStep({
               document explains itself, and the step says nothing about where the drafting
               happens. The disclosure lives on the privacy page, which describes the guided
               flow and this step in it. */}
-          {drafting && (
-            <p aria-live="polite" className="mt-2 text-[14.5px] font-semibold text-help-ink">
-              {t("memoDrafting")}
-            </p>
-          )}
-          <div id="memo-text" data-memo={memo.body}>
-            <MemoView blocks={memo.blocks} />
+          <div id="memo-text" data-memo={analysisText}>
+            {analysisView}
           </div>
           <div className="mt-4 flex flex-wrap gap-3">
             <button
@@ -2508,7 +2550,7 @@ function ResultStep({
               className="btn btn-primary"
               onClick={async () => {
                 try {
-                  await navigator.clipboard.writeText(memo.body);
+                  await navigator.clipboard.writeText(analysisText);
                   setMemoCopied(true);
                   setTimeout(() => setMemoCopied(false), 2000);
                 } catch {
@@ -2980,6 +3022,20 @@ function ResultStep({
               {t("letterPolishing")}
             </p>
           )}
+          {shortLetter && (
+            <div className="mt-3 rounded-sticker border-2 border-help bg-help-soft px-4 py-3">
+              <p className="text-[15px] leading-relaxed text-ink">
+                {useFullLetter ? t("letterFullNotice") : t("letterShortNotice")}
+              </p>
+              <button
+                type="button"
+                className="btn btn-secondary mt-3"
+                onClick={() => setUseFullLetter((v) => !v)}
+              >
+                {useFullLetter ? t("letterUseShort") : t("letterUseFull")}
+              </button>
+            </div>
+          )}
           <LetterView body={letterBody} label={activeApply.label} />
           <LetterPlaceholderKey text={t("letterPlaceholderKey")} />
           <button
@@ -3094,16 +3150,14 @@ function ResultStep({
               lib/handoff, so a person arrived at a legal service with a different paper from
               the one the app had just walked them through. And offering it only as a file
               meant someone on a phone with no easy way to open a .txt had nothing to read. */}
-          <div data-memo={memo.body}>
-            <MemoView blocks={memo.blocks} />
-          </div>
+          <div data-memo={analysisText}>{analysisView}</div>
           <div className="mt-4 flex flex-wrap items-center gap-3">
             <button
               type="button"
               className="btn btn-help"
               onClick={async () => {
                 try {
-                  await navigator.clipboard.writeText(memo.body);
+                  await navigator.clipboard.writeText(analysisText);
                   setMemoCopied(true);
                   setTimeout(() => setMemoCopied(false), 2000);
                 } catch {

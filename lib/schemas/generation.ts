@@ -126,6 +126,48 @@ export const GeneratedMemoSchema = z.object({
 export type GeneratedMemo = z.infer<typeof GeneratedMemoSchema>;
 
 /**
+ * The short analysis — the thing a person reads first.
+ *
+ * The long memo copies every test, case and remedy from the corpus, and the owner's verdict on
+ * it was plain: it reads as verbatim, and verbatim is not the value. This is the value: what
+ * matters for THIS person's matter, said briefly. The long memo stays, folded away under it, as
+ * the full notes a duty lawyer can open.
+ *
+ * What the model writes is prose ABOUT the law, never the law: each point names a part of a
+ * test or a criterion by its id, and the heading printed above it is ours, from the corpus.
+ * The time limit, the sources list and the disclaimer are placed by `composeBrief`, not here.
+ *
+ * Arrays carry no maximum on purpose. A model that returns five points instead of four should
+ * not throw the whole analysis away at schema time; the composer keeps the first four.
+ */
+export const GeneratedBriefSchema = z.object({
+  covered: z.boolean(),
+  /** Two or three sentences: what happened, in their terms, and what they want. */
+  situation: z.string().default(""),
+  /** One or two sentences: the chosen path and what that body looks at, from the context. */
+  path: z.string().default(""),
+  /**
+   * Only the parts of the test or criteria their account actually relates to. `ref` is an id
+   * copied from the context; one we did not supply matches nothing and is dropped.
+   */
+  points: z
+    .array(
+      z.object({
+        ref: z.string(),
+        relates: z.string().default(""),
+        needed: z.string().default(""),
+      }),
+    )
+    .default([]),
+  /** What the decision-maker will usually say back. Never an outcome. */
+  otherSide: z.string().default(""),
+  /** Documents or records that would help — noun phrases, not instructions. */
+  toGather: z.array(z.string()).default([]),
+  sources: z.array(z.string()).default([]),
+});
+export type GeneratedBrief = z.infer<typeof GeneratedBriefSchema>;
+
+/**
  * A polished letter.
  *
  * One field, because the output IS the letter — there is nothing to assemble around it, and

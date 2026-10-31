@@ -164,3 +164,66 @@ describe("a warning written to the person, not the office", () => {
     expect(checkLetterFidelity(plain, "", plain)).toHaveLength(0);
   });
 });
+
+/**
+ * SINCE 2026-10-31 THE REWRITE MAY SUMMARISE THEIR ACCOUNT — the owner's call, because the
+ * whole account pasted in is not a good letter. That loosens what the model may do to their
+ * words, so these are the matching tightenings: no new name or place, and it must actually be
+ * shorter than a page a review officer reads in a minute.
+ */
+describe("a shorter letter adds no name or place", () => {
+  const LONG = buildDraft(
+    verifiedEntry,
+    "internal-review-request",
+    "My car was parked in a bay on Batman Street in West Melbourne. The sign was hidden by a tree.",
+  ).body;
+  const MINE = "My car was parked in a bay on Batman Street in West Melbourne. The sign was hidden by a tree.";
+
+  it("accepts a faithful summary that keeps their names", () => {
+    const short = LONG.replace(
+      "My car was parked in a bay on Batman Street in West Melbourne. The sign was hidden by a tree.",
+      "I parked on Batman Street in West Melbourne, where the sign was hidden by a tree.",
+    );
+    expect(checkLetterFidelity(LONG, MINE, short).filter((f) => f.gate === "invented-name")).toEqual([]);
+  });
+
+  it("refuses a name they never gave", () => {
+    const short = LONG.replace(
+      "The sign was hidden by a tree.",
+      "I spoke to Officer Brown, who agreed the sign was hidden by a tree.",
+    );
+    const f = checkLetterFidelity(LONG, MINE, short);
+    expect(f.some((x) => x.gate === "invented-name" && x.detail === "Officer")).toBe(true);
+    expect(f.some((x) => x.gate === "invented-name" && x.detail === "Brown")).toBe(true);
+  });
+
+  it("refuses a place they never gave", () => {
+    const short = LONG.replace("on Batman Street", "on Batman Street near Flagstaff Gardens");
+    expect(checkLetterFidelity(LONG, MINE, short).some((x) => x.gate === "invented-name")).toBe(true);
+  });
+
+  it("does not treat an ordinary sentence opening, or their own 'I', as a name", () => {
+    const short = LONG.replace(
+      "The sign was hidden by a tree.",
+      "Unfortunately the sign was hidden by a tree. I could not read it.",
+    );
+    expect(checkLetterFidelity(LONG, MINE, short).filter((f) => f.gate === "invented-name")).toEqual([]);
+  });
+
+  it("does not treat a capitalised word they wrote in lowercase as new", () => {
+    const short = LONG.replace("hidden by a tree", "hidden by a Tree");
+    expect(checkLetterFidelity(LONG, MINE, short).filter((f) => f.gate === "invented-name")).toEqual([]);
+  });
+});
+
+describe("a shorter letter is actually short", () => {
+  it("refuses a rewrite that grew past the draft and past a one-minute read", () => {
+    const padded = DRAFT.body.replace(THEIRS, `${THEIRS} ${"I am very upset about all of this. ".repeat(80)}`);
+    const f = checkLetterFidelity(DRAFT.body, THEIRS, padded);
+    expect(f.some((x) => x.gate === "too-long")).toBe(true);
+  });
+
+  it("accepts a rewrite no longer than the draft it came from", () => {
+    expect(checkLetterFidelity(DRAFT.body, THEIRS, DRAFT.body).filter((x) => x.gate === "too-long")).toEqual([]);
+  });
+});

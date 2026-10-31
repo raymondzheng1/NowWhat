@@ -30,9 +30,55 @@ export interface LetterFidelityFailure {
     | "placeholder-invented"
     | "invented-figure"
     | "not-a-letter"
-    | "warning-dropped";
+    | "warning-dropped"
+    | "invented-name"
+    | "too-long";
   detail: string;
 }
+
+/**
+ * Capitalised words a rewrite may use even if neither the draft nor their words contain them.
+ * Kept tiny on purpose: everything a letter of ours says is already in the draft it started
+ * from, so the allowance is only for the person's own first-person voice.
+ */
+const ALWAYS_ALLOWED = new Set(["i", "i'm", "i've", "i'd", "i'll"]);
+
+/** A word, allowing the apostrophes and hyphens that names and places carry. */
+const WORD = /[A-Za-z][A-Za-z'’-]*/g;
+
+/**
+ * A capitalised word in the middle of a sentence that appears nowhere in what we started from.
+ *
+ * Since 2026-10-31 the rewrite may SUMMARISE the person's account, not only reword our
+ * framing — the owner's call, because the whole account pasted in is not a good letter. That
+ * loosens what the model may do to their words, so this is the matching tightening: a figure
+ * was already caught; a name or a place now is too. "I spoke to Officer Brown at the Collins
+ * Street office" is the sentence that must never appear unless they wrote it.
+ *
+ * Mid-sentence only. A sentence-initial capital is ordinary English ("However", "Because"),
+ * and refusing those would throw away good letters to catch nothing. Membership is checked
+ * without case, so a model that capitalises "council" has not invented anything.
+ */
+function inventedNames(source: string, rewritten: string): string[] {
+  const known = new Set([...source.matchAll(WORD)].map((m) => m[0].toLowerCase()));
+  const found = new Set<string>();
+  // Blanks are checked by the placeholder gate; their contents are not prose.
+  const text = rewritten.replace(PLACEHOLDER, " ");
+  for (const m of text.matchAll(WORD)) {
+    const w = m[0];
+    if (w[0] !== w[0]!.toUpperCase() || w[0] === w[0]!.toLowerCase()) continue;
+    const lower = w.toLowerCase();
+    if (ALWAYS_ALLOWED.has(lower) || known.has(lower)) continue;
+    // Sentence-initial: nothing but space, quotes or brackets back to a full stop, a colon, a
+    // line break or the start of the text.
+    const before = text.slice(0, m.index).replace(/["'“‘(\s]+$/, "");
+    if (before === "" || /[.!?:\n]$/.test(before)) continue;
+    found.add(w);
+  }
+  return [...found];
+}
+
+const words = (s: string) => s.split(/\s+/).filter(Boolean).length;
 
 /**
  * Blocks a draft addresses to the person rather than to the agency, and which the rewrite
@@ -101,6 +147,19 @@ export function checkLetterFidelity(
     if (original.includes(w) && !rewritten.includes(w)) {
       failures.push({ gate: "warning-dropped", detail: w });
     }
+  }
+
+  // No new names or places, mid-sentence (see `inventedNames`).
+  for (const n of inventedNames(`${original}\n${theirWords}`, rewritten)) {
+    failures.push({ gate: "invented-name", detail: n });
+  }
+
+  // The rewrite exists to be SHORTER. One that grew past the draft — or past a length no
+  // review officer reads in a minute — has stopped doing its job, and the person is better off
+  // with the draft they can see in full.
+  const limit = Math.max(words(original), 450);
+  if (words(rewritten) > limit) {
+    failures.push({ gate: "too-long", detail: `${words(rewritten)} words (limit ${limit})` });
   }
 
   // The structural bones. A "more professional" rewrite that drops the sign-off or the

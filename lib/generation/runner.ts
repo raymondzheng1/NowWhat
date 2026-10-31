@@ -11,10 +11,12 @@ import {
   GeneratedDecodeSchema,
   GeneratedMemoSchema,
   GeneratedLetterSchema,
+  GeneratedBriefSchema,
   type GeneratedAnswer,
   type GeneratedDecode,
   type GeneratedMemo,
   type GeneratedLetter,
+  type GeneratedBrief,
 } from "@/lib/schemas/generation";
 
 /**
@@ -291,6 +293,39 @@ export function runMemo(
       declaredSources: d.sources,
     }),
   });
+}
+
+/**
+ * Write the short analysis. Every sentence the model wrote goes to the verifier — the same
+ * rule as the memo: a field missing from this list would be the one prose on the page no gate
+ * had read, and on this output it is the prose people read first.
+ */
+export function runBrief(
+  args: Omit<RunOpts<GeneratedBrief>, "task" | "schema" | "extract">,
+): Promise<GenerationResult<GeneratedBrief>> {
+  return runGeneration<GeneratedBrief>({
+    ...args,
+    task: "brief",
+    schema: GeneratedBriefSchema,
+    extract: (d) => ({
+      covered: d.covered,
+      text: briefProse(d),
+      declaredSources: d.sources,
+    }),
+  });
+}
+
+/** All the prose a brief carries, in one string — for the verifier and the route's own gates. */
+export function briefProse(d: GeneratedBrief): string {
+  return [
+    d.situation,
+    d.path,
+    ...d.points.flatMap((p) => [p.relates, p.needed]),
+    d.otherSide,
+    ...d.toGather,
+  ]
+    .filter((x) => x && x.trim())
+    .join(" ");
 }
 
 /**

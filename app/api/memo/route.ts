@@ -6,22 +6,25 @@ import { precheck } from "@/lib/cost/guard";
 import { getDataEntry } from "@/lib/data";
 import { getEntry, FALLBACK_ENTRY_ID } from "@/lib/corpus/index";
 import { getConcept, getGround, getProcess } from "@/lib/legal";
-import { runMemo } from "@/lib/generation/runner";
+import { runBrief, briefProse } from "@/lib/generation/runner";
 import { isModelConfigured } from "@/lib/generation/anthropic";
 import { buildMemoContext, memoExtraSources } from "@/lib/memo/context";
-import { answerableCriteria } from "@/lib/memo/criteria";
 import { checkMemoCitations } from "@/lib/memo/qa";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /**
- * Draft the application section of a person's memo.
+ * Write the short analysis a person reads first.
  *
- * THIS IS THE ONE STEP IN /start THAT LEAVES THE DEVICE, and it exists because the memo is
+ * THIS IS THE ONE STEP IN /start THAT LEAVES THE DEVICE, and it exists because the analysis is
  * the product: everything before it gathers what a person knows, and this is where that turns
- * into something a duty lawyer can read in two minutes. The rest of the flow still computes
- * on-device and still sends nothing.
+ * into something they — and a duty lawyer — can read in a minute. The rest of the flow still
+ * computes on-device and still sends nothing.
+ *
+ * Since 2026-10-31, on the owner's call, this writes a SHORT brief (`runBrief`) instead of
+ * inserts for the long memo. The long memo is still composed — deterministically, from the
+ * corpus — and sits folded under the brief as the full notes for a lawyer.
  *
  * What that costs, and what protects it:
  *   · The request carries the person's own words. It is processed IN MEMORY and discarded on
@@ -30,8 +33,11 @@ export const dynamic = "force-dynamic";
  *   · The model is given ONLY our knowledge base (`buildMemoContext`) plus their words. It
  *     cannot reach anything else, which is the owner's rule: our analysis and our legal
  *     sources come from our own corpus and nowhere else.
- *   · The model writes the APPLICATION only. Every test, case, remedy and time-limit rule is
- *     copied verbatim by `composeMemo`, so there is nothing there for it to get wrong.
+ *   · The model writes prose ABOUT the law, never the law. Each point names a part of a test
+ *     or a criterion by its id, and the page prints the corpus's words for it. The time limit,
+ *     sources and disclaimer are placed by `composeBrief`, and the brief may state no time
+ *     limit at all.
+ *   · The brief must be short: over `BRIEF_MAX_WORDS` it is refused, not shown.
  *   · Output passes `verifyOutput` (no advice, no prediction, no out-of-corpus fact,
  *     source-binding, jurisdiction, reading level) and then `checkMemoCitations`, which
  *     rejects any case, Act or section the context did not supply.
@@ -41,13 +47,19 @@ export const dynamic = "force-dynamic";
  */
 
 /**
- * Output budget for one memo, from the number of points and the parts of their tests.
- * Capped, so a request that marks every ground cannot ask for an unbounded answer.
+ * Room for the SHORT analysis. It is capped at four points whatever the person marked, so it
+ * does not grow with the input the way the long memo did — but the ids and the sources it
+ * copies back cost tokens, and a ceiling that is too low truncates the JSON and silently
+ * loses the analysis (the memo's lesson). Billing is on tokens used, so headroom is free.
  */
-function memoTokenBudget(grounds: { elements: unknown[] }[], criteria: number): number {
-  const parts = grounds.reduce((n, g) => n + g.elements.length, 0);
-  return Math.min(8000, 1200 + 300 * grounds.length + 220 * parts + 220 * criteria);
-}
+const BRIEF_TOKENS = 1600;
+
+/**
+ * The brief is meant to be short; one that is not has stopped doing its job. Over this many
+ * words of prose it is refused, and the person gets the full notes — the same fallback as any
+ * other failed gate — rather than a long answer presented as the short one.
+ */
+const BRIEF_MAX_WORDS = 350;
 
 const BodySchema = z.object({
   entryId: z.string().min(1).max(64),
@@ -143,21 +155,14 @@ export async function POST(req: NextRequest) {
 
   let result;
   try {
-    result = await runMemo({
+    result = await runBrief({
       entry: verifyEntry,
       context,
       userInput: theirWords,
       guard: ctx.guard,
       byoKeyValue: ctx.byoKeyValue,
       extraSources: memoExtraSources({ entry, process: proc, internal, grounds }),
-      // ROOM FOR THE ANSWER, sized to what was actually asked for. The memo is the only
-      // output whose length follows its input: three paragraphs for each point the person
-      // marked, plus two short lines for each part of each point's test. The shared 1200
-      // was enough for one point and not for two, and going over does not produce a shorter
-      // memo — it produces half a JSON object, which fails to parse and ends as "not
-      // covered". Billing is on tokens USED, so a ceiling that is never reached costs
-      // nothing; the only thing a low one buys is a silently missing analysis.
-      maxTokens: memoTokenBudget(grounds, answerableCriteria(entry, body.criteria).length),
+      maxTokens: BRIEF_TOKENS,
     });
   } catch {
     return notCovered();
@@ -165,37 +170,30 @@ export async function POST(req: NextRequest) {
   // `theirWords` and `body` go out of scope here. Nothing is written anywhere.
 
   if (result.status !== "answered" || !result.data) return notCovered();
+  if (!result.data.covered) return notCovered();
 
-  // The memo's own gate, on top of the shared ones: a citation that did not come from our
-  // knowledge base never ships, even if it happens to name a real case.
-  const drafted = [
-    result.data.summary,
-    ...result.data.application.flatMap((a) => [
-      a.forThem,
-      a.against,
-      a.toTest,
-      // The per-element lines too. A fabricated case is no less dangerous for being written
-      // under one part of a test instead of under the whole of it.
-      ...a.elements.flatMap((e) => [e.says, e.missing]),
-    ]),
-    // And the per-criterion lines. This is the only drafted analysis most people will see —
-    // an internal review and a tribunal have no grounds — so leaving it out of the citation
-    // scan would exempt the common case and gate the rare one.
-    ...result.data.criteria.flatMap((c) => [c.says, c.missing]),
-  ].join("\n");
-  const invented = checkMemoCitations(drafted, `${context}\n${entry.deadlineRule}`);
+  const prose = briefProse(result.data);
+
+  // The memo's own citation gate, on top of the verifier: a case, Act or section that did not
+  // come from our knowledge base never ships, even if it happens to be real.
+  const invented = checkMemoCitations(prose, `${context}\n${entry.deadlineRule}`);
   if (invented.length > 0) return notCovered();
 
-  if (!result.data.covered) return notCovered();
+  // Short is the point of it. A brief that ran long is refused rather than shown as the short one.
+  if (prose.split(/\s+/).filter(Boolean).length > BRIEF_MAX_WORDS) return notCovered();
 
   return apiJson(
     {
       ok: true,
       status: "answered" as const,
-      summary: result.data.summary,
-      application: result.data.application,
-      criteria: result.data.criteria,
-      sources: result.data.sources,
+      brief: {
+        situation: result.data.situation,
+        path: result.data.path,
+        points: result.data.points,
+        otherSide: result.data.otherSide,
+        toGather: result.data.toGather,
+        sources: result.data.sources,
+      },
     },
     ctx,
   );
