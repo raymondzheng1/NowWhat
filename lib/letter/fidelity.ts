@@ -102,6 +102,12 @@ export function checkLetterFidelity(
   original: string,
   theirWords: string,
   rewritten: string,
+  /**
+   * For the case letter: the corpus material it argues from (whose names — the tribunal, the
+   * Act — it may use), and the length a case letter is allowed. The shorter letter passes
+   * neither, and is held to the draft alone and to being short.
+   */
+  opts: { known?: string; maxWords?: number } = {},
 ): LetterFidelityFailure[] {
   const failures: LetterFidelityFailure[] = [];
 
@@ -142,6 +148,7 @@ export function checkLetterFidelity(
   const allowed = new Set([
     ...[...original.matchAll(NUMBER)].map((m) => m[0]),
     ...[...theirWords.matchAll(NUMBER)].map((m) => m[0]),
+    ...[...(opts.known ?? "").matchAll(NUMBER)].map((m) => m[0]),
   ]);
   const seen = new Set<string>();
   for (const m of rewritten.matchAll(NUMBER)) {
@@ -178,14 +185,14 @@ export function checkLetterFidelity(
   }
 
   // No new names or places, mid-sentence (see `inventedNames`).
-  for (const n of inventedNames(`${original}\n${theirWords}`, rewritten)) {
+  for (const n of inventedNames(`${original}\n${theirWords}\n${opts.known ?? ""}`, rewritten)) {
     failures.push({ gate: "invented-name", detail: n });
   }
 
   // The rewrite exists to be SHORTER. One that grew past the draft — or past a length no
   // review officer reads in a minute — has stopped doing its job, and the person is better off
   // with the draft they can see in full.
-  const limit = Math.max(words(original), 450);
+  const limit = opts.maxWords ?? Math.max(words(original), 450);
   if (words(rewritten) > limit) {
     failures.push({ gate: "too-long", detail: `${words(rewritten)} words (limit ${limit})` });
   }

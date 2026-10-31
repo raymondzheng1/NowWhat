@@ -5,10 +5,9 @@ import { apiJson } from "@/lib/http/respond";
 import { precheck } from "@/lib/cost/guard";
 import { getDataEntry } from "@/lib/data";
 import { getEntry, FALLBACK_ENTRY_ID } from "@/lib/corpus/index";
-import { getConcept, getGround, getProcess } from "@/lib/legal";
 import { runBrief, briefProse } from "@/lib/generation/runner";
 import { isModelConfigured } from "@/lib/generation/anthropic";
-import { buildMemoContext, memoExtraSources } from "@/lib/memo/context";
+import { contextForPath } from "@/lib/memo/path-context";
 import { checkMemoCitations } from "@/lib/memo/qa";
 
 export const runtime = "nodejs";
@@ -129,46 +128,12 @@ export async function POST(req: NextRequest) {
     return apiJson({ ok: false, status: "blocked", reason: guard.reason, message: guard.message }, ctx, code);
   }
 
-  // ONLY A PATH THAT IS ONE OF THE TWO CORPUS PROCESSES GETS ONE.
-  //
-  // Stated positively on purpose. Written the other way round — "everything that is not an
-  // internal review is merits review" — it handed the merits process to a court election,
-  // and the model would then have been told that the body asks "Is this the correct or
-  // preferable decision?" and can set the decision aside and substitute its own. A court
-  // hearing a charge on election does neither. That mis-label has been patched on the card,
-  // in the plan, in the hand-off and in the memo heading; this is the last place it could
-  // still have entered, and it enters as the one thing a gate cannot catch, because the
-  // sentence would be true of some other body.
-  //
-  // And only a TRIBUNAL on the merits path. The merits process — "stands in the shoes",
-  // "correct or preferable", set aside and substitute — is a tribunal's, and the full notes
-  // have long withheld it from any other body. The model was still handed it for the Housing
-  // Appeals Office and for a renting dispute, so the analysis said what the full notes refused
-  // to (the end-to-end QA).
-  const meritsIsTribunal = (entry.avenue.mr.character ?? "tribunal") === "tribunal";
-  const proc =
-    body.pathId === "judicial-review"
-      ? getProcess("judicial-review") ?? null
-      : body.pathId === "merits-review" && meritsIsTribunal
-        ? getProcess("merits-review") ?? null
-        : null;
-  const internal = body.pathId === "internal-review" ? getConcept("internal-review") ?? null : null;
-  // Grounds of review belong to judicial review; carrying them elsewhere would invite an
-  // application written against the wrong test.
-  const grounds =
-    body.pathId === "judicial-review"
-      ? body.groundIds.map((id) => getGround(id)).filter((g): g is NonNullable<typeof g> => !!g)
-      : [];
-
-  const context = buildMemoContext({
-    entry,
-    process: proc,
-    internal,
-    grounds,
-    criteria: body.criteria,
-    forum: body.forum || entry.title,
-    pathName: body.pathName || "review",
+  const { context, extraSources } = contextForPath(entry, {
     pathId: body.pathId,
+    groundIds: body.groundIds,
+    criteria: body.criteria,
+    forum: body.forum,
+    pathName: body.pathName,
   });
 
   // The verifier's allow-list is a decode-corpus entry. The two knowledge sources share ids
@@ -197,7 +162,7 @@ export async function POST(req: NextRequest) {
       userInput: theirWords,
       guard: ctx.guard,
       byoKeyValue: ctx.byoKeyValue,
-      extraSources: memoExtraSources({ entry, process: proc, internal, grounds }),
+      extraSources,
       // What it was given and what they said — see the verifier. Grounded either way.
       groundedText: context,
       accountText: theirWords,

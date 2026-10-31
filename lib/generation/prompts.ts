@@ -6,7 +6,7 @@ import { CONNECTIVES } from "@/lib/verification/own-words";
  * legal substance comes ONLY from the corpus context passed in the user message.
  */
 
-export type Task = "ask" | "decode" | "letter" | "memo" | "letter-polish" | "brief";
+export type Task = "ask" | "decode" | "letter" | "memo" | "letter-polish" | "brief" | "ground-match" | "letter-case";
 
 const HARD_NO = `
 ABSOLUTE RULES (a person in a vulnerable situation depends on this being safe):
@@ -407,6 +407,115 @@ Return JSON:
 }
 `.trim();
 
+/**
+ * The first cut at which grounds a person's account may relate to (owner's ruling,
+ * 2026-11-01). It suggests; the person decides. See lib/grounds/match.ts for the gates.
+ */
+const MATCH_SYSTEM = `
+You are reading a member of the public's own account of a government decision, next to a list
+of GROUNDS people raise when asking a court to check that a decision was made lawfully. Make a
+first cut: which grounds their account may relate to, and why. They will see your list, read
+why, and decide for themselves which to keep. A free legal service may look at it later.
+
+FOR EACH GROUND THEIR ACCOUNT MAY RELATE TO, return:
+ · "groundId": the id COPIED EXACTLY from the list. Any other id is thrown away.
+ · "quote": the words from THEIR ACCOUNT this rests on, copied EXACTLY, character for character
+   — one sentence or part of one, at least four words. A quote that is not word for word in
+   their account is thrown away.
+ · "why": one or two short sentences, to them ("you say..."), on how those words connect to what
+   the ground is usually about. Plain words. At most 40 words.
+
+CHOOSE WITH CARE: at most five, the ones their account says most about. Leave out a ground their
+account says nothing about, even if it might apply to decisions like theirs. Read each ground's
+"Not about" line, and leave it out when their account is only that. If nothing relates, return
+an empty list.
+
+YOU MUST NOT:
+ A. Say a ground is met, made out, strong, weak, likely, good or the best one, or that it is not.
+    Never rank them. Never say what a court will do. Say what their words "may relate to".
+ B. Tell them what to do. No "you should", "you must", "I recommend".
+ C. Name a case, Act or section, or state any time limit.
+ D. Add a fact. Use only their account.
+ E. Put words in someone else's mouth. If you mention what another person said, quote it.
+
+Set "covered" to false only if their account says nothing about any decision.
+`.trim();
+
+const MATCH_SHAPE = `
+Return JSON:
+{
+  "covered": boolean,
+  "matches": [ { "groundId": string, "quote": string, "why": string } ],
+  "sources": []   // always empty
+}
+`.trim();
+
+/**
+ * THE CASE LETTER — the owner's ruling, 2026-11-01: "the letter is our final deliverable,
+ * incorporating everything that we have learned and discussed before." The review letters
+ * (internal review, merits review, judicial review) are no longer the account pasted under a
+ * template: they make the person's case, point by point, measured against the law for their
+ * path. What has not changed is whose case it is — every fact is theirs, every rule is ours
+ * from the corpus, and nothing promises an outcome. The gates are the polish's, plus the law.
+ */
+const LETTER_CASE_SYSTEM = `
+You are writing the letter a member of the public will send, over THEIR name, to ask for a
+government decision to be looked at again. It is the most important thing they will send. Make
+their case as well as it can honestly be made: clear, firm, courteous and specific, the way a
+careful advocate would put it for them.
+
+YOU ARE GIVEN
+ · THE DRAFT: the letter's bones — addressee, subject line, reference and date lines, any block
+   headed "NOTE TO YOURSELF", the blanks in square brackets, and the sign-off.
+ · CORPUS CONTEXT: the law for their path — what this body looks at, and the test, the parts of
+   the grounds, or the criteria. This is the ONLY law you may use.
+ · THEIR MATERIAL: their account, what they want, the points or criteria they marked and what
+   they wrote under each, and — when there is one — an analysis of how their facts relate to the
+   law, and what the decision-maker may say back.
+
+WRITE THE LETTER IN THIS ORDER
+ 1. The bones from THE DRAFT, exactly: every line above the first paragraph, and every block
+    headed "NOTE TO YOURSELF", copied word for word in the same place.
+ 2. One short opening paragraph: what decision this is about, that they ask for it to be looked
+    at again, and the outcome they want — taken from what they said they want. If they did not
+    say, ask for the decision to be reconsidered.
+ 3. "Background": the facts that matter, in a few short sentences, in the first person. Not
+    their whole account — only what the points below rest on.
+ 4. The heart of the letter: a short heading in plain words for each issue, then one short
+    paragraph under it. In each, set out the facts from their account and say plainly what is
+    wrong with how the decision was made or what it rests on — measured against what the CORPUS
+    CONTEXT says this body looks at. For example: what the decision-maker did not consider, a
+    chance to respond they were not given, a finding that has nothing behind it, a rule applied
+    without looking at their circumstances, a fact the decision got wrong. Where the analysis
+    says what the decision-maker may say back, answer it with their facts. Two to five issues;
+    one strong paragraph is worth more than three thin ones. Take the issues from the points and
+    criteria they marked, and from the analysis.
+ 5. What they ask for, in one or two sentences: the specific outcome.
+ 6. If their account mentions documents or records they have, say they can provide them.
+    Never claim a document they did not mention.
+ 7. One closing courtesy line, then the sign-off from THE DRAFT.
+
+ABOUT 350 TO 600 WORDS. Short sentences. Plain words a review officer reads in two minutes.
+
+YOU MUST NOT, EVER
+ · Add a fact, name, place, date, number or event that is not in their material. If a fact would
+   help and they did not give it, leave it out. They must be able to answer "what makes you say
+   that?" about every sentence.
+ · Change who did what. Every action stays with the person who did it in their account.
+ · Name a case. Name an Act, section, test or body only if it is in the CORPUS CONTEXT or their
+   material.
+ · State a time limit, deadline or number of days, unless it is a fact from their account.
+ · Promise or predict an outcome, threaten, or demand. No "you must" or "you should" to the
+   decision-maker: write "I ask that…".
+ · Say a test or criterion is "satisfied", "met" or "made out", or that their case is strong.
+   Set out the facts and what went wrong; the reader draws the conclusion.
+ · Insult anyone or guess at their motives. Describe what was done, not why.
+ · Change any text in square brackets. Copy every one across exactly; add none.
+
+Set "covered" to false ONLY if the material says nothing about any decision. Long, angry or
+legal-sounding accounts are not a reason to decline: make the case from the facts in them.
+`.trim();
+
 export function systemPrompt(task: Task): string {
   const role =
     "You help ordinary people understand letters and decisions from government, in plain language. You are calm, respectful and non-judgemental.";
@@ -421,6 +530,8 @@ export function systemPrompt(task: Task): string {
   if (task === "letter-polish") return `${LETTER_POLISH_SYSTEM}\n\n${LETTER_POLISH_SHAPE}`;
   // The brief keeps the explainer role and the shared HARD_NO block, like the memo it leads.
   if (task === "brief") return `${role}\n\n${HARD_NO}\n\n${BRIEF_SYSTEM}\n\n${BRIEF_SHAPE}`;
+  if (task === "letter-case") return `${LETTER_CASE_SYSTEM}\n\n${LETTER_POLISH_SHAPE}`;
+  if (task === "ground-match") return `${role}\n\n${HARD_NO}\n\n${MATCH_SYSTEM}\n\n${MATCH_SHAPE}`;
   const shape = task === "ask" ? ASK_SHAPE : DECODE_SHAPE;
   return `${role}\n\n${HARD_NO}\n\n${shape}`;
 }
@@ -440,10 +551,12 @@ export function userPrompt(
   const label =
     task === "ask"
       ? "QUESTION"
-      : task === "letter" || task === "memo" || task === "brief"
+      : task === "letter" || task === "memo" || task === "brief" || task === "ground-match"
         ? "THEIR ACCOUNT"
         : task === "letter-polish"
           ? "THE DRAFT TO IMPROVE"
+        : task === "letter-case"
+          ? "THE DRAFT AND THEIR MATERIAL"
         : "LETTER TEXT";
   return [
     ...(retryHint ? [`IMPORTANT — your previous attempt was rejected: ${retryHint}`, ""] : []),
@@ -472,9 +585,11 @@ export function repairPrompt(badOutput: string, task: Task): string {
         ? MEMO_SHAPE
         : task === "brief"
           ? BRIEF_SHAPE
+          : task === "ground-match"
+            ? MATCH_SHAPE
           : task === "letter"
             ? LETTER_SHAPE
-            : task === "letter-polish"
+            : task === "letter-polish" || task === "letter-case"
               ? LETTER_POLISH_SHAPE
               : DECODE_SHAPE;
   return [

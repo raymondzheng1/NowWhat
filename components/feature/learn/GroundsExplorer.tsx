@@ -6,9 +6,13 @@ import type { Ground } from "@/lib/schemas/legal";
 
 /**
  * Neutral, scannable list of the grounds of review — the same component for browsing (the
- * library) and for the in-flow "what might relate to your situation" step. Grounds are
- * shown in corpus order, NEVER ranked or visually privileged (no score). In selectable
- * mode the chosen grounds are reported up (→ the hand-off pack as "things to mention").
+ * library) and for the in-flow "what might relate to your situation" step. Never scored or
+ * ranked. In selectable mode the chosen grounds are reported up (→ the hand-off pack as
+ * "things to mention").
+ *
+ * In the flow, the grounds the person's account may relate to are listed first, each with
+ * the words of theirs it rests on and why (`why`, lib/grounds/match.ts) — the owner's ruling
+ * of 2026-11-01. They are a first cut, in no order of merit, and the rest stay listed below.
  *
  * Sticker album: a tidy grid of white sticker cards on the paper, each with a deterministic
  * tilt chosen by position (never randomised). Cards carry a hairline border as well as the
@@ -25,8 +29,13 @@ export function GroundsExplorer({
   selected = [],
   onToggle,
   linkBase,
+  why,
+  labels,
 }: {
   grounds: Ground[];
+  /** For a suggested ground: their own words it rests on, and why it may relate. */
+  why?: Record<string, { quote: string; why: string }>;
+  labels?: { yourWords: string; why: string };
   selectable?: boolean;
   selected?: string[];
   onToggle?: (id: string) => void;
@@ -84,6 +93,22 @@ export function GroundsExplorer({
                   </button>
                 </div>
                 <p className="mt-1 text-[15.5px] leading-[1.55] text-ink-soft">{g.oneLine}</p>
+                {why?.[g.id] && labels && (
+                  <div className="mt-3 space-y-2">
+                    <figure>
+                      <figcaption className="font-display text-[12.5px] font-black uppercase tracking-[0.1em] text-ink-faint">
+                        {labels.yourWords}
+                      </figcaption>
+                      <blockquote className="mt-1 border-l-[3px] border-help bg-help-soft px-3 py-1.5 text-[15px] italic leading-snug text-ink">
+                        {why[g.id]!.quote}
+                      </blockquote>
+                    </figure>
+                    <p className="text-[15px] leading-snug text-ink-soft">
+                      <span className="font-semibold text-ink">{labels.why}: </span>
+                      {why[g.id]!.why}
+                    </p>
+                  </div>
+                )}
 
                 {isOpen && (
                   <div className="mt-4 space-y-3.5 border-l-[3px] border-ink pl-4">

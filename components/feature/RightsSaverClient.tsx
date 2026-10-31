@@ -40,6 +40,7 @@ import { Crest } from "@/components/ui/Wordmark";
 import { Icon, type IconName } from "@/components/ui/icons";
 import { ProcessExplainer } from "@/components/feature/learn/ProcessExplainer";
 import { GroundsExplorer } from "@/components/feature/learn/GroundsExplorer";
+import type { GroundSuggestion } from "@/lib/grounds/match";
 
 /**
  * Did this browsing session already tick the "not legal advice" box?
@@ -1000,7 +1001,7 @@ function ResultStep({
   relatedGrounds: string[];
   onToggleGround: (id: string) => void;
   /** Restores the ticked grounds after a trip out of the flow — the parent owns them. */
-  onRestoreGrounds: (ids: string[]) => void;
+  onRestoreGrounds: React.Dispatch<React.SetStateAction<string[]>>;
   /** Moves this matter to the decision type its account describes, words and all. */
   onRefile: (entryId: string) => void;
   /** The `?view=` this page loaded with, captured before the URL was rewritten. */
@@ -1020,6 +1021,13 @@ function ResultStep({
   );
   // Which of the four result steps is on screen, and what they told us on the way.
   const [view, setView] = useState<ResultView>("story");
+  // The first cut at which grounds their account may relate to (lib/grounds/match.ts), for
+  // the account it was made from. A changed account asks again; the same one never does.
+  const [match, setMatch] = useState<{
+    key: string;
+    status: "busy" | "ready" | "none";
+    suggestions: GroundSuggestion[];
+  } | null>(null);
   // What the person wrote against each ground they marked.
   //
   // Marking a ground said "this sounds like my situation" and nothing more, so the memo could
@@ -1500,6 +1508,49 @@ function ResultStep({
     ...(goalOther.trim() ? [goalOther.trim()] : []),
   ];
   const pointsStory = (account["q-story"] ?? "").trim();
+
+  // Ask once, when the grounds step is first on screen for this account.
+  const matchAccount = [pointsStory, (account["q-more"] ?? "").trim()].filter(Boolean).join("\n\n");
+  const matchKey = `${entry.id}::${matchAccount}`;
+  useEffect(() => {
+    if (view !== "grounds" || chosenPath !== "judicial-review") return;
+    if (matchAccount.length < 20 || shownGrounds.length === 0) return;
+    if (match?.key === matchKey) return;
+    // Kept whenever it belongs to the account on screen, even if they have moved on to
+    // another step meanwhile: dropping it there left the step on "Reading…" for good.
+    const key = matchKey;
+    setMatch({ key, status: "busy", suggestions: [] });
+    const settle = (suggestions: GroundSuggestion[]) =>
+      setMatch((prev) =>
+        prev?.key === key ? { key, status: suggestions.length ? "ready" : "none", suggestions } : prev,
+      );
+    (async () => {
+      try {
+        const res = await fetch("/api/grounds-match", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          cache: "no-store",
+          body: JSON.stringify({ entryId: entry.id, account: matchAccount, groundIds: shownGrounds.map((g) => g.id) }),
+        });
+        const data = await res.json();
+        const suggestions: GroundSuggestion[] = data.status === "ready" ? (data.suggestions ?? []) : [];
+        settle(suggestions);
+        // Ticked to start with, as a first cut — but never over choices they have already made.
+        if (suggestions.length) {
+          onRestoreGrounds((prev) => (prev.length === 0 ? suggestions.map((x) => x.groundId) : prev));
+        }
+      } catch {
+        settle([]);
+      }
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, chosenPath, matchKey]);
+  const suggestedFor = match?.key === matchKey && match.status === "ready" ? match.suggestions : [];
+  const suggestedGrounds = suggestedFor
+    .map((x) => shownGrounds.find((g) => g.id === x.groundId))
+    .filter((g): g is NonNullable<typeof g> => !!g);
+  const otherGrounds = shownGrounds.filter((g) => !suggestedFor.some((x) => x.groundId === g.id));
+  const whyFor = Object.fromEntries(suggestedFor.map((x) => [x.groundId, { quote: x.quote, why: x.why }]));
   const pointsWrittenCount =
     chosenPath === "judicial-review"
       ? relatedGrounds.filter((id) => (groundNotes[id] ?? "").trim()).length
@@ -1722,44 +1773,10 @@ function ResultStep({
     io.observe(el);
     return () => io.disconnect();
   }, [letterNear, view, rawDraftBody]);
-  useEffect(() => {
-    if (view !== "memo" || !rawDraftBody || !activeApply || !letterNear) return;
-    if (polished[rawDraftBody] !== undefined) return;
-    let live = true;
-    setPolishing(true);
-    fetch("/api/letter-polish", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        entryId: entry.id,
-        draft: rawDraftBody,
-        theirWords: account["q-story"] ?? "",
-      }),
-    })
-      .then((r) => r.json())
-      .then((d: { status?: string; letter?: string }) => {
-        if (!live) return;
-        // Cached against the draft it came from, so switching path or editing the account
-        // asks again, and re-entering the step does not.
-        setPolished((prev) => ({ ...prev, [rawDraftBody]: d?.status === "answered" && d.letter ? d.letter : "" }));
-      })
-      .catch(() => {
-        /* offline, blocked or rejected — the deterministic draft is what they get */
-      })
-      .finally(() => {
-        if (live) setPolishing(false);
-      });
-    return () => {
-      live = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view, rawDraftBody, entry.id, letterNear]);
   // The shorter letter summarises their account; the full one carries every word of it. The
   // person decides which goes out over their name, and is told to check every sentence.
   const [useFullLetter, setUseFullLetter] = useState(false);
-  const shortLetter = (rawDraftBody && polished[rawDraftBody]) || "";
   /** The letter as shown and copied: the shorter one where it came back, unless they chose theirs in full. */
-  const letterBody = (!useFullLetter && shortLetter) || rawDraftBody;
 
   // ---- The drafted application ------------------------------------------------------
   //
@@ -1811,6 +1828,8 @@ function ResultStep({
   ].join("\u0000");
   const drafted = draftCache[draftKey] ?? null;
   const [drafting, setDrafting] = useState(false);
+  // The analysis request that last FINISHED, answered or not — so the letter can wait for it.
+  const [memoTried, setMemoTried] = useState<string | null>(null);
   useEffect(() => {
     if (view !== "memo") return;
     const story = (account["q-story"] ?? "").trim();
@@ -1870,6 +1889,7 @@ function ResultStep({
            a dropped connection is worth retrying, unlike a refusal. */
       })
       .finally(() => {
+        setMemoTried(draftKey);
         if (live) setDrafting(false);
       });
     return () => {
@@ -1883,6 +1903,86 @@ function ResultStep({
     // page, and omitting it would leave the analysis written around answers since changed.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, draftKey, draftCache]);
+
+  // ---- The letter, written from everything above -------------------------------------
+  //
+  // THE CASE LETTER (the owner's ruling, 2026-11-01). For the three review letters the model
+  // no longer shortens their account: it makes their case, issue by issue, against the law for
+  // the path they chose, from their account, what they want, the points and criteria they
+  // marked with their notes, and the analysis — which is why it waits for the analysis to
+  // settle. The enquiries (reasons, the court form) stay the shorter letter. Every gate of the
+  // shorter letter still applies, measured against their material and the corpus.
+  const isCaseLetter =
+    !!activeApply &&
+    ["internal-review-request", "merits-review-application", "review-application", "judicial-review-application"].includes(
+      activeApply.id,
+    ) &&
+    memoPathId !== "court-election";
+  const analysisSettled =
+    !(account["q-story"] ?? "").trim() || draftKey in draftCache || (!drafting && memoTried === draftKey);
+  const letterKey = isCaseLetter ? `${rawDraftBody}\u0000${draftKey}` : rawDraftBody;
+  useEffect(() => {
+    if (view !== "memo" || !rawDraftBody || !activeApply || !letterNear) return;
+    if (isCaseLetter && !analysisSettled) return;
+    if (polished[letterKey] !== undefined) return;
+    let live = true;
+    setPolishing(true);
+    const a = drafted;
+    fetch("/api/letter-polish", {
+      method: "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        entryId: entry.id,
+        draft: rawDraftBody,
+        theirWords: [(account["q-story"] ?? "").trim(), moreSettled].filter(Boolean).join("\n\n"),
+        ...(isCaseLetter
+          ? {
+              case: {
+                pathId: memoPathId,
+                forum: memoPathBody,
+                pathName: memoPathName({
+                  process: memoProcess,
+                  internal: memoPathId === "internal-review" ? (internalReview ?? null) : null,
+                  character: memoPath?.character ?? "tribunal",
+                  t,
+                }),
+                goals: pointsSaidGoals,
+                groundIds: relatedGrounds,
+                criteria: memoPath?.criteria ?? [],
+                notes: memoNotes,
+                analysis: a
+                  ? {
+                      situation: a.situation,
+                      points: a.points.slice(0, 6).map((p) => ({ ref: p.ref, relates: p.relates, needed: p.needed })),
+                      otherSide: a.otherSide,
+                    }
+                  : null,
+              },
+            }
+          : {}),
+      }),
+    })
+      .then((r) => r.json())
+      .then((d: { status?: string; letter?: string }) => {
+        if (!live) return;
+        // Cached against everything it was written from, so a change to the path, the account,
+        // the points or the analysis asks again, and re-entering the step does not.
+        setPolished((prev) => ({ ...prev, [letterKey]: d?.status === "answered" && d.letter ? d.letter : "" }));
+      })
+      .catch(() => {
+        /* offline, blocked or rejected — the deterministic draft is what they get */
+      })
+      .finally(() => {
+        if (live) setPolishing(false);
+      });
+    return () => {
+      live = false;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, letterKey, entry.id, letterNear, analysisSettled]);
+  const shortLetter = (rawDraftBody && polished[letterKey]) || "";
+  /** The letter as shown and copied: the written one where it came back, unless they chose the plain one. */
+  const letterBody = (!useFullLetter && shortLetter) || rawDraftBody;
 
   // THE FULL NOTES. No `drafted` any more: the model writes the short brief instead, and these
   // are the corpus's own words, composed on the device, for a lawyer who wants the detail.
@@ -2781,9 +2881,39 @@ function ResultStep({
           <h2 className="font-display text-[21px] font-black text-ink">{t("groundsTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("groundsLead")}</p>
           {pointsContext}
+          {match?.key === matchKey && match.status === "busy" && (
+            <p role="status" className="mt-5 text-[15.5px] leading-relaxed text-ink">
+              {t("groundsSuggestBusy")}
+            </p>
+          )}
+          {match?.key === matchKey && match.status === "none" && (
+            <p role="status" className="mt-5 text-[15.5px] leading-relaxed text-ink-soft">
+              {t("groundsSuggestNone")}
+            </p>
+          )}
+          {suggestedGrounds.length > 0 && (
+            <div className="mt-5" data-testid="grounds-suggested">
+              <h3 className="font-display text-[18px] font-black text-ink">{t("groundsSuggestTitle")}</h3>
+              <p className="mt-1.5 text-[15.5px] leading-relaxed text-ink-soft">{t("groundsSuggestLead")}</p>
+              <div className="mt-4">
+                <GroundsExplorer
+                  grounds={suggestedGrounds}
+                  selectable
+                  selected={relatedGrounds}
+                  onToggle={onToggleGround}
+                  linkBase="/learn/grounds"
+                  why={whyFor}
+                  labels={{ yourWords: t("groundsYourWords"), why: t("groundsWhy") }}
+                />
+              </div>
+            </div>
+          )}
           <div className="mt-5">
+            {suggestedGrounds.length > 0 && (
+              <h3 className="mb-4 mt-8 font-display text-[18px] font-black text-ink">{t("groundsOthersTitle")}</h3>
+            )}
             <GroundsExplorer
-              grounds={shownGrounds}
+              grounds={otherGrounds}
               selectable
               selected={relatedGrounds}
               onToggle={onToggleGround}
@@ -3087,20 +3217,26 @@ function ResultStep({
 
           {polishing && (
             <p aria-live="polite" className="mt-3 text-[14.5px] font-semibold text-help-ink">
-              {t("letterPolishing")}
+              {isCaseLetter ? t("letterCaseWriting") : t("letterPolishing")}
             </p>
           )}
           {shortLetter && (
             <div className="mt-3 rounded-sticker border-2 border-help bg-help-soft px-4 py-3">
               <p className="text-[15px] leading-relaxed text-ink">
-                {useFullLetter ? t("letterFullNotice") : t("letterShortNotice")}
+                {useFullLetter ? t("letterFullNotice") : isCaseLetter ? t("letterCaseNotice") : t("letterShortNotice")}
               </p>
               <button
                 type="button"
                 className="btn btn-secondary mt-3"
                 onClick={() => setUseFullLetter((v) => !v)}
               >
-                {useFullLetter ? t("letterUseShort") : t("letterUseFull")}
+                {useFullLetter
+                  ? isCaseLetter
+                    ? t("letterUseCase")
+                    : t("letterUseShort")
+                  : isCaseLetter
+                    ? t("letterUsePlain")
+                    : t("letterUseFull")}
               </button>
             </div>
           )}

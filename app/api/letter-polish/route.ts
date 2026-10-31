@@ -8,6 +8,12 @@ import { runLetterPolish } from "@/lib/generation/runner";
 import { isModelConfigured } from "@/lib/generation/anthropic";
 import { checkLetterFidelity } from "@/lib/letter/fidelity";
 import { checkMemoCitations } from "@/lib/memo/qa";
+import { runLetterCase } from "@/lib/generation/runner";
+import { getDataEntry } from "@/lib/data";
+import { getGround } from "@/lib/legal";
+import { contextForPath } from "@/lib/memo/path-context";
+import { periodsAreTheirs } from "@/lib/grounds/match";
+import { checkNoCaseCitation } from "@/lib/verification/own-words";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -44,7 +50,37 @@ const BodySchema = z.object({
   draft: z.string().min(1).max(12000),
   /** Their own account, so a figure they themselves gave is allowed to stay. */
   theirWords: z.string().max(8000).default(""),
+  /**
+   * Present for the three review letters: everything the flow learned, so the letter makes
+   * their case instead of shortening their account (the owner's ruling, 2026-11-01). Absent
+   * for the enquiries — a request for reasons or for the court form — which stay short.
+   */
+  case: z
+    .object({
+      pathId: z.enum(["internal-review", "merits-review", "judicial-review"]),
+      forum: z.string().max(200).default(""),
+      pathName: z.string().max(200).default(""),
+      goals: z.array(z.string().max(300)).max(12).default([]),
+      groundIds: z.array(z.string().max(64)).max(20).default([]),
+      criteria: z.array(z.string().max(600)).max(20).default([]),
+      notes: z.record(z.string(), z.string().max(4000)).default({}),
+      analysis: z
+        .object({
+          situation: z.string().max(2000).default(""),
+          points: z
+            .array(z.object({ ref: z.string().max(200), relates: z.string().max(1200), needed: z.string().max(1200) }))
+            .max(6)
+            .default([]),
+          otherSide: z.string().max(1500).default(""),
+        })
+        .nullable()
+        .default(null),
+    })
+    .optional(),
 });
+
+/** A case letter may be as long as a case needs, and no longer than two minutes' reading. */
+const CASE_MAX_WORDS = 750;
 
 export async function POST(req: NextRequest) {
   const ctx = getRequestContext(req);
@@ -102,6 +138,7 @@ export async function POST(req: NextRequest) {
   async function attemptLetter(
     entry: NonNullable<typeof verifyEntry>,
   ): Promise<{ letter: string } | { gates: string[] }> {
+  if (body.case) return attemptCase(entry, body.case);
   let result;
   try {
     result = await runLetterPolish({
@@ -137,5 +174,87 @@ export async function POST(req: NextRequest) {
   if (fidelity.length > 0) return { gates: fidelity.map((f) => f.gate) };
   if (checkMemoCitations(rewritten, body.draft).length > 0) return { gates: ["out-of-corpus-citation"] };
   return { letter: rewritten };
+  }
+
+  /**
+   * The case letter. Same gates as the shorter one — no new fact, figure, name or blank; the
+   * bones and the warning blocks intact; no advice, prediction or score — measured against the
+   * draft, their material AND the corpus context, because arguing from the law is now its job.
+   * Two more: every citation must be in that context or their words, and any period of time it
+   * states must be one they gave (the context's time rule is printed by the page, not argued).
+   */
+  async function attemptCase(
+    entry: NonNullable<typeof verifyEntry>,
+    c: NonNullable<z.infer<typeof BodySchema>["case"]>,
+  ): Promise<{ letter: string } | { gates: string[] }> {
+    const data = getDataEntry(body.entryId);
+    if (!data) return { gates: ["unknown-entry"] };
+    const { context } = contextForPath(data, {
+      pathId: c.pathId,
+      groundIds: c.groundIds,
+      criteria: c.criteria,
+      forum: c.forum,
+      pathName: c.pathName,
+    });
+    const noteName = (k: string) => getGround(k)?.plainName ?? k;
+    const notes = Object.entries(c.notes)
+      .filter(([, v]) => v.trim())
+      .map(([k, v]) => `On "${noteName(k)}": ${v.trim()}`);
+    const theirs = [body.theirWords.trim(), ...notes].filter(Boolean).join("\n\n");
+    const a = c.analysis;
+    const material = [
+      "THE DRAFT:",
+      body.draft,
+      "",
+      "THEIR ACCOUNT:",
+      body.theirWords.trim(),
+      c.goals.length ? `\nWHAT THEY SAID THEY WANT: ${c.goals.join("; ")}` : "",
+      notes.length ? `\nWHAT THEY WROTE UNDER THE POINTS THEY MARKED:\n${notes.join("\n")}` : "",
+      a && (a.points.length || a.otherSide)
+        ? [
+            "",
+            "ANALYSIS (how their facts relate to the law above — use it, but every fact must still come from their account):",
+            a.situation,
+            ...a.points.map((p) => `- ${p.ref}: ${p.relates} ${p.needed}`.trim()),
+            a.otherSide ? `WHAT THE DECISION-MAKER MAY SAY: ${a.otherSide}` : "",
+          ]
+            .filter(Boolean)
+            .join("\n")
+        : "",
+    ]
+      .filter((x) => x !== "")
+      .join("\n");
+
+    let result;
+    try {
+      result = await runLetterCase({
+        entry,
+        context,
+        userInput: material,
+        guard: ctx.guard,
+        byoKeyValue: ctx.byoKeyValue,
+        maxTokens: 2600,
+        groundedText: `${context}\n${body.draft}`,
+        accountText: theirs,
+      });
+    } catch {
+      return { gates: ["error"] };
+    }
+    if (result.status !== "answered" || !result.data) {
+      return { gates: result.rejectedGates ?? (result.reason ? [result.reason] : []) };
+    }
+    if (!result.data.covered) return { gates: ["model-declined"] };
+
+    const letter = result.data.letter;
+    const fidelity = checkLetterFidelity(body.draft, theirs, letter, { known: context, maxWords: CASE_MAX_WORDS });
+    if (fidelity.length > 0) return { gates: fidelity.map((f) => f.gate) };
+    if (checkMemoCitations(letter, `${context}\n${body.draft}\n${theirs}`).length > 0) {
+      return { gates: ["out-of-corpus-citation"] };
+    }
+    if (!periodsAreTheirs(letter, `${body.draft}\n${theirs}`)) return { gates: ["time-limit-stated"] };
+    // The context carries the leading cases, for the analysis. A letter to the agency names
+    // none: a self-represented person should not be answering for case law in their own name.
+    if (!checkNoCaseCitation([letter])) return { gates: ["case-citation"] };
+    return { letter };
   }
 }

@@ -95,11 +95,13 @@ test("a refused brief leaves the full notes open, exactly as before", async ({ p
   await expect(memo).not.toContainText(/Your situation/i);
 });
 
-test("the shorter letter says to check every sentence, and switches back to the full account", async ({ page }) => {
+test("the case letter says to check every sentence, and switches back to the plain letter", async ({ page }) => {
   await seed(page);
   await page.route("**/api/memo", (route) => route.fulfill({ json: { ok: true, status: "not-covered" } }));
+  let pathId: string | undefined;
   await page.route("**/api/letter-polish", async (route) => {
-    const { draft } = route.request().postDataJSON() as { draft: string };
+    const { draft, case: c } = route.request().postDataJSON() as { draft: string; case?: { pathId: string } };
+    pathId = c?.pathId;
     const letter = draft.replace(/My reasons are as follows\.[^\n]*/, "I parked on Batman Street. The sign was hidden by a tree.");
     await route.fulfill({ json: { ok: true, status: "answered", letter } });
   });
@@ -107,16 +109,18 @@ test("the shorter letter says to check every sentence, and switches back to the 
 
   const apply = page.locator("#r-apply");
   await apply.scrollIntoViewIfNeeded({ timeout: 15_000 });
-  await expect(apply).toContainText(/We shortened your account/i, { timeout: 15_000 });
+  await expect(apply).toContainText(/We wrote this letter to set out your case/i, { timeout: 15_000 });
   await expect(apply).toContainText("I parked on Batman Street. The sign was hidden by a tree.");
   await expect(apply).not.toContainText("parking enforcement officer");
 
-  await apply.getByRole("button", { name: /use my full account instead/i }).click();
+  await apply.getByRole("button", { name: /use the plain letter/i }).click();
   await expect(apply).toContainText("parking enforcement officer");
   await expect(apply).toContainText(/with your account in full/i);
 
-  await apply.getByRole("button", { name: /use the shorter letter/i }).click();
+  await apply.getByRole("button", { name: /use the letter that sets out my case/i }).click();
   await expect(apply).not.toContainText("parking enforcement officer");
+  // A review letter is written as a case, for the path it argues.
+  expect(pathId).toBe("internal-review");
 });
 
 test("a refused shorter letter shows the full one with no notice", async ({ page }) => {
@@ -175,4 +179,60 @@ test("the free services in the analysis can be tapped to call or visit", async (
   const call = page.locator('article a[href^="tel:"]').first();
   await expect(call).toBeVisible({ timeout: 15_000 });
   await expect(page.locator('article a[target="_blank"]').first()).toBeVisible();
+});
+
+// The owner's ruling, 2026-11-01: on the judicial-review path the app makes a first cut at
+// which grounds the account may relate to, says why in the person's own words, and leaves
+// every ground open to tick or untick.
+test("judicial review: the grounds the account may relate to come first, ticked, with why", async ({ page }) => {
+  await page.addInitScript((story) => {
+    window.localStorage.setItem("wn:tour:off", "1");
+    window.localStorage.setItem("wn:install:off", "1");
+    if (window.sessionStorage.getItem("__seeded")) return;
+    window.sessionStorage.setItem("__seeded", "1");
+    window.sessionStorage.setItem("wn-consented", JSON.stringify({ matter: "Vic|vic-generic", flags: {} }));
+    window.sessionStorage.setItem(
+      "wn-flow",
+      JSON.stringify({
+        matter: "Vic|vic-generic",
+        chosenPath: "judicial-review",
+        goals: [],
+        goalOther: "",
+        account: { "q-story": story },
+        relatedGrounds: [],
+        groundNotes: {},
+        criteriaNotes: {},
+        pickedCriteria: [],
+      }),
+    );
+  }, "The council cancelled my permit. I never got a chance to reply to the complaint before they decided.");
+  let calls = 0;
+  await page.route("**/api/grounds-match", (route) => {
+    calls++;
+    return route.fulfill({
+      json: {
+        ok: true,
+        status: "ready",
+        suggestions: [
+          {
+            groundId: "procedural-fairness-hearing",
+            quote: "I never got a chance to reply to the complaint before they decided.",
+            why: "You say you could not answer the complaint first.",
+          },
+        ],
+      },
+    });
+  });
+  await page.goto("/start?jur=Vic&area=vic-generic&date=2026-10-14&step=result&view=grounds");
+  const suggested = page.getByTestId("grounds-suggested");
+  await expect(suggested).toContainText("I never got a chance to reply to the complaint", { timeout: 15_000 });
+  await expect(suggested).toContainText("You say you could not answer the complaint first.");
+  const box = suggested.getByRole("checkbox");
+  await expect(box).toBeChecked();
+  // Theirs to take out, and to put back.
+  await box.uncheck();
+  await expect(box).not.toBeChecked();
+  await box.check();
+  await expect(page.getByText("Other grounds people raise")).toBeVisible();
+  expect(calls).toBe(1);
 });

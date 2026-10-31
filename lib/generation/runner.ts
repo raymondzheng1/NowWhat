@@ -6,6 +6,7 @@ import { record, estimateCostUsd, type GuardContext } from "@/lib/cost/guard";
 import { getKv } from "@/lib/kv/redis";
 import { MODELS, MAX_GENERATION_ATTEMPTS } from "@/lib/config";
 import type { PathwayEntry } from "@/lib/schemas/corpus";
+import { GroundMatchSchema, matchProse, type GroundMatch } from "@/lib/grounds/match";
 import {
   GeneratedAnswerSchema,
   GeneratedDecodeSchema,
@@ -351,6 +352,23 @@ export function runBrief(
   });
 }
 
+/**
+ * The first cut at which grounds an account may relate to. Every "why" goes to the verifier;
+ * the quotes are the person's own words and are checked against their account by the route.
+ */
+export function runGroundMatch(
+  args: Omit<RunOpts<GroundMatch>, "task" | "schema" | "extract">,
+): Promise<GenerationResult<GroundMatch>> {
+  return runGeneration<GroundMatch>({
+    ...args,
+    task: "ground-match",
+    // It names grounds by id and cites nothing; the page prints each ground's own words.
+    citesNothing: true,
+    schema: GroundMatchSchema,
+    extract: (d) => ({ covered: d.covered, text: matchProse(d), declaredSources: d.sources }),
+  });
+}
+
 /** All the prose a brief carries, in one string — for the verifier and the route's own gates. */
 export function briefProse(d: GeneratedBrief): string {
   return [
@@ -371,6 +389,21 @@ export function briefProse(d: GeneratedBrief): string {
  * output — there is no envelope to strip. `lib/letter/fidelity` then checks what a general
  * gate cannot: that the blanks survived and no figure appeared from nowhere.
  */
+export function runLetterCase(
+  args: Omit<RunOpts<GeneratedLetter>, "task" | "schema" | "extract">,
+): Promise<GenerationResult<GeneratedLetter>> {
+  return runGeneration<GeneratedLetter>({
+    ...args,
+    task: "letter-case",
+    // It may name the body and the law from its context; the route checks every citation
+    // against that context, so no source line is asked of it.
+    citesNothing: true,
+    retryDecline: true,
+    schema: GeneratedLetterSchema,
+    extract: (d) => ({ covered: d.covered, text: d.letter, declaredSources: d.sources }),
+  });
+}
+
 export function runLetterPolish(
   args: Omit<RunOpts<GeneratedLetter>, "task" | "schema" | "extract">,
 ): Promise<GenerationResult<GeneratedLetter>> {

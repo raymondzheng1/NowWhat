@@ -33,7 +33,7 @@
     { "pattern": "\\b(meets|met|meeting) (this |the |that |each )?(element|test|requirement|limb|criterion|criteria|part)\\b", "why": "'meets the element' is a strength judgment (use 'relates to')" },
     { "pattern": "\\b(establishes|proves|makes out|demonstrates) (this |the |that |your )?(element|ground|case|requirement|criterion|criteria|part)\\b", "why": "asserts the ground is made out (use 'relates to')" },
     { "pattern": "\\bis sufficient (for|to (satisfy|establish|meet|prove))\\b", "why": "sufficiency is a strength judgment (use 'relates to')" },
-    { "pattern": "\\b(this|that|these|those|your|their|the|each|both)\\s+(element|elements|criterion|criteria|ground|grounds|test|requirement|limb|part)\\b[^.?!]{0,24}\\b(is|are|was|were|has been|have been)\\b[^.?!]{0,16}\\b(satisfied|met|established|proved|proven|made out|sufficient)\\b", "why": "the same judgment written the other way round ('this criterion is satisfied')" }
+    { "pattern": "\\b(this|that|these|those|your|their|the|each|both)\\s+(?:[A-Za-z-]+\\s+){0,3}(element|elements|criterion|criteria|ground|grounds|test|requirement|limb|part)\\b[^.?!]{0,24}\\b(is|are|was|were|has been|have been)\\b[^.?!]{0,16}\\b(satisfied|met|established|proved|proven|made out|sufficient)\\b", "why": "the same judgment written the other way round ('this criterion is satisfied')" }
   ],
   "aiMentions": [
     { "pattern": "\\bAI\\b", "why": "no AI mentions in customer copy" },
