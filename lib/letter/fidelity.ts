@@ -125,8 +125,16 @@ export function checkLetterFidelity(
       failures.push({ gate: "placeholder-dropped", detail: n > 1 ? `${b} (${kept} of ${n})` : b });
     }
   }
+  // A NEW blank is refused — unless its words are the person's own. People leave themselves
+  // notes in their account, like "(Insert Rego)", and a rewrite that turns one into
+  // "[Insert Rego]" has not invented a field: it has made their own reminder into a blank the
+  // page highlights, which is the better outcome. Measured on a real account: that alone was
+  // refusing one shorter letter in six.
+  const theirsLower = norm(theirWords);
   for (const [b, n] of after) {
-    if (n > (before.get(b) ?? 0)) failures.push({ gate: "placeholder-invented", detail: b });
+    if (n > (before.get(b) ?? 0) && !(b && theirsLower.includes(b))) {
+      failures.push({ gate: "placeholder-invented", detail: b });
+    }
   }
 
   // Figures must be traceable. Checked against the draft AND their account, because a date

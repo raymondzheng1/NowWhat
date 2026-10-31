@@ -12,6 +12,9 @@ import { checkMemoCitations } from "@/lib/memo/qa";
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
+/** Attempts at the shorter letter per request: one, then one more if it was refused. */
+const LETTER_ATTEMPTS = 2;
+
 /**
  * Rewrite a draft letter so it reads as a competent adult wrote it.
  *
@@ -82,10 +85,27 @@ export async function POST(req: NextRequest) {
   const verifyEntry = getEntry(body.entryId) ?? getEntry(FALLBACK_ENTRY_ID);
   if (!verifyEntry) return notCovered();
 
+  // ONE MORE TRY. Measured on a real 493-word account, a single attempt was refused about one
+  // time in three — the model declining, or one gate catching a slip — and the person was left
+  // with the long letter. The page shows the full letter while this runs, so a second attempt
+  // costs a few cents and some seconds nobody waits on, and every gate still applies to it.
+  let lastGates: string[] = [];
+  for (let attempt = 0; attempt < LETTER_ATTEMPTS; attempt++) {
+    const out = await attemptLetter(verifyEntry);
+    if ("letter" in out) {
+      return apiJson({ ok: true, status: "answered" as const, letter: out.letter }, ctx);
+    }
+    lastGates = out.gates;
+  }
+  return notCovered(lastGates);
+
+  async function attemptLetter(
+    entry: NonNullable<typeof verifyEntry>,
+  ): Promise<{ letter: string } | { gates: string[] }> {
   let result;
   try {
     result = await runLetterPolish({
-      entry: verifyEntry,
+      entry,
       // The draft IS the context: it is the only material the letter may draw on, and the
       // gates below measure the rewrite against it.
       context: body.draft,
@@ -99,18 +119,18 @@ export async function POST(req: NextRequest) {
       maxTokens: 2000,
     });
   } catch {
-    return notCovered();
+    return { gates: ["error"] };
   }
 
   if (result.status !== "answered" || !result.data) {
-    return notCovered(result.rejectedGates ?? (result.reason ? [result.reason] : []));
+    return { gates: result.rejectedGates ?? (result.reason ? [result.reason] : []) };
   }
-  if (!result.data.covered) return notCovered(["model-declined"]);
+  if (!result.data.covered) return { gates: ["model-declined"] };
 
   const rewritten = result.data.letter;
   const fidelity = checkLetterFidelity(body.draft, body.theirWords, rewritten);
-  if (fidelity.length > 0) return notCovered(fidelity.map((f) => f.gate));
-  if (checkMemoCitations(rewritten, body.draft).length > 0) return notCovered(["out-of-corpus-citation"]);
-
-  return apiJson({ ok: true, status: "answered" as const, letter: rewritten }, ctx);
+  if (fidelity.length > 0) return { gates: fidelity.map((f) => f.gate) };
+  if (checkMemoCitations(rewritten, body.draft).length > 0) return { gates: ["out-of-corpus-citation"] };
+  return { letter: rewritten };
+  }
 }

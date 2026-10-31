@@ -297,3 +297,18 @@ describe("a shorter letter is actually short", () => {
     expect(checkLetterFidelity(DRAFT.body, THEIRS, DRAFT.body).filter((x) => x.gate === "too-long")).toEqual([]);
   });
 });
+
+describe("a blank made from the person's own note is theirs", () => {
+  const MINE = "My car (Insert Rego) was parked on Batman Street.";
+  const D = buildDraft(verifiedEntry, "internal-review-request", MINE).body;
+
+  it("accepts their '(Insert Rego)' turned into '[Insert Rego]'", () => {
+    const out = D.replace("(Insert Rego)", "[Insert Rego]");
+    expect(checkLetterFidelity(D, MINE, out).filter((f) => f.gate === "placeholder-invented")).toEqual([]);
+  });
+
+  it("still refuses a blank whose words they never wrote", () => {
+    const out = D.replace("(Insert Rego)", "[Insert your licence number]");
+    expect(checkLetterFidelity(D, MINE, out).some((f) => f.gate === "placeholder-invented")).toBe(true);
+  });
+});

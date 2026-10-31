@@ -573,3 +573,36 @@ describe("a refusal says which gate refused — and nothing else", () => {
     expect(JSON.stringify(body)).not.toContain("Craig");
   });
 });
+
+describe("the shorter letter gets one more try", () => {
+  it("tries again once when the first attempt is refused, and every gate still applies", async () => {
+    let calls = 0;
+    const good = polishBody.draft.replace(
+      "I am writing to ask you to review the decision described above.",
+      "I am writing to request a review of the decision described above.",
+    );
+    __setModelForTests(async (call) => {
+      calls++;
+      // First attempt invents a figure (refused); the second is faithful.
+      const letter = calls === 1 ? polishBody.draft.replace("[Your name]\n", "[Your name]\nOn 99 March I phoned.\n") : good;
+      return { text: JSON.stringify({ covered: true, letter, sources: [] }), inputTokens: 10, outputTokens: 10, model: call.model };
+    });
+    const body = await (await polishPost(jsonReq("http://x/api/letter-polish", polishBody))).json();
+    expect(body.status).toBe("answered");
+    expect(body.letter).toContain("request a review");
+    expect(calls).toBe(2);
+  });
+
+  it("stops after the second refusal and says why", async () => {
+    let calls = 0;
+    __setModelForTests(async (call) => {
+      calls++;
+      const letter = polishBody.draft.replace("[Your name]\n", "[Your name]\nOn 99 March I phoned.\n");
+      return { text: JSON.stringify({ covered: true, letter, sources: [] }), inputTokens: 10, outputTokens: 10, model: call.model };
+    });
+    const body = await (await polishPost(jsonReq("http://x/api/letter-polish", polishBody))).json();
+    expect(body.status).toBe("not-covered");
+    expect(body.gates).toContain("invented-figure");
+    expect(calls).toBe(2);
+  });
+});
