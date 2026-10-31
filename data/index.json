@@ -1,5 +1,5 @@
 {
-  "builtAt": "43d1ef33384af472",
+  "builtAt": "8ebf1a15108237a0",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -156,8 +156,8 @@
           "who": "free complaints about Australian Government bodies (cannot overturn a decision)"
         },
         {
-          "service": "Community legal centres (Federation of CLCs)",
-          "link": "https://fclc.org.au",
+          "service": "Community legal centres (Community Legal Centres Australia)",
+          "link": "https://clcs.org.au",
           "who": "free local legal help — find your nearest centre"
         },
         {

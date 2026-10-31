@@ -98,7 +98,7 @@ describe("the context handed to the drafter carries the knowledge base, and noth
 
   it("carries the time-limit rule but adds no figure of its own", () => {
     expect(built).toContain(entry.deadlineRule);
-    expect(built).toContain("never add a number");
+    expect(built).toContain("do NOT repeat it or any number in it");
   });
 
   it("says nothing about the person — their words travel separately", () => {

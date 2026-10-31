@@ -56,8 +56,8 @@ getHelp:
   - service: Commonwealth Ombudsman
     link: 'https://www.ombudsman.gov.au'
     who: 'free complaints about Australian Government bodies (cannot overturn a decision)'
-  - service: Community legal centres (Federation of CLCs)
-    link: 'https://fclc.org.au'
+  - service: Community legal centres (Community Legal Centres Australia)
+    link: 'https://clcs.org.au'
     who: 'free local legal help — find your nearest centre'
   - service: Administrative Review Tribunal (ART)
     link: 'https://www.art.gov.au'

@@ -1,5 +1,6 @@
 import type { Concept, Ground, Process } from "@/lib/schemas/legal";
 import type { DataPathway } from "@/lib/schemas/data";
+import { ruleForPath, officialSourceForPath, type RulePath } from "@/lib/deadline/rule";
 import { answerableCriteria, withCriterionIds } from "@/lib/memo/criteria";
 import { titleAsPhrase } from "@/lib/text/title";
 
@@ -198,6 +199,8 @@ export interface MemoInput {
      */
     criteria?: { criterionId: string; says: string; missing: string }[];
   } | null;
+  /** The path being worked through: picks the part of the time rule, and the official link. */
+  pathId?: RulePath;
   /** Section headings, so all customer prose stays in the i18n layer. */
   t: (key: string) => string;
 }
@@ -310,6 +313,7 @@ export function composeMemo(input: MemoInput): Memo {
     decisionDate,
     forum,
     corpusVersion,
+    pathId,
     t,
   } = input;
   const L: string[] = [];
@@ -525,7 +529,7 @@ export function composeMemo(input: MemoInput): Memo {
     for (const k of internal.keyPoints) item(rule(k));
     sub(t("memoApplication"));
     para(`${t("memoInternalBodyIs")} ${forum}.`, "  ");
-    if (entry.deadlineRule) para(rule(entry.deadlineRule), "  ");
+    if (entry.deadlineRule) para(rule(ruleForPath(entry.deadlineRule, pathId)), "  ");
     para(t("memoTimeCheck"), "  ");
 
     h(t("memoIssue2Internal"));
@@ -566,7 +570,7 @@ export function composeMemo(input: MemoInput): Memo {
   }
   sub(t("memoApplication"));
   para(`${t("memoForumIs")} ${forum}.`, "  ");
-  if (entry.deadlineRule) para(rule(entry.deadlineRule), "  ");
+  if (entry.deadlineRule) para(rule(ruleForPath(entry.deadlineRule, pathId)), "  ");
   para(t("memoTimeCheck"), "  ");
   // STANDING, as a sub-issue of eligibility. The Rule above already names it in one clause
   // and then never returned to it, so the one document a duty lawyer reads said nothing
@@ -766,7 +770,8 @@ export function composeMemo(input: MemoInput): Memo {
   // version is a build fingerprint, so a memo can always be tied back to the exact content
   // that produced it. Nothing here is about the person.
   h(t("memoSourceTitle"));
-  link(t("memoSourceOfficial"), entry.sourceUrl);
+  const official = officialSourceForPath(entry, pathId);
+  if (official) link(t("memoSourceOfficial"), official);
   meta(t("memoSourceChecked"), entry.verifiedAsAt);
   if (corpusVersion) meta(t("memoSourceVersion"), corpusVersion);
 

@@ -24,7 +24,7 @@ async function seed(page: Page) {
     // Once per test: a reload must restore from what the page itself wrote, not re-seed.
     if (window.sessionStorage.getItem("__seeded")) return;
     window.sessionStorage.setItem("__seeded", "1");
-    window.sessionStorage.setItem("wn-consented", "1");
+    window.sessionStorage.setItem("wn-consented", JSON.stringify({ matter: "Vic|vic-generic", flags: {} }));
     window.sessionStorage.setItem(
       "wn-flow",
       JSON.stringify({

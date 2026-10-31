@@ -127,6 +127,9 @@ interface RunOpts<T> {
   extraSources?: string[];
   /** See `citesNothing` in the verifier: for outputs that assert no law. */
   citesNothing?: boolean;
+  /** See the verifier: the corpus material this task was given, and the person's own words. */
+  groundedText?: string;
+  accountText?: string;
   /** Pull the verifiable prose + declared sources + covered flag out of the parsed shape. */
   extract: (data: T) => { covered: boolean; text: string; declaredSources: string[] };
 }
@@ -139,6 +142,10 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
   // The best answer we produced that cleared every SAFETY gate. See the fallback below.
   let readableEnough: { data: T; failures: VerifyFailure[] } | null = null;
   let retryHint: string | undefined;
+  // Every gate that refused ANY attempt. Reporting only the last attempt's hid the real
+  // pattern — three attempts can fail three different ways, and fixing the one we were told
+  // about left the other two in place.
+  const everyGate = new Set<string>();
 
   while (attempts < MAX_GENERATION_ATTEMPTS) {
     attempts++;
@@ -182,9 +189,12 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
       entry: opts.entry,
       extraSources: opts.extraSources,
       citesNothing: opts.citesNothing,
+      groundedText: opts.groundedText,
+      accountText: opts.accountText,
     });
     if (verdict.ok) return { status: "answered", data, attempts };
     lastFailures = verdict.failures; // diagnostic only — never contains PII
+    for (const f of verdict.failures) everyGate.add(f.gate);
     await recordBlockedOutput(opts.task, verdict.failures.map((f) => f.gate));
 
     // Reading level is a QUALITY gate, not a safety gate: it measures how hard the text is
@@ -217,7 +227,7 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
     attempts,
     lastFailures,
     reason: lastFailures?.length ? "gates-rejected" : undefined,
-    rejectedGates: lastFailures ? [...new Set(lastFailures.map((f) => f.gate))] : undefined,
+    rejectedGates: everyGate.size ? [...everyGate] : undefined,
   };
 }
 

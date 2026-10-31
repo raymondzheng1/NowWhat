@@ -103,7 +103,7 @@ getHelp:
     link: 'https://www.ombudsman.gov.au'
   - service: Community legal centres
     who: free local legal help — find your nearest centre
-    link: 'https://www.fclc.org.au'
+    link: 'https://clcs.org.au'
   - service: Legal aid in your state or territory
     who: free legal information and advice, wherever you live
     link: 'https://www.nationallegalaid.org'

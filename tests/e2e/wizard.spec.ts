@@ -1088,3 +1088,38 @@ test("a scheme with nothing grounded asks nothing extra", async ({ page }) => {
   await advance(page, /next: what you want/i);
   await expect(page.locator("#r-goal")).not.toContainText(/a few things about this kind of decision/i);
 });
+
+/**
+ * The urgent banner comes back with the result (end-to-end QA, 2026-10-31).
+ *
+ * The urgent answers lived in memory only, so following a link out to an explainer and
+ * pressing Back restored the result WITHOUT them: a person who had ticked that their time
+ * limit was very soon lost the banner telling them to call someone today. They are now held
+ * with the consent, for this matter only.
+ */
+test("the urgent banner survives a trip to an explainer and back", async ({ page }) => {
+  await page.goto("/start?jur=Vic&area=vic-generic");
+  await page.getByRole("checkbox", { name: /time limit is very soon/i }).check();
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("heading", { name: /call a human service today/i })).toBeVisible({ timeout: 15_000 });
+
+  await page.goto("/learn/grounds/procedural-fairness-hearing");
+  await expect(page).toHaveURL(/\/learn\/grounds\//);
+  await page.goBack();
+  await expect(page.getByRole("heading", { name: /call a human service today/i })).toBeVisible({ timeout: 15_000 });
+});
+
+/** Consent given for one decision does not carry the person past the questions for another. */
+test("consent for one decision does not skip the questions for another", async ({ page }) => {
+  await page.goto("/start?jur=Vic&area=vic-generic");
+  await page.getByRole("checkbox", { name: /general information, not legal advice/i }).check();
+  await page.getByRole("button", { name: /see my next steps/i }).click();
+  await expect(page.getByRole("button", { name: /start over/i })).toBeVisible({ timeout: 15_000 });
+
+  await page.goto("/start?jur=Vic&area=vic-fines&step=result");
+  await expect(page.getByRole("checkbox", { name: /general information, not legal advice/i })).toBeVisible({
+    timeout: 15_000,
+  });
+  await expect(page.getByRole("checkbox", { name: /general information, not legal advice/i })).not.toBeChecked();
+});

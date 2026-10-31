@@ -1,4 +1,5 @@
 import type { DataPathway } from "@/lib/schemas/data";
+import { ruleForPath, type RulePath } from "@/lib/deadline/rule";
 import { answerableCriteria, withCriterionIds } from "@/lib/memo/criteria";
 import type { Concept, Ground, Process } from "@/lib/schemas/legal";
 
@@ -23,6 +24,8 @@ export function buildMemoContext(input: {
   criteria: string[];
   forum: string;
   pathName: string;
+  /** The path being worked through — only its part of the time rule is shown. */
+  pathId?: RulePath;
 }): string {
   const { entry, process: proc, internal, grounds, criteria, forum, pathName } = input;
   const L: string[] = [];
@@ -30,8 +33,11 @@ export function buildMemoContext(input: {
   L.push("DECISION TYPE:", entry.title, "");
   L.push("THE PATH THIS MEMO WORKS THROUGH:", `${pathName}, at ${forum}`, "");
 
-  L.push("TIME LIMIT RULE (quote or paraphrase only — never add a number):");
-  L.push(entry.deadlineRule, "");
+  // The page prints this rule, verbatim, above the analysis. Labelled "quote or paraphrase",
+  // it invited the model to restate it — and a restated figure is the one thing the analysis
+  // must never carry in its own words.
+  L.push("TIME LIMIT (the page shows this to them separately — do NOT repeat it or any number in it):");
+  L.push(ruleForPath(entry.deadlineRule, input.pathId), "");
 
   if (proc) {
     L.push(`WHAT THIS BODY IS ASKING: ${proc.question}`);

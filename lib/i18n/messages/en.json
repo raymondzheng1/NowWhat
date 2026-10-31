@@ -722,7 +722,9 @@
     "dismiss": "No thanks"
   },
   "letter": {
-    "groundsLead": "Below are the things I want looked at. I marked these from a list of common problems. I am not a lawyer.",
+    "internalHeading": "What I am asking you to look at again",
+    "criteriaHeading": "What I ask you to consider",
+    "groundsLead":"Below are the things I want looked at. I marked these from a list of common problems. I am not a lawyer.",
     "otherConcerns": "I have other concerns about this decision. I am taking those to a human legal service.",
     "groundHearing": "I did not get a chance to have my say",
     "groundRelevant": "I gave them information the decision does not mention",

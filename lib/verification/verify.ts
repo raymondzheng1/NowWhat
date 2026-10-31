@@ -43,6 +43,31 @@ export interface VerifyInput {
    * to check it against.
    */
   citesNothing?: boolean;
+  /**
+   * The corpus material this output was GIVEN — for the analysis, the memo context built from
+   * our own knowledge base. A section, an Act or a time figure that appears in it is grounded
+   * by definition: it is the curated, lawyer-signed text, not something the model reached for.
+   *
+   * Without this the allow-list was the decode-corpus entry alone, which knows nothing of the
+   * legal corpus or of the data layer's verified time rule — so an analysis that repeated the
+   * rule it had been handed ("Order 56 … 60 days") failed `no-fabricated-deadline`.
+   */
+  groundedText?: string;
+  /**
+   * What the person told us. Their account is THEIR fact, not our claim: an Act they say the
+   * council relied on, the fifteen years they have bred cats, a sentence an officer said to
+   * them. Restating it is not citing law or stating a deadline, and refusing it refused the
+   * analysis on every realistic account (measured by the judicial-review benchmark).
+   *
+   * Narrow allowances, and only these:
+   *   · a citation or a time figure that appears in their words;
+   *   · an advice-shaped phrase that the output QUOTES (inside double quotes) and that they
+   *     wrote — the officer said "you should never be allowed to breed" is reporting, not
+   *     advising.
+   * Everything else — no-score, jurisdiction, AI mentions, and advice in our own voice — is
+   * checked exactly as before.
+   */
+  accountText?: string;
 }
 
 export interface VerifyFailure {
@@ -83,6 +108,19 @@ function allowedSourceList(entry: PathwayEntry, extra: string[] = []): string[] 
     entry.rightToReasons.source,
     ...entry.getHelp.map((h) => h.link),
   ].map(norm);
+}
+
+/** The spans an output puts inside double quotes — straight or curly. */
+const QUOTED_RE = /["\u201c]([^"\u201c\u201d]{2,600})["\u201d]/g;
+
+/**
+ * The output with every quoted span that THEY wrote taken out. Advice is then checked on what
+ * is left — our own voice — so a quoted "you should" is excused and an unquoted one beside it
+ * is not. A quoted phrase the model made up stays in, and is checked like anything else.
+ */
+function withoutTheirQuotes(text: string, theirs: string): string {
+  if (!theirs) return text;
+  return text.replace(QUOTED_RE, (whole, inner: string) => (theirs.includes(norm(inner)) ? " " : whole));
 }
 
 const DOMAIN_RE = /\b[a-z0-9-]+(?:\.[a-z0-9-]+)+\b/g;
@@ -157,6 +195,13 @@ export function verifyOutput(input: VerifyInput): VerifyResult {
   const { text, declaredSources, entry, extraSources = [] } = input;
   const t = norm(text);
   const blob = allowedSourceBlob(entry, extraSources);
+  const given = norm(input.groundedText ?? "");
+  const theirs = norm(input.accountText ?? "");
+  // A citation is grounded if our corpus material holds it, or the person said it.
+  const inGivenOrTheirs = (s: string) => {
+    const n = norm(s);
+    return (!!given && given.includes(n)) || (!!theirs && theirs.includes(n));
+  };
 
   // 1. Source allow-list — every declared source must be grounded in the entry's sources
   //    (substring, shared domain, or strong word overlap — models reword sources).
@@ -181,7 +226,7 @@ export function verifyOutput(input: VerifyInput): VerifyResult {
   // 3. No out-of-corpus legal citation in the prose.
   const citationRe = /\b(?:section|sections|s\.?|ss\.?)\s?\d+[a-z]*\b|\b[A-Z][A-Za-z'’]+(?:\s+[A-Z][A-Za-z'’]+)*\s+Act\s+\d{4}\b/g;
   for (const m of text.match(citationRe) ?? []) {
-    if (!blob.includes(norm(m))) {
+    if (!blob.includes(norm(m)) && !inGivenOrTheirs(m)) {
       failures.push({
         gate: "no-out-of-corpus-citation",
         detail: `citation "${m.trim()}" is not grounded in the corpus entry`,
@@ -192,6 +237,8 @@ export function verifyOutput(input: VerifyInput): VerifyResult {
   // 4. No fabricated/unsourced deadline. Every time figure in the prose must appear in
   //    the corpus entry's own grounded figures — otherwise it's an unsourced number.
   const grounded = groundedTimeFigures(entry);
+  if (input.groundedText) collectFigures(input.groundedText, grounded);
+  if (input.accountText) collectFigures(input.accountText, grounded);
   for (const m of text.matchAll(TIME_FIGURE_RE)) {
     const tok = `${Number(m[1])} ${normUnit(m[2]!)}`;
     if (!grounded.has(tok)) {
@@ -219,7 +266,8 @@ export function verifyOutput(input: VerifyInput): VerifyResult {
   }
 
   // 6. No advice / no prediction (the tone gate) — the most important.
-  const advice = checkNoAdvice(text);
+  // Their words, reported in quotes, are not our advice (see `accountText`).
+  const advice = checkNoAdvice(withoutTheirQuotes(text, theirs));
   for (const h of advice.hits) {
     failures.push({ gate: "no-advice", detail: `${h.why}: "${h.match}"` });
   }

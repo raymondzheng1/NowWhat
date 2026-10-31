@@ -49,3 +49,35 @@ export function flowForMatter<T extends { matter?: unknown }>(
   if ((parsed as { matter?: unknown }).matter !== matter) return null;
   return parsed as T;
 }
+
+/**
+ * What a person agreed to, and what they told us on the urgent-questions step, for ONE matter.
+ *
+ * The consent used to be a bare "1" for the whole tab. Two things followed from that, both
+ * found by the end-to-end QA:
+ *   · the urgent questions were answered in memory only, so following a link out to an
+ *     explainer and pressing Back restored the result WITHOUT them — a person who had ticked
+ *     "a hearing is already booked" lost the banner telling them to get help today;
+ *   · a link to a DIFFERENT decision in the same tab skipped both the urgent questions and the
+ *     consent box, because the tab had consented once, to something else.
+ * Both are answered by recording the matter and the flags together, and restoring only for it.
+ */
+export interface ConsentRecord<F> {
+  matter: string;
+  flags: F;
+}
+
+export function consentRecord<F>(matter: string, flags: F): string {
+  return JSON.stringify({ matter, flags } satisfies ConsentRecord<F>);
+}
+
+/**
+ * The flags recorded with consent for THIS matter, or null — "ask again". A bare "1" from
+ * before this change, another matter's record, or anything malformed all ask again, which is
+ * the safe direction: the cost is two ticks, the cost of the other is a missed warning.
+ */
+export function consentForMatter<F extends object>(raw: string | null | undefined, matter: string): F | null {
+  const rec = flowForMatter<{ matter?: unknown; flags?: unknown }>(raw, matter);
+  if (!rec || !rec.flags || typeof rec.flags !== "object" || Array.isArray(rec.flags)) return null;
+  return rec.flags as F;
+}

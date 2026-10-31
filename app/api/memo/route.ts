@@ -71,6 +71,8 @@ const BodySchema = z.object({
   /** What the person wrote. Bounded so one request cannot become an upload channel. */
   story: z.string().max(8000).default(""),
   notes: z.record(z.string(), z.string().max(4000)).default({}),
+  /** What they said they want, in the page's words or theirs. Without it the brief guessed. */
+  goals: z.array(z.string().max(300)).max(12).default([]),
 });
 
 export async function POST(req: NextRequest) {
@@ -147,6 +149,7 @@ export async function POST(req: NextRequest) {
     criteria: body.criteria,
     forum: body.forum || entry.title,
     pathName: body.pathName || "review",
+    pathId: body.pathId,
   });
 
   // The verifier's allow-list is a decode-corpus entry. The two knowledge sources share ids
@@ -160,6 +163,8 @@ export async function POST(req: NextRequest) {
     ...Object.entries(body.notes)
       .filter(([, v]) => v.trim())
       .map(([k, v]) => `On "${k}": ${v.trim()}`),
+    // Labelled, so the brief can say what they want from what they SAID, and nothing else.
+    body.goals.length ? `WHAT THEY SAID THEY WANT: ${body.goals.map((g) => g.trim()).filter(Boolean).join("; ")}` : "",
   ]
     .filter(Boolean)
     .join("\n\n");
@@ -174,6 +179,9 @@ export async function POST(req: NextRequest) {
       guard: ctx.guard,
       byoKeyValue: ctx.byoKeyValue,
       extraSources: memoExtraSources({ entry, process: proc, internal, grounds }),
+      // What it was given and what they said — see the verifier. Grounded either way.
+      groundedText: context,
+      accountText: theirWords,
       maxTokens: BRIEF_TOKENS,
     });
   } catch {
@@ -190,7 +198,8 @@ export async function POST(req: NextRequest) {
 
   // The memo's own citation gate, on top of the verifier: a case, Act or section that did not
   // come from our knowledge base never ships, even if it happens to be real.
-  const invented = checkMemoCitations(prose, `${context}\n${entry.deadlineRule}`);
+  // An Act or case THEY named is theirs to have named; the brief may say they mentioned it.
+  const invented = checkMemoCitations(prose, `${context}\n${theirWords}`);
   if (invented.length > 0) return notCovered(["out-of-corpus-citation"]);
 
   // Short is the point of it. A brief that ran long is refused rather than shown as the short one.

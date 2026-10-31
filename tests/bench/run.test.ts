@@ -112,6 +112,7 @@ describe.skipIf(!INPUT)("bench", () => {
       goalOther: "",
       decisionDate: s.decisionDate,
       forum,
+      pathId: s.pathId,
       paths: plan.paths.map((pp) => ({
         name:
           pp.id === "internal-review"
@@ -139,6 +140,7 @@ describe.skipIf(!INPUT)("bench", () => {
       criteria: path.criteria ?? [],
       forum,
       pathName,
+      pathId: s.pathId,
     });
 
     const corpusEntry = getEntry(s.entryId);
@@ -150,6 +152,7 @@ describe.skipIf(!INPUT)("bench", () => {
             answers: {
               "q-story": s.story,
               "q-internal": (s.internalNote ?? "").trim(),
+              "q-criteria": Object.values(s.criteriaNotes ?? {}).map((v) => v.trim()).filter(Boolean).join("\n\n"),
               ...Object.fromEntries(
                 Object.entries(s.groundNotes ?? {})
                   .filter(([id, v]) => (s.groundIds ?? []).includes(id) && v.trim())
@@ -163,8 +166,10 @@ describe.skipIf(!INPUT)("bench", () => {
           otherConcerns: L.otherConcerns ?? "",
           universal: [
             { id: "q-story", label: R.accountQStory ?? "What happened?" },
-            { id: "q-internal", label: INTERNAL_NOTE_KEY },
+            { id: "q-internal", label: L.internalHeading ?? INTERNAL_NOTE_KEY },
+            { id: "q-criteria", label: L.criteriaHeading ?? "" },
           ],
+          decisionDate: s.decisionDate,
         })
       : null;
 
@@ -188,6 +193,7 @@ describe.skipIf(!INPUT)("bench", () => {
           criteria: path.criteria ?? [],
           story: s.story,
           notes,
+          goals: s.goals ?? [],
         },
         null,
         2,

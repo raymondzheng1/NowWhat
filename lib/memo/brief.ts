@@ -1,4 +1,5 @@
 import type { DataPathway } from "@/lib/schemas/data";
+import { ruleForPath, officialSourceForPath, type RulePath } from "@/lib/deadline/rule";
 import type { Ground } from "@/lib/schemas/legal";
 import type { Memo, MemoBlock } from "@/lib/memo/compose";
 import { answerableCriteria, withCriterionIds } from "@/lib/memo/criteria";
@@ -44,6 +45,8 @@ export interface BriefInput {
   grounds: Ground[];
   /** The criteria for the chosen path, as handed to the model. */
   criteria: string[];
+  /** The path being worked through: picks the part of the time rule, and the official link. */
+  pathId?: RulePath;
   t: (key: string) => string;
 }
 
@@ -123,7 +126,7 @@ export function composeBrief(input: BriefInput): Memo {
   // missing, so it does not wait on a model call and it is never paraphrased: the entry's own
   // verified rule, verbatim, with the date we last checked it.
   h(t("briefTimeLimit"));
-  if (entry.deadlineRule) para(clean(entry.deadlineRule));
+  if (entry.deadlineRule) para(clean(ruleForPath(entry.deadlineRule, input.pathId)));
   para(t("memoTimeCheck"));
   meta(t("memoSourceChecked"), entry.verifiedAsAt);
 
@@ -192,7 +195,8 @@ export function composeBrief(input: BriefInput): Memo {
       listed.add(s);
       item(s);
     }
-    link(t("memoSourceOfficial"), entry.sourceUrl);
+    const official = officialSourceForPath(entry, input.pathId);
+    if (official) link(t("memoSourceOfficial"), official);
 
     L.push("");
     L.push(t("memoNotAdvice"));

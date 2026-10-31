@@ -7,7 +7,7 @@ import { listDataEntries, getDataEntry, getDataIndex, suggestEntry } from "@/lib
 import type { DataPathway, Jurisdiction } from "@/lib/schemas/data";
 import { groundAppliesIn, type Process, type Ground, type Concept } from "@/lib/schemas/legal";
 import { avenueView } from "@/lib/triage";
-import { flowForMatter, matterKey } from "@/lib/flow/matter";
+import { consentForMatter, consentRecord, flowForMatter, matterKey } from "@/lib/flow/matter";
 import { titleAsPhrase } from "@/lib/text/title";
 import { planFor, midSentence } from "@/lib/analysis";
 import { questionsForScheme } from "@/lib/intake/scheme-questions";
@@ -86,16 +86,19 @@ function forgetFlow(): void {
     /* nothing to clear */
   }
 }
-function sessionConsented(): boolean {
+/** The urgent-question answers given with consent for this matter, or null to ask again. */
+function sessionConsented(matter: string): TripwireFlags | null {
   try {
-    return window.sessionStorage.getItem(CONSENT_KEY) === "1";
+    return consentForMatter<TripwireFlags>(window.sessionStorage.getItem(CONSENT_KEY), matter);
   } catch {
-    return false; // private mode, storage disabled — fall back to asking again
+    return null; // private mode, storage disabled — fall back to asking again
   }
 }
-function rememberConsent(on: boolean): void {
+function rememberConsent(on: false): void;
+function rememberConsent(on: true, matter: string, flags: TripwireFlags): void;
+function rememberConsent(on: boolean, matter?: string, flags?: TripwireFlags): void {
   try {
-    if (on) window.sessionStorage.setItem(CONSENT_KEY, "1");
+    if (on && matter) window.sessionStorage.setItem(CONSENT_KEY, consentRecord(matter, flags ?? {}));
     else window.sessionStorage.removeItem(CONSENT_KEY);
   } catch {
     /* storage unavailable — the gate simply asks again, which is the safe direction */
@@ -280,6 +283,13 @@ export function RightsSaverClient({
   const [consent, setConsent] = useState(false);
   const [copied, setCopied] = useState(false);
   const lastStepRef = useRef<Step | null>(null);
+  // Keep the urgent answers with the consent, for the matter they were given for, so a
+  // return from an explainer brings the banner back with the result.
+  useEffect(() => {
+    if (!consent || !areaId) return;
+    const e = getDataEntry(areaId);
+    if (e) rememberConsent(true, matterKey(e), flags);
+  }, [consent, flags, areaId]);
   // Grounds the person marked as possibly relating to their situation (neutral; →handoff).
   const [relatedGrounds, setRelatedGrounds] = useState<string[]>([]);
 
@@ -303,9 +313,13 @@ export function RightsSaverClient({
     // "not legal advice" consent box never ticked. A bookmark, a shared link, a chat
     // hand-off or the Back button was enough to bypass both. We still WRITE step=result
     // so Back works inside a session; we just never trust it on the way in.
-    if (area && getDataEntry(area)) {
+    const areaEntry = area ? getDataEntry(area) : undefined;
+    if (areaEntry) {
       const wantsResult = p.get("step") === "result";
-      if (wantsResult && sessionConsented()) {
+      // Consent, and the urgent answers given with it, for THIS decision only.
+      const saved = wantsResult ? sessionConsented(matterKey(areaEntry)) : null;
+      if (saved) {
+        setFlags(saved);
         setConsent(true);
         setStep("result");
       } else {
@@ -907,7 +921,8 @@ function WhatStep({
             checked={consent}
             onChange={(e) => {
               setConsent(e.target.checked);
-              rememberConsent(e.target.checked);
+              // Ticking is recorded by the effect beside `consent`, with the matter and flags.
+              if (!e.target.checked) rememberConsent(false);
               if (e.target.checked) setBlocked(null);
             }}
             className="mt-0.5 h-5 w-5 shrink-0 accent-ink"
@@ -1119,7 +1134,7 @@ function ResultStep({
   // restore anyone's answers. It never leaves the device and it dies with the tab, which is
   // what the privacy note on these steps promises. "Start over" clears it.
   useEffect(() => {
-    if (!sessionConsented()) return;
+    if (!sessionConsented(matterKey(entry))) return;
     try {
       const v = initialView ?? new URLSearchParams(window.location.search).get("view");
       if (RESULT_VIEWS.includes(v as ResultView)) setView(v as ResultView);
@@ -1157,7 +1172,7 @@ function ResultStep({
   }, []);
 
   useEffect(() => {
-    if (!sessionConsented()) return;
+    if (!sessionConsented(matterKey(entry))) return;
     // NEVER blank a real saved answer set.
     //
     // Both effects fire in the same commit on mount, and this one sees the state as it was
@@ -1209,7 +1224,7 @@ function ResultStep({
   const [letterMsg, setLetterMsg] = useState<string | null>(null);
 
   const trip = checkTripwire({ jurisdiction, flags, entry });
-  const stopServices = servicesForStop(trip.stopReasons);
+  const stopServices = servicesForStop(trip.stopReasons, jurisdiction);
   const caps = capabilitiesForStop(trip.stopReasons);
 
   /**
@@ -1374,11 +1389,22 @@ function ResultStep({
   // The internal-review note is a second block, and only on that path's letter: what someone
   // types under "what you are asking them to look at again" IS the substance of that letter,
   // and it reached the memo but never the draft, so the letter kept its placeholder.
+  // What they wrote under the criteria they TICKED, for the letter. It used to reach the
+  // analysis and never the letter, so a fines review request stated no review ground at all
+  // while the person had written "my brother was driving, not me" under mistake of identity.
+  // Unticked criteria are left out: a note they abandoned is not something they chose to send.
+  const criteriaForLetter = pickedCriteria
+    .map((c) => (criteriaNotes[c] ?? "").trim())
+    .filter(Boolean)
+    .join("\n\n");
+  // Headings inside the person's own letter are in THEIR voice. "What you are asking them to
+  // look at again" is the app talking to them, and it was printing in a letter to an agency.
   const universalQs = [
     { id: "q-story", label: t("accountQStory") },
     ...(chosenPath === "internal-review" && (criteriaNotes[INTERNAL_NOTE_KEY] ?? "").trim()
-      ? [{ id: "q-internal", label: t("internalAskTitle") }]
+      ? [{ id: "q-internal", label: tLetter("internalHeading") }]
       : []),
+    ...(criteriaForLetter ? [{ id: "q-criteria", label: tLetter("criteriaHeading") }] : []),
   ];
 
   const applyDraft =
@@ -1391,6 +1417,7 @@ function ResultStep({
               ...account,
               // What they wrote on the internal-review step, so the letter carries it.
               "q-internal": (criteriaNotes[INTERNAL_NOTE_KEY] ?? "").trim(),
+              "q-criteria": criteriaForLetter,
               // Their own words on a ground go in first; a picked sentence for the same
               // ground overwrites it below, because a sentence they ticked is one they have
               // already approved for a letter someone else will read.
@@ -1414,6 +1441,7 @@ function ResultStep({
             groundIds: relatedGrounds,
           },
           headingFor: (k) => tLetter(k),
+          decisionDate: decisionDate || undefined,
           groundsLead: tLetter("groundsLead"),
           otherConcerns: tLetter("otherConcerns"),
           universal: universalQs,
@@ -1749,6 +1777,23 @@ function ResultStep({
   // The key is everything the draft is built from, so a real change still re-drafts and a
   // return visit never does.
   const [draftCache, setDraftCache] = useState<Record<string, MemoDraft | null>>({});
+  // What the analysis is written from, besides the account: the notes under the points they
+  // still have MARKED (a note under a point they unticked is not something they chose to have
+  // analysed), and what they said they want.
+  //
+  // Both used to be wrong. Every note ever typed was sent, ticked or not; and the goals were
+  // never sent at all, so the brief's "what you want" was the model's guess — the end-to-end
+  // QA caught it writing "you want the decision overturned" for a person who had asked only
+  // for reasons. And because neither was in the key below, editing a note re-used the old
+  // analysis, written without it.
+  const memoNotes: Record<string, string> = {};
+  for (const id of relatedGrounds) if ((groundNotes[id] ?? "").trim()) memoNotes[id] = groundNotes[id]!;
+  for (const c of pickedCriteria) if ((criteriaNotes[c] ?? "").trim()) memoNotes[c] = criteriaNotes[c]!;
+  if (memoPathId === "internal-review" && (criteriaNotes[INTERNAL_NOTE_KEY] ?? "").trim()) {
+    memoNotes[INTERNAL_NOTE_KEY] = criteriaNotes[INTERNAL_NOTE_KEY]!;
+  }
+  for (const [k, v] of Object.entries(schemeAnswers)) memoNotes[k] = v;
+  const memoNotesKey = JSON.stringify(memoNotes);
   const draftKey = [
     entry.id,
     memoPathId,
@@ -1756,6 +1801,8 @@ function ResultStep({
     schemeAnswerKey,
     (account["q-story"] ?? "").trim(),
     moreSettled,
+    memoNotesKey,
+    pointsSaidGoals.join("|"),
   ].join("\u0000");
   const drafted = draftCache[draftKey] ?? null;
   const [drafting, setDrafting] = useState(false);
@@ -1766,10 +1813,6 @@ function ResultStep({
     if (draftKey in draftCache) return;
     let live = true;
     setDrafting(true);
-    const notes: Record<string, string> = {};
-    for (const [k, v] of Object.entries(groundNotes)) if (v.trim()) notes[k] = v;
-    for (const [k, v] of Object.entries(criteriaNotes)) if (v.trim()) notes[k] = v;
-    for (const [k, v] of Object.entries(schemeAnswers)) notes[k] = v;
     fetch("/api/memo", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -1791,7 +1834,8 @@ function ResultStep({
         groundIds: relatedGrounds,
         criteria: memoPath?.criteria ?? [],
         story: [story, moreSettled].filter(Boolean).join("\n\n"),
-        notes,
+        notes: memoNotes,
+        goals: pointsSaidGoals,
       }),
     })
       .then((r) => r.json())
@@ -1839,6 +1883,7 @@ function ResultStep({
   // are the corpus's own words, composed on the device, for a lawyer who wants the detail.
   const memo = composeMemo({
     entry,
+    pathId: memoPathId,
     process: memoProcess,
     internal: memoPathId === "internal-review" ? (internalReview ?? null) : null,
     internalNote: criteriaNotes[INTERNAL_NOTE_KEY] ?? "",
@@ -1921,6 +1966,7 @@ function ResultStep({
   const briefDoc = composeBrief({
     brief: drafted,
     entry,
+    pathId: memoPathId,
     pathName: memoPathName({
       process: memoProcess,
       internal: memoPathId === "internal-review" ? (internalReview ?? null) : null,

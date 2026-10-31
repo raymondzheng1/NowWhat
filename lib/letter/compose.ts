@@ -68,6 +68,8 @@ export interface ComposeInput {
   otherConcerns: string;
   /** Labels for the universal questions, in the order they should appear. */
   universal: { id: string; label: string }[];
+  /** The date on the decision they gave on the first steps (YYYY-MM-DD), if any. */
+  decisionDate?: string;
 }
 
 /**
@@ -77,6 +79,11 @@ export interface ComposeInput {
 export function composeLetter(input: ComposeInput): Draft {
   const { answers, groundIds } = input.account;
   const said = (id: string) => (answers[id] ?? "").trim();
+  // Worked out first, because the template needs to know: a judicial-review letter whose
+  // grounds are listed below it should not also ask the person to name one.
+  const willList = groundIds.some(
+    (id) => !!LETTER_GROUND_HEADINGS[id] && !LAWYER_NOTE_ONLY.has(id) && !!said(`g-${id}`),
+  );
   // Their reason for writing, into the letter's own "why" sentence.
   //
   // `buildDraft` has always taken a `context`, and this never passed one — so the template's
@@ -84,7 +91,10 @@ export function composeLetter(input: ComposeInput): Draft {
   // every person who had just spent a step telling us exactly that, and their account was
   // appended further down instead. The prompt is the app admitting it does not know; it
   // should not be there when it does.
-  const base = buildDraft(input.entry, input.kind, said("q-story") || undefined);
+  const base = buildDraft(input.entry, input.kind, said("q-story") || undefined, {
+    decisionDate: input.decisionDate,
+    groundsListed: willList,
+  });
 
   const parts: string[] = [];
 

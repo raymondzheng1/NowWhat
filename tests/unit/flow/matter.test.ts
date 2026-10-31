@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { matterKey, flowForMatter } from "@/lib/flow/matter";
+import { matterKey, flowForMatter, consentForMatter, consentRecord } from "@/lib/flow/matter";
 import { listDataEntries } from "@/lib/data";
 
 const VIC_FINES = { id: "vic-fines", jurisdiction: "Vic" as const };
@@ -66,5 +66,20 @@ describe("answers are restored only into the matter they were written for", () =
     expect(flowForMatter("null", matterKey(VIC_FINES))).toBeNull();
     expect(flowForMatter('"Vic|vic-fines"', matterKey(VIC_FINES))).toBeNull();
     expect(flowForMatter('["Vic|vic-fines"]', matterKey(VIC_FINES))).toBeNull();
+  });
+});
+
+describe("consent and the urgent answers belong to one matter", () => {
+  const m = "Vic|vic-fines";
+  it("round-trips the flags for the same matter", () => {
+    const raw = consentRecord(m, { hearingBooked: true });
+    expect(consentForMatter<{ hearingBooked?: boolean }>(raw, m)).toEqual({ hearingBooked: true });
+  });
+  it("another matter, the old bare '1', or junk all ask again", () => {
+    expect(consentForMatter(consentRecord(m, {}), "Cth|cth-centrelink")).toBeNull();
+    expect(consentForMatter("1", m)).toBeNull();
+    expect(consentForMatter("{not json", m)).toBeNull();
+    expect(consentForMatter(JSON.stringify({ matter: m, flags: [] }), m)).toBeNull();
+    expect(consentForMatter(null, m)).toBeNull();
   });
 });

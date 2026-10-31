@@ -57,6 +57,34 @@ describe("noticing when what someone wrote is a different kind of decision", () 
   });
 });
 
+// Found by the end-to-end QA: each of these used to fire, and each was wrong.
+describe("the suggestion stays quiet on weak evidence", () => {
+  it("a body's name alone is not a kind of decision", () => {
+    expect(suggestEntry("The local council refused my planning permit.", "vic-generic")).toBeNull();
+    expect(suggestEntry("Victoria Police and the local council both wrote to me.", "vic-generic")).toBeNull();
+  });
+
+  it("words match whole, not as prefixes", () => {
+    expect(suggestEntry("The finest enforcement of the rules, they said.", "vic-generic")).toBeNull();
+  });
+
+  it("only someone who chose a general page is asked", () => {
+    expect(
+      suggestEntry("Centrelink sent me a debt notice for my JobSeeker payments.", "vic-renting"),
+    ).toBeNull();
+  });
+
+  it("a match in their own jurisdiction wins", () => {
+    const text =
+      "I got an infringement notice for parking. Centrelink also sent me a debt notice for my JobSeeker payments.";
+    expect(suggestEntry(text, "vic-generic")?.entryId).toBe("vic-fines");
+  });
+
+  it("a decision term with the body's name is enough", () => {
+    expect(suggestEntry("The local council gave me a parking fine.", "vic-generic")?.entryId).toBe("vic-fines");
+  });
+});
+
 describe("a title inside a sentence", () => {
   // Reported from the live site: "This note is about a a victorian government decision".
   it("never doubles the article", () => {

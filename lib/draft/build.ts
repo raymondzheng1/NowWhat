@@ -3,6 +3,7 @@ import {
   SELF_WARNING_HEADING,
   SELF_WARNING_JUDICIAL_REVIEW,
   SELF_WARNING_COURT_ELECTION,
+  SELF_WARNING_MERITS,
 } from "@/lib/draft/warnings";
 
 /**
@@ -36,12 +37,54 @@ export interface Draft {
 
 const SIGN_OFF = "Yours faithfully,\n[Your name]\n[Your contact details]";
 
+export interface DraftOptions {
+  /** The date on the decision, as the person gave it (YYYY-MM-DD). Fills the date blank. */
+  decisionDate?: string;
+  /**
+   * The person's own points will be listed below the judicial-review letter, so its
+   * "[name the ground — …]" blank is not needed — leaving it there asked them to name what
+   * the letter already names.
+   */
+  groundsListed?: boolean;
+}
+
+const MONTHS = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+/** "2026-10-14" → "14 October 2026"; anything else as given. */
+function letterDate(iso: string): string {
+  const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(iso.trim());
+  if (!m) return iso.trim();
+  const month = MONTHS[Number(m[2]) - 1];
+  return month ? `${Number(m[3])} ${month} ${m[1]}` : iso.trim();
+}
+
+/**
+ * The tribunal named in this entry's own pathways, if it has one.
+ *
+ * The merits letter used to take `pathways[0]`, which is the tribunal only for renting. For
+ * Centrelink it was the Authorised Review Officer; for a general Victorian decision, "the
+ * decision-maker"; for housing, the Housing Appeals Office — so a person applying to a
+ * tribunal posted their application to the agency and could miss the tribunal's time limit.
+ * Found by the end-to-end QA on every entry with a tribunal.
+ */
+function tribunalOf(entry: PathwayEntry): string | undefined {
+  return entry.pathways.find((p) => /\b(VCAT|Tribunal)\b/.test(p.body))?.body;
+}
+
 export function buildDraft(
   entry: PathwayEntry,
   kind: DraftKind,
   context?: string,
+  opts: DraftOptions = {},
 ): Draft {
   const issuer = entry.issuers[0] ?? "the agency that made the decision";
+  const isMerits = kind === "merits-review-application" || kind === "review-application";
+  const tribunal = tribunalOf(entry);
+  // A merits application goes to the tribunal, not to the agency whose decision it is.
+  const addressee = isMerits && tribunal ? tribunal : issuer;
   const header = [
     "[Your name]",
     "[Your address]",
@@ -49,9 +92,11 @@ export function buildDraft(
     "",
     "[Date]",
     "",
-    `To: ${issuer}`,
+    `To: ${addressee}`,
     "",
   ].join("\n");
+  // The date they gave us, in place of the blank that asked them for it again.
+  const decisionDate = opts.decisionDate?.trim() ? letterDate(opts.decisionDate) : "";
 
   // ONE WHOLE SENTENCE PER ENTRY. These used to be hand-wrapped at about eighty characters,
   // which looked right in a monospace box and broke into fragments the moment the letter was
@@ -82,7 +127,7 @@ export function buildDraft(
         "Re: Request for a statement of reasons",
         "",
         "Reference number: [reference number from your letter, if any]",
-        "Date of the decision: [date on your letter]",
+        `Date of the decision: ${decisionDate || "[date on your letter]"}`,
         "",
         "I am writing to ask for the reasons for the decision described above. I would like a written statement setting out how the decision was made, what information it was based on, and which findings were made on the material questions of fact.",
         provisionLine,
@@ -115,7 +160,7 @@ export function buildDraft(
         "Re: Request for an internal review",
         "",
         "Reference number: [reference number from your letter, if any]",
-        "Date of the decision: [date on your letter]",
+        `Date of the decision: ${decisionDate || "[date on your letter]"}`,
         "",
         "I am writing to ask you to review the decision described above.",
         "",
@@ -146,7 +191,7 @@ export function buildDraft(
         "Re: Concern about how a decision was made",
         "",
         "Reference number: [reference number from your letter, if any]",
-        "Date of the decision: [date on your letter]",
+        `Date of the decision: ${decisionDate || "[date on your letter]"}`,
         "",
         SELF_WARNING_HEADING,
         SELF_WARNING_JUDICIAL_REVIEW,
@@ -155,8 +200,12 @@ export function buildDraft(
         "",
         `What happened, in my own words. ${inTheirWords("describe what you were told, what you were able to respond to, and what you think was not taken into account")}`,
         "",
-        "The concern I ask to have looked at is set out below.",
-        "  [name the ground — for example, that you were not given a fair chance to respond, that something irrelevant was taken into account, or that something relevant was not considered]",
+        ...(opts.groundsListed
+          ? ["The concerns I ask to have looked at are set out below."]
+          : [
+              "The concern I ask to have looked at is set out below.",
+              "  [name the ground — for example, that you were not given a fair chance to respond, that something irrelevant was taken into account, or that something relevant was not considered]",
+            ]),
         "",
         "I ask that the decision be looked at again and made according to law.",
         "",
@@ -192,7 +241,7 @@ export function buildDraft(
         "Re: Enquiry about having this matter heard in court",
         "",
         "Reference number: [reference number from your notice, if any]",
-        "Date of the notice: [date on your notice]",
+        `Date of the notice: ${decisionDate || "[date on your notice]"}`,
         "",
         SELF_WARNING_HEADING,
         SELF_WARNING_COURT_ELECTION,
@@ -220,7 +269,7 @@ export function buildDraft(
       ? "I am including, or can provide, the following.\n" +
         entry.evidenceChecklist.map((e) => `  - ${e}`).join("\n")
       : "";
-  const reviewBody = entry.pathways[0]?.body ?? "the reviewing body";
+  const reviewBody = tribunal ?? "the reviewing body";
   return {
     title: "Request to review a decision (merits review)",
     filename: `${entry.id}-merits-review.txt`,
@@ -229,7 +278,10 @@ export function buildDraft(
       "Re: Application for review of a decision",
       "",
       "Reference number: [reference number from your letter, if any]",
-      "Date of the decision: [date on your letter]",
+      `Date of the decision: ${decisionDate || "[date on your letter]"}`,
+      "",
+      SELF_WARNING_HEADING,
+      SELF_WARNING_MERITS,
       "",
       `I am writing to apply for a review of the decision described above. I do not agree with the decision, and I ask that it be considered again by ${reviewBody}.`,
       "",

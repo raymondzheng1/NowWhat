@@ -28,6 +28,14 @@ export const SELF_WARNING_COURT_ELECTION =
   "This letter is not the election, and sending it does not elect anything. Asking for a matter to be heard in court is a formal step with its own form and its own time limit, and this letter only asks what that form is and when it is due. Do not wait for their reply to act: you can usually only ask for a court hearing until the fine is registered, which can happen as soon as the due date on your Penalty Reminder Notice passes. Please talk to a free legal service before you elect. A court hearing decides the charge itself. The court can dismiss it, or find you guilty, record a conviction, and order you to pay more or less than the fine, plus costs.";
 
 /**
+ * A tribunal application is usually made on the tribunal's own form. The merits letter is
+ * addressed to the tribunal, and without this a person could post it, believe they had
+ * applied, and let the time limit run out — the harm the whole product exists to prevent.
+ */
+export const SELF_WARNING_MERITS =
+  "Tribunals usually ask you to apply on their own form, often online. Sending this letter may not count as applying. Check with the tribunal how to apply, and use these words to say why you disagree, before the time limit runs out.";
+
+/**
  * Every block a rewrite must hand back unchanged. The label is what the refusal is logged
  * as, so it has to name the block rather than quote 400 characters of it.
  */
@@ -35,4 +43,5 @@ export const SELF_WARNING_BLOCKS = [
   { label: "the NOTE TO YOURSELF heading", text: SELF_WARNING_HEADING },
   { label: "the judicial-review warning", text: SELF_WARNING_JUDICIAL_REVIEW },
   { label: "the court-election warning", text: SELF_WARNING_COURT_ELECTION },
+  { label: "the merits-review warning", text: SELF_WARNING_MERITS },
 ] as const;

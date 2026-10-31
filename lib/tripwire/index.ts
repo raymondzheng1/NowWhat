@@ -236,11 +236,42 @@ export const TRIPWIRE_SERVICES: Record<TripwireReason, HelpService[]> = {
   "deadline-imminent-or-passed": [],
 };
 
-/** The services to show for a set of stop reasons, de-duplicated, most specific first. */
-export function servicesForStop(reasons: TripwireReason[]): HelpService[] {
+/**
+ * The national counterpart of each Victorian service above, for a Commonwealth matter.
+ *
+ * A Commonwealth decision reaches people in every state, and the stop screen handed all of
+ * them Victoria Legal Aid's number — someone in Perth told the one place to ring is a
+ * Victorian phone line. Found by the end-to-end QA. Each of these is the national front door
+ * that finds the person's own state or territory service; no phone number is given, because
+ * there is no single national one to give.
+ */
+const NATIONAL_EQUIVALENT: Record<string, HelpService> = {
+  "Victoria Legal Aid": {
+    service: "Legal aid in your state or territory (National Legal Aid)",
+    who: "free legal help — find the legal aid commission where you live",
+    link: "https://nationallegalaid.org.au",
+  },
+  "Victorian Aboriginal Legal Service (VALS)": {
+    service: "Aboriginal and Torres Strait Islander Legal Services (NATSILS)",
+    who: "free legal help for Aboriginal and Torres Strait Islander people — find the service in your state",
+    link: "https://www.natsils.org.au",
+  },
+  "Community legal centres": {
+    service: "Community legal centres (Community Legal Centres Australia)",
+    who: "free local legal help — find your nearest centre",
+    link: "https://clcs.org.au",
+  },
+};
+
+/**
+ * The services to show for a set of stop reasons, de-duplicated, most specific first —
+ * national ones in place of Victorian ones for a Commonwealth matter.
+ */
+export function servicesForStop(reasons: TripwireReason[], jurisdiction: Jurisdiction = "Vic"): HelpService[] {
   const out: HelpService[] = [];
   for (const r of reasons) {
-    for (const s of TRIPWIRE_SERVICES[r] ?? []) {
+    for (const raw of TRIPWIRE_SERVICES[r] ?? []) {
+      const s = jurisdiction === "Cth" ? (NATIONAL_EQUIVALENT[raw.service] ?? raw) : raw;
       if (!out.some((x) => x.service === s.service)) out.push(s);
     }
   }
