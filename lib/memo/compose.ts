@@ -730,6 +730,11 @@ export function composeMemo(input: MemoInput): Memo {
     for (const pp of input.paths) {
       item(`${pp.name}: ${pp.body}${pp.conditional ? ` — ${t("memoPathsConditional")}` : ""}`);
     }
+    // And the rung that is NOT open, said once. A reader holding the internal-review /
+    // merits-review / judicial-review ladder — a duty lawyer as much as anyone — sees a court
+    // hearing in the middle of a fine's list and reads it as a mislabelled merits review. The
+    // owner did exactly that on the live page. vic-fines is signed with mr.available false.
+    if (!entry.avenue.mr.available) para(t("memoMeritsNotOpen"));
   }
 
   // ---- Close -----------------------------------------------------------------------

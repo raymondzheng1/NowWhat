@@ -23,6 +23,10 @@ const eslintConfig = [
       "corpus/legal/index.json",
       "data/index.json",
       "coverage/**",
+      // Background sessions check out whole copies of this repo under .claude/worktrees/,
+      // build output and all. Linting them failed `verify` here with 960 errors that were
+      // none of this checkout's code, whenever a background task happened to be running.
+      ".claude/**",
     ],
   },
   {

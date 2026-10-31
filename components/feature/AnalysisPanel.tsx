@@ -1,5 +1,6 @@
 "use client";
 
+import { Fragment } from "react";
 import { useTranslations } from "next-intl";
 import type { AvenueView } from "@/lib/triage";
 import type { Process } from "@/lib/schemas/legal";
@@ -106,8 +107,26 @@ export function AnalysisPanel({
 
     {plan.paths.length > 0 && (
       <ol className="mt-5 space-y-4">
-        {plan.paths.map((p: PathPlan) => (
-          <li key={p.id} className="rounded-card border-2 border-line bg-cream p-4 sm:p-5">
+        {plan.paths.map((p: PathPlan, i: number) => (
+          <Fragment key={p.id}>
+          {/* MERITS REVIEW, NOT OPEN — where the reader expects it. On a fine the cards
+              read internal review, court hearing, judicial review, and the owner read the
+              middle one as a mislabelled merits review. This rung sits where merits review
+              would be, carries no number because it is not a step anyone can take, and says
+              why. Rendered once, before the first path that is not an internal review. */}
+          {!avenue.mrAvailable &&
+            p.id !== "internal-review" &&
+            plan.paths.findIndex((x) => x.id !== "internal-review") === i && (
+              <li className="rounded-card border-2 border-dashed border-line p-4 sm:p-5">
+                <p className="font-display text-[17px] font-extrabold text-ink-soft">
+                  {meritsReview.name} — {t("learnMeritsNotOpen")}
+                </p>
+                <p className="mt-2 text-[15.5px] leading-[1.55] text-ink-soft">
+                  {t("pathMeritsNotOpenBody")}
+                </p>
+              </li>
+            )}
+          <li className="rounded-card border-2 border-line bg-cream p-4 sm:p-5">
             {/* The goal match leads the card now, on its own line and at card width, rather
                 than trailing a row of small pills where it was the easiest thing to miss.
                 It is still a MAPPING — the goal step asked what they want, the corpus says
@@ -298,6 +317,7 @@ export function AnalysisPanel({
               </div>
             )}
           </li>
+          </Fragment>
         ))}
       </ol>
     )}

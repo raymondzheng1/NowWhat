@@ -126,15 +126,56 @@ describe("no heading calls every path a review", () => {
   });
 
   it("explains the gap where a tribunal would be", () => {
-    expect(rights.learnNoTribunal).toMatch(/tribunal/i);
+    expect(rights.learnMeritsNotOpenBody).toMatch(/tribunal/i);
     // It states what our rules list, not what the law forbids, and it routes to a person.
-    expect(rights.learnNoTribunal).toMatch(/our checked rules|not one of the paths/i);
-    expect(rights.learnNoTribunal).toMatch(/free legal service/i);
+    expect(rights.learnMeritsNotOpenBody).toMatch(/our checked rules/i);
+    expect(rights.learnMeritsNotOpenHelp).toMatch(/free legal service/i);
+  });
+});
+
+/**
+ * MERITS REVIEW IS SHOWN WHERE THE READER EXPECTS IT, AND SAYS IT IS NOT OPEN.
+ *
+ * The owner, twice, from the live fines page: "the second one should be merits review". The
+ * ladder people carry is internal review, merits review, judicial review; on a fine the middle
+ * rung showed a court hearing and nothing said where merits review had gone.
+ *
+ * It cannot be filled. The owner's own KNOWLEDGE framework says merits review is "performed by
+ * a tribunal in the executive branch (not an exercise of judicial power)" and "exists only
+ * where an enabling Act expressly confers it"; the signed corpus says "a tribunal is not a
+ * court". vic-fines is signed off with `mr.available: false`. So the rung is SHOWN — on the
+ * explainer list, on the option cards, and in the analysis — and says why it is empty.
+ */
+describe("the merits-review rung, where it is not open", () => {
+  it("is named merits review and says plainly it is not open", () => {
+    expect(rights.learnMeritsNotOpen).toMatch(/not open/i);
+    expect(rights.learnMeritsNotOpenBody).toMatch(/only available where a law gives a right of review/i);
   });
 
-  it("renders that note only where no tribunal is available", () => {
+  it("says the court hearing is not merits review, on every surface that shows both", () => {
+    for (const key of ["learnMeritsNotOpenCourt", "pathMeritsNotOpenBody", "memoMeritsNotOpen"]) {
+      expect(rights[key], key).toMatch(/not merits review/i);
+    }
+    // And never the reverse: no copy may call the court hearing a tribunal or a review.
+    expect(rights.learnMeritsNotOpenCourt).toMatch(/a tribunal is not a court/i);
+  });
+
+  it("is rendered on the explainer list, the option cards and the analysis", () => {
     const client = read("components/feature/RightsSaverClient.tsx");
-    expect(client).toContain('{!av.mrAvailable && (');
-    expect(client).toContain('t("learnNoTribunal")');
+    expect(client).toContain('t("learnMeritsNotOpen")');
+    expect(client).toContain('t("learnMeritsNotOpenBody")');
+    const cards = read("components/feature/AnalysisPanel.tsx");
+    expect(cards).toContain("!avenue.mrAvailable");
+    expect(cards).toContain('t("pathMeritsNotOpenBody")');
+    const memo = read("lib/memo/compose.ts");
+    expect(memo).toContain('if (!entry.avenue.mr.available) para(t("memoMeritsNotOpen"))');
+  });
+
+  it("only on a decision with no tribunal — which today is the fine and nothing else", () => {
+    const index = JSON.parse(read("data/index.json")) as {
+      entries: { id: string; avenue: { mr: { available: boolean } } }[];
+    };
+    const noTribunal = index.entries.filter((e) => !e.avenue.mr.available).map((e) => e.id);
+    expect(noTribunal).toEqual(["vic-fines"]);
   });
 });

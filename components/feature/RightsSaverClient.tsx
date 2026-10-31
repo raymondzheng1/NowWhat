@@ -2279,6 +2279,30 @@ function ResultStep({
                 </div>
               </details>
             )}
+            {/* MERITS REVIEW, IN ITS PLACE, MARKED NOT OPEN.
+                The owner, twice, from the live fines page: "the second one should be merits
+                review". Readers carry the ladder — internal review, merits review, judicial
+                review — and on a fine the middle rung showed a court hearing with nothing to
+                say where merits review had gone. A note at the foot of the list did not
+                answer it; the rung itself does.
+
+                It cannot be filled. Merits review is a tribunal's, and only where a law gives
+                a right of review (the signed corpus, and the owner's own framework: "not an
+                exercise of judicial power"). vic-fines is signed with mr.available false, and
+                a Magistrates' Court hearing the charge is judicial power by definition. So
+                the rung is shown, dashed and unopenable as a path, saying exactly that. */}
+            {!av.mrAvailable && (
+              <details className="rounded-sticker border-2 border-dashed border-line px-4 py-3">
+                <summary className="cursor-pointer py-2.5 font-display text-[17px] font-extrabold text-ink-soft">
+                  {meritsReview.name} — {t("learnMeritsNotOpen")}
+                </summary>
+                <div className="mt-4 space-y-3 text-[16px] leading-[1.6] text-ink">
+                  <p>{t("learnMeritsNotOpenBody")}</p>
+                  {av.courtAvailable && <p>{t("learnMeritsNotOpenCourt")}</p>}
+                  <p className="text-ink-soft">{t("learnMeritsNotOpenHelp")}</p>
+                </div>
+              </details>
+            )}
             {/* A COURT HEARING ON ELECTION. This section says it explains "these options",
                 and for a Victorian fine it listed two of the three — the court election had a
                 numbered card of its own and no explainer anywhere above it. Someone reading
@@ -2335,19 +2359,6 @@ function ResultStep({
               </details>
             )}
           </div>
-          {/* WHY MERITS REVIEW IS NOT IN THAT LIST.
-              Reported from the live site: on a Victorian fine the second item is the court
-              election, where a reader expects a tribunal — and nothing said why. The list
-              renders only the paths that are open, while the lead promised the general set,
-              so an absence read as an omission. A fine has no tribunal review; it has an
-              internal review and an election to have the charge heard. That is the entry's
-              own lawyer-verified `avenue.mr.available`, so the note states what our rules
-              list rather than what the law forbids, and sends the doubt to a person. */}
-          {!av.mrAvailable && (
-            <p className="mt-4 border-l-2 border-line pl-3 text-[15px] leading-relaxed text-ink-soft">
-              {t("learnNoTribunal")}
-            </p>
-          )}
           <Link href="/learn" className="link-text mt-5 inline-flex min-h-[44px]">
             {t("learnMore")}
           </Link>
