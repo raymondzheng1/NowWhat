@@ -612,3 +612,53 @@ describe("the professional structure the owner's worked memoranda use", () => {
     expect(checkNoScore(m.body).ok).toBe(true);
   });
 });
+
+describe("a court election is not handed a tribunal's memo", () => {
+  // The caller has no process for a court election — the corpus holds two, and a court
+  // hearing a charge on election is neither — so it passes the MERITS process plus
+  // `character: "court"`. Issue 2 already knew to distrust that. Two things did not.
+  const fines = getDataEntry("vic-fines")!;
+  const courtMemo = () =>
+    composeMemo({
+      ...base,
+      entry: fines,
+      process: merits,
+      character: "court",
+      criteria: fines.courtCriteria ?? [],
+      forum: "the Magistrates' Court, if you elect to have it heard there",
+    });
+
+  it("is not titled with the merits process's own plain name", () => {
+    const b = courtMemo().body;
+    expect(b).not.toContain(merits.plainName);
+    expect(b).toContain(t("memoPathCourt"));
+  });
+
+  it("does not print the tribunal's eligibility rules as this body's", () => {
+    const b = courtMemo().body;
+    // These are the lines that were appearing: asking a TRIBUNAL for written reasons, and
+    // TRIBUNALS accepting late applications, on a memo about a criminal charge.
+    for (const line of merits.canApply) expect(b).not.toContain(line);
+    expect(b).toContain(t("memoNoProcessRule"));
+  });
+
+  it("still carries what the entry itself verifies", () => {
+    const b = courtMemo().body;
+    expect(b).toContain("the Magistrates' Court, if you elect to have it heard there");
+    expect(b).toContain(fines.deadlineRule.replace(/\s+/g, " ").trim());
+  });
+
+  it("leaves a real tribunal memo untouched", () => {
+    const b = composeMemo({ ...base, character: "tribunal" }).body;
+    expect(b).toContain(merits.plainName);
+    for (const line of merits.canApply) expect(b).toContain(line);
+    expect(b).not.toContain(t("memoNoProcessRule"));
+  });
+
+  it("leaves judicial review untouched", () => {
+    const b = composeMemo({ ...base, process: judicial, character: "court" }).body;
+    expect(b).toContain(judicial.plainName);
+    for (const line of judicial.canApply) expect(b).toContain(line);
+    expect(b).not.toContain(t("memoNoProcessRule"));
+  });
+});

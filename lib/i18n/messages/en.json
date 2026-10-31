@@ -471,7 +471,9 @@
     "memoPrivativeQ": "Some Acts contain a clause that tries to shut out review. What such a clause can actually do is a legal question in itself.",
     "memoPrivativeYes": "The procedural layer records that this scheme has such a clause. That makes early advice from a free legal service more important, not less.",
     "memoGroundWritten": "You have written something about this point. The questions above are the parts a person will work through with you.",
-    "memoGroundBlank": "You have not written about this point yet. The questions above are what to think about before you do."
+    "memoGroundBlank": "You have not written about this point yet. The questions above are what to think about before you do.",
+    "memoPathCourt": "asking a court to hear the matter itself",
+    "memoNoProcessRule": "We do not hold a checked list of what this body requires before it will hear a matter like yours. The time limit below is checked. Ask the official body, or a free legal service, what else applies."
   },
   "ask": {
     "title": "Ask a question",

@@ -271,7 +271,22 @@ export function composeMemo(input: MemoInput): Memo {
   };
   // The name of the path, from whichever entry describes it. One of the two must be
   // present; the caller decides which, from the approach the person chose.
-  const pathName = proc?.plainName ?? internal?.plainName ?? t("pathTitleInternal");
+  // The same test `planFor` applies to the card, computed once and used everywhere below.
+  // Only a tribunal gets a tribunal's eligibility rules, question, remedies and name;
+  // judicial review is unaffected because it carries a court process's own.
+  const isTribunal = proc ? proc.id === "judicial-review" || character === "tribunal" : false;
+  // A COURT ELECTION IS NOT A FRESH LOOK AT THE DECISION. The caller has no process to hand
+  // for it — the corpus holds two, and a court hearing a charge on election is neither — so
+  // it passes the merits process and `character: "court"`. Issue 2 already knew to distrust
+  // that. The heading did not, so a memo about the Magistrates' Court was titled with the
+  // merits process's own plain name, "asking for a fresh look at the decision", which is the
+  // one thing that court does not do.
+  const pathName =
+    proc && isTribunal
+      ? proc.plainName
+      : proc && proc.id === "judicial-review"
+        ? proc.plainName
+        : (internal?.plainName ?? (proc ? t("memoPathCourt") : t("pathTitleInternal")));
 
   const title = `${t("memoTitle")} — ${entry.title}`;
   L.push(title);
@@ -413,7 +428,14 @@ export function composeMemo(input: MemoInput): Memo {
   h(t("memoIssue1"));
   para(t("memoIssue1Q"));
   sub(t("memoRule"));
-  for (const c of proc.canApply) item(rule(c));
+  // Only where they are this body's rules. We hold no verified eligibility rules for a court
+  // election, so the memo says so and keeps the forum, the deadline rule and the time-limit
+  // warning — all of which come from the entry, not from the process.
+  if (isTribunal || proc.id === "judicial-review") {
+    for (const c of proc.canApply) item(rule(c));
+  } else {
+    para(t("memoNoProcessRule"), "  ");
+  }
   sub(t("memoApplication"));
   para(`${t("memoForumIs")} ${forum}.`, "  ");
   if (entry.deadlineRule) para(rule(entry.deadlineRule), "  ");
@@ -437,7 +459,6 @@ export function composeMemo(input: MemoInput): Memo {
   // A body that is not a tribunal does not get the tribunal's question, remedies or limits —
   // the same rule `planFor` applies to the card. Judicial review is never affected: it is a
   // court path carrying the court process's own question and remedies, not borrowed ones.
-  const isTribunal = proc.id === "judicial-review" || character === "tribunal";
   h(t("memoIssue2"));
   if (isTribunal) para(`${t("memoQuestionAsked")}: "${proc.question}"`);
   else para(t("memoNotATribunal"));
