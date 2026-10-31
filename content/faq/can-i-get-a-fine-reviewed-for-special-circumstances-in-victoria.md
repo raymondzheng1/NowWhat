@@ -23,14 +23,16 @@ updated: '2026-06-16'
 
 ## What counts as special circumstances?
 
-The grounds include these. At the time you got the fine, one of them was true for you:
+Special circumstances means one of these was true for you when the offence happened:
 
-- You had a **mental illness or disability**
+- You had a **mental or intellectual disability or illness**
 - You had a **serious addiction**
 - You were **homeless**
 - You were affected by **family violence**
+- You are in **long-term circumstances**, not only about money, that make it
+  impracticable to pay or deal with the fine
 
-The rule also asks for a link. The situation has to have affected your behaviour at the time. That link is the part applications most often leave out. Check the current wording with Fines Victoria or a free legal service.
+The rule also asks for a link. For an illness, disability or addiction, it must have made it much harder for you to understand that what you did was an offence, or to control what you did. For homelessness or family violence, it must have made it much harder for you to control what you did. That link is the part applications most often leave out. If family violence is involved, Fines Victoria also has a separate Family Violence Scheme you can ask about. Check the current wording with Fines Victoria or a free legal service.
 
 ## What evidence might help?
 

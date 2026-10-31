@@ -190,7 +190,7 @@ export function buildDraft(
         "Date of the notice: [date on your notice]",
         "",
         "NOTE TO YOURSELF — PLEASE READ FIRST",
-        "This letter is not the election, and sending it does not elect anything. Asking for a matter to be heard in court is a formal step with its own form and its own time limit, and this letter only asks what that form is and when it is due. Please talk to a free legal service before you elect. A court hearing decides the charge itself. The court can dismiss it, or find you guilty, record a conviction, and order you to pay more or less than the fine, plus costs.",
+        "This letter is not the election, and sending it does not elect anything. Asking for a matter to be heard in court is a formal step with its own form and its own time limit, and this letter only asks what that form is and when it is due. Do not wait for their reply to act: you can usually only ask for a court hearing until the fine is registered, which can happen as soon as the due date on your Penalty Reminder Notice passes. Please talk to a free legal service before you elect. A court hearing decides the charge itself. The court can dismiss it, or find you guilty, record a conviction, and order you to pay more or less than the fine, plus costs.",
         "",
         "I am writing about the notice described above. I am considering asking for this matter to be heard in court, and I would like to know what I need to do.",
         "",

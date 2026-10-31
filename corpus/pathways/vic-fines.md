@@ -33,55 +33,55 @@ reviewable:
 pathways:
   - name: "Ask for a review (on one of the five grounds)"
     body: "the agency that issued the fine, or Fines Victoria"
-    deadline: "You can usually ask any time until your fine is registered with Fines Victoria. A fine can be registered once the time to pay on the Penalty Reminder Notice has passed, which is before any Notice of Final Demand is sent. Only one review is allowed per fine. Review is not available for excessive-speed, drink-driving or drug-driving fines."
+    deadline: "You can usually ask any time until your fine is registered with Fines Victoria. A fine can be registered once the time to pay on the Penalty Reminder Notice has passed, which is before any Notice of Final Demand is sent. You can usually ask the agency for one review on these grounds. After a Notice of Final Demand you can still ask Fines Victoria for a review, until enforcement goes further. Review is not available for excessive-speed, drink-driving or drug-driving fines."
     deadlineDays: null
     deadlineVerified: false
     howCounted: "until the fine is registered, which can happen once the Penalty Reminder Notice due date has passed"
     howToStart: "apply for a review and choose a ground"
     cost: "free"
-    source: "fines.vic.gov.au — request a review; Infringements Act 2006 (Vic) ss 21, 22"
+    source: "fines.vic.gov.au — request a review; Infringements Act 2006 (Vic) ss 21, 22; Fines Reform Act 2014 (Vic) s 32"
   - name: "Ask for a review because you did not know about the fine"
     body: "the agency that issued the fine, or Fines Victoria"
-    deadline: "Apply within 14 days of finding out about the fine. This ground is only open if the notice was not handed to you in person. If the review is refused, you then have 14 days to pay, arrange to pay, or ask to have the matter heard in court."
+    deadline: "Apply within 14 days of finding out about the fine. This is only open if the notice was not handed to you in person, and it will be refused if you moved and did not update your address within 14 days. For speeding, red-light and other traffic fines, and for toll fines, you ask Fines Victoria for 28 more days to deal with the fine instead. For other fines, if you ask before the fine is registered and the review is refused, you then have 14 days to pay, arrange to pay, or ask to have the matter heard in court."
     deadlineDays: 14
     deadlineVerified: true
     howCounted: "from the day you found out about the fine"
-    howToStart: "apply for a review on the 'person was unaware' ground (you may need a statutory declaration)"
+    howToStart: "apply on the 'did not know about the fine' ground. You will usually need a statutory declaration about when and how you found out, and for traffic and toll fines it is required."
     cost: "free"
-    source: "fines.vic.gov.au — if you didn't know about your fine; Infringements Act 2006 (Vic) ss 22, 25"
+    source: "fines.vic.gov.au — if you didn't know about your fine; Infringements Act 2006 (Vic) ss 21(2), 22, 25; Road Safety Act 1986 (Vic) s 67"
   - name: "Object, and have the matter heard in court (excessive speed, drink-driving or drug-driving)"
     body: "Magistrates' Court of Victoria (Children's Court if you were under 18 when the offence happened)"
-    deadline: "For excessive-speed, drink-driving or drug-driving offences you object in writing to the person named on the notice. Unless you object within 28 days after the date on the notice, the notice takes effect as a conviction for the offence. There is no review for these fines. Free legal help is available."
+    deadline: "For excessive-speed, drink-driving or drug-driving offences you object in writing to the person named on the notice. You have 28 days after the date printed on the notice, not the day you got it. If you do nothing, or just pay, the notice takes effect as a conviction and you lose your licence for a time. For excessive speed, naming the real driver within the same 28 days also stops this. There is no review for these fines. If the notice was not handed to you and you only just found out, you have 14 days to ask for more time to object. Free legal help is available."
     deadlineDays: null
     deadlineVerified: false
-    howToStart: "give a written notice of objection to the person named on the notice, saying you refuse to pay and want a court to deal with it"
-    cost: "No fee to object. The court can dismiss the charge. If you are found guilty, it can record a conviction, order you to pay more or less than the fine, and order you to pay costs. Free legal help is available."
-    source: "fines.vic.gov.au — go to court; Road Safety Act 1986 (Vic) s 89A"
+    howToStart: "give a written notice of objection to the person named on the notice. It must say that you refuse to pay, that you want a court to deal with it, and whether or not you plan to defend the charge."
+    cost: "It is free to object. The court can dismiss the charge. If you are found guilty, it can record a conviction, order you to pay more or less than the fine, and order you to pay costs, and for driving offences you may lose your licence. Free legal help is available."
+    source: "fines.vic.gov.au — go to court; Road Safety Act 1986 (Vic) ss 89A, 89B, 89C, 89D"
   - name: "Ask to have the matter heard in court (any other fine)"
     body: "Magistrates' Court of Victoria (Children's Court if you were under 18 when the offence happened)"
-    deadline: "For fines other than excessive speed, drink-driving or drug-driving: any time until the fine is registered with Fines Victoria. A fine can be registered once the time to pay on the Penalty Reminder Notice has passed, which is before any Notice of Final Demand is sent. Once you ask, any review you asked for ends."
+    deadline: "For fines other than excessive speed, drink-driving or drug-driving: any time until the fine is registered with Fines Victoria. A fine can be registered once the time to pay on the Penalty Reminder Notice has passed, which is before any Notice of Final Demand is sent. To be safe, ask before the due date on your Penalty Reminder Notice. Once you ask, any review you asked for ends. If you were under 18 at the time, different time limits apply, so get free legal help."
     deadlineDays: null
     deadlineVerified: false
     howCounted: "until the fine is registered, which can happen once the Penalty Reminder Notice due date has passed"
     howToStart: "tell the agency named on the notice, in writing or through Fines Victoria, that you want the matter heard in court"
-    cost: "No fee to ask. The court can dismiss the charge. If you are found guilty, it can record a conviction, order you to pay more or less than the fine, and order you to pay costs. Free legal help is available."
+    cost: "It is free to ask. The court can dismiss the charge. If you are found guilty, it can record a conviction, order you to pay more or less than the fine, and order you to pay costs. Free legal help is available."
     source: "fines.vic.gov.au — go to court; Infringements Act 2006 (Vic) s 16; Fines Reform Act 2014 (Vic) ss 16, 23"
   - name: "Get help to pay or clear the fine"
-    body: "Fines Victoria"
+    body: "the agency that issued the fine, or Fines Victoria"
     deadline: "available at any stage"
     deadlineDays: null
     deadlineVerified: false
-    howToStart: "ask for a payment plan, or ask about a Work and Development Permit if you are in hardship (for example illness, disability, addiction, homelessness or family violence)"
+    howToStart: "ask for a payment plan, or ask about a Work and Development Permit if you have a mental or intellectual disability or illness, an addiction, are homeless, are in acute financial hardship, or are affected by family violence"
     cost: "free"
     source: "fines.vic.gov.au — pay by instalments; Work and Development Permit"
   - name: "Complain to the Victorian Ombudsman"
     body: "Victorian Ombudsman"
-    deadline: "There is no strict time limit on making a complaint, but complaining sooner is usually better."
+    deadline: "The Ombudsman may not look at a complaint made more than 12 months after you became aware of the problem, unless there is a good reason, so complain as soon as you can."
     deadlineDays: null
     deadlineVerified: false
     howToStart: "make a complaint through ombudsman.vic.gov.au — this is about how the agency handled things, so keep track of any review time limit as well"
     cost: "free"
-    source: "Victorian Ombudsman — ombudsman.vic.gov.au"
+    source: "Victorian Ombudsman — ombudsman.vic.gov.au; Fitzroy Legal Service Law Handbook"
 rightToReasons:
   available: "yes"
   how: "after a review, the agency must tell you the outcome in writing"
@@ -93,7 +93,7 @@ groundsOrCriteria:
   - "the decision to fine you was contrary to law"
   - "it was a mistake of identity — you were not the person responsible"
   - "exceptional circumstances explain what happened, such as a medical emergency"
-  - "special circumstances: at the time you had a mental illness or disability, a serious addiction, were homeless, or were affected by family violence, and this affected your behaviour"
+  - "special circumstances: when it happened, a mental or intellectual disability or illness, or a serious addiction, made it much harder for you to understand that what you did was an offence or to control it; or homelessness or family violence made it much harder for you to control it; or long-term circumstances, not only about money, make it impracticable for you to deal with the fine"
 evidenceChecklist:
   - "the fine or notice, including the infringement number"
   - "for 'did not know': a statutory declaration about when and how you found out"
@@ -117,7 +117,7 @@ getHelp:
     who: "free, independent financial counselling"
     phone: "1800 007 007"
     link: "https://ndh.org.au/debt-problems/fines/"
-plainLanguageExplainer: "If you got a fine or infringement notice in Victoria and you disagree with it, or you can't pay, you have options. You can ask for a review on set grounds, nominate the real driver, ask to go to court, or get help to pay. What you can do depends on the stage your fine has reached, so it helps to act early. Most options close once the fine is registered with Fines Victoria, and that can happen before any Notice of Final Demand arrives. Free help is available."
+plainLanguageExplainer: "If you got a fine or infringement notice in Victoria and you disagree with it, or you can't pay, you have options. You can ask for a review on set grounds, nominate the real driver, ask to go to court, or get help to pay. What you can do depends on the stage your fine has reached, so it helps to act early. Going to court closes once the fine is registered with Fines Victoria, and that can happen before any Notice of Final Demand arrives. After that, you can still ask Fines Victoria for a review or for help to pay. Free help is available."
 sources:
   - "Fines Victoria — online.fines.vic.gov.au"
   - "Infringements Act 2006 (Vic) — legislation.vic.gov.au"
@@ -137,8 +137,8 @@ So the app read a pre-launch caveat as verified content.
 
 Victorian fines move through stages: an Infringement Notice, then a Penalty Reminder
 Notice, then registration with Fines Victoria, then a Notice of Final Demand, then
-enforcement. Some options — like going to court or nominating another driver — are only
-available until the fine is registered. Registration comes BEFORE the Notice of Final
+enforcement. Going to court is only available until the fine is registered, and
+nominating another driver has its own due date, printed on the notice. Registration comes BEFORE the Notice of Final
 Demand: it can happen once the time to pay on the Penalty Reminder Notice has passed.
 The exact date to pay is the due date printed on your own notice, so check the notice
 itself.
