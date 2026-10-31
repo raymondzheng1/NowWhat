@@ -345,6 +345,20 @@ describe("/api/memo (the short analysis)", () => {
     expect(body.status).toBe("answered");
   });
 
+  // Live, 2026-11-01: a brief cut off by the token ceiling came back "…but you say you have
+  // never" with an empty "what the other side may say". It passed every content gate.
+  it("falls back when the brief was cut off", async () => {
+    __setModelForTests(
+      briefModel({
+        points: [{ ref: "procedural-fairness-hearing/notice", relates: "You say you have never", needed: "" }],
+        otherSide: "",
+      }),
+    );
+    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+    expect(body.status).toBe("not-covered");
+    expect(body.gates).toEqual(["incomplete"]);
+  });
+
   it("still answers when the brief names no points at all", async () => {
     __setModelForTests(briefModel({ points: [] }));
     const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();

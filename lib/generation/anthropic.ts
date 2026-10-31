@@ -72,13 +72,34 @@ function client(byoKeyValue: string | undefined, surface: ModelCall["surface"]):
   return c;
 }
 
+/**
+ * Models that accept `thinking: { type: "disabled" }`.
+ *
+ * THINKING WAS EATING THE ANSWER. Current models think by default when `thinking` is left
+ * out, and thinking tokens count against `max_tokens` — so the analysis's 1600 tokens were
+ * mostly spent reasoning, and what came back was cut off mid-sentence ("but you say you have
+ * never") with its last sections empty, after the repair pass closed the JSON. Measured live on
+ * the owner's judicial-review case, 2026-11-01; it is also why those calls took 50 seconds.
+ * Every task here is a short, structured, gated piece of writing, so thinking is turned off
+ * where the model allows it.
+ *
+ * Newer models reject "disabled" with a 400 (Claude Opus 5.5, Claude Sonnet 5.5, Fable), so
+ * the list is explicit: a model not on it keeps its default and gets headroom instead.
+ */
+export const THINKING_OFF_OK = /^claude-(sonnet-5|opus-5|opus-4-[5-8]|sonnet-4-[56]|haiku-4-5)(?:$|-\d{8}$)/;
+
+/** Room for thinking on a model that will not turn it off, so it cannot crowd out the answer. */
+const THINKING_HEADROOM = 6000;
+
 export const callModel: ModelFn = async (call) => {
   if (injected) return injected(call);
 
   const anthropic = client(call.byoKeyValue, call.surface);
+  const thinkingOff = THINKING_OFF_OK.test(call.model);
   const res = await anthropic.messages.create({
     model: call.model,
-    max_tokens: call.maxTokens,
+    max_tokens: thinkingOff ? call.maxTokens : call.maxTokens + THINKING_HEADROOM,
+    ...(thinkingOff ? { thinking: { type: "disabled" as const } } : {}),
     // Stable system prompt is cached (ephemeral) to cut token cost on repeat calls.
     system: [
       { type: "text", text: call.system, cache_control: { type: "ephemeral" } },

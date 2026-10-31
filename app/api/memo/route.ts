@@ -214,6 +214,18 @@ export async function POST(req: NextRequest) {
   }
   if (!result.data.covered) return notCovered(["model-declined"]);
 
+  // A CUT-OFF BRIEF IS NOT A SHORT ONE. When the output ran out of room, the repair pass
+  // closed the JSON and what came back stopped mid-sentence, with the last parts empty — and
+  // it passed every gate, because an empty field says nothing wrong. Every part the prompt
+  // asks for must be there, or the person gets the full notes instead.
+  const d = result.data;
+  const incomplete =
+    !d.situation.trim() ||
+    !d.path.trim() ||
+    !d.otherSide.trim() ||
+    d.points.some((p) => !p.relates.trim() || !p.needed.trim());
+  if (incomplete) return notCovered(["incomplete"]);
+
   const prose = briefProse(result.data);
 
   // The memo's own citation gate, on top of the verifier: a case, Act or section that did not
