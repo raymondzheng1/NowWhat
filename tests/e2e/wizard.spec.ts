@@ -98,7 +98,7 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
   await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
   await expect(page.getByText(/time limits:/i)).toBeVisible(); // brief generic note, not a headline
-  await expect(page.getByRole("heading", { name: /the ways a decision gets looked at again/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /the ways a decision can be taken further/i })).toBeVisible();
   await expect(page.getByText(/not legal advice/i)).toBeVisible(); // disclaimer
   await expect(page.getByText(/free help/i).first()).toBeVisible();
 
@@ -273,9 +273,7 @@ test("the fines court election is never dressed up as merits review", async ({ p
   await expect(courtCard).not.toContainText(/correct or preferable/i);
   await expect(courtCard).toContainText(/the court decides the charge itself/i);
 
-  // Choosing the court: the points step must not be headed "What the tribunal decides", and
-  // no letter is offered, because electing to go to court is a formal step under the scheme's
-  // own Act and we hold no checked form for it.
+  // Choosing the court: the points step must not be headed "What the tribunal decides".
   await courtCard.getByRole("button", { name: /work through this one/i }).click();
   await advance(page, /next: the points you raise/i);
   await expect(page.getByRole("heading", { name: /what this body decides for a decision like yours/i }))
@@ -283,8 +281,41 @@ test("the fines court election is never dressed up as merits review", async ({ p
   await expect(page.getByRole("heading", { name: /what the tribunal decides/i })).toHaveCount(0);
 
   await advance(page, /build my analysis/i);
-  await expect(page.locator("#r-apply")).toContainText(/There is no draft for this path/i);
-  await expect(page.locator("#r-apply .rounded-card")).toHaveCount(0);
+
+  // A draft IS offered on this path, and what matters is which letter it is. We still draft
+  // no election: that is a formal step under the scheme's own Act, with a prescribed form we
+  // hold no checked version of, and a document of ours that looked official would be read as
+  // one. What this is instead is the letter that comes BEFORE it — which form, where it
+  // goes, by when. So the letter has to say so itself, send the person to a free service, and
+  // claim none of a tribunal's powers.
+  //
+  // The e2e run is keyless, so `/api/letter-polish` degrades and this is the deterministic
+  // draft verbatim. "NOTE TO YOURSELF" is additionally held by `checkLetterFidelity`, which
+  // refuses any rewrite that drops it.
+  const letter = page.locator("#r-apply .rounded-card");
+  await expect(letter).toHaveCount(1, { timeout: 15_000 });
+  await expect(page.locator("#r-apply")).not.toContainText(/There is no draft for this path/i);
+  await expect(letter).toContainText(/NOTE TO YOURSELF/);
+  await expect(letter).toContainText(/this letter is not the election/i);
+  await expect(letter).toContainText(/sending it does not elect anything/i);
+  // Human help, in the letter itself rather than only in the hand-off step.
+  await expect(letter).toContainText(/talk to a free legal service before you elect/i);
+  // It asks for the three facts a free service would tell them to get.
+  await expect(letter).toContainText(/which form i need to complete/i);
+  await expect(letter).toContainText(/the date by which it must be received/i);
+
+  // Not a tribunal, and not dressed as one. "afresh on the facts" / "correct or preferable"
+  // are the merits-review draft's own words: this path pointed at that draft once, and these
+  // are the strings that would come back if it ever did again.
+  await expect(letter).not.toContainText(/correct or preferable/i);
+  await expect(letter).not.toContainText(/afresh on the facts/i);
+  await expect(letter).not.toContainText(/fresh look at the decision/i);
+  await expect(letter).not.toContainText(/substitute/i);
+  await expect(letter).not.toContainText(/merits review/i);
+  await expect(letter).not.toContainText(/tribunal/i);
+
+  // And the section that frames it says the same thing above the letter.
+  await expect(page.locator("#r-apply")).toContainText(/this letter does not ask for a court hearing/i);
 
   // And the memo hands the duty lawyer no tribunal powers for that court either.
   const memo = page.locator("#memo-text");
@@ -567,7 +598,7 @@ test("the flow gives guidance first and hands over last", async ({ page }) => {
   // The options view explains the three approaches BEFORE the person's own paths. Someone
   // who has had a letter does not already know that tribunal, review and court are
   // different things.
-  await expect(page.getByRole("heading", { name: /the ways a decision gets looked at again/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /the ways a decision can be taken further/i })).toBeVisible();
   // Explained IN PLACE, above the cards. This was a second list of the same three approaches
   // whose items were links out of the flow — the same navigation that stranded people.
   await expect(page.locator("#r-learn")).toContainText(/internal review/i);
