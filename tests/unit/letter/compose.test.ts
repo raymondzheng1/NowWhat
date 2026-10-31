@@ -96,3 +96,36 @@ describe("which grounds may carry a heading", () => {
     expect(LAWYER_NOTE_ONLY.has("invalid-delegation")).toBe(true);
   });
 });
+
+describe("the person's account appears in the letter once", () => {
+  // Reported from the live site: a full page of someone's account appeared twice, word for
+  // word — once as the letter's reasons, then again under "What happened?". It read as a
+  // paste gone wrong, in a letter going to an agency over their name.
+  const STORY = "My car was parked in a bay on Batman Street and the sign was hidden by a tree.";
+  const count = (hay: string, needle: string) => hay.split(needle).length - 1;
+
+  for (const kind of [
+    "merits-review-application",
+    "internal-review-request",
+    "court-election-enquiry",
+  ] as const) {
+    it(`does not repeat it (${kind})`, () => {
+      const out = composeLetter({
+        entry,
+        kind,
+        account: { answers: { "q-story": STORY }, groundIds: [] },
+        headingFor: (k) => L[k]!,
+        groundsLead: L.groundsLead!,
+        otherConcerns: L.otherConcerns!,
+        universal: [{ id: "q-story", label: "What happened?" }],
+      });
+      expect(count(out.body, STORY)).toBe(1);
+    });
+  }
+
+  it("still adds an answer the template did not already carry", () => {
+    const out = compose({ "q-story": STORY, "q-what": "A parking fine from the council." }, []);
+    expect(count(out.body, STORY)).toBe(1);
+    expect(out.body).toContain("A parking fine from the council.");
+  });
+});

@@ -1085,3 +1085,47 @@ describe("the drafted analysis is written against what the body decides", () => 
     expect(checkNoScore(m.body).ok).toBe(true);
   });
 });
+
+describe("reported from the live site, 2026-10-31", () => {
+  it("does not double the article or lowercase a name in the summary", () => {
+    const generic = getDataEntry("vic-generic")!;
+    const m = composeMemo({ ...base, entry: generic, decisionDate: "2026-10-14" });
+    expect(m.body).not.toMatch(/about a a /i);
+    expect(m.body).toContain("a Victorian government decision, ");
+    const cth = composeMemo({ ...base, entry, decisionDate: "2026-10-14" });
+    expect(cth.body).toContain("a Centrelink / social-security decision or debt");
+  });
+
+  it("does not list the path these notes work through among 'the others'", () => {
+    // Someone working through an internal review read, at the foot of the memo, that an
+    // internal review "may not apply to this decision". Whether it applies is the memo's own
+    // first issue; it is not repeated as an afterthought under the other avenues.
+    const paths = [
+      { name: "Internal review", body: "the agency", question: "", conditional: true, chosen: true },
+      { name: "Judicial review", body: "the Supreme Court", question: "", conditional: false },
+    ];
+    const m = composeMemo({ ...base, paths });
+    expect(m.body).toContain("Judicial review: the Supreme Court");
+    expect(m.body).not.toContain("Internal review: the agency");
+  });
+
+  it("drops the whole section when the chosen path was the only one", () => {
+    const m = composeMemo({
+      ...base,
+      paths: [
+        { name: "Internal review", body: "the agency", question: "", conditional: true, chosen: true },
+        { name: "Judicial review", body: "the court", question: "", conditional: false, chosen: true },
+      ],
+    });
+    // The real heading, upper-cased as headings are — this describe uses the real copy.
+    expect(m.body).not.toContain(t("memoPathsTitle").toUpperCase());
+    const shown = composeMemo({
+      ...base,
+      paths: [
+        { name: "Internal review", body: "the agency", question: "", conditional: true, chosen: true },
+        { name: "Judicial review", body: "the court", question: "", conditional: false },
+      ],
+    });
+    expect(shown.body).toContain(t("memoPathsTitle").toUpperCase());
+  });
+});

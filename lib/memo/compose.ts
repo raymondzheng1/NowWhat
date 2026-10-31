@@ -1,6 +1,7 @@
 import type { Concept, Ground, Process } from "@/lib/schemas/legal";
 import type { DataPathway } from "@/lib/schemas/data";
 import { answerableCriteria, withCriterionIds } from "@/lib/memo/criteria";
+import { titleAsPhrase } from "@/lib/text/title";
 
 /**
  * The memo.
@@ -129,7 +130,19 @@ export interface MemoInput {
    * document was thinner than the memo in every other respect, but it did list all the
    * avenues — which is the first thing a duty lawyer wants to know, and the memo did not say.
    */
-  paths?: { name: string; body: string; question: string; conditional: boolean }[];
+  paths?: {
+    name: string;
+    body: string;
+    question: string;
+    conditional: boolean;
+    /**
+     * The path these notes work through. Listed under "the others" it contradicted the whole
+     * document: someone working through an internal review read, at the foot of it, that an
+     * internal review "may not apply to this decision". Whether it applies is the memo's own
+     * first issue, set out above; it is not repeated as an afterthought here.
+     */
+    chosen?: boolean;
+  }[];
   /**
    * Build fingerprint of the knowledge layer this memo was composed from. Optional, because
    * the memo must still compose without it — a missing version is a missing line, never a
@@ -417,10 +430,13 @@ export function composeMemo(input: MemoInput): Memo {
   h(t("memoSummary"));
   {
     const bits: string[] = [];
+    // `titleAsPhrase`, not `title.toLowerCase()`: the copy used to carry its own "a", so a
+    // title that already began with one printed "about a a victorian government decision",
+    // and every proper noun in a title came out lowercase.
     bits.push(
       decisionDate
-        ? `${t("memoSummaryAbout")} ${entry.title.toLowerCase()}, ${t("memoSummaryDated")} ${decisionDate}.`
-        : `${t("memoSummaryAbout")} ${entry.title.toLowerCase()}.`,
+        ? `${t("memoSummaryAbout")} ${titleAsPhrase(entry.title)}, ${t("memoSummaryDated")} ${decisionDate}.`
+        : `${t("memoSummaryAbout")} ${titleAsPhrase(entry.title)}.`,
     );
     if (goals.length || goalOther.trim()) {
       const said = [...goals, ...(goalOther.trim() ? [goalOther.trim()] : [])]
@@ -724,10 +740,11 @@ export function composeMemo(input: MemoInput): Memo {
   // needs to know what else was available, and whether the choice closed anything off.
   // Names and bodies only: what each decides is set out above for the chosen path, and
   // asserting it for the others would repeat the whole analysis three times.
-  if (input.paths && input.paths.length > 1) {
+  const otherPaths = (input.paths ?? []).filter((pp) => !pp.chosen);
+  if (input.paths && input.paths.length > 1 && otherPaths.length > 0) {
     h(t("memoPathsTitle"));
     para(t("memoPathsLead"));
-    for (const pp of input.paths) {
+    for (const pp of otherPaths) {
       item(`${pp.name}: ${pp.body}${pp.conditional ? ` — ${t("memoPathsConditional")}` : ""}`);
     }
     // And the rung that is NOT open, said once. A reader holding the internal-review /

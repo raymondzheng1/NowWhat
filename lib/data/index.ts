@@ -48,7 +48,11 @@ export interface DataClassifyResult {
  * entry (so the person still gets reasons + help), flagged as a fallback so the UI is
  * honest about uncertainty. Text is treated as DATA, never instructions (harness §6.5).
  */
-export function classifyData(text: string, jurisdiction?: Jurisdiction): DataClassifyResult {
+/** Score every entry against free text. Shared by `classifyData` and `suggestEntry`. */
+function scoreText(
+  text: string,
+  jurisdiction?: Jurisdiction,
+): Map<string, { score: number; tokens: Set<string> }> {
   const index = getDataIndex();
   const jur = new Map(index.entries.map((e) => [e.id, e.jurisdiction] as const));
   const hay = " " + text.toLowerCase().replace(/\s+/g, " ") + " ";
@@ -63,6 +67,11 @@ export function classifyData(text: string, jurisdiction?: Jurisdiction): DataCla
       scores.set(t.entryId, cur);
     }
   }
+  return scores;
+}
+
+export function classifyData(text: string, jurisdiction?: Jurisdiction): DataClassifyResult {
+  const scores = scoreText(text, jurisdiction);
 
   let best: { entryId: string; score: number; tokens: Set<string> } | null = null;
   for (const [entryId, v] of scores) {
@@ -71,4 +80,45 @@ export function classifyData(text: string, jurisdiction?: Jurisdiction): DataCla
 
   if (best) return { entryId: best.entryId, isFallback: false, matched: [...best.tokens] };
   return { entryId: fallbackId(jurisdiction ?? "Vic"), isFallback: true, matched: [] };
+}
+
+/**
+ * Does what the person WROTE clearly describe a different kind of decision from the one
+ * they picked? If so, which one.
+ *
+ * Reported from the live site: someone picked "A Victorian government decision" and then
+ * described, in detail, a parking infringement — "an infringement notice … issued by a
+ * parking enforcement officer". The generic page gave them general steps, said an internal
+ * review "may not apply", and said nothing about the things that matter for a fine: that it
+ * can be taken to court, and that most options close once the fine is registered. The fines
+ * page says all of that. The words that would have sent them there were already on the page.
+ *
+ * This only SUGGESTS — the person decides, and nothing moves without them. So it is built to
+ * stay quiet unless the evidence is plain:
+ *   · the match must be a specific decision type, never a generic catch-all;
+ *   · it needs two different matching terms, or one multi-word term ("infringement notice"),
+ *     so a single common word — "I'm fine" — never triggers it;
+ *   · and it must outscore the decision type they picked on that same text.
+ * Runs on the device against the data index the page already holds. Nothing is sent.
+ */
+export function suggestEntry(
+  text: string,
+  chosenId: string,
+): { entryId: string; matched: string[] } | null {
+  if (!text.trim()) return null;
+  const scores = scoreText(text);
+  const fallback = new Set(getDataIndex().entries.filter((e) => e.isFallback).map((e) => e.id));
+
+  let best: { entryId: string; score: number; tokens: Set<string> } | null = null;
+  for (const [entryId, v] of scores) {
+    if (fallback.has(entryId)) continue;
+    if (!best || v.score > best.score) best = { entryId, ...v };
+  }
+  if (!best || best.entryId === chosenId) return null;
+
+  const strong = best.tokens.size >= 2 || [...best.tokens].some((tok) => tok.includes(" "));
+  if (!strong) return null;
+  if ((scores.get(chosenId)?.score ?? 0) >= best.score) return null;
+
+  return { entryId: best.entryId, matched: [...best.tokens] };
 }

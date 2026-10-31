@@ -3,11 +3,12 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { listDataEntries, getDataEntry, getDataIndex } from "@/lib/data";
+import { listDataEntries, getDataEntry, getDataIndex, suggestEntry } from "@/lib/data";
 import type { DataPathway, Jurisdiction } from "@/lib/schemas/data";
 import { groundAppliesIn, type Process, type Ground, type Concept } from "@/lib/schemas/legal";
 import { avenueView } from "@/lib/triage";
 import { flowForMatter, matterKey } from "@/lib/flow/matter";
+import { titleAsPhrase } from "@/lib/text/title";
 import { planFor, midSentence } from "@/lib/analysis";
 import { questionsForScheme } from "@/lib/intake/scheme-questions";
 import { AnalysisPanel } from "@/components/feature/AnalysisPanel";
@@ -468,6 +469,56 @@ export function RightsSaverClient({
     setAreaId(id);
   }
 
+  /**
+   * The same matter, filed under the decision type its own words describe.
+   *
+   * NOT `pickArea`. Changing area by hand starts from scratch, on the owner's ruling, because
+   * that is a different matter and its words must not leak into the next one. This is the
+   * opposite case: the app noticed that what the person wrote is a fine (say) while they had
+   * picked "a Victorian government decision", and offered to move it. Same letter, same
+   * account — so their account comes with it, re-keyed to the new matter.
+   *
+   * What does NOT come: the path they chose and the points and criteria they marked. Those
+   * belong to the old page's options, which the new page does not have.
+   */
+  function refileTo(id: string) {
+    const next = getDataEntry(id);
+    if (!next) return;
+    try {
+      const raw = window.sessionStorage.getItem(FLOW_KEY);
+      const f = raw ? (JSON.parse(raw) as Partial<FlowState>) : null;
+      if (f) {
+        const carried: FlowState = {
+          matter: matterKey(next),
+          chosenPath: null,
+          goals: f.goals ?? [],
+          goalOther: f.goalOther ?? "",
+          account: f.account ?? {},
+          relatedGrounds: [],
+          groundNotes: {},
+          criteriaNotes: {},
+          pickedCriteria: [],
+        };
+        window.sessionStorage.setItem(FLOW_KEY, JSON.stringify(carried));
+      }
+    } catch {
+      /* storage unavailable — the move still happens; their words are on the old page's
+         state only, which is the safe direction */
+    }
+    // Land on their account, so the first thing they see is that it came with them.
+    initialViewRef.current = "story";
+    try {
+      const u = new URL(window.location.href);
+      u.searchParams.set("view", "story");
+      window.history.replaceState(window.history.state, "", u);
+    } catch {
+      /* history unavailable */
+    }
+    setRelatedGrounds([]);
+    setJurisdiction(next.jurisdiction);
+    setAreaId(id);
+  }
+
   function reset() {
     setStep("who");
     setJurisdiction(null);
@@ -562,6 +613,7 @@ export function RightsSaverClient({
               relatedGrounds={relatedGrounds}
               onToggleGround={toggleGround}
               onRestoreGrounds={setRelatedGrounds}
+              onRefile={refileTo}
               onViewChange={setResultView}
               initialView={initialViewRef.current ?? null}
               tLetter={tLetter}
@@ -917,6 +969,7 @@ function ResultStep({
   relatedGrounds,
   onToggleGround,
   onRestoreGrounds,
+  onRefile,
   initialView,
   onViewChange,
   faqs,
@@ -938,6 +991,8 @@ function ResultStep({
   onToggleGround: (id: string) => void;
   /** Restores the ticked grounds after a trip out of the flow — the parent owns them. */
   onRestoreGrounds: (ids: string[]) => void;
+  /** Moves this matter to the decision type its account describes, words and all. */
+  onRefile: (entryId: string) => void;
   /** The `?view=` this page loaded with, captured before the URL was rewritten. */
   initialView: string | null;
   /** Reports the step on screen, so the header can count the whole journey. */
@@ -1021,6 +1076,31 @@ function ResultStep({
   // never written to storage, never put in the URL, and never sent anywhere. It exists to be
   // composed into a letter they then send themselves.
   const [account, setAccount] = useState<Record<string, string>>({});
+  // WHAT THEY WROTE, AGAINST WHAT THEY PICKED. See `suggestEntry`: a parking infringement
+  // written up under "a Victorian government decision" got general steps and none of a
+  // fine's options or time limits. Computed on the device; it only ever suggests.
+  const accountText = `${account["q-story"] ?? ""} ${account["q-more"] ?? ""}`;
+  const suggestion = useMemo(() => suggestEntry(accountText, entry.id), [accountText, entry.id]);
+  const [refileDismissed, setRefileDismissed] = useState(false);
+  const suggested = suggestion && !refileDismissed ? (getDataEntry(suggestion.entryId) ?? null) : null;
+  const refileNotice = suggested ? (
+    <aside role="status" className="card border-2 border-help bg-help-soft">
+      <p className="font-display text-[17px] font-extrabold text-help-ink">
+        {t("refileTitle", { what: titleAsPhrase(suggested.title) })}
+      </p>
+      <p className="mt-2 text-[15.5px] leading-relaxed text-ink">
+        {t("refileBody", { chosen: titleAsPhrase(entry.title) })}
+      </p>
+      <div className="mt-4 flex flex-wrap gap-3">
+        <button type="button" className="btn btn-primary" onClick={() => onRefile(suggested.id)}>
+          {t("refileGo")}
+        </button>
+        <button type="button" className="btn btn-secondary" onClick={() => setRefileDismissed(true)}>
+          {t("refileKeep")}
+        </button>
+      </div>
+    </aside>
+  ) : null;
 
   // ---- Coming back to where you were -----------------------------------------------
   //
@@ -1543,7 +1623,7 @@ function ResultStep({
 
   const dl = deadlineRuleView(entry);
   const template = reasonsRequestTemplate(entry, {
-    about: entry.title.toLowerCase(),
+    about: titleAsPhrase(entry.title),
     decisionDate: decisionDate || undefined,
   });
 
@@ -1788,17 +1868,23 @@ function ResultStep({
     // Provenance: which build of the procedural layer produced the rule and the source
     // printed in this memo. It is already in the client bundle, so this costs nothing.
     paths: plan.paths.map((pp) => ({
+      // The court election by its own name. It fell through to "Having the decision looked at
+      // again" — the one thing a court hearing the charge does not do, in the one list a duty
+      // lawyer reads to see what else was open.
       name:
         pp.id === "internal-review"
           ? t("pathTitleInternal")
           : pp.id === "judicial-review"
             ? judicialReview.name
-            : pp.character === "tribunal"
-              ? meritsReview.name
-              : t("pathTitleNotTribunal"),
+            : pp.id === "court-election"
+              ? t("pathTitleCourtElection")
+              : pp.character === "tribunal"
+                ? meritsReview.name
+                : t("pathTitleNotTribunal"),
       body: pp.body,
       question: pp.question,
       conditional: pp.conditional,
+      chosen: pp.id === memoPathId,
     })),
     corpusVersion: getDataIndex().builtAt,
     // Links back into our own guides, so a reader holding the memo can reach the full
@@ -2400,6 +2486,7 @@ function ResultStep({
           application letter and a list of FAQ links, so someone who reached "your memo"
           met a letter template before a word of the analysis. The letter is what you do
           AFTER reading the analysis, so it now follows it. */}
+      {view === "memo" && refileNotice}
       {view === "memo" && (
         <section id="r-memo" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("memoSectionTitle")}</h2>
@@ -2833,6 +2920,7 @@ function ResultStep({
 
         </section>
       )}
+      {view === "story" && refileNotice}
 
       {/* Apply for review — one draft per path, chosen by the person. Built on-device from
           the corpus entry (pure function, no request), so the no-network promise holds. */}

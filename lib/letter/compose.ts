@@ -89,9 +89,16 @@ export function composeLetter(input: ComposeInput): Draft {
   const parts: string[] = [];
 
   // The person's own narrative, under the questions they were asked.
+  //
+  // ONCE. Their account became the letter's own reason for writing (above), and was then
+  // appended again under "What happened?" — so a person who wrote a page got a letter that
+  // said it twice, word for word, and read as though it had been pasted in by mistake.
+  // Reported from the live site. An answer already in the letter is not added again; the
+  // test is the text itself, so it holds whichever template carried it.
   for (const q of input.universal) {
     const v = said(q.id);
-    if (v) parts.push(`${q.label}\n${v}`);
+    if (!v || base.body.includes(v)) continue;
+    parts.push(`${q.label}\n${v}`);
   }
 
   // The points they marked, each with what THEY wrote under it. A heading with nothing
