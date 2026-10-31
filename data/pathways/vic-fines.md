@@ -112,7 +112,9 @@ lawyer like the four beneath it, and it goes on the list for the next cadence.
 Court"). The test's point — fines go to internal review and the Magistrates' Court, never VCAT —
 survives this change; its literal needs updating with it.
 
-**Still open after this pass: the stage limits.** The reviewer asked us to verify the repeat-review
+**Still open after this pass: the stage limits.** (Closed 2026-10-31: the stage limits were sourced
+to the Acts in the decode-corpus QA and confirmed by the supervising lawyer — see
+`corpus/pathways/vic-fines.md`.) The reviewer asked us to verify the repeat-review
 exceptions and the stage-specific limits across the Infringements and Fines Reform legislation. That
 is new sourced content, not a correction, and it waits on the same lawyer confirmation as the Act
 attribution above — the 14-day 'person unaware' and 28-day court-election figures cannot be named

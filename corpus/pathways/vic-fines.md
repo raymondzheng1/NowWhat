@@ -156,7 +156,16 @@ apply to them (IA s 21(1)(a)); the 'unaware' ground needs non-personal service a
 refusal leaves 14 days (IA ss 22(1)(d), 25(6)-(7)); the Children's Court test is age at
 the offence (IA s 3(1)); and the court's outcomes and costs are now stated and sourced
 (VLA; CPA ss 401, 403). The 28-day figure is stated as prose only — `deadlineDays` stays
-null and no date is computed — pending the supervising lawyer's confirmation.
+null and no date is computed.
+
+**Confirmed by the supervising lawyer, 2026-10-31.** Both QA rounds were put to the supervising
+lawyer and approved in full: the registration deadline, the excessive-speed, drink-driving and
+drug-driving route (28 days from the date printed on the notice; conviction and licence loss
+without an objection), the 'did not know' routes (14 days; the Road Safety Act s 67 extension
+for traffic and toll fines), review after a Final Demand, the special-circumstances test, Work
+and Development Permit eligibility, and the Ombudsman's 12-month practice. The figures stay as
+prose rather than computed dates, in line with the no-countdown rule; this records that they
+are confirmed, not that they are now counted down.
 
 **The court-election figure generalised 2026-08-23 on the owner's instruction.** It carried the
 same doubt as the 'person unaware' figure removed above — our procedural layer named them

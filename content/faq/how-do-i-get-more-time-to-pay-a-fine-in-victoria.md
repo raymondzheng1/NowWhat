@@ -12,7 +12,7 @@ sources:
 related:
   - dispute-a-fine-in-victoria
   - can-i-ask-for-a-government-decision-to-be-reviewed
-updated: "2026-06-16"
+updated: "2026-10-31"
 ---
 
 If a Victorian fine is more than you can pay right now, you have options. Acting early —

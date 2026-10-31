@@ -11,7 +11,7 @@ sources:
   - "Victoria Legal Aid — Fines and infringements — legalaid.vic.gov.au"
 related:
   - can-i-ask-for-a-government-decision-to-be-reviewed
-updated: "2026-06-16"
+updated: "2026-10-31"
 ---
 
 If you got a fine or infringement notice in Victoria and you disagree with it, or you

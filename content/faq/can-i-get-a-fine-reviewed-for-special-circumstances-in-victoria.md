@@ -18,7 +18,7 @@ sources:
   - Victoria Legal Aid — Fines and infringements — legalaid.vic.gov.au
 related:
   - i-did-not-know-about-my-fine-what-can-i-do
-updated: '2026-06-16'
+updated: '2026-10-31'
 ---
 
 ## What counts as special circumstances?
