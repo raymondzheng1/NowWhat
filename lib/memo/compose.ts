@@ -158,7 +158,21 @@ export interface MemoInput {
    */
   drafted?: {
     summary?: string;
-    application?: { groundId: string; forThem: string; against: string; toTest: string }[];
+    application?: {
+      groundId: string;
+      forThem: string;
+      against: string;
+      toTest: string;
+      /**
+       * The same application, one PART of the test at a time, keyed by the part's own id.
+       *
+       * Optional, and matched by id rather than by position: a part the draft said nothing
+       * about, a part it answered with an id we never supplied, and a draft that never
+       * arrived all come out the same way — the part prints its question and nothing more,
+       * exactly as it did before any of this existed.
+       */
+      elements?: { elementId: string; says: string; missing: string }[];
+    }[];
   } | null;
   /** Section headings, so all customer prose stays in the i18n layer. */
   t: (key: string) => string;
@@ -179,6 +193,19 @@ export type MemoBlock =
   | { kind: "para"; text: string }
   | { kind: "meta"; label: string; value: string }
   | { kind: "item"; text: string; detail?: string }
+  /**
+   * OUR words about ONE part of a test, sitting under that part.
+   *
+   * Its own kind because of where it has to sit. A `para` renders flush with the heading
+   * above it, so four parts in a row each gaining a paragraph produced four paragraphs a
+   * reader could not tie back to the part they answered — and the whole point of writing
+   * to a part rather than to the ground is lost if the reader cannot tell which is which.
+   *
+   * Deliberately NOT a `quote`: that kind is reserved for the person's own words and is set
+   * apart so a reader can see at a glance which half of this document is theirs. These are
+   * ours, about what they said, and the two must never look alike.
+   */
+  | { kind: "note"; label: string; text: string }
   | { kind: "quote"; text: string; label?: string }
   | { kind: "link"; text: string; href: string }
   | { kind: "disclaimer"; text: string };
@@ -259,6 +286,11 @@ export function composeMemo(input: MemoInput): Memo {
     if (label) L.push(`${indent === "  " ? "" : "      "}${label}:`);
     L.push(`${indent}"${x}"`);
     B.push({ kind: "quote", text: x, ...(label ? { label } : {}) });
+  };
+  /** A subordinate line under the item above it. Indented in both forms. */
+  const noteLine = (label: string, text: string, indent = "      ") => {
+    L.push(`${indent}${label}: ${text}`);
+    B.push({ kind: "note", label, text });
   };
   const link = (label: string, href: string) => {
     L.push(`${label}: ${href}`);
@@ -505,28 +537,49 @@ export function composeMemo(input: MemoInput): Memo {
       // element carries its own `layPrompt`, a question already written for a lay reader
       // and already inside the reading-level gate, so this adds no new claim and no new
       // prose of ours.
+      // WHAT TENDS TO RELATE TO THIS, which is rule material rather than application: it is
+      // what the corpus says about the test in general, true of anyone raising it. It used
+      // to sit after the parts, and once the parts carried what THIS person had said, the
+      // list closed by asking them to say which of these happened to them — after the memo
+      // had already set out what they said. Same words, read before the application instead.
+      blank();
+      para(`${t("memoArgument")}:`);
+      for (const w of g.whatRelates) item(rule(w));
+      para(t("memoArgumentNote"), "  ");
+      const d = input.drafted?.application?.find((a) => a.groundId === g.id);
+      // The application OPENS on the point as a whole, then works through the parts. That
+      // order is the reference memoranda's own, and it was worth moving this block up for:
+      // the overview read as an afterthought when it came after the parts it introduces.
+      if (d?.forThem.trim()) {
+        blank();
+        sub(t("memoDraftedForThem"));
+        para(rule(d.forThem));
+      }
       if (g.elements.length) {
         blank();
         sub(t("memoElements"));
         para(t("memoElementsLead"), "  ");
         for (const el of g.elements) {
           item(rule(el.name), el.layPrompt ? `${t("memoElementAsked")}: ${rule(el.layPrompt)}` : undefined);
+          // THE APPLICATION, UNDER THE PART IT BELONGS TO. Matched by id inside this
+          // ground — element ids are local ("notice", "applies"), so the same id means
+          // different things under different grounds and a global lookup would misfile
+          // the answer. An id we never supplied finds no part and prints nowhere.
+          //
+          // `para`, not `quote`: these are OUR words about what they said. Quoting is
+          // reserved for their own, and blurring that line is how a memo ends up
+          // attributing a sentence to a person who never wrote it.
+          const de = d?.elements?.find((x) => x.elementId === el.id);
+          const says = (de?.says ?? "").trim();
+          const missing = (de?.missing ?? "").trim();
+          if (says) noteLine(t("memoElementSays"), rule(says));
+          if (missing) noteLine(t("memoElementMissing"), rule(missing));
         }
       }
-      blank();
-      para(`${t("memoArgument")}:`);
-      for (const w of g.whatRelates) item(rule(w));
-      para(t("memoArgumentNote"), "  ");
       // What their account has to do with THIS test, and the answer they will get back.
       // The generic list above stays: it is what the corpus says relates to the ground in
       // general, and it is true whether or not a draft arrived.
-      const d = input.drafted?.application?.find((a) => a.groundId === g.id);
       if (d) {
-        if (d.forThem.trim()) {
-          blank();
-          sub(t("memoDraftedForThem"));
-          para(rule(d.forThem));
-        }
         if (d.against.trim()) {
           blank();
           sub(t("memoDraftedAgainst"));

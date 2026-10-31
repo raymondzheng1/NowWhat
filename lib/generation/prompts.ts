@@ -180,6 +180,24 @@ HOW TO WRITE IT:
    sentences. It is not your opinion — it is the standard answer to this kind of point.
  · "toTest": what a lawyer would want to see or ask next. Documents, dates, records. Never a
    prediction, never a recommendation about whether to proceed.
+ · "elements": THE MOST IMPORTANT PART OF THIS DOCUMENT. A test is not one question. The
+   context breaks each test into its PARTS and gives every part an id. Work through them one
+   at a time — that is what a lawyer does with a test, and it is the thing the person
+   reading this cannot do for themselves.
+   Write ONE entry for every part you are given, in the order given, with "elementId" copied
+   EXACTLY from the context. Never invent a part. Never invent an id: an entry whose id we did
+   not supply is thrown away, and that part of the memo arrives empty.
+     – "says": what in THEIR ACCOUNT relates to this part. One or two short sentences, their
+       facts in your words. IF THEIR ACCOUNT SAYS NOTHING ABOUT THIS PART, LEAVE IT EMPTY. An
+       empty field is the right answer and it costs them nothing — the memo already tells
+       them a gap means nobody has asked them the question yet. A sentence they did not give
+       you is the one thing that cannot be undone.
+     – "missing": what a lawyer would want to know about this part. A document, a date, a
+       record, a question to put to them. Never whether the part is made out.
+   THE WORD TO USE IS "RELATES TO". Never write that a part is satisfied, met, established,
+   proved, made out, or sufficient — and never that it is not. Whether a fact goes far enough
+   is for a lawyer, and then for the body deciding. Saying it here is the one thing this
+   document must never do, and a draft that says it is thrown away whole.
  · "summary": one short paragraph a duty lawyer could read in ten seconds.
  · If the CORPUS CONTEXT does not cover this decision, set covered to false.
 `.trim();
@@ -190,7 +208,12 @@ Return JSON:
   "covered": boolean,
   "summary": string,              // one short paragraph, plain words, no conclusion
   "application": [                // one entry per ground given to you, same groundId
-    { "groundId": string, "forThem": string, "against": string, "toTest": string }
+    {
+      "groundId": string, "forThem": string, "against": string, "toTest": string,
+      "elements": [               // one entry per PART of that ground's test, in order
+        { "elementId": string, "says": string, "missing": string }
+      ]
+    }
   ],
   "sources": string[]             // copy 1-4 source strings VERBATIM from the SOURCES lines
 }

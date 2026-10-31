@@ -662,3 +662,213 @@ describe("a court election is not handed a tribunal's memo", () => {
     expect(b).not.toContain(t("memoNoProcessRule"));
   });
 });
+
+describe("the drafted application is written to each part of the test", () => {
+  // The upgrade this covers. Before it, the draft wrote to the GROUND — one paragraph for a
+  // test with four parts — so the memo set out a four-part test and then applied it as if it
+  // were one question. That is the difference between naming a rule and applying it, and it
+  // is the move the owner's worked memoranda make: s 17(1)(a), (b) and (f)(viii) each get
+  // their own application, not "the section".
+  const pf = listGrounds().filter((g) => g.id === "procedural-fairness-hearing");
+  const ground = pf[0]!;
+
+  const draftFor = (
+    elements: { elementId: string; says: string; missing: string }[],
+    over: Partial<{ forThem: string; against: string; toTest: string }> = {},
+  ) => ({
+    summary: "This is about a Centrelink debt.",
+    application: [
+      {
+        groundId: ground.id,
+        forThem: "You say you sent a certificate. You say nobody asked you about it.",
+        against: "They may say the letter invited a response.",
+        toTest: "A lawyer will want the date you sent it.",
+        elements,
+        ...over,
+      },
+    ],
+  });
+
+  const memo = (elements: { elementId: string; says: string; missing: string }[]) =>
+    composeMemo({
+      ...base,
+      process: judicial,
+      grounds: pf,
+      story: "They cut my payment and never asked me about the certificate I sent.",
+      drafted: draftFor(elements),
+    });
+
+  it("prints what their account relates to under the part it belongs to", () => {
+    const m = memo([
+      { elementId: "notice", says: "You say no letter came before the decision.", missing: "" },
+      { elementId: "chance-to-respond", says: "You say nobody asked you first.", missing: "" },
+    ]);
+    const b = m.body;
+    const el = ground.elements.find((e) => e.id === "notice")!;
+    const partAt = b.indexOf(el.name);
+    const saysAt = b.indexOf("You say no letter came before the decision.");
+    expect(partAt).toBeGreaterThan(-1);
+    expect(saysAt).toBeGreaterThan(partAt);
+    // And under THAT part, not under the one after it.
+    const nextPart = ground.elements.find((e) => e.id === "adverse-information")!;
+    expect(saysAt).toBeLessThan(b.indexOf(nextPart.name));
+    expect(b).toContain(t("memoElementSays"));
+  });
+
+  it("prints what is still needed for a part, where the draft says so", () => {
+    const m = memo([
+      { elementId: "notice", says: "", missing: "The date the first letter was sent." },
+    ]);
+    expect(m.body).toContain(`${t("memoElementMissing")}: The date the first letter was sent.`);
+  });
+
+  it("leaves a part the draft said nothing about exactly as it was", () => {
+    // A silent part keeps its question and gains no prose. The memo already tells the reader
+    // a gap means nobody has asked them yet, so an empty field is a correct answer — and a
+    // model that fills it is inventing a fact about a person's life.
+    const m = memo([{ elementId: "notice", says: "You say no letter came.", missing: "" }]);
+    const b = m.body;
+    const silent = ground.elements.find((e) => e.id === "chance-to-respond")!;
+    expect(b).toContain(silent.name);
+    expect(b).toContain(`${t("memoElementAsked")}: ${silent.layPrompt}`);
+    // Exactly one part carries an application line.
+    expect(b.split(t("memoElementSays")).length - 1).toBe(1);
+  });
+
+  it("drops an application written against a part we never supplied", () => {
+    // Element ids are LOCAL to their ground — "applies", "notice". A draft that answers an
+    // id from a different ground, or invents one, must find no part to sit under rather than
+    // being filed against whichever part happens to come first.
+    const m = memo([
+      { elementId: "no-such-part", says: "Invented part text.", missing: "Invented too." },
+      { elementId: "notice", says: "You say no letter came.", missing: "" },
+    ]);
+    expect(m.body).not.toContain("Invented part text.");
+    expect(m.body).not.toContain("Invented too.");
+    expect(m.body).toContain("You say no letter came.");
+  });
+
+  it("opens on the point as a whole, then works through the parts", () => {
+    const m = memo([{ elementId: "notice", says: "You say no letter came.", missing: "" }]);
+    const b = m.body;
+    expect(b.indexOf(t("memoDraftedForThem"))).toBeLessThan(b.indexOf(t("memoElements")));
+    // And the answer back still comes after the parts, not before them.
+    expect(b.indexOf(t("memoDraftedAgainst"))).toBeGreaterThan(b.indexOf(t("memoElements")));
+  });
+
+  it("composes exactly as before when no draft arrived", () => {
+    const without = composeMemo({ ...base, process: judicial, grounds: pf, story: "x" });
+    const withEmpty = composeMemo({
+      ...base,
+      process: judicial,
+      grounds: pf,
+      story: "x",
+      drafted: { summary: "", application: [] },
+    });
+    expect(withEmpty.body).toBe(without.body);
+    expect(without.body).not.toContain(t("memoElementSays"));
+  });
+
+  it("still passes the no-advice and no-score gates with every part written up", () => {
+    // Writing to ONE part of a test is where "this element is satisfied" is most tempting,
+    // and that sentence is the thing this document may never contain. Asserted through the
+    // real runtime gates rather than against the pattern file, so the test cannot pass by
+    // checking a regex it built wrongly.
+    const m = memo(
+      ground.elements.map((e) => ({
+        elementId: e.id,
+        says: `You have told us something that relates to ${e.name.toLowerCase()}.`,
+        missing: "A lawyer will want the dates and any letters.",
+      })),
+    );
+    expect(checkNoAdvice(m.body).ok, JSON.stringify(checkNoAdvice(m.body).hits)).toBe(true);
+    expect(checkNoScore(m.body).ok, JSON.stringify(checkNoScore(m.body).hits)).toBe(true);
+  });
+});
+
+describe("the per-part application is OUR words, not theirs", () => {
+  // The memo's one visual promise: a reader can see at a glance which half is the person's
+  // and which is ours. The per-part application is ours — about what they said, not said by
+  // them — so it must never arrive as a `quote` block, which is the kind set apart for their
+  // own words. A memo that blurs that line attributes a sentence to someone who never wrote
+  // it, in the document they hand to a lawyer.
+  const pf = listGrounds().filter((g) => g.id === "procedural-fairness-hearing");
+
+  const m = composeMemo({
+    ...base,
+    process: judicial,
+    grounds: pf,
+    story: "Nobody asked me anything.",
+    drafted: {
+      summary: "",
+      application: [
+        {
+          groundId: "procedural-fairness-hearing",
+          forThem: "",
+          against: "",
+          toTest: "",
+          elements: [{ elementId: "notice", says: "You say no letter came.", missing: "" }],
+        },
+      ],
+    },
+  });
+
+  it("renders as a note, never as a quote", () => {
+    const quotes = m.blocks.filter((b) => b.kind === "quote");
+    for (const q of quotes) expect(q.text).not.toContain("You say no letter came.");
+    const notes = m.blocks.filter((b) => b.kind === "note");
+    expect(notes).toHaveLength(1);
+    expect(notes[0]).toMatchObject({ label: t("memoElementSays"), text: "You say no letter came." });
+  });
+
+  it("still quotes their own account as a quote", () => {
+    const quotes = m.blocks.filter((b) => b.kind === "quote");
+    expect(quotes.some((q) => q.text === "Nobody asked me anything.")).toBe(true);
+  });
+
+  it("sits directly under the part it answers", () => {
+    const names = m.blocks.map((b) => ("text" in b ? b.text : ""));
+    const part = pf[0]!.elements.find((e) => e.id === "notice")!;
+    const at = names.indexOf(part.name);
+    expect(at).toBeGreaterThan(-1);
+    expect(m.blocks[at + 1]!.kind).toBe("note");
+  });
+});
+
+describe("rule material is read before the application, not after it", () => {
+  // "What tends to relate to this" is what the corpus says about the test in general, and
+  // it closes by asking the reader to say which of those things happened to them. Printed
+  // after the parts, it asked that question after the memo had already set out their answer.
+  const pf = listGrounds().filter((g) => g.id === "procedural-fairness-hearing");
+  const m = composeMemo({
+    ...base,
+    process: judicial,
+    grounds: pf,
+    story: "Nobody asked me anything.",
+    drafted: {
+      summary: "",
+      application: [
+        {
+          groundId: "procedural-fairness-hearing",
+          forThem: "You say nobody asked you.",
+          against: "They may say the notice invited a reply.",
+          toTest: "Dates.",
+          elements: [{ elementId: "notice", says: "You say no letter came.", missing: "" }],
+        },
+      ],
+    },
+  });
+
+  it("puts the general list above the application and the parts", () => {
+    const b = m.body;
+    const general = b.indexOf(t("memoArgument"));
+    expect(general).toBeGreaterThan(-1);
+    expect(general).toBeLessThan(b.indexOf(t("memoDraftedForThem")));
+    expect(general).toBeLessThan(b.indexOf(t("memoElements")));
+  });
+
+  it("still keeps it below the rule and the authorities it belongs with", () => {
+    const b = m.body;
+    expect(b.indexOf(t("memoArgument"))).toBeGreaterThan(b.indexOf(t("memoWhereFrom")));
+  });
+});

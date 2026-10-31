@@ -66,6 +66,21 @@ export function buildMemoContext(input: {
       L.push("", `GROUND: ${g.name} — ${g.plainName}`);
       L.push(`  question: ${g.oneLine}`);
       L.push(`  test: ${g.test}`);
+      // THE PARTS OF THE TEST, with their ids.
+      //
+      // The context named the test and stopped, so the only application a model could write
+      // was one about the ground as a whole — which is the half of the work a lay reader can
+      // already do. The parts have been in the corpus since it was written; handing them over
+      // with their ids is what lets the draft answer each one separately, and lets the memo
+      // put the answer back under the part it belongs to. An id that is not in this list
+      // matches nothing on the way back and is dropped.
+      if (g.elements.length) {
+        L.push("  the parts that have to be shown (one entry per part, id copied exactly):");
+        for (const el of g.elements) {
+          L.push(`    - id: ${el.id} | ${el.name}`);
+          if (el.layPrompt) L.push(`        asks: ${el.layPrompt}`);
+        }
+      }
       if (g.whatRelates.length) {
         L.push("  what tends to relate to it:");
         for (const w of g.whatRelates) L.push(`    - ${w}`);

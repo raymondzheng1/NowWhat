@@ -63,6 +63,19 @@ export function MemoView({ blocks }: { blocks: MemoBlock[] }) {
                 </span>
               </div>
             );
+          case "note":
+            // Ours, about one part of a test, hung under that part. A hairline rule and an
+            // indent do the tying; the person's own words get the teal block instead, so
+            // the two are never mistaken for each other at a glance.
+            return (
+              <p
+                key={i}
+                className="ml-4 mt-1 border-l-2 border-line pl-3 text-[14.5px] leading-snug text-ink-soft"
+              >
+                <span className="font-semibold text-ink">{b.label}: </span>
+                {b.text}
+              </p>
+            );
           case "quote":
             // Their own words, set apart so a reader can see at a glance which parts of this
             // document are the person's and which are ours. Never characterised.

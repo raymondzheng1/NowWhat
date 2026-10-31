@@ -59,6 +59,36 @@ export const GeneratedMemoSchema = z.object({
       against: z.string(),
       /** What a lawyer would want to see. Never "this will succeed". */
       toTest: z.string(),
+      /**
+       * The same work, done one PART of the test at a time.
+       *
+       * A test is not a single question — `elements` has broken every ground into its parts
+       * since the corpus was written. Writing to the ground as a whole is what a lay reader
+       * can already do; walking each part and saying which of their facts reaches it is the
+       * thing they cannot, and it is what the owner's worked memoranda do with s 17(1)(a),
+       * (b) and (f)(viii) rather than with "the section".
+       *
+       * Defaulted to empty on purpose. An older draft, a model that returns the four
+       * ground-level fields and nothing else, or a part it had nothing to say about all land
+       * here as an absence — and the memo composes exactly as it did before, which is the
+       * standing rule for this whole draft: it may only ever add.
+       */
+      elements: z
+        .array(
+          z.object({
+            /**
+             * The part's own id, copied from the context. Local to its ground ("notice",
+             * "applies"), so it is only ever matched inside the ground it came from.
+             * An id we did not supply matches nothing and is dropped, never rendered.
+             */
+            elementId: z.string(),
+            /** What in their account RELATES to this part. Empty is a correct answer. */
+            says: z.string().default(""),
+            /** What a lawyer would want to know about this part. Never whether it is met. */
+            missing: z.string().default(""),
+          }),
+        )
+        .default([]),
     }),
   ),
   sources: z.array(z.string()),

@@ -255,9 +255,19 @@ export function runMemo(
       covered: d.covered,
       // EVERY sentence the model wrote goes to the verifier. Missing one here would be a
       // hole in the allow-list, the no-advice gate and the reading-level gate at once.
+      //
+      // The per-element lines are included for exactly that reason, and they are the ones
+      // that need it most: writing to a single part of a test is where "this element is
+      // satisfied" is most tempting to write, and `checkNoScore` is what refuses it. A field
+      // left out of this list would be customer-visible prose that no gate ever read.
       text: [
         d.summary,
-        ...d.application.flatMap((a) => [a.forThem, a.against, a.toTest]),
+        ...d.application.flatMap((a) => [
+          a.forThem,
+          a.against,
+          a.toTest,
+          ...a.elements.flatMap((e) => [e.says, e.missing]),
+        ]),
       ]
         .filter(Boolean)
         .join(" "),

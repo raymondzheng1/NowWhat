@@ -316,6 +316,71 @@ describe("/api/memo (the drafted analysis)", () => {
     const res = await memoPost(jsonReq("http://x/api/memo", { nope: true }));
     expect(res.status).toBe(400);
   });
+
+  // ---- the application, written one part of a test at a time ------------------------
+  //
+  // The draft now works through each PART of a ground's test, not the ground as a whole.
+  // That is more prose, written in the place where a model is most tempted to say a part is
+  // satisfied — so the thing these tests prove is not that the feature works, but that the
+  // new prose passes through every gate the old prose did. A field left out of the
+  // verifier's text or the citation scan would be customer-visible output no gate ever read.
+  const withElements = (
+    elements: { elementId: string; says: string; missing: string }[],
+  ) =>
+    memoModel({
+      application: [
+        {
+          groundId: "procedural-fairness-hearing",
+          forThem: "You say you sent a medical certificate.",
+          against: "They may say the letter invited a response.",
+          toTest: "A lawyer will want the date you sent it.",
+          elements,
+        },
+      ],
+    });
+
+  it("passes the per-part application through once it clears the gates", async () => {
+    __setModelForTests(
+      withElements([
+        { elementId: "notice", says: "You say no letter came first.", missing: "The date it was sent." },
+      ]),
+    );
+    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+    expect(body.status).toBe("answered");
+    expect(body.application[0].elements[0].elementId).toBe("notice");
+    expect(body.application[0].elements[0].says).toContain("no letter came first");
+  });
+
+  it("falls back when a part of the test is called satisfied", async () => {
+    // The sentence this document may never contain, in the one place it reads as natural.
+    // A fact may RELATE TO a part; whether it goes far enough is not ours to say.
+    __setModelForTests(
+      withElements([
+        { elementId: "notice", says: "This satisfies the element of notice.", missing: "" },
+      ]),
+    );
+    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+    expect(body.status).toBe("not-covered");
+  });
+
+  it("falls back when a part of the test invents a case", async () => {
+    __setModelForTests(
+      withElements([
+        { elementId: "notice", says: "", missing: "Compare Craig v South Australia on this part." },
+      ]),
+    );
+    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+    expect(body.status).toBe("not-covered");
+  });
+
+  it("still answers when a draft returns no parts at all", async () => {
+    // Nothing about this upgrade may make the memo worse than it was. A draft with the four
+    // ground-level fields and no parts is the old shape, and it must still ship.
+    __setModelForTests(memoModel());
+    const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+    expect(body.status).toBe("answered");
+    expect(body.application[0].elements).toEqual([]);
+  });
 });
 
 /**

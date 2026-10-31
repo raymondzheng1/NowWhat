@@ -136,7 +136,14 @@ const RESULT_VIEWS: ResultView[] = ["story", "goal", "options", "grounds", "memo
 /** What /api/memo hands back, once it has cleared every gate. */
 interface MemoDraft {
   summary: string;
-  application: { groundId: string; forThem: string; against: string; toTest: string }[];
+  application: {
+    groundId: string;
+    forThem: string;
+    against: string;
+    toTest: string;
+    /** The same work, one part of the test at a time. Absent on an older draft. */
+    elements?: { elementId: string; says: string; missing: string }[];
+  }[];
 }
 
 /** The key the internal-review note is filed under, so the memo can find it. */

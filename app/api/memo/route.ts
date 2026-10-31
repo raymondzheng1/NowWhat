@@ -140,7 +140,14 @@ export async function POST(req: NextRequest) {
   // knowledge base never ships, even if it happens to name a real case.
   const drafted = [
     result.data.summary,
-    ...result.data.application.flatMap((a) => [a.forThem, a.against, a.toTest]),
+    ...result.data.application.flatMap((a) => [
+      a.forThem,
+      a.against,
+      a.toTest,
+      // The per-element lines too. A fabricated case is no less dangerous for being written
+      // under one part of a test instead of under the whole of it.
+      ...a.elements.flatMap((e) => [e.says, e.missing]),
+    ]),
   ].join("\n");
   const invented = checkMemoCitations(drafted, `${context}\n${entry.deadlineRule}`);
   if (invented.length > 0) return notCovered();
