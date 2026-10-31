@@ -104,6 +104,11 @@ export function buildMemoContext(input: {
 
   L.push("SOURCES (copy these VERBATIM into the sources field — do not shorten or reword):");
   L.push(`  - ${entry.sourceUrl}`);
+  // The court avenue's own source. On a court-election memo there is no process and no
+  // concept, so without this the only source offered is the scheme's front door — and the
+  // source that actually says the election exists was both absent from the context and
+  // missing from the allow-list below, so citing it would have been refused.
+  if (entry.avenue.court?.source) L.push(`  - ${entry.avenue.court.source}`);
   if (proc) for (const s of proc.sources ?? []) L.push(`  - ${s}`);
   if (internal) for (const s of internal.sources ?? []) L.push(`  - ${s}`);
   for (const g of grounds) for (const s of g.sources ?? []) L.push(`  - ${s}`);
@@ -126,6 +131,7 @@ export function memoExtraSources(input: {
     entry.sourceUrl,
     entry.avenue.ir?.source ?? "",
     entry.avenue.mr.source,
+    entry.avenue.court?.source ?? "",
     entry.avenue.jr.source,
     entry.reasonsRequest.provision,
     ...(proc?.sources ?? []),

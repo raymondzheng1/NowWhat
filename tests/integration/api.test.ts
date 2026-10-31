@@ -402,6 +402,82 @@ describe("/api/memo (the drafted analysis)", () => {
     expect(two).toBeLessThanOrEqual(8000);
   });
 
+  // ---- the court election ----------------------------------------------------------
+  //
+  // The Magistrates' Court hearing a fine on election decides the CHARGE. The route used to
+  // reject the path outright, so the request 400'd, the client cached a refusal, and the one
+  // path with no grounds of review also had no drafted paragraph — silently, because a
+  // rejected request and a missing key look identical from the page.
+  //
+  // Accepting it is the easy half. The half that matters is what the model is TOLD: the
+  // corpus holds two processes, this is neither, and handing it the merits one would have it
+  // write that the body asks "Is this the correct or preferable decision?" and can substitute
+  // its own decision. No gate could catch that, because the sentence is true of some other
+  // body. So the prompt itself is asserted.
+  const courtBody = {
+    entryId: "vic-fines",
+    pathId: "court-election",
+    forum: "the Magistrates' Court, if you elect to have it heard there",
+    pathName: "asking a court to hear the matter itself",
+    groundIds: [],
+    criteria: ["If the matter goes to court instead, the court decides the charge itself."],
+    story: "The notice came to my old address and I only saw it after the date on it.",
+    notes: {},
+  };
+
+  const courtModel = (): ModelFn => async (call) => ({
+    text: JSON.stringify({
+      covered: true,
+      summary: "You say the notice went to your old address. You say you saw it after the date on it.",
+      application: [],
+      sources: ["https://www.fines.vic.gov.au"],
+    }),
+    inputTokens: 40,
+    outputTokens: 40,
+    model: call.model,
+  });
+
+  it("drafts for a court election instead of rejecting the request", async () => {
+    __setModelForTests(courtModel());
+    const res = await memoPost(jsonReq("http://x/api/memo", courtBody));
+    const body = await res.json();
+    expect(res.status).toBe(200);
+    expect(body.status).toBe("answered");
+    expect(body.summary).toContain("old address");
+    // No grounds of review on this path, so no per-point application. That is parity with
+    // internal and merits review, not a lesser outcome.
+    expect(body.application).toEqual([]);
+  });
+
+  it("never tells the model a court election is a review", async () => {
+    let prompt = "";
+    __setModelForTests(async (call) => {
+      prompt = call.user;
+      return courtModel()(call);
+    });
+    await memoPost(jsonReq("http://x/api/memo", courtBody));
+    expect(prompt).toContain("the Magistrates' Court");
+    // The source that says the election exists, so it can be cited.
+    expect(prompt).toContain("Infringements Act 2006 (Vic)");
+    // And nothing whatever from the merits process.
+    expect(prompt).not.toContain("Is this the correct or preferable decision?");
+    expect(prompt).not.toContain("Affirm — keep the decision the same.");
+    expect(prompt).not.toContain("Asking for a fresh look at the decision");
+  });
+
+  it("still gives merits review its own process", async () => {
+    // The guard on the test above: it must be asserting an absence that is otherwise present.
+    let prompt = "";
+    __setModelForTests(async (call) => {
+      prompt = call.user;
+      return courtModel()(call);
+    });
+    await memoPost(
+      jsonReq("http://x/api/memo", { ...memoBody, pathId: "merits-review", groundIds: [] }),
+    );
+    expect(prompt).toContain("Is this the correct or preferable decision?");
+  });
+
   it("still answers when a draft returns no parts at all", async () => {
     // Nothing about this upgrade may make the memo worse than it was. A draft with the four
     // ground-level fields and no parts is the old shape, and it must still ship.

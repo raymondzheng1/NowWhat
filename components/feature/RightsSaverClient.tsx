@@ -23,7 +23,7 @@ import {
   TRIPWIRE_MESSAGE_KEYS,
   type TripwireFlags,
 } from "@/lib/tripwire";
-import { composeMemo } from "@/lib/memo/compose";
+import { composeMemo, memoPathName } from "@/lib/memo/compose";
 import type { PathId } from "@/lib/analysis";
 import { Disclaimer } from "@/components/ui/Disclaimer";
 import { MemoView } from "@/components/feature/MemoView";
@@ -1637,7 +1637,17 @@ function ResultStep({
         entryId: entry.id,
         pathId: memoPathId,
         forum: memoPathBody,
-        pathName: memoProcess?.plainName ?? internalReview?.plainName ?? "",
+        // The SAME derivation the memo itself uses, from the same three inputs it is handed
+        // twenty lines below. Worked out here a second time, this read `memoProcess.plainName`
+        // — and the process in hand for a court election is the merits one, so the draft
+        // would have been written under "asking for a fresh look at the decision" about a
+        // court that does nothing of the kind.
+        pathName: memoPathName({
+          process: memoProcess,
+          internal: memoPathId === "internal-review" ? (internalReview ?? null) : null,
+          character: memoPath?.character ?? "tribunal",
+          t,
+        }),
         groundIds: relatedGrounds,
         criteria: memoPath?.criteria ?? [],
         story: [story, (account["q-more"] ?? "").trim()].filter(Boolean).join("\n\n"),

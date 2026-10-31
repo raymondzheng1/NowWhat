@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { buildMemoContext } from "@/lib/memo/context";
+import { buildMemoContext, memoExtraSources } from "@/lib/memo/context";
 import { getProcess, listGrounds } from "@/lib/legal";
 import { getDataEntry } from "@/lib/data";
 
@@ -57,5 +57,69 @@ describe("the context hands over every id the answer is keyed by", () => {
     for (const w of ["story", "their account", "medical certificate"]) {
       expect(c).not.toContain(w);
     }
+  });
+});
+
+describe("a court election is not described as a review", () => {
+  // The Magistrates' Court hearing a fine on election decides the CHARGE. It is not merits
+  // review and it is not a review of the decision at all, and the corpus holds no process
+  // for it — only merits review and judicial review. So the context it is given must assert
+  // nothing about what the body asks or what it can do: thin and true beats full and wrong.
+  //
+  // What makes this worth a test rather than a comment is that the mis-label has arrived
+  // four separate ways — on the card, in the plan, in the hand-off and in the memo heading —
+  // and each time from a line that quietly treated "not an internal review" as "merits
+  // review". A sentence like "this body can set the decision aside and substitute its own"
+  // would pass every gate we have, because it is true of some other body.
+  const fines = getDataEntry("vic-fines")!;
+  const merits = getProcess("merits-review")!;
+
+  const courtContext = () =>
+    buildMemoContext({
+      entry: fines,
+      process: null,
+      internal: null,
+      grounds: [],
+      criteria: fines.courtCriteria,
+      forum: fines.avenue.court.body,
+      pathName: "asking a court to hear the matter itself",
+    });
+
+  it("names the court, the time limit and what the court decides", () => {
+    const c = courtContext();
+    expect(c).toContain(fines.avenue.court.body);
+    expect(c).toContain(fines.deadlineRule);
+    for (const cr of fines.courtCriteria) expect(c).toContain(cr);
+  });
+
+  it("offers the source that says the election exists", () => {
+    expect(fines.avenue.court.source).toBeTruthy();
+    expect(courtContext()).toContain(fines.avenue.court.source);
+    // And the verifier is told it may be cited, or citing it would be refused.
+    const allowed = memoExtraSources({ entry: fines, process: null, internal: null, grounds: [] });
+    expect(allowed).toContain(fines.avenue.court.source);
+  });
+
+  it("says nothing a tribunal would say", () => {
+    const c = courtContext();
+    expect(c).not.toContain(merits.question);
+    expect(c).not.toContain(merits.plainName);
+    for (const r of merits.remedies) expect(c).not.toContain(r);
+    for (const r of merits.canApply) expect(c).not.toContain(r);
+  });
+
+  it("would say all of it if the merits process were handed over", () => {
+    // Proof the assertion above is load-bearing and not just true of an empty string.
+    const wrong = buildMemoContext({
+      entry: fines,
+      process: merits,
+      internal: null,
+      grounds: [],
+      criteria: fines.courtCriteria,
+      forum: fines.avenue.court.body,
+      pathName: merits.plainName,
+    });
+    expect(wrong).toContain(merits.question);
+    expect(wrong).toContain(merits.remedies[0]!);
   });
 });

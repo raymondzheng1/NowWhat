@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { composeMemo } from "@/lib/memo/compose";
+import { composeMemo, memoPathName } from "@/lib/memo/compose";
 import { getConcept, getProcess, listGrounds } from "@/lib/legal";
 import { getDataEntry } from "@/lib/data";
 import messages from "@/lib/i18n/messages/en.json";
@@ -872,5 +872,49 @@ describe("rule material is read before the application, not after it", () => {
   it("still keeps it below the rule and the authorities it belongs with", () => {
     const b = m.body;
     expect(b.indexOf(t("memoArgument"))).toBeGreaterThan(b.indexOf(t("memoWhereFrom")));
+  });
+});
+
+describe("what the path is called, worked out once", () => {
+  // The name used to be derived in two places: here, and in the request that asks for the
+  // drafted paragraph. The second one read `process.plainName` — and the process in hand for
+  // a court election is the MERITS process, so a draft about the Magistrates' Court would
+  // have been written under "asking for a fresh look at the decision". Every one of these
+  // cases goes through the same function now.
+  const internalConcept = getConcept("internal-review")!;
+
+  it("gives a court election its own name, even holding the merits process", () => {
+    expect(memoPathName({ process: merits, character: "court", t })).toBe(t("memoPathCourt"));
+    expect(memoPathName({ process: merits, character: "court", t })).not.toBe(merits.plainName);
+  });
+
+  it("gives merits review its own name at a tribunal", () => {
+    expect(memoPathName({ process: merits, character: "tribunal", t })).toBe(merits.plainName);
+  });
+
+  it("keeps judicial review's name whatever the body is called", () => {
+    expect(memoPathName({ process: judicial, character: "court", t })).toBe(judicial.plainName);
+  });
+
+  it("uses the concept's name when there is no process at all", () => {
+    expect(memoPathName({ process: null, internal: internalConcept, t })).toBe(
+      internalConcept.plainName,
+    );
+    expect(memoPathName({ process: null, t })).toBe(t("pathTitleInternal"));
+  });
+
+  it("still calls merits review a review when an internal or mixed body hears it", () => {
+    // No entry sets these today, so this case is unreachable from the app. The nested form
+    // this replaced fell through to the COURT name for both, which is wrong on its face:
+    // merits review done by a departmental reviewer is still a fresh look at the decision.
+    for (const character of ["internal", "mixed"] as const) {
+      expect(memoPathName({ process: merits, character, t })).toBe(merits.plainName);
+    }
+  });
+
+  it("is what the memo's own heading says", () => {
+    const m = composeMemo({ ...base, process: merits, character: "court" });
+    expect(m.body).toContain(memoPathName({ process: merits, character: "court", t }));
+    expect(m.body).not.toContain(merits.plainName);
   });
 });

@@ -50,7 +50,7 @@ function memoTokenBudget(grounds: { elements: unknown[] }[]): number {
 
 const BodySchema = z.object({
   entryId: z.string().min(1).max(64),
-  pathId: z.enum(["internal-review", "merits-review", "judicial-review"]),
+  pathId: z.enum(["internal-review", "merits-review", "court-election", "judicial-review"]),
   forum: z.string().max(200).default(""),
   pathName: z.string().max(200).default(""),
   groundIds: z.array(z.string().max(64)).max(20).default([]),
@@ -90,10 +90,22 @@ export async function POST(req: NextRequest) {
     return apiJson({ ok: false, status: "blocked", reason: guard.reason, message: guard.message }, ctx, code);
   }
 
+  // ONLY A PATH THAT IS ONE OF THE TWO CORPUS PROCESSES GETS ONE.
+  //
+  // Stated positively on purpose. Written the other way round — "everything that is not an
+  // internal review is merits review" — it handed the merits process to a court election,
+  // and the model would then have been told that the body asks "Is this the correct or
+  // preferable decision?" and can set the decision aside and substitute its own. A court
+  // hearing a charge on election does neither. That mis-label has been patched on the card,
+  // in the plan, in the hand-off and in the memo heading; this is the last place it could
+  // still have entered, and it enters as the one thing a gate cannot catch, because the
+  // sentence would be true of some other body.
   const proc =
-    body.pathId === "internal-review"
-      ? null
-      : getProcess(body.pathId === "judicial-review" ? "judicial-review" : "merits-review") ?? null;
+    body.pathId === "judicial-review"
+      ? getProcess("judicial-review") ?? null
+      : body.pathId === "merits-review"
+        ? getProcess("merits-review") ?? null
+        : null;
   const internal = body.pathId === "internal-review" ? getConcept("internal-review") ?? null : null;
   // Grounds of review belong to judicial review; carrying them elsewhere would invite an
   // application written against the wrong test.

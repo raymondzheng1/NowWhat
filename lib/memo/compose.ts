@@ -235,6 +235,41 @@ function quoted(story: string): string[] {
     .map((p) => `  "${p.replace(/\s+/g, " ")}"`);
 }
 
+/**
+ * What to call the path this memo works through.
+ *
+ * Exported because TWO places need it and they used to work it out separately: the memo
+ * itself, and the request that asks for the drafted paragraph. The second one derived it as
+ * `process.plainName`, and the process in hand for a court election is the MERITS process —
+ * so a draft about the Magistrates' Court would have been written under the heading "asking
+ * for a fresh look at the decision", which is the one thing that court does not do. That
+ * mis-label has been patched on the card, in the plan, in the hand-off and in this memo's
+ * own heading; each time the cause was the same, that the name is worked out in more than
+ * one place. Now it is worked out here, once.
+ *
+ * `character` is what distinguishes a court election from merits review, because the caller
+ * has no process to hand for it: the corpus holds two, and a court hearing a charge on
+ * election is neither.
+ */
+export function memoPathName(input: {
+  process: Process | null;
+  internal?: Concept | null;
+  character?: "tribunal" | "internal" | "mixed" | "court";
+  t: (key: string) => string;
+}): string {
+  const { process: proc, internal = null, character = "tribunal", t } = input;
+  // No process at all: an internal review, which is a decision-maker, not a forum.
+  if (!proc) return internal?.plainName ?? t("pathTitleInternal");
+  // Judicial review is a court carrying its own process, so it keeps its own name whatever
+  // the body is called.
+  if (proc.id === "judicial-review") return proc.plainName;
+  // A court hearing the matter itself. The process in hand is not its process.
+  if (character === "court") return t("memoPathCourt");
+  // Merits review — including where the body is an internal or mixed one. It is still a
+  // fresh look at the decision, and the old nested form called those a court.
+  return proc.plainName;
+}
+
 export function composeMemo(input: MemoInput): Memo {
   const {
     entry,
@@ -313,12 +348,7 @@ export function composeMemo(input: MemoInput): Memo {
   // that. The heading did not, so a memo about the Magistrates' Court was titled with the
   // merits process's own plain name, "asking for a fresh look at the decision", which is the
   // one thing that court does not do.
-  const pathName =
-    proc && isTribunal
-      ? proc.plainName
-      : proc && proc.id === "judicial-review"
-        ? proc.plainName
-        : (internal?.plainName ?? (proc ? t("memoPathCourt") : t("pathTitleInternal")));
+  const pathName = memoPathName({ process: proc, internal, character, t });
 
   const title = `${t("memoTitle")} — ${entry.title}`;
   L.push(title);
