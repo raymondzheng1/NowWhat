@@ -105,7 +105,7 @@ test("flow: Victorian → renting → consent → result (avenue, time limit, re
   // Choosing an approach drives what comes next. Renting is a tribunal path, so the points
   // are what VCAT decides — not seventeen judicial-review grounds, which are not what a
   // person doing merits review is arguing.
-  await chooseApproach(page, /^merits review$|having the decision looked at again/i);
+  await chooseApproach(page, /^merits review$|having the decision looked at again|decide the dispute/i);
   await advance(page, /next: the points you raise/i);
   await expect(page.getByRole("heading", { name: /what the tribunal decides/i })).toBeVisible({
     timeout: 15_000,
@@ -387,7 +387,7 @@ test("urgent timing does NOT dead-end: the person still gets their options", asy
   await expect(page.getByRole("heading", { name: /call a human service today/i })).toBeVisible({ timeout: 15_000 });
   await toOptions(page);
   await expect(page.getByRole("heading", { name: /what this means for you/i })).toBeVisible();
-  await chooseApproach(page, /^merits review$|having the decision looked at again/i);
+  await chooseApproach(page, /^merits review$|having the decision looked at again|decide the dispute/i);
   await advance(page, /next: the points you raise/i);
   await advance(page, /build my analysis/i);
   await expect(page.getByRole("heading", { name: /^ask for the reasons$/i })).toBeVisible({
@@ -791,7 +791,7 @@ test("the first two steps must be answered, and say why", async ({ page }) => {
   await opts.click();
 
   // And the steps AFTER the choice are not gated — the points are optional.
-  await chooseApproach(page, /^merits review$/i);
+  await chooseApproach(page, /^merits review$|decide the dispute/i);
   await advance(page, /next: the points you raise/i);
   await expect(page.getByRole("button", { name: /build my analysis/i })).toBeEnabled();
 });

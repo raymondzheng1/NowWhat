@@ -38,7 +38,9 @@ export const AvenueMRSchema = z.object({
    * housing to the Housing Appeals Office for a housing decision and VCAT for a notice to
    * vacate. Nothing is hidden on a mixed path; a caution travels with it instead.
    */
-  character: z.enum(["tribunal", "internal", "mixed", "court"]).default("tribunal"),
+  // "dispute": the body hears a dispute between the person and someone who is not government
+  // (a rental provider), and decides it under the law — it is not reviewing anyone's decision.
+  character: z.enum(["tribunal", "internal", "mixed", "court", "dispute"]).default("tribunal"),
   /** Merits-review body, e.g. "VCAT" (Vic) or "ART" (Cth). */
   body: z.string(),
   source: z.string(),

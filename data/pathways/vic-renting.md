@@ -25,6 +25,7 @@ avenue:
   mr:
     available: true
     body: VCAT
+    character: dispute
     source: 'vcat.vic.gov.au — Residential Tenancies list; Residential Tenancies Act 1997 (Vic)'
   jr:
     available: false

@@ -1,5 +1,5 @@
 {
-  "builtAt": "23b8d4962a8051f3",
+  "builtAt": "1d72ea4a5083ff9e",
   "processes": [
     {
       "id": "judicial-review",
@@ -441,7 +441,7 @@
         {
           "id": "substantial",
           "name": "That other purpose was substantial",
-          "layPrompt": "Did that other reason come up when the decision was explained?"
+          "layPrompt": "Would they have made the same decision without that other reason?"
         }
       ],
       "sources": [
@@ -793,7 +793,7 @@
         {
           "id": "connection",
           "name": "A link between that thing and this decision",
-          "layPrompt": "Can you join the dots between that thing and the decision going the way it did?"
+          "layPrompt": "Can you say how that thing might lead them to decide other than on the facts and the rules?"
         },
         {
           "id": "closed-mind",

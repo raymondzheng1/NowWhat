@@ -37,7 +37,7 @@ elements:
     layPrompt: Does the real reason look like something else?
   - id: substantial
     name: That other purpose was substantial
-    layPrompt: Did that other reason come up when the decision was explained?
+    layPrompt: Would they have made the same decision without that other reason?
 sources:
   - Owner's administrative-law knowledge base (AdminLawCoach corpus, 2026-08-16)
 status: verified

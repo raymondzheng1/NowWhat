@@ -40,8 +40,8 @@ elements:
   - id: connection
     name: A link between that thing and this decision
     layPrompt: >-
-      Can you join the dots between that thing and the decision going the way
-      it did?
+      Can you say how that thing might lead them to decide other than on the
+      facts and the rules?
   - id: closed-mind
     name: A mind already made up
     layPrompt: Did they seem unable to change their mind, whatever you said?

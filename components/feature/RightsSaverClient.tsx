@@ -1889,7 +1889,10 @@ function ResultStep({
     internalNote: criteriaNotes[INTERNAL_NOTE_KEY] ?? "",
     // Standing is a live question wherever a body has to accept the application. It is not
     // one for an internal review, where the decision-maker is already dealing with them.
-    standing: memoPathId === "internal-review" ? null : (standingConcept ?? null),
+    // Standing is a public-law question — whose decision is it to challenge. A renting dispute
+    // is not a challenge to anyone's decision, so it does not arise there either.
+    standing:
+      memoPathId === "internal-review" || memoPath?.character === "dispute" ? null : (standingConcept ?? null),
     justiciability: justiciabilityConcept ?? null,
     // Both come from the plan, so the memo cannot disagree with the card the person read.
     // Re-deriving them from the process is what gave the fines Magistrates' Court a
@@ -1935,7 +1938,9 @@ function ResultStep({
               ? t("pathTitleCourtElection")
               : pp.character === "tribunal"
                 ? meritsReview.name
-                : t("pathTitleNotTribunal"),
+                : pp.character === "dispute"
+                  ? t("pathTitleDispute")
+                  : t("pathTitleNotTribunal"),
       body: pp.body,
       question: pp.question,
       conditional: pp.conditional,
@@ -2575,14 +2580,9 @@ function ResultStep({
       />
       )}
 
-      {/* Free help, before the reading.
-          External legal review (2026-08-23): on a time-sensitive route, the official body AND a
-          free service belong above optional educational content. The panel above already names
-          the official body, the rule and its source; the free services only appeared at the foot
-          of the page, below an explainer nobody has to read. Every route here has a time limit,
-          so this is not gated on the urgency tripwire — it shows on every options view. The full
-          block still closes the page. */}
-      {view === "help" && <HelpList t={t} entry={entry} compact />}
+      {/* The free-help list lives on the hand-over view only — "guidance first, hand over
+          last" (5d1489f). A compact copy gated on that same view printed the list twice there,
+          one above the other (the end-to-end QA). */}
 
       {/* Understand these options — in-flow Learn (progressive disclosure) */}
       {/* Ask for the reasons */}
@@ -2718,7 +2718,7 @@ function ResultStep({
       {view === "grounds" && chosenPath === "merits-review" && entry.mrCriteria.length > 0 && (
         <section id="r-grounds" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">
-            {t(meritsIsTribunal ? "criteriaTitle" : "criteriaTitleOther")}
+            {t(meritsIsTribunal || av.mrCharacter === "dispute" ? "criteriaTitle" : "criteriaTitleOther")}
           </h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
             {t(meritsIsTribunal ? "criteriaLead" : "criteriaLeadOther")}
@@ -3238,7 +3238,7 @@ function ResultStep({
       </section>
       )}
 
-      {view === "help" && <HelpList t={t} entry={entry} />}
+      {view === "help" && <HelpList t={t} entry={entry} compact />}
     </div>
   );
 }

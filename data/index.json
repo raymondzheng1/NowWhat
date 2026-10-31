@@ -1,5 +1,5 @@
 {
-  "builtAt": "8ebf1a15108237a0",
+  "builtAt": "8e58b791b893c93d",
   "entries": [
     {
       "id": "cth-centrelink",
@@ -472,6 +472,7 @@
         "mr": {
           "available": true,
           "body": "VCAT",
+          "character": "dispute",
           "source": "vcat.vic.gov.au — Residential Tenancies list; Residential Tenancies Act 1997 (Vic)"
         },
         "jr": {

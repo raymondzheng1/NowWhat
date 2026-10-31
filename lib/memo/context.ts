@@ -1,5 +1,5 @@
 import type { DataPathway } from "@/lib/schemas/data";
-import { ruleForPath, type RulePath } from "@/lib/deadline/rule";
+import { ruleForPath, officialSourceForPath, type RulePath } from "@/lib/deadline/rule";
 import { answerableCriteria, withCriterionIds } from "@/lib/memo/criteria";
 import type { Concept, Ground, Process } from "@/lib/schemas/legal";
 
@@ -40,6 +40,15 @@ export function buildMemoContext(input: {
   L.push(ruleForPath(entry.deadlineRule, input.pathId), "");
 
   if (proc) {
+    // How the body works — "stands in the shoes", "the best and most current information",
+    // "cannot make a new decision for you". The corpus has always held it and the analysis was
+    // never shown it, so the one thing a reviewer most needs a person to understand was the
+    // one thing the analysis could not say (the merits-review benchmark).
+    L.push(`HOW THIS BODY WORKS: ${proc.whatItIs}`);
+    if (proc.goodToKnow.length) {
+      L.push("GOOD TO KNOW:");
+      for (const g of proc.goodToKnow) L.push(`  - ${g}`);
+    }
     L.push(`WHAT THIS BODY IS ASKING: ${proc.question}`);
     L.push("WHO MAY APPLY:");
     for (const c of proc.canApply) L.push(`  - ${c}`);
@@ -126,13 +135,23 @@ export function buildMemoContext(input: {
   }
 
   L.push("SOURCES (copy these VERBATIM into the sources field — do not shorten or reword):");
-  L.push(`  - ${entry.sourceUrl}`);
+  // THE SOURCES FOR THIS PATH, IN THIS JURISDICTION. The list was every source the entry and
+  // process had — so a Victorian VCAT analysis was offered the Administrative Review Tribunal,
+  // a fines internal review the court-election page, a Victorian judicial review the Federal
+  // Court — and the model cited them (the end-to-end QA). The allow-list below stays broad;
+  // only what the model is OFFERED is narrowed.
+  const official = officialSourceForPath(entry, input.pathId);
+  if (official) L.push(`  - ${official}`);
+  const pathSource = avenueSource(entry, input.pathId);
+  if (pathSource && !KB_PROVENANCE.test(pathSource)) L.push(`  - ${pathSource}`);
   // The court avenue's own source. On a court-election memo there is no process and no
   // concept, so without this the only source offered is the scheme's front door — and the
   // source that actually says the election exists was both absent from the context and
-  // missing from the allow-list below, so citing it would have been refused.
-  if (entry.avenue.court?.source) L.push(`  - ${entry.avenue.court.source}`);
-  if (proc) for (const s of proc.sources ?? []) L.push(`  - ${s}`);
+  // missing from the allow-list below, so citing it would have been refused. Only on that path.
+  if (!input.pathId && entry.avenue.court?.source) L.push(`  - ${entry.avenue.court.source}`);
+  if (proc) {
+    for (const s of proc.sources ?? []) if (fitsJurisdiction(s, entry.jurisdiction)) L.push(`  - ${s}`);
+  }
   if (internal) for (const s of internal.sources ?? []) L.push(`  - ${s}`);
   for (const g of grounds) for (const s of g.sources ?? []) L.push(`  - ${s}`);
 
@@ -163,3 +182,30 @@ export function memoExtraSources(input: {
     ...grounds.flatMap((g) => g.leadingCases.map((c) => c.name)),
   ].filter(Boolean);
 }
+
+/** The corpus's own provenance line for synthesised entries — not a source anyone can look up. */
+const KB_PROVENANCE = /owner'?s administrative-law knowledge base/i;
+
+/** The avenue's own source line for the path being worked through. */
+function avenueSource(entry: DataPathway, path?: RulePath): string {
+  if (!path) return "";
+  const av =
+    path === "internal-review"
+      ? entry.avenue.ir
+      : path === "merits-review"
+        ? entry.avenue.mr
+        : path === "court-election"
+          ? entry.avenue.court
+          : entry.avenue.jr;
+  return av?.source?.trim() ?? "";
+}
+
+const VIC_SOURCE = /\bvic\b|\.vic\.gov\.au|victoria|vcat/i;
+const CTH_SOURCE = /art\.gov\.au|fedcourt|federal court|administrative review tribunal|\(cth\)|legislation\.gov\.au/i;
+
+/** Does a process source belong to this jurisdiction? (Processes carry both.) */
+export function fitsJurisdiction(source: string, jurisdiction: DataPathway["jurisdiction"]): boolean {
+  const vic = VIC_SOURCE.test(source);
+  return jurisdiction === "Vic" ? vic || !CTH_SOURCE.test(source) : !vic;
+}
+

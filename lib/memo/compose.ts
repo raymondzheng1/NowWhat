@@ -1,6 +1,7 @@
 import type { Concept, Ground, Process } from "@/lib/schemas/legal";
 import type { DataPathway } from "@/lib/schemas/data";
 import { ruleForPath, officialSourceForPath, type RulePath } from "@/lib/deadline/rule";
+import { midSentence } from "@/lib/analysis";
 import { answerableCriteria, withCriterionIds } from "@/lib/memo/criteria";
 import { titleAsPhrase } from "@/lib/text/title";
 
@@ -77,7 +78,7 @@ export interface MemoInput {
    * Same rule as `planFor`: only a tribunal gets the tribunal's question, remedies and
    * limits. Judicial review is unaffected — it carries the court process's own.
    */
-  character?: "tribunal" | "internal" | "mixed" | "court";
+  character?: "tribunal" | "internal" | "mixed" | "court" | "dispute";
   /**
    * The scheme-specific criteria for THIS path — `mrCriteria` or `irCriteria`, chosen by the
    * caller. Defaults to the old behaviour (the merits list, on a merits memo) so nothing
@@ -281,7 +282,7 @@ function quoted(story: string): string[] {
 export function memoPathName(input: {
   process: Process | null;
   internal?: Concept | null;
-  character?: "tribunal" | "internal" | "mixed" | "court";
+  character?: "tribunal" | "internal" | "mixed" | "court" | "dispute";
   t: (key: string) => string;
 }): string {
   const { process: proc, internal = null, character = "tribunal", t } = input;
@@ -292,6 +293,8 @@ export function memoPathName(input: {
   if (proc.id === "judicial-review") return proc.plainName;
   // A court hearing the matter itself. The process in hand is not its process.
   if (character === "court") return t("memoPathCourt");
+  // A dispute heard and decided, not a decision looked at again (renting).
+  if (character === "dispute") return t("memoPathDispute");
   // Merits review — including where the body is an internal or mixed one. It is still a
   // fresh look at the decision, and the old nested form called those a court.
   return proc.plainName;
@@ -448,7 +451,7 @@ export function composeMemo(input: MemoInput): Memo {
         .join("; ");
       bits.push(`${t("memoSummaryWants")} ${said}.`);
     }
-    bits.push(`${t("memoSummaryPath")} ${pathName.toLowerCase()}, ${t("memoSummaryAt")} ${forum}.`);
+    bits.push(`${t("memoSummaryPath")} ${pathName.toLowerCase()}, ${t("memoSummaryAt")} ${midSentence(forum)}.`);
     if (grounds.length) {
       bits.push(
         grounds.length === 1
@@ -528,7 +531,7 @@ export function composeMemo(input: MemoInput): Memo {
     sub(t("memoRule"));
     for (const k of internal.keyPoints) item(rule(k));
     sub(t("memoApplication"));
-    para(`${t("memoInternalBodyIs")} ${forum}.`, "  ");
+    para(`${t("memoInternalBodyIs")} ${midSentence(forum)}.`, "  ");
     if (entry.deadlineRule) para(rule(ruleForPath(entry.deadlineRule, pathId)), "  ");
     para(t("memoTimeCheck"), "  ");
 
@@ -569,7 +572,7 @@ export function composeMemo(input: MemoInput): Memo {
     para(t("memoNoProcessRule"), "  ");
   }
   sub(t("memoApplication"));
-  para(`${t("memoForumIs")} ${forum}.`, "  ");
+  para(`${t("memoForumIs")} ${midSentence(forum)}.`, "  ");
   if (entry.deadlineRule) para(rule(ruleForPath(entry.deadlineRule, pathId)), "  ");
   para(t("memoTimeCheck"), "  ");
   // STANDING, as a sub-issue of eligibility. The Rule above already names it in one clause
@@ -593,7 +596,18 @@ export function composeMemo(input: MemoInput): Memo {
   // court path carrying the court process's own question and remedies, not borrowed ones.
   h(t("memoIssue2"));
   if (isTribunal) para(`${t("memoQuestionAsked")}: "${proc.question}"`);
-  else para(t("memoNotATribunal"));
+  else para(t(character === "dispute" ? "memoDisputeNote" : "memoNotATribunal"));
+  // How the body works, and what is good to know about it — the corpus's own words. The notes
+  // printed the question and the remedies and never this, which is the part a reviewer most
+  // wants a person to have understood (the merits-review benchmark).
+  if (isTribunal || proc.id === "judicial-review") {
+    sub(t("memoHowItWorks"));
+    para(rule(proc.whatItIs), "  ");
+    if (proc.goodToKnow.length) {
+      sub(t("memoGoodToKnow"));
+      for (const g of proc.goodToKnow) item(rule(g));
+    }
+  }
   const criteriaList = input.criteria ?? (proc.id === "merits-review" ? entry.mrCriteria : []);
   if (criteriaList.length) {
     sub(t("memoRule"));

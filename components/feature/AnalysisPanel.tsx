@@ -187,7 +187,9 @@ export function AnalysisPanel({
                     ? judicialReview.name
                     : p.character === "tribunal"
                       ? meritsReview.name
-                      : t("pathTitleNotTribunal")}
+                      : p.character === "dispute"
+                        ? t("pathTitleDispute")
+                        : t("pathTitleNotTribunal")}
             </h3>
 
             {/* The question the forum decides — the foundation the whole path rests on.

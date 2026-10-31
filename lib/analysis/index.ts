@@ -54,7 +54,7 @@ export interface PathPlan {
    * contradicted itself three lines lower, in the caution saying this one is not a review of
    * the decision at all.
    */
-  focusKey: "focusInternal" | "focusMerits" | "focusCourt" | "focusJudicial";
+  focusKey: "focusInternal" | "focusMerits" | "focusCourt" | "focusJudicial" | "focusDispute";
   /** Shown with a condition attached: this route exists only if the enabling Act provides it. */
   conditional: boolean;
   /**
@@ -63,7 +63,7 @@ export interface PathPlan {
    * both. A non-tribunal body does NOT have a tribunal's remedies, and the card says so
    * rather than inheriting claims that are not true of it.
    */
-  character: "tribunal" | "internal" | "mixed" | "court";
+  character: "tribunal" | "internal" | "mixed" | "court" | "dispute";
 }
 
 export interface ResultPlan {
@@ -213,7 +213,9 @@ export function planFor({
         ? "focusMerits"
         : mrCharacter === "court"
           ? "focusCourt"
-          : "focusInternal",
+          : mrCharacter === "dispute"
+            ? "focusDispute"
+            : "focusInternal",
     });
   }
   // A court hearing the matter ITSELF. Its own path since 2026-09-16, because it is not

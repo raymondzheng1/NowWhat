@@ -22,7 +22,7 @@ export interface AvenueView {
   /** Exists only where the enabling Act provides it (catch-all entries). */
   mrConditional: boolean;
   /** What kind of body the merits path actually is. */
-  mrCharacter: "tribunal" | "internal" | "mixed" | "court";
+  mrCharacter: "tribunal" | "internal" | "mixed" | "court" | "dispute";
   /** Internal review — asking the decision-maker to look at its own decision again. */
   irAvailable: boolean;
   irBody: string;
