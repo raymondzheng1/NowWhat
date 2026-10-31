@@ -98,6 +98,18 @@ export interface GenerationResult<T> {
 
 interface RunOpts<T> {
   task: Task;
+  /**
+   * Room for the answer, in output tokens. Defaults to the 1200 every task shared.
+   *
+   * The memo is the one output whose length comes from its INPUT: three paragraphs per point
+   * the person marked, plus two short lines for each part of each point's test. Two points
+   * already overran 1200, and an overrun is not a short answer — it is a truncated JSON
+   * object, which the repair pass (sharing the same ceiling) cannot close either. So the
+   * person got no drafted analysis at all, and from outside it was indistinguishable from
+   * having no key configured. Confirmed against the live site: one point answered, two
+   * points returned "not covered" every time.
+   */
+  maxTokens?: number;
   entry: PathwayEntry;
   context: string;
   userInput: string;
@@ -119,6 +131,7 @@ interface RunOpts<T> {
 
 async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> {
   const sys = systemPrompt(opts.task);
+  const maxTokens = opts.maxTokens ?? 1200;
   let attempts = 0;
   let lastFailures: VerifyFailure[] | undefined;
   // The best answer we produced that cleared every SAFETY gate. See the fallback below.
@@ -133,7 +146,7 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
       system: sys,
       user: userPrompt(opts.task, opts.context, opts.userInput, retryHint),
       model: MODELS.primary,
-      maxTokens: 1200,
+      maxTokens,
       byoKeyValue: opts.byoKeyValue,
     });
     await record(opts.guard, estimateCostUsd(res.model, res.inputTokens, res.outputTokens));
@@ -146,7 +159,7 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
         system: "You fix malformed JSON. Output only valid JSON.",
         user: repairPrompt(res.text, opts.task),
         model: MODELS.small,
-        maxTokens: 1200,
+        maxTokens,
         byoKeyValue: opts.byoKeyValue,
       });
       await record(opts.guard, estimateCostUsd(repair.model, repair.inputTokens, repair.outputTokens));

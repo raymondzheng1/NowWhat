@@ -59,3 +59,35 @@ describe("drift: KV reads both env-name conventions (harness §15)", () => {
     expect(kv).toContain("KV_REST_API_URL");
   });
 });
+
+describe("drift: the composer's copy never asks a formatter for a value it cannot give", () => {
+  // THE BUG THIS PINS, found in the live app and not by any test.
+  //
+  // `composeMemo` is handed a `t` that takes a key and NOTHING ELSE. That signature is the
+  // rule that keeps every line of customer prose in the i18n layer. But the real `t` is
+  // next-intl's, and next-intl parses its values as ICU messages: a value containing {n} is
+  // a message with a REQUIRED argument, so calling it with no arguments does not interpolate
+  // — it fails, and the page prints the key instead. Anyone who marked more than one point
+  // read "rights.memoSummaryPoints" in the middle of their analysis.
+  //
+  // No unit test could see it, because a test `t` is a plain record lookup and never runs a
+  // formatter. So the convention is asserted on the copy itself: a value read through a
+  // single-argument `t` carries no braces at all. Where the composer substitutes something,
+  // the placeholder is %n — meaningless to a formatter, so the stored value and the
+  // formatted value are the same string, and this test can prove the whole path.
+  const KEY = /t\("([A-Za-z0-9_]+)"\)/g;
+  const copy = (JSON.parse(read("lib/i18n/messages/en.json")) as { rights: Record<string, string> })
+    .rights;
+
+  it("the memo composer reads no message that needs an argument", () => {
+    const keys = [...read("lib/memo/compose.ts").matchAll(KEY)].map((m) => m[1]!);
+    expect(keys.length).toBeGreaterThan(10);
+    const bad = keys.filter((k) => copy[k] !== undefined && /[{}]/.test(copy[k]!));
+    expect(bad, `these need a value this \`t\` cannot pass: ${bad.join(", ")}`).toEqual([]);
+  });
+
+  it("the count still reaches the reader, with nothing left over", () => {
+    expect(copy.memoSummaryPoints).toContain("%n");
+    expect(copy.memoSummaryPoints!.replace("%n", "2")).toBe("It works through 2 points you marked.");
+  });
+});

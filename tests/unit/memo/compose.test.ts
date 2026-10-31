@@ -163,7 +163,9 @@ describe("the memo opens with the shape of the matter", () => {
     expect(m.body).toContain("2026-08-01");
     expect(m.body.toLowerCase()).toContain("a different decision");
     // Two points marked, so it says so — a count, never a view on their worth.
-    expect(m.body).toContain(t("memoSummaryPoints").replace("{n}", "2"));
+    expect(m.body).toContain(t("memoSummaryPoints").replace("%n", "2"));
+    // And nothing of the placeholder survives into what the person reads.
+    expect(m.body).not.toMatch(/%n|\{n\}/);
   });
 
   it("merits-review criteria carry the person's own words too", () => {

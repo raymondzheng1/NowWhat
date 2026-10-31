@@ -373,6 +373,35 @@ describe("/api/memo (the drafted analysis)", () => {
     expect(body.status).toBe("not-covered");
   });
 
+  it("asks for room that grows with the points marked", async () => {
+    // THE DEFECT THIS EXISTS FOR, and it was mine: writing to each part made the answer
+    // longer, and every task shared one 1200-token ceiling. One point fitted. Two did not,
+    // and an overrun is not a shorter memo — it is half a JSON object, which fails to parse,
+    // and the repair pass shared the same ceiling so it could not close it either. The live
+    // site answered a one-point request and returned "not covered" for a two-point one every
+    // single time, with nothing anywhere to say why.
+    const seen: number[] = [];
+    const spy: ModelFn = async (call) => {
+      seen.push(call.maxTokens);
+      return { text: "{}", inputTokens: 10, outputTokens: 10, model: call.model };
+    };
+    __setModelForTests(spy);
+    await memoPost(jsonReq("http://x/api/memo", { ...memoBody, groundIds: ["procedural-fairness-hearing"] }));
+    const one = Math.max(...seen);
+    seen.length = 0;
+    await memoPost(
+      jsonReq("http://x/api/memo", {
+        ...memoBody,
+        groundIds: ["procedural-fairness-hearing", "relevant-considerations"],
+      }),
+    );
+    const two = Math.max(...seen);
+    expect(one).toBeGreaterThan(1200);
+    expect(two).toBeGreaterThan(one);
+    // Bounded, so marking every point cannot ask for an unbounded answer.
+    expect(two).toBeLessThanOrEqual(8000);
+  });
+
   it("still answers when a draft returns no parts at all", async () => {
     // Nothing about this upgrade may make the memo worse than it was. A draft with the four
     // ground-level fields and no parts is the old shape, and it must still ship.

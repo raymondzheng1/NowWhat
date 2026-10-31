@@ -63,7 +63,13 @@ export function buildMemoContext(input: {
     L.push("THE POINTS THE PERSON MARKED. For each, the TEST is the law and must not be");
     L.push("restated, softened or extended. Cases are named here and nowhere else.");
     for (const g of grounds) {
-      L.push("", `GROUND: ${g.name} — ${g.plainName}`);
+      // THE ID, FIRST. It was never in here, and the shape the model returns is keyed by it,
+      // so the model had to guess the id from the name — and for "Procedural fairness — the
+      // hearing rule" it guessed `procedural-fairness-hearing-rule`, one word off. An id
+      // that matches no ground matches nothing in the composer, so the whole drafted
+      // application for the point was dropped without a trace: no error, no gate, just a
+      // memo that quietly contained none of the work. Verified against the live site.
+      L.push("", `GROUND (use this exact id: ${g.id}): ${g.name} — ${g.plainName}`);
       L.push(`  question: ${g.oneLine}`);
       L.push(`  test: ${g.test}`);
       // THE PARTS OF THE TEST, with their ids.

@@ -39,6 +39,15 @@ export const dynamic = "force-dynamic";
  *     never worse than it was before this route existed.
  */
 
+/**
+ * Output budget for one memo, from the number of points and the parts of their tests.
+ * Capped, so a request that marks every ground cannot ask for an unbounded answer.
+ */
+function memoTokenBudget(grounds: { elements: unknown[] }[]): number {
+  const parts = grounds.reduce((n, g) => n + g.elements.length, 0);
+  return Math.min(8000, 1200 + 300 * grounds.length + 220 * parts);
+}
+
 const BodySchema = z.object({
   entryId: z.string().min(1).max(64),
   pathId: z.enum(["internal-review", "merits-review", "judicial-review"]),
@@ -128,6 +137,14 @@ export async function POST(req: NextRequest) {
       guard: ctx.guard,
       byoKeyValue: ctx.byoKeyValue,
       extraSources: memoExtraSources({ entry, process: proc, internal, grounds }),
+      // ROOM FOR THE ANSWER, sized to what was actually asked for. The memo is the only
+      // output whose length follows its input: three paragraphs for each point the person
+      // marked, plus two short lines for each part of each point's test. The shared 1200
+      // was enough for one point and not for two, and going over does not produce a shorter
+      // memo — it produces half a JSON object, which fails to parse and ends as "not
+      // covered". Billing is on tokens USED, so a ceiling that is never reached costs
+      // nothing; the only thing a low one buys is a silently missing analysis.
+      maxTokens: memoTokenBudget(grounds),
     });
   } catch {
     return notCovered();

@@ -384,7 +384,7 @@
     "memoSummaryPath": "The approach worked through here is",
     "memoSummaryAt": "at",
     "memoSummaryOnePoint": "It works through one point you marked.",
-    "memoSummaryPoints": "It works through {n} points you marked.",
+    "memoSummaryPoints": "It works through %n points you marked.",
     "memoSummaryReads": "Three sections follow: eligibility, what that body decides, and the points raised.",
     "pathTitleInternal": "Internal review",
     "focusInternal": "This is the decision-maker looking at its own decision again. What carries weight is what they did not have, or did not take into account — documents, dates, and anything that has changed. It is usually free, and it may be quicker than an outside review. The rules differ from one Act to the next, so check what yours says.",

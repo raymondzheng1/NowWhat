@@ -360,7 +360,17 @@ export function composeMemo(input: MemoInput): Memo {
       bits.push(
         grounds.length === 1
           ? t("memoSummaryOnePoint")
-          : t("memoSummaryPoints").replace("{n}", String(grounds.length)),
+          // The count is substituted HERE, not by the translator's formatter, because the
+          // `t` this composer is given takes a key and nothing else — that is what keeps
+          // every line of customer prose in the i18n layer.
+          //
+          // So the placeholder is %n, which carries no meaning to an ICU formatter. It used
+          // to be {n}, which does: next-intl reads a value with braces as a message that
+          // REQUIRES an argument, and called with none it printed the key. Anyone who marked
+          // more than one point read "rights.memoSummaryPoints" in the middle of their
+          // analysis. No test saw it, because a test `t` is a plain lookup that never runs a
+          // formatter at all — so the convention is pinned statically in the drift suite.
+          : t("memoSummaryPoints").replace("%n", String(grounds.length)),
       );
     }
     // Say what the memo actually contains. The internal line promised "three questions" and

@@ -207,7 +207,10 @@ Return JSON:
 {
   "covered": boolean,
   "summary": string,              // one short paragraph, plain words, no conclusion
-  "application": [                // one entry per ground given to you, same groundId
+  "application": [                // one entry per ground given to you
+    // "groundId" and every "elementId" are COPIED CHARACTER FOR CHARACTER from the ids in
+    // the context. Do not tidy them, do not infer one from a name: an id that is not in the
+    // context matches nothing, and the whole entry is silently dropped.
     {
       "groundId": string, "forThem": string, "against": string, "toTest": string,
       "elements": [               // one entry per PART of that ground's test, in order
