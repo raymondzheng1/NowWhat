@@ -15,6 +15,14 @@ import { fileURLToPath } from "node:url";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const INDEX = resolve(ROOT, "data/index.json");
 const SRC = resolve(ROOT, "data/pathways");
+// WHO SIGNED WHAT, HELD OFF THE REPOSITORY.
+//
+// The supervising lawyer is a named private individual; this repository is public, and
+// data/index.json is bundled into a public JS file. So the record lives here, outside
+// version control (.gitignore), and is read only by this script — never by the app, never
+// by the build. A clone without it reports 0 approved, which is the honest answer for a
+// working copy that holds no record.
+const LEDGER = resolve(ROOT, "data/approvals.local.json");
 
 const hard = [];
 const warn = [];
@@ -112,6 +120,19 @@ function checkStatusHonesty(id, status, body) {
   }
 }
 
+/** The local sign-off ledger, or an empty one. Absent is normal, not an error. */
+function readLedger() {
+  if (!existsSync(LEDGER)) return {};
+  try {
+    const raw = JSON.parse(readFileSync(LEDGER, "utf8"));
+    delete raw._comment;
+    return raw;
+  } catch (e) {
+    hard.push(`data/approvals.local.json is not readable JSON — ${e.message}`);
+    return {};
+  }
+}
+
 function main() {
   let index;
   try {
@@ -123,6 +144,8 @@ function main() {
 
   const entries = index.entries ?? [];
   if (entries.length === 0) hard.push("data layer has no entries");
+  const ledger = readLedger();
+  const approverFor = (id) => (ledger[id]?.lawyerApprover ?? "").trim();
 
   // Status honesty runs over the SOURCE files: the built index carries frontmatter only, and
   // the contradiction we are guarding against lives in the prose underneath it.
@@ -136,6 +159,15 @@ function main() {
       const body = fences.length >= 2 ? lines.slice(fences[1] + 1).join("\n") : raw;
       const m = front.match(/^status:[ \t]*(\S+)/m);
       checkStatusHonesty(`data/pathways/${file}`, m ? m[1] : "", body);
+      // A NAME MAY NOT BE COMMITTED. Frontmatter is copied wholesale into data/index.json,
+      // which ships inside a public JS bundle, so an approval block here would publish the
+      // lawyer's name to every visitor and to the repository's history for good.
+      if (/^\s*(approval:|lawyerApprover:|lawyerApprovedAt:)/m.test(front)) {
+        hard.push(
+          `data/pathways/${file}: carries an approval block in its frontmatter — that reaches`
+            + ` data/index.json and a public JS bundle. Record it in data/approvals.local.json instead.`,
+        );
+      }
     }
   }
 
@@ -254,8 +286,8 @@ function main() {
         hard.push(`${at}: source.url is a site front page — point it at the provision`);
       }
       if (!st.trigger) hard.push(`${at}: needs the event the period runs from`);
-      if (!e.approval?.lawyerApprover) {
-        hard.push(`${at}: a stage may not ship without a named lawyer approver on the entry`);
+      if (!approverFor(e.id)) {
+        hard.push(`${at}: a stage may not ship without a named lawyer approver in the ledger`);
       }
     }
   }
@@ -267,10 +299,11 @@ function main() {
   // is: `status: verified` on this layer meant "figures checked against a website", never
   // "a lawyer signed this", and one label reading as both is how unsigned procedure came to
   // look confirmed.
-  const noApprover = entries.filter((e) => !e.approval?.lawyerApprover).map((e) => e.id);
+  const noApprover = entries.filter((e) => !approverFor(e.id)).map((e) => e.id);
   const noStages = entries.filter((e) => (e.stages ?? []).length === 0).map((e) => e.id);
   console.log(
-    `data-check sign-off: ${entries.length - noApprover.length}/${entries.length} entries have a named lawyer approver.`,
+    `data-check sign-off: ${entries.length - noApprover.length}/${entries.length} entries have a named lawyer approver`
+      + ` (ledger: ${existsSync(LEDGER) ? "data/approvals.local.json" : "not present on this machine"}).`,
   );
   if (noApprover.length) console.log(`  awaiting sign-off: ${noApprover.join(", ")}`);
   if (noStages.length) {

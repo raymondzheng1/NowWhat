@@ -34,6 +34,14 @@ function normalise(file, raw, body) {
   e.isFallback = e.isFallback ?? false;
   e.privativeClause = e.privativeClause ?? false;
   if (e.avenue && e.avenue.noReviewEndpoint === undefined) e.avenue.noReviewEndpoint = null;
+  // THE INDEX IS A PUBLIC FILE. Frontmatter is copied wholesale (`{ ...raw }`) and the built
+  // index is bundled into a client chunk any visitor can download, so who signed an entry
+  // off — a named private individual — is dropped here rather than published. The record
+  // lives in data/approvals.local.json, which is gitignored and read only by data-check.
+  // data-check also fails on an approval block in frontmatter; this is the second line.
+  delete e.approval;
+  delete e.lawyerApprover;
+  delete e.lawyerApprovedAt;
 
   const need = (cond, m) => {
     if (!cond) fail(`${file}: ${m}`);

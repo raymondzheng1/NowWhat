@@ -41,7 +41,7 @@ avenue:
 deadlineRule: >-
   Fines have a strict time limit. Check the exact limit with Fines Victoria or a
   free service.
-verifiedAsAt: '2026-06-30'
+verifiedAsAt: '2026-10-31'
 sourceUrl: 'https://www.fines.vic.gov.au'
 reviewCadenceDays: 90
 reasonsRequest:

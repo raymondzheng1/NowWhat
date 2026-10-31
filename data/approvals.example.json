@@ -1,0 +1,8 @@
+{
+  "_comment": "TEMPLATE. Copy to data/approvals.local.json and fill it in there — that file is gitignored and must stay so. Who signed an entry off is a named private individual; this repository is public, and data/index.json ships inside a public JS bundle, so neither a name nor a signing date belongs in either. data-check reads the local file when it exists and reports the sign-off count; without it the count reads 0, which is the honest answer for a clone that holds no record. One key per entry id, matching a file in data/pathways/.",
+  "example-entry-id": {
+    "contentOwner": "who keeps this entry current — operational, not legal",
+    "lawyerApprover": "the supervising lawyer who approved it, as they should be recorded",
+    "lawyerApprovedAt": "YYYY-MM-DD"
+  }
+}

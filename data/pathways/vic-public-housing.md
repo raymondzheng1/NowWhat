@@ -41,7 +41,7 @@ deadlineRule: >-
   from when the grounds first arose. The Administrative Law Act 1978 (Vic)
   runs 30 days. Trying another path first does not restart either clock.
   Choosing the right route can be technical, so get legal help before you file.
-verifiedAsAt: '2026-06-30'
+verifiedAsAt: '2026-10-31'
 sourceUrl: 'https://www.housing.vic.gov.au'
 reviewCadenceDays: 90
 reasonsRequest:

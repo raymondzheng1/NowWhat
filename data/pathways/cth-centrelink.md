@@ -42,7 +42,7 @@ deadlineRule: >-
   step, with its own limit. A court limit is separate again, and court limits
   are strict. Check each limit, and how it is counted, with Services Australia
   or a free service.
-verifiedAsAt: '2026-06-30'
+verifiedAsAt: '2026-10-31'
 sourceUrl: 'https://www.servicesaustralia.gov.au/reviews-and-appeals'
 reviewCadenceDays: 90
 reasonsRequest:

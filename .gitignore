@@ -41,3 +41,15 @@ pnpm-debug.log*
 content/faq/_drafts/
 scratch_plan.md
 scratch_block.txt
+
+# THE SIGN-OFF LEDGER — NEVER COMMITTED.
+#
+# Who approved each procedural entry, and when. The supervising lawyer is a named private
+# individual, and this repository is PUBLIC: anything committed here is published, in the
+# history, permanently. The build has no use for it either — `data/index.json` ships inside
+# a public JS bundle, so a name in the frontmatter would be downloadable by every visitor.
+#
+# So the ledger lives on the owner's machine only. `data-check` reads it when it is there and
+# reports the sign-off count; without it the count simply reads 0, which is the honest answer
+# for a clone that holds no record. `data/approvals.example.json` shows the shape.
+data/approvals.local.json

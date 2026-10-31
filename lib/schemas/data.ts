@@ -195,7 +195,13 @@ export const StageSchema = z.object({
 });
 export type Stage = z.infer<typeof StageSchema>;
 
-/** Who maintains an entry, and who signed it. Separate people, separate acts. */
+/**
+ * Who maintains an entry, and who signed it. Separate people, separate acts.
+ *
+ * This types the LOCAL ledger (`data/approvals.local.json`), not a shipped entry. The name of
+ * a supervising lawyer is a private individual's, this repository is public, and
+ * `data/index.json` is bundled into a client chunk — so the record is held off both.
+ */
 export const ApprovalSchema = z.object({
   /** Who keeps the entry current. Operational, not legal. */
   contentOwner: z.string().default(""),
@@ -286,7 +292,14 @@ export const DataPathwaySchema = z.object({
    */
   stages: z.array(StageSchema).default([]),
   /** Who maintains this entry and who signed it off. */
-  approval: ApprovalSchema.default({ contentOwner: "", lawyerApprover: "", lawyerApprovedAt: "" }),
+  // NO APPROVAL BLOCK ON A SHIPPED ENTRY, deliberately.
+  //
+  // This schema types `data/index.json`, which is bundled into a client chunk any visitor can
+  // download — proved against the live site. Who signed an entry off is a named private
+  // individual, so the record lives in `data/approvals.local.json`: gitignored (the repository
+  // is public), read only by `scripts/data-check.mjs`, typed by `ApprovalSchema` above. The
+  // build deletes an approval block if one appears in frontmatter and `data-check` fails on
+  // it, so the only way to hold this is the way that does not publish it.
   /** True for the generic per-jurisdiction fallback entries. */
   isFallback: z.boolean().default(false),
 });
