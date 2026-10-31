@@ -1066,6 +1066,20 @@ function ResultStep({
   // never written to storage, never put in the URL, and never sent anywhere. It exists to be
   // composed into a letter they then send themselves.
   const [account, setAccount] = useState<Record<string, string>>({});
+  // WHAT THE ANALYSIS SEES OF "ANYTHING ELSE?" — what they wrote once they paused.
+  //
+  // The analysis is asked for again whenever what it is written from changes, and this box
+  // was read on every keystroke: a 33-character sentence fired 28 requests (measured), each
+  // cancelled on the page and still paid for on the server — against a daily budget a few
+  // people typing could spend. The box itself still updates as they type; the analysis only
+  // hears about it once they stop for a moment.
+  const [moreSettled, setMoreSettled] = useState("");
+  const moreNow = (account["q-more"] ?? "").trim();
+  useEffect(() => {
+    if (moreNow === moreSettled) return;
+    const id = window.setTimeout(() => setMoreSettled(moreNow), 1500);
+    return () => window.clearTimeout(id);
+  }, [moreNow, moreSettled]);
   // WHAT THEY WROTE, AGAINST WHAT THEY PICKED. See `suggestEntry`: a parking infringement
   // written up under "a Victorian government decision" got general steps and none of a
   // fine's options or time limits. Computed on the device; it only ever suggests.
@@ -1127,7 +1141,10 @@ function ResultStep({
       if (f.chosenPath) setChosenPath(f.chosenPath);
       if (f.goals) setGoals(f.goals);
       if (typeof f.goalOther === "string") setGoalOther(f.goalOther);
-      if (f.account) setAccount(f.account);
+      if (f.account) {
+        setAccount(f.account);
+        setMoreSettled((f.account["q-more"] ?? "").trim());
+      }
       if (f.relatedGrounds) onRestoreGrounds(f.relatedGrounds);
       if (f.groundNotes) setGroundNotes(f.groundNotes);
       if (f.criteriaNotes) setCriteriaNotes(f.criteriaNotes);
@@ -1738,8 +1755,8 @@ function ResultStep({
     groundKey,
     schemeAnswerKey,
     (account["q-story"] ?? "").trim(),
-    (account["q-more"] ?? "").trim(),
-  ].join(" ");
+    moreSettled,
+  ].join("\u0000");
   const drafted = draftCache[draftKey] ?? null;
   const [drafting, setDrafting] = useState(false);
   useEffect(() => {
@@ -1773,7 +1790,7 @@ function ResultStep({
         }),
         groundIds: relatedGrounds,
         criteria: memoPath?.criteria ?? [],
-        story: [story, (account["q-more"] ?? "").trim()].filter(Boolean).join("\n\n"),
+        story: [story, moreSettled].filter(Boolean).join("\n\n"),
         notes,
       }),
     })

@@ -1,0 +1,156 @@
+import { test, expect, type Page } from "@playwright/test";
+
+/**
+ * The short analysis and the shorter letter, in a real browser.
+ *
+ * These run keyless like the rest of the e2e suite, so the two model-backed routes are stood in
+ * for with `page.route`. What is under test is the PAGE: what it shows while the brief is being
+ * written, where the brief and the full notes sit, what happens when the brief is refused, and
+ * how the shorter letter is offered and switched back. A hidden browser pane cannot exercise
+ * the letter at all — it is asked for when it scrolls into view, and a page that is not drawn
+ * never scrolls — so this is where that path is proved.
+ */
+
+const STORY =
+  "On 14 October 2026 my car was parked in a bay on Batman Street. An infringement notice was issued " +
+  "by a parking enforcement officer. The sign was hidden by a tree, so I could not read it.";
+
+const MEMO_URL = "/start?jur=Vic&area=vic-generic&date=2026-10-14&step=result&view=memo";
+
+async function seed(page: Page) {
+  await page.addInitScript((story) => {
+    window.localStorage.setItem("wn:tour:off", "1");
+    window.localStorage.setItem("wn:install:off", "1");
+    // Once per test: a reload must restore from what the page itself wrote, not re-seed.
+    if (window.sessionStorage.getItem("__seeded")) return;
+    window.sessionStorage.setItem("__seeded", "1");
+    window.sessionStorage.setItem("wn-consented", "1");
+    window.sessionStorage.setItem(
+      "wn-flow",
+      JSON.stringify({
+        matter: "Vic|vic-generic",
+        chosenPath: "internal-review",
+        goals: [],
+        goalOther: "",
+        account: { "q-story": story },
+        relatedGrounds: [],
+        groundNotes: {},
+        criteriaNotes: {},
+        pickedCriteria: [],
+      }),
+    );
+  }, STORY);
+}
+
+const BRIEF = {
+  situation: "You got a parking fine on Batman Street. You say the sign was hidden by a tree.",
+  path: "An internal review is the agency looking at its own decision again.",
+  points: [],
+  otherSide: "The agency will usually say the sign was clear enough.",
+  toGather: ["the infringement notice", "photos of the sign"],
+  sources: [],
+};
+
+test("the short analysis leads, after the time limit, and the full notes fold under it", async ({ page }) => {
+  await seed(page);
+  let memoCalls = 0;
+  await page.route("**/api/memo", async (route) => {
+    memoCalls++;
+    // Slow, like the real thing, so anything that re-asks while it is in flight shows up.
+    await new Promise((r) => setTimeout(r, 9000));
+    await route.fulfill({ json: { ok: true, status: "answered", brief: BRIEF } });
+  });
+  await page.goto(MEMO_URL);
+
+  const memo = page.locator("#memo-text");
+  // While it is written: the frame (time limit) and the notice, not the long memo open.
+  await expect(memo).toContainText(/Writing your analysis/i, { timeout: 15_000 });
+  await expect(memo.getByRole("heading", { name: "Time limit" })).toBeVisible();
+
+  await expect(memo).toContainText(BRIEF.situation, { timeout: 25_000 });
+  await expect(memo).not.toContainText(/Writing your analysis/i);
+
+  // The time limit comes before anything the model wrote.
+  const text = await memo.innerText();
+  expect(text.indexOf("Time limit")).toBeLessThan(text.indexOf(BRIEF.situation));
+
+  // The full notes are there, folded.
+  const notes = memo.locator("details");
+  await expect(notes.locator("summary")).toHaveText(/Full notes for a lawyer/i);
+  expect(await notes.evaluate((d) => (d as HTMLDetailsElement).open)).toBe(false);
+
+  // One request for one analysis. A second while the first is in flight is paid twice.
+  expect(memoCalls).toBe(1);
+});
+
+test("a refused brief leaves the full notes open, exactly as before", async ({ page }) => {
+  await seed(page);
+  await page.route("**/api/memo", (route) => route.fulfill({ json: { ok: true, status: "not-covered" } }));
+  await page.goto(MEMO_URL);
+
+  const memo = page.locator("#memo-text");
+  await expect(memo).toContainText(/About/i, { timeout: 15_000 });
+  await expect(memo.locator("details")).toHaveCount(0);
+  await expect(memo).not.toContainText(/Writing your analysis/i);
+  await expect(memo).not.toContainText(/Your situation/i);
+});
+
+test("the shorter letter says to check every sentence, and switches back to the full account", async ({ page }) => {
+  await seed(page);
+  await page.route("**/api/memo", (route) => route.fulfill({ json: { ok: true, status: "not-covered" } }));
+  await page.route("**/api/letter-polish", async (route) => {
+    const { draft } = route.request().postDataJSON() as { draft: string };
+    const letter = draft.replace(/My reasons are as follows\.[^\n]*/, "I parked on Batman Street. The sign was hidden by a tree.");
+    await route.fulfill({ json: { ok: true, status: "answered", letter } });
+  });
+  await page.goto(MEMO_URL);
+
+  const apply = page.locator("#r-apply");
+  await apply.scrollIntoViewIfNeeded({ timeout: 15_000 });
+  await expect(apply).toContainText(/We shortened your account/i, { timeout: 15_000 });
+  await expect(apply).toContainText("I parked on Batman Street. The sign was hidden by a tree.");
+  await expect(apply).not.toContainText("parking enforcement officer");
+
+  await apply.getByRole("button", { name: /use my full account instead/i }).click();
+  await expect(apply).toContainText("parking enforcement officer");
+  await expect(apply).toContainText(/with your account in full/i);
+
+  await apply.getByRole("button", { name: /use the shorter letter/i }).click();
+  await expect(apply).not.toContainText("parking enforcement officer");
+});
+
+test("a refused shorter letter shows the full one with no notice", async ({ page }) => {
+  await seed(page);
+  await page.route("**/api/memo", (route) => route.fulfill({ json: { ok: true, status: "not-covered" } }));
+  await page.route("**/api/letter-polish", (route) =>
+    route.fulfill({ json: { ok: true, status: "not-covered" } }),
+  );
+  await page.goto(MEMO_URL);
+  const apply = page.locator("#r-apply");
+  await apply.scrollIntoViewIfNeeded({ timeout: 15_000 });
+  await expect(apply).toContainText("parking enforcement officer", { timeout: 15_000 });
+  await expect(apply).not.toContainText(/We shortened your account/i);
+});
+
+test("typing in 'Anything else?' does not ask for a new analysis on every keystroke", async ({ page }) => {
+  // The analysis is keyed by everything it is written from, including what they add on this
+  // step. Read on every keystroke, a sentence typed here was a paid request per letter — each
+  // one cancelled on the page and still billed on the server.
+  await seed(page);
+  let memoCalls = 0;
+  await page.route("**/api/memo", async (route) => {
+    memoCalls++;
+    await route.fulfill({ json: { ok: true, status: "answered", brief: BRIEF } });
+  });
+  await page.goto(MEMO_URL);
+  const memo = page.locator("#memo-text");
+  await expect(memo).toContainText(BRIEF.situation, { timeout: 15_000 });
+  expect(memoCalls).toBe(1);
+
+  const more = page.locator("#r-memo textarea").first();
+  await more.click();
+  await more.pressSequentially("The tree has since been cut back.", { delay: 40 });
+  // Settle, then at most one more request for the finished sentence.
+  await page.waitForTimeout(4000);
+  expect(memoCalls).toBeLessThanOrEqual(2);
+});
