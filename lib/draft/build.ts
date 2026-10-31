@@ -80,7 +80,12 @@ export function buildDraft(
   context?: string,
   opts: DraftOptions = {},
 ): Draft {
-  const issuer = entry.issuers[0] ?? "the agency that made the decision";
+  // A catch-all entry does not know who decided. "Victorian government department" headed a
+  // letter about a COUNCIL's decision (the judicial-review benchmark), so for those the
+  // addressee is a blank the person fills in — the page highlights it like every other.
+  const issuer = entry.isFallback
+    ? "[the agency or council that made the decision]"
+    : (entry.issuers[0] ?? "the agency that made the decision");
   const isMerits = kind === "merits-review-application" || kind === "review-application";
   const tribunal = tribunalOf(entry);
   // A merits application goes to the tribunal, not to the agency whose decision it is.
@@ -102,7 +107,13 @@ export function buildDraft(
   // which looked right in a monospace box and broke into fragments the moment the letter was
   // rendered as a letter — "please tell me what" ending one paragraph and "the next step is"
   // starting the next. The renderer wraps; the template must not.
-  const lines = (...xs: string[]) => xs.filter((l) => l !== "").join("\n");
+  //
+  // The empty strings ARE the paragraph breaks. Filtering them out ran every part of the letter
+  // together — "Re:", the reference, the warning and the body on consecutive lines — which is
+  // how it printed, downloaded and copied (the end-to-end QA). An optional line left empty
+  // would leave two breaks in a row, so runs collapse to one.
+  const lines = (...xs: string[]) =>
+    xs.join("\n").replace(/\n{3,}/g, "\n\n").replace(/^\n+|\n+$/g, "");
 
   /**
    * Their reason for writing, in their own words.

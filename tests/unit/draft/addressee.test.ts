@@ -32,9 +32,24 @@ describe("the merits letter is addressed to the tribunal", () => {
   }
 
   it("the other letters still go to the agency that decided", () => {
-    const d = buildDraft(getEntry("vic-generic")!, "internal-review-request");
-    expect(d.body).toMatch(/^To: Victorian government department/m);
+    const d = buildDraft(getEntry("cth-centrelink")!, "internal-review-request");
+    expect(d.body).toMatch(/^To: Services Australia/m);
     expect(d.body).not.toContain(SELF_WARNING_MERITS);
+  });
+
+  // A catch-all entry does not know who decided: "Victorian government department" headed a
+  // letter about a council's decision (the judicial-review benchmark).
+  it("a catch-all entry leaves the addressee as a blank to fill in", () => {
+    for (const id of ["vic-generic", "cth-generic"]) {
+      const d = buildDraft(getEntry(id)!, "judicial-review-application");
+      expect(d.body).toMatch(/^To: \[the agency or council that made the decision\]/m);
+    }
+  });
+
+  it("a letter keeps its paragraph breaks", () => {
+    const d = buildDraft(getEntry("vic-generic")!, "internal-review-request");
+    expect(d.body).toMatch(/Re: Request for an internal review\n\nReference number/);
+    expect(d.body).not.toMatch(/\n{3,}/);
   });
 });
 
