@@ -1,6 +1,32 @@
 "use client";
 
 import type { MemoBlock } from "@/lib/memo/compose";
+import { CallButton } from "@/components/ui/CallButton";
+
+const URL_RE = /(https?:\/\/[^\s)]+[^\s).,;:])/g;
+
+/**
+ * A web address in our text, made tappable. Sources arrive as plain strings — some of them a
+ * bare "https://…" — and a phone reader cannot copy a URL out of a paragraph with any ease.
+ */
+function Linked({ text }: { text: string }) {
+  const parts = text.split(URL_RE);
+  if (parts.length === 1) return <>{text}</>;
+  return (
+    <>
+      {parts.map((p, i) =>
+        i % 2 === 1 ? (
+          <a key={i} href={p} target="_blank" rel="noopener noreferrer" className="link break-all">
+            {p}
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+        ) : (
+          p
+        ),
+      )}
+    </>
+  );
+}
 
 /**
  * The memo, rendered as a document rather than as a wall of monospace.
@@ -54,7 +80,7 @@ export function MemoView({ blocks }: { blocks: MemoBlock[] }) {
               <div key={i} className="mt-1.5 flex gap-2.5 text-[15px] leading-relaxed text-ink-soft">
                 <span aria-hidden="true" className="mt-[9px] h-1.5 w-1.5 flex-none rounded-[2px] bg-accent" />
                 <span className="min-w-0">
-                  {b.text}
+                  <Linked text={b.text} />
                   {b.detail && (
                     <span className="mt-0.5 block text-[14.5px] leading-snug text-ink-faint">
                       {b.detail}
@@ -107,6 +133,22 @@ export function MemoView({ blocks }: { blocks: MemoBlock[] }) {
                   <span className="sr-only"> (opens in a new tab)</span>
                 </a>
               </p>
+            );
+          case "contact":
+            return (
+              <div key={i} className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                <a
+                  href={b.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="link inline-flex min-h-[44px] items-center gap-1.5 text-[15px] font-semibold"
+                >
+                  {b.service}
+                  <span aria-hidden="true">↗</span>
+                  <span className="sr-only"> (opens in a new tab)</span>
+                </a>
+                {b.phone && <CallButton phone={b.phone} label={b.service} />}
+              </div>
             );
           case "disclaimer":
             return (

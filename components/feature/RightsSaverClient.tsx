@@ -518,6 +518,11 @@ export function RightsSaverClient({
     } catch {
       /* history unavailable */
     }
+    // THE CONSENT COMES TOO. Consent is held per decision, and the result page reads the
+    // carried account only where its own decision has one. The parent's effect records it for
+    // the new area — but after the new page has mounted and found nothing, so their account
+    // stayed behind (reported live). It is the same matter and the same person who agreed.
+    rememberConsent(true, matterKey(next), flags);
     setRelatedGrounds([]);
     setJurisdiction(next.jurisdiction);
     setAreaId(id);

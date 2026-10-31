@@ -357,6 +357,12 @@ WHAT YOU MAY DO
    their account. Keep it in the first person ("I", "my"). You may condense, merge and reorder
    their facts, and leave out ones that do not matter here.
  · Fix grammar, punctuation and capitalisation anywhere.
+ · SAY EACH THING ONCE. When a fact or a request appears twice — in their account and again
+   under a heading they wrote under — keep it once, where it reads best. You may fold a short
+   headed section into the body of the letter, keeping what it asks for.
+ · KEEP THE ORDER OF A LETTER: what they ask for and why, then the courtesies that close it
+   (asking them to confirm receipt, "thank you"), then the sign-off. Nothing of theirs goes
+   after "thank you".
 
 WHAT YOU MAY NOT DO, EVER
  · ADD ANYTHING TO WHAT THEY SAID HAPPENED. Not a fact, a name, a place, a date, a number, a

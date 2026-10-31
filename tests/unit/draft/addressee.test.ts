@@ -87,3 +87,67 @@ describe("the letter uses what the person already told us", () => {
     expect(d.body).toContain("[name the ground");
   });
 });
+
+/**
+ * The owner's parking review, 2026-11-01: every fact said twice — once as the reasons, then
+ * again under "What I ask you to consider" — and both headed sections printed after "Thank you
+ * for your help", as if the letter had already ended.
+ */
+describe("the internal-review letter says each thing once, before it closes", () => {
+  const story =
+    "The main parking control sign was heavily covered by overgrown foliage from a nearby street tree, making the time-limit panel unreadable. The signpost itself was turned about 45 degrees away from the road.";
+  const compose = (answers: Record<string, string>) =>
+    composeLetter({
+      entry: getEntry("vic-generic")!,
+      kind: "internal-review-request",
+      account: { answers: { "q-story": story, ...answers }, groundIds: [] },
+      headingFor: (k) => L[k]!,
+      groundsLead: L.groundsLead!,
+      otherConcerns: L.otherConcerns!,
+      universal: [
+        { id: "q-story", label: "What happened?" },
+        { id: "q-internal", label: L.internalHeading! },
+        { id: "q-criteria", label: L.criteriaHeading! },
+      ],
+    }).body;
+
+  it("a note that repeats the account keeps only what is new", () => {
+    const body = compose({
+      "q-criteria":
+        "the sign is not clear. The main parking control sign was heavily covered by overgrown foliage from a nearby street tree, making the time-limit panel unreadable.\n\nThe signpost itself was turned about 45 degrees away from the road.",
+    });
+    expect(body.split("overgrown foliage").length - 1).toBe(1);
+    expect(body.split("45 degrees").length - 1).toBe(1);
+    expect(body).toContain(`${L.criteriaHeading}\nThe sign is not clear.`);
+  });
+
+  it("a note with nothing new is left out, heading and all", () => {
+    const body = compose({ "q-criteria": "The signpost itself was turned about 45 degrees away from the road." });
+    expect(body).not.toContain(L.criteriaHeading!);
+  });
+
+  it("their headed points come before the close, never after 'Thank you'", () => {
+    const body = compose({ "q-internal": "the fine should be withdrawn." });
+    const at = body.indexOf(L.internalHeading!);
+    expect(at).toBeGreaterThan(body.indexOf("My reasons are as follows."));
+    expect(at).toBeLessThan(body.indexOf("I would be grateful if you would confirm"));
+    expect(at).toBeLessThan(body.indexOf("Thank you for your help."));
+    expect(body).toContain("The fine should be withdrawn.");
+  });
+
+  it("judicial review: the grounds sit under 'set out below', before the request and the thanks", () => {
+    const id = Object.keys(LETTER_GROUND_HEADINGS)[0]!;
+    const body = composeLetter({
+      entry: getEntry("vic-generic")!,
+      kind: "judicial-review-application",
+      account: { answers: { [`g-${id}`]: "They never let me reply." }, groundIds: [id] },
+      headingFor: (k) => L[k]!,
+      groundsLead: L.groundsLead!,
+      otherConcerns: L.otherConcerns!,
+      universal: [],
+    }).body;
+    const at = body.indexOf("They never let me reply.");
+    expect(at).toBeGreaterThan(body.indexOf("set out below"));
+    expect(at).toBeLessThan(body.indexOf("I ask that the decision be looked at again"));
+  });
+});

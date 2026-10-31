@@ -154,3 +154,25 @@ test("typing in 'Anything else?' does not ask for a new analysis on every keystr
   await page.waitForTimeout(4000);
   expect(memoCalls).toBeLessThanOrEqual(2);
 });
+
+// Reported live, 2026-11-01: "Use that page" moved the matter to the fines page and left
+// their account behind. Consent is held per decision, and the fines page had none yet.
+test("moving to the page their words describe brings their account with it", async ({ page }) => {
+  await seed(page);
+  await page.goto("/start?jur=Vic&area=vic-generic&date=2026-10-14&step=result&view=story");
+  await page.getByRole("button", { name: "Use that page" }).click();
+  await expect(page).toHaveURL(/area=vic-fines/);
+  await expect(page.locator("textarea").first()).toHaveValue(STORY);
+});
+
+// Most people read the analysis on a phone: each free service opens its site and dials.
+test("the free services in the analysis can be tapped to call or visit", async ({ page }) => {
+  await seed(page);
+  await page.route("**/api/memo", (route) =>
+    route.fulfill({ json: { ok: true, status: "answered", brief: BRIEF } }),
+  );
+  await page.goto(MEMO_URL);
+  const call = page.locator('article a[href^="tel:"]').first();
+  await expect(call).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator('article a[target="_blank"]').first()).toBeVisible();
+});

@@ -1,5 +1,5 @@
 import type { PathwayEntry } from "@/lib/schemas/corpus";
-import { buildDraft, type Draft, type DraftKind } from "@/lib/draft/build";
+import { buildDraft, LETTER_CLOSINGS, type Draft, type DraftKind } from "@/lib/draft/build";
 
 /**
  * Composes the person's own account into a review letter — deterministically, on the device.
@@ -72,6 +72,42 @@ export interface ComposeInput {
   decisionDate?: string;
 }
 
+const words = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
+
+/**
+ * A sentence is a repeat when the account already holds it — word for word, or with eight or
+ * more words of which nine in ten are already there (a pasted line with a word fixed). Short
+ * sentences only count when word for word: "The sign was not clear" is a point, not a copy.
+ */
+function isRepeat(sentence: string, story: string): boolean {
+  const w = words(sentence);
+  if (!w) return true;
+  if (words(story).includes(w)) return true;
+  const ws = w.split(" ");
+  if (ws.length < 8) return false;
+  const have = new Set(words(story).split(" "));
+  return ws.filter((x) => have.has(x)).length / ws.length >= 0.9;
+}
+
+/** The note with every sentence already in their account taken out, paragraphs kept. */
+export function withoutRepeats(note: string, story: string): string {
+  if (!story.trim()) return note.trim();
+  return note
+    .split(/\n{2,}/)
+    .map((para) =>
+      para
+        .split(/(?<=[.!?])\s+/)
+        .filter((x) => x.trim() && !isRepeat(x, story))
+        .join(" ")
+        .trim(),
+    )
+    .filter(Boolean)
+    .join("\n\n");
+}
+
+/** "the fine should be withdrawn." under a heading in a letter reads as a slip. */
+const capitalise = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 /**
  * Returns the deterministic draft with the person's account woven in. When they have written
  * nothing, this is exactly the letter they would have got before — never a blank page.
@@ -105,10 +141,18 @@ export function composeLetter(input: ComposeInput): Draft {
   // said it twice, word for word, and read as though it had been pasted in by mistake.
   // Reported from the live site. An answer already in the letter is not added again; the
   // test is the text itself, so it holds whichever template carried it.
+  //
+  // AND NOT AGAIN UNDER A HEADING. What someone types under a criterion or "what you are asking
+  // them to look at again" is very often their account's own sentences, pasted a second time —
+  // the owner's parking review said every fact twice, once as the reasons and once under "What
+  // I ask you to consider". A sentence already in their account is dropped from the note; a
+  // note left with nothing new is dropped whole.
+  const story = said("q-story");
   for (const q of input.universal) {
-    const v = said(q.id);
+    const raw = said(q.id);
+    const v = q.id === "q-story" ? raw : withoutRepeats(raw, story);
     if (!v || base.body.includes(v)) continue;
-    parts.push(`${q.label}\n${v}`);
+    parts.push(`${q.label}\n${capitalise(v)}`);
   }
 
   // The points they marked, each with what THEY wrote under it. A heading with nothing
@@ -136,9 +180,12 @@ export function composeLetter(input: ComposeInput): Draft {
 
   if (parts.length === 0) return base;
 
-  // Slot the account above the sign-off so the letter still closes properly.
+  // Slot it in above the letter's close — the paragraph that asks them to confirm receipt and
+  // thanks them — so the letter says what it asks and why, and only then signs off. Above the
+  // sign-off alone put their points after "Thank you for your help".
   const SIGN_OFF = "Yours faithfully,";
-  const idx = base.body.lastIndexOf(SIGN_OFF);
+  const closes = LETTER_CLOSINGS.map((c) => base.body.indexOf(c)).filter((i) => i >= 0);
+  const idx = closes.length > 0 ? Math.min(...closes) : base.body.lastIndexOf(SIGN_OFF);
   const block = parts.join("\n\n");
   const body =
     idx === -1

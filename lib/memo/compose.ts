@@ -236,6 +236,12 @@ export type MemoBlock =
   | { kind: "note"; label: string; text: string }
   | { kind: "quote"; text: string; label?: string }
   | { kind: "link"; text: string; href: string }
+  /**
+   * A free service: its name opens its site, its number dials. Most people read this on a
+   * phone, and the list printed "Fines Victoria — (03) 9200 8111" as plain text, so calling
+   * meant copying the number out by hand (the owner's QA).
+   */
+  | { kind: "contact"; service: string; href: string; phone?: string }
   | { kind: "disclaimer"; text: string };
 
 export interface Memo {

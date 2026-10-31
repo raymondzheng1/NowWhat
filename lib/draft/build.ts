@@ -37,6 +37,17 @@ export interface Draft {
 
 const SIGN_OFF = "Yours faithfully,\n[Your name]\n[Your contact details]";
 
+// The paragraph that starts each letter's close. What the person adds under headings goes
+// ABOVE it: appended at the sign-off, their points printed after "Thank you for your help",
+// as an afterthought to a letter that had already finished (the owner's internal review).
+const CLOSE_REASONS = "Please send the statement to the contact details above. Thank you for your help.";
+const CLOSE_INTERNAL =
+  "I would be grateful if you would confirm that you have received this request, and let me know if you need anything further from me to complete the review.";
+const CLOSE_JR = "I ask that the decision be looked at again and made according to law.";
+const CLOSE_COURT = "I would be grateful if you would confirm that you have received this letter. Thank you for your help.";
+const CLOSE_MERITS = "Please let me know if you need anything further from me. Thank you for your help.";
+export const LETTER_CLOSINGS = [CLOSE_REASONS, CLOSE_INTERNAL, CLOSE_JR, CLOSE_COURT, CLOSE_MERITS];
+
 export interface DraftOptions {
   /** The date on the decision, as the person gave it (YYYY-MM-DD). Fills the date blank. */
   decisionDate?: string;
@@ -145,7 +156,7 @@ export function buildDraft(
         "",
         context ? `The decision concerns the following. ${context.trim()}` : "",
         "",
-        "Please send the statement to the contact details above. Thank you for your help.",
+        CLOSE_REASONS,
         "",
         SIGN_OFF,
       ),
@@ -177,7 +188,7 @@ export function buildDraft(
         "",
         `My reasons are as follows. ${inTheirWords("set out what you think was missed, what you were not able to explain, or what has changed")}`,
         "",
-        "I would be grateful if you would confirm that you have received this request, and let me know if you need anything further from me to complete the review.",
+        CLOSE_INTERNAL,
         "",
         "If an internal review is not available for a decision of this kind, please tell me what the next step is and who I should write to. Please also tell me the time limit that applies to that next step, so that I can keep track of it while this request is with you.",
         "",
@@ -218,7 +229,7 @@ export function buildDraft(
               "  [name the ground — for example, that you were not given a fair chance to respond, that something irrelevant was taken into account, or that something relevant was not considered]",
             ]),
         "",
-        "I ask that the decision be looked at again and made according to law.",
+        CLOSE_JR,
         "",
         "Please let me know what information you need from me. Thank you.",
         "",
@@ -265,7 +276,7 @@ export function buildDraft(
         "",
         `What happened, in my own words. ${inTheirWords("describe what the notice was about, what you told them and when, and anything that has changed since")}`,
         "",
-        "I would be grateful if you would confirm that you have received this letter. Thank you for your help.",
+        CLOSE_COURT,
         "",
         SIGN_OFF,
       ),
@@ -302,7 +313,7 @@ export function buildDraft(
       "",
       evidence,
       "",
-      "Please let me know if you need anything further from me. Thank you for your help.",
+      CLOSE_MERITS,
       "",
       SIGN_OFF,
     ),

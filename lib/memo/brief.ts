@@ -179,7 +179,9 @@ export function composeBrief(input: BriefInput): Memo {
   // ---- Free help, always ---------------------------------------------------------------
   h(t("briefHelp"));
   for (const s of entry.getHelp.slice(0, 3)) {
-    item(s.phone ? `${s.service} — ${s.phone}` : s.service);
+    // The copy and the download keep the link too: on paper it is the only way to find them.
+    L.push(`  - ${[s.service, s.phone, s.link].filter(Boolean).join(" — ")}`);
+    B.push({ kind: "contact", service: s.service, href: s.link, ...(s.phone ? { phone: s.phone } : {}) });
   }
 
   if (brief) {

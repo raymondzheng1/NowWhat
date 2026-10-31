@@ -93,6 +93,19 @@ describe("the short analysis keeps the law and the time limit ours", () => {
     }
   });
 
+  // Most people read this on a phone. "Fines Victoria — (03) 9200 8111" as plain text meant
+  // copying the number out by hand (the owner's QA, 2026-11-01).
+  it("each free service is a contact with its link and a number to dial", () => {
+    const b = doc(BRIEF, { entry: fines, criteria: fines.irCriteria! });
+    const contacts = b.blocks.filter((x) => x.kind === "contact");
+    expect(contacts.length).toBe(Math.min(3, fines.getHelp.length));
+    for (const [i, c] of contacts.entries()) {
+      const h = fines.getHelp[i]!;
+      expect(c).toMatchObject({ service: h.service, href: h.link, ...(h.phone ? { phone: h.phone } : {}) });
+      expect(b.body).toContain(h.link);
+    }
+  });
+
   it("names the free services from the entry itself", () => {
     const b = doc(BRIEF, { entry: fines, criteria: fines.irCriteria! }).body;
     expect(b).toContain(fines.getHelp[0]!.service);
