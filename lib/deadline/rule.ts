@@ -12,7 +12,7 @@ import { isVerifyMarker, type DataPathway } from "@/lib/schemas/data";
  * text, or a generic fallback if an entry still holds a VERIFY placeholder) plus an
  * official source link when one is real.
  *
- * (Distinct from lib/deadline/compute.ts, which serves the legacy What Now? decode corpus.)
+ * (Distinct from lib/deadline/compute.ts, which serves the legacy Now What? decode corpus.)
  */
 
 export interface DeadlineRuleView {

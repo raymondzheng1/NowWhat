@@ -4,7 +4,7 @@ import { CrestEl, OG } from "@/lib/og/render";
 import { getFaq, getPublishedFaqs } from "@/lib/faq/load";
 
 export const runtime = "nodejs";
-export const alt = "What Now? — common question";
+export const alt = "Now What? — common question";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -25,7 +25,7 @@ export default async function FaqOgImage({ params }: { params: Promise<{ slug: s
           <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
             <CrestEl size={62} />
             <div style={{ display: "flex", flexDirection: "column" }}>
-              <span style={{ fontFamily: OG.display, fontWeight: 900, fontSize: 26, color: OG.ink }}>What Now?</span>
+              <span style={{ fontFamily: OG.display, fontWeight: 900, fontSize: 26, color: OG.ink }}>Now What?</span>
               <span style={{ fontFamily: OG.display, fontSize: 14, letterSpacing: 4, color: OG.tan, fontWeight: 900, marginTop: 5 }}>
                 COMMON QUESTIONS · VICTORIA
               </span>

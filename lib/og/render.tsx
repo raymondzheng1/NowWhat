@@ -1,6 +1,6 @@
 /**
  * Shared JSX for next/og ImageResponse renders (satori subset — flexbox only, no absolute
- * layout tricks). Sticker-album mark: a red rounded tile with a cream "W", matching the
+ * layout tricks). Sticker-album mark: a red rounded tile with a cream "N", matching the
  * favicon. Legacy key names are kept so the image routes need no rewiring.
  */
 export const OG = {
@@ -22,7 +22,7 @@ export const OG = {
   serif: "Archivo",
 };
 
-/** The brand tile — red sticker with a cream W (same mark as the favicon). */
+/** The brand tile — red sticker with a cream N (same mark as the favicon). */
 export function CrestEl({ size }: { size: number }) {
   return (
     <div
@@ -45,7 +45,7 @@ export function CrestEl({ size }: { size: number }) {
           lineHeight: 1,
         }}
       >
-        W
+        N
       </div>
     </div>
   );

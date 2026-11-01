@@ -1,4 +1,4 @@
-# What Now? — your rights when government says no
+# Now What? — your rights when government says no
 
 A free, **login-free** web app that helps ordinary people understand and respond to an
 adverse government decision: it decodes the letter in plain English, finds the **review

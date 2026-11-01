@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
   const result = await sendEmail({
     to,
     replyTo: email,
-    subject: `${suspected ? "[possible spam] " : ""}What Now? — contact form: ${name}`.slice(0, 200),
+    subject: `${suspected ? "[possible spam] " : ""}Now What? — contact form: ${name}`.slice(0, 200),
     tag: suspected ? "contact-suspect" : "contact",
     text: `Name: ${name}\nEmail: ${email}\n\n${message}`,
     html: `<h2>New contact-form message</h2><p><strong>Name:</strong> ${escapeHtml(name)}</p><p><strong>Email:</strong> ${escapeHtml(email)}</p><hr/><pre style="white-space:pre-wrap;font-family:inherit">${escapeHtml(message)}</pre>`,
@@ -80,10 +80,10 @@ export async function POST(req: NextRequest) {
   if (hasVerifiedSender()) {
     void sendEmail({
       to: email,
-      subject: "We've received your message — What Now?",
+      subject: "We've received your message — Now What?",
       tag: "contact-ack",
-      text: `Hi ${name},\n\nThanks for reaching out — we've received your message and will get back to you. This inbox is for the service; for help with your own situation, free legal services are listed at our Get help page.\n\n— What Now?`,
-      html: `<p>Hi ${escapeHtml(name)},</p><p>Thanks for reaching out — we&rsquo;ve received your message and will get back to you.</p><p>For help with your own situation, free legal services are listed on our Get help page.</p><p>— What Now?</p>`,
+      text: `Hi ${name},\n\nThanks for reaching out — we've received your message and will get back to you. This inbox is for the service; for help with your own situation, free legal services are listed at our Get help page.\n\n— Now What?`,
+      html: `<p>Hi ${escapeHtml(name)},</p><p>Thanks for reaching out — we&rsquo;ve received your message and will get back to you.</p><p>For help with your own situation, free legal services are listed on our Get help page.</p><p>— Now What?</p>`,
     });
   }
 

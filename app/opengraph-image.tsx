@@ -3,7 +3,7 @@ import { ogFonts } from "@/lib/og/fonts";
 import { CrestEl, OG } from "@/lib/og/render";
 
 export const runtime = "nodejs";
-export const alt = "What Now? — free, plain-English help with a Victorian government decision";
+export const alt = "Now What? — free, plain-English help with a Victorian government decision";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -16,7 +16,7 @@ export default function OpengraphImage() {
         <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center" }}>
           <CrestEl size={128} />
           <div style={{ display: "flex", alignItems: "baseline", marginTop: 34 }}>
-            <div style={{ fontFamily: OG.display, fontWeight: 900, fontSize: 92, color: OG.ink, lineHeight: 1, letterSpacing: -3 }}>What Now</div>
+            <div style={{ fontFamily: OG.display, fontWeight: 900, fontSize: 92, color: OG.ink, lineHeight: 1, letterSpacing: -3 }}>Now What</div>
             <div style={{ fontFamily: OG.display, fontWeight: 900, fontSize: 92, color: OG.red, lineHeight: 1 }}>?</div>
           </div>
           <div style={{ marginTop: 22, fontFamily: OG.display, fontWeight: 900, fontSize: 20, letterSpacing: 7, color: OG.tan }}>

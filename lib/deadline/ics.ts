@@ -34,7 +34,7 @@ export function buildReminderIcs(opts: {
   const lines = [
     "BEGIN:VCALENDAR",
     "VERSION:2.0",
-    "PRODID:-//What Now//Deadline Reminder//EN",
+    "PRODID:-//Now What//Deadline Reminder//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
     "BEGIN:VEVENT",

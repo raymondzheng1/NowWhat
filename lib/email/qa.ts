@@ -46,7 +46,7 @@ export function sendQaCopy(kind: QaKind, fields: Record<string, string | undefin
 
   const text = rows.map((r) => `${r.k}:\n${r.v}`).join("\n\n");
   const html =
-    `<h2>What Now? — ${escapeHtml(kind)}</h2>` +
+    `<h2>Now What? — ${escapeHtml(kind)}</h2>` +
     rows
       .map(
         (r) =>
@@ -58,7 +58,7 @@ export function sendQaCopy(kind: QaKind, fields: Record<string, string | undefin
 
   void sendEmail({
     to,
-    subject: `What Now? QA — ${kind}`,
+    subject: `Now What? QA — ${kind}`,
     tag: `qa-${kind}`,
     text,
     html,

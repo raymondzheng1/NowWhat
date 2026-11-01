@@ -15,7 +15,7 @@ export interface SendResult {
 }
 
 /** Resend's shared testing sender — works without verifying a domain (to your own inbox). */
-const RESEND_SANDBOX_FROM = "What Now? <onboarding@resend.dev>";
+const RESEND_SANDBOX_FROM = "Now What? <onboarding@resend.dev>";
 const FROM = () => process.env.CONTACT_FROM_EMAIL?.trim() || RESEND_SANDBOX_FROM;
 
 /** True once a real verified sending domain is configured (then we can email visitors too). */

@@ -1,4 +1,4 @@
-# CLAUDE.md — What Now? (operating manual; Tier B; end-user access-to-justice)
+# CLAUDE.md — Now What? (operating manual; Tier B; end-user access-to-justice)
 
 **Read `C:\Users\Ivy\RayTasks\Projects\Harness.md` first.** Shares the engine with **Adaptive IRAC** and **AdminLaw Coach** — reuse those packages. Tracks ON: §8 SEO, §11 AI content pipeline, §10 i18n.
 

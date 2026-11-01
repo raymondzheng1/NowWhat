@@ -1,4 +1,4 @@
-# Testing — What Now?
+# Testing — Now What?
 
 The whole quality bar is one command: **`npm run verify`**. It must be green before every push.
 

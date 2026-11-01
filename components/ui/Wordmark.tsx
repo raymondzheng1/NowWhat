@@ -1,7 +1,7 @@
 import { PRODUCT_NAME } from "@/lib/config";
 
 /**
- * The brand mark (sticker album). The tile is a red rounded square with a cream "W" —
+ * The brand mark (sticker album). The tile is a red rounded square with a cream "N" —
  * the same mark as the favicon and the share image. The wordmark sets the "?" in red.
  * Tone "light" is for placement on an ink/red surface.
  */
@@ -18,7 +18,7 @@ export function Crest({ size = 44 }: { size?: number }) {
         fill="#FFF6EC"
         style={{ fontFamily: "var(--font-display), system-ui, sans-serif" }}
       >
-        W
+        N
       </text>
     </svg>
   );

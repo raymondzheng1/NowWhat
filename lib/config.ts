@@ -104,5 +104,5 @@ export const DISCLAIMER =
   "This is general information, not legal advice. It does not tell you what will happen in your case, and it does not choose an option for you. Time limits depend on your decision and can be short. Check your letter, and get help from the official body or a free legal service as soon as you can.";
 
 /** Product name SoT (no AI/LLM mentions in customer copy — harness §11). */
-export const PRODUCT_NAME = "What Now?";
+export const PRODUCT_NAME = "Now What?";
 export const PRODUCT_TAGLINE = "Your rights when government says no";

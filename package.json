@@ -2,7 +2,7 @@
   "name": "what-now",
   "version": "0.1.0",
   "private": true,
-  "description": "What Now? — a free, login-free web app that helps people understand and respond to an adverse government decision. Information, not advice. Grounded-or-silent.",
+  "description": "Now What? — a free, login-free web app that helps people understand and respond to an adverse government decision. Information, not advice. Grounded-or-silent.",
   "scripts": {
     "dev": "next dev",
     "build": "node scripts/build-corpus.mjs && node scripts/build-data.mjs && node scripts/build-legal.mjs && next build",

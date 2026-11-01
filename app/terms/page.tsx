@@ -6,7 +6,7 @@ import { PageHeader } from "@/components/ui/PageHeader";
 export const metadata: Metadata = {
   title: "Terms of use",
   description:
-    "What Now? gives general information about Australian Government and Victorian government decisions — not legal advice. Here are the terms of using this free service.",
+    "Now What? gives general information about Australian Government and Victorian government decisions — not legal advice. Here are the terms of using this free service.",
   alternates: { canonical: "/terms" },
 };
 
@@ -24,7 +24,7 @@ export default function TermsPage() {
       <PageHeader
         kicker="Terms"
         title="Terms of use"
-        lead="What Now? is a free service that gives general information to help you understand an Australian Government or Victorian government decision. Using it means you agree to these terms."
+        lead="Now What? is a free service that gives general information to help you understand an Australian Government or Victorian government decision. Using it means you agree to these terms."
       />
 
       <Disclaimer className="mt-6" />
@@ -32,7 +32,7 @@ export default function TermsPage() {
       <div className="prose-plain mt-4 max-w-none text-ink-soft">
         <H2>Information, not legal advice</H2>
         <p className="mt-3 leading-relaxed">
-          What Now? gives general information, not legal advice. Using it does not make us your
+          Now What? gives general information, not legal advice. Using it does not make us your
           lawyer, and we can&rsquo;t tell you what will happen in your case. For advice about your own
           situation, talk to a free legal service — see the{" "}
           <Link href="/help" className="link">Get help</Link> page.

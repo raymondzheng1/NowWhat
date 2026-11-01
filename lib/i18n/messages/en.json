@@ -1,6 +1,6 @@
 {
   "common": {
-    "productName": "What Now?",
+    "productName": "Now What?",
     "tagline": "Your rights when government says no",
     "sources": "Where this comes from",
     "lastVerified": "Last checked",
@@ -34,7 +34,7 @@
   "home": {
     "heroEyebrow": "Understand · Know your options · Get help",
     "heroTitle": "They said no.",
-    "heroLead": "Many government decisions can be reviewed, depending on the law the decision was made under. We cover decisions by the Australian Government (Commonwealth) and the State of Victoria. Victoria is our worked example of a state. Every state sets review up in much the same way, under its own laws. What Now? turns your letter into plain English, your options into a numbered list, and your next step into a letter — free, no account, your letter is not stored.",
+    "heroLead": "Many government decisions can be reviewed, depending on the law the decision was made under. We cover decisions by the Australian Government (Commonwealth) and the State of Victoria. Victoria is our worked example of a state. Every state sets review up in much the same way, under its own laws. Now What? turns your letter into plain English, your options into a numbered list, and your next step into a letter — free, no account, your letter is not stored.",
     "ctaStart": "Start now",
     "ctaScan": "Scan or paste the letter",
     "ctaAsk": "Ask a question",
@@ -741,7 +741,7 @@
     "home": "Back to the home page"
   },
   "footer": {
-    "infoNotAdvice": "What Now? gives general information, not legal advice.",
+    "infoNotAdvice": "Now What? gives general information, not legal advice.",
     "neverStored": "We never keep your letter or your answers.",
     "learn": "How review works",
     "contact": "Contact us",
@@ -755,7 +755,7 @@
   },
   "install": {
     "title": "Keep this on your phone",
-    "body": "Add What Now? to your home screen so you can find your way back without hunting for the link. It stays free, and it still keeps no letter.",
+    "body": "Add Now What? to your home screen so you can find your way back without hunting for the link. It stays free, and it still keeps no letter.",
     "bodyIos": "To keep this on your home screen: tap the Share button, then choose “Add to Home Screen”.",
     "action": "Add to home screen",
     "dismiss": "No thanks"

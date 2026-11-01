@@ -665,7 +665,7 @@ function FocusedHeader({
       >
         <Crest size={26} />
         <span className="hidden font-display text-[16px] font-black text-ink sm:inline">
-          What Now<span className="text-red-ink">?</span>
+          Now What<span className="text-red-ink">?</span>
         </span>
       </Link>
       <span className="inline-flex items-center rounded-pill bg-cream-deep px-3.5 py-2 font-display text-[12px] font-extrabold uppercase tracking-[0.1em] text-ink sm:text-[12.5px]">

@@ -1,4 +1,4 @@
-# End-to-end test script — What Now?
+# End-to-end test script — Now What?
 
 **Site:** https://now-what-puce.vercel.app
 **Time needed:** ~2 hours working top-to-bottom. Priorities: **P0 = launch blockers** (safety promises + the main journey) → **P1 = core value** (ask / decode / chat / learn / FAQ / help) → **P2 = quality** (homepage, contact, errors, mobile, keyboard).
