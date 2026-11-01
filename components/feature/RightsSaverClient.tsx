@@ -2008,9 +2008,10 @@ function ResultStep({
                 ]
               : []),
           ],
-          // The analysis, then the statement of case written from it: about a minute and a half
-          // for six grounds, measured live (2026-11-01).
-          slowAfterMs: 150_000,
+          // The analysis and the statement are written at once since 2026-11-02: about 17 seconds
+          // for four grounds, measured live. The way out is offered well after that, because the
+          // statement can still fall back to being written on its own if a part was refused.
+          slowAfterMs: 90_000,
           onCancel: () => setMemoReleased(true),
           cancelLabel: t("busyShowReady"),
         }
