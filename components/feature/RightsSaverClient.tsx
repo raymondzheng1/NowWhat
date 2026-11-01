@@ -1394,6 +1394,9 @@ function ResultStep({
   // to a different body about a different question.
   const offeredApply = chosenPath ? applyKinds.filter((k) => k.pathId === chosenPath) : applyKinds;
   const activeApply = offeredApply.find((k) => k.id === applyKind) ?? offeredApply[0];
+  // Judicial review drafts a statement of their case for the court, not a letter.
+  const forCourt = activeApply?.id === "judicial-review-application";
+  const applyTitle = forCourt ? t("applyTitleCourt") : t("applyTitle");
   // True when the person chose a path we deliberately hold no letter for, so the memo view
   // can say that rather than silently dropping the section.
   const noLetterForPath =
@@ -1712,7 +1715,7 @@ function ResultStep({
       // announcing it as item four — so the contents disagreed with the page it described.
       memo: [
         { id: "r-memo", label: t("memoSectionTitle") },
-        ...(applyDraft || noLetterForPath ? [{ id: "r-apply", label: t("applyTitle") }] : []),
+        ...(applyDraft || noLetterForPath ? [{ id: "r-apply", label: applyTitle }] : []),
         { id: "r-reasons", label: t("reasonsTitle") },
         ...(faqs.length > 0 ? [{ id: "r-faq", label: t("faqTitle") }] : []),
       ],
@@ -1952,6 +1955,9 @@ function ResultStep({
                       situation: a.situation,
                       points: a.points.slice(0, 6).map((p) => ({ ref: p.ref, relates: p.relates, needed: p.needed })),
                       otherSide: a.otherSide,
+                      // Each point argued both ways: the statement argues the one and answers
+                      // the other (the owner's ruling, 2026-11-01).
+                      depth: (a.depth ?? []).slice(0, 7),
                     }
                   : null,
               },
@@ -2018,7 +2024,7 @@ function ResultStep({
             ...(letterWanted
               ? [
                   {
-                    label: isCaseLetter ? t("busyStepCaseLetter") : t("busyStepLetter"),
+                    label: isCaseLetter ? t(forCourt ? "busyStepCaseCourt" : "busyStepCaseLetter") : t("busyStepLetter"),
                     state: letterSettled ? "done" : isCaseLetter && !analysisSettled ? "waiting" : "active",
                   } as BusyStep,
                 ]
@@ -3257,7 +3263,7 @@ function ResultStep({
           tell whether the app decided not to help or simply broke. */}
       {view === "memo" && noLetterForPath && (
         <section id="r-apply" className="card">
-          <h2 className="font-display text-[21px] font-black text-ink">{t("applyTitle")}</h2>
+          <h2 className="font-display text-[21px] font-black text-ink">{applyTitle}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">{t("applyNoDraft")}</p>
           <button type="button" onClick={() => goView("help")} className="btn btn-primary mt-4">
             {t("applyNoDraftCta")}
@@ -3267,13 +3273,13 @@ function ResultStep({
 
       {view === "memo" && applyDraft && activeApply && (
         <section id="r-apply" data-tour="apply" className="card">
-          <h2 className="font-display text-[21px] font-black text-ink">{t("applyTitle")}</h2>
+          <h2 className="font-display text-[21px] font-black text-ink">{applyTitle}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
             {chosenPath ? t("applyLeadChosen") : t("applyLead")}
           </p>
 
           {offeredApply.length > 1 && (
-            <div role="group" aria-label={t("applyTitle")} className="mt-4 flex flex-wrap gap-2.5">
+            <div role="group" aria-label={applyTitle} className="mt-4 flex flex-wrap gap-2.5">
               {offeredApply.map((k) => {
                 const on = k.id === applyKind;
                 return (
@@ -3305,13 +3311,13 @@ function ResultStep({
 
           {polishing && (
             <p aria-live="polite" className="mt-3 text-[14.5px] font-semibold text-help-ink">
-              {isCaseLetter ? t("letterCaseWriting") : t("letterPolishing")}
+              {isCaseLetter ? t(forCourt ? "letterCaseWritingCourt" : "letterCaseWriting") : t("letterPolishing")}
             </p>
           )}
           {shortLetter && (
             <div className="mt-3 rounded-sticker border-2 border-help bg-help-soft px-4 py-3">
               <p className="text-[15px] leading-relaxed text-ink">
-                {useFullLetter ? t("letterFullNotice") : isCaseLetter ? t("letterCaseNotice") : t("letterShortNotice")}
+                {useFullLetter ? t("letterFullNotice") : isCaseLetter ? t(forCourt ? "letterCaseNoticeCourt" : "letterCaseNotice") : t("letterShortNotice")}
               </p>
               <button
                 type="button"
@@ -3333,7 +3339,7 @@ function ResultStep({
               pasted under a template and could not tell anything had gone wrong. */}
           {isCaseLetter && !polishing && polished[letterKey] === "" && (
             <p data-testid="letter-case-refused" className="mt-3 text-[15px] leading-relaxed text-ink-soft">
-              {t("letterCaseRefused")}
+              {t(forCourt ? "letterCaseRefusedCourt" : "letterCaseRefused")}
             </p>
           )}
           {letterWarnings.length > 0 && (

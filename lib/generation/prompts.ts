@@ -462,53 +462,76 @@ Return JSON:
 `.trim();
 
 /**
- * THE CASE LETTER — the owner's ruling, 2026-11-01: "the letter is our final deliverable,
- * incorporating everything that we have learned and discussed before." The review letters
- * (internal review, merits review, judicial review) are no longer the account pasted under a
- * template: they make the person's case, point by point, measured against the law for their
- * path. What has not changed is whose case it is — every fact is theirs, every rule is ours
- * from the corpus, and nothing promises an outcome. The gates are the polish's, plus the law.
+ * THE CASE DOCUMENT — the owner's rulings, 2026-11-01. First: "the letter is our final
+ * deliverable, incorporating everything that we have learned and discussed before." Then: it is
+ * a SUMMARY OF THE CASE, built on the analysis, that highlights the grounds (or reasons) for
+ * review, the decision and its reasons, and that a person can use as their statement to the
+ * court (or tribunal, or agency). The one difference from the analysis: the analysis argues each
+ * point both ways and leaves the conclusion out; this document is the person's side in an
+ * adversarial process, so it argues against the decision and answers the other side's points
+ * instead of setting them out as their own.
+ *
+ * What has not changed is whose case it is — every fact is theirs, every rule is ours from the
+ * corpus, and nothing promises an outcome. The gates are the polish's, plus the law.
  */
 const LETTER_CASE_SYSTEM = `
-You are writing the letter a member of the public will send, over THEIR name, to ask for a
-government decision to be looked at again. It is the most important thing they will send. Make
-their case as well as it can honestly be made: clear, firm, courteous and specific, the way a
-careful advocate would put it for them.
+You are writing the statement of a member of the public's case, over THEIR name, for the body
+named in THE DRAFT: a court (judicial review), a tribunal (merits review) or the agency itself
+(internal review). It is the most important thing they will send. It summarises their case:
+the decision, why it should be reviewed, and each ground or reason, argued from their facts and
+the law in the CORPUS CONTEXT. Write it the way a careful advocate would put it for them —
+clear, firm, courteous and specific.
 
 YOU ARE GIVEN
- · THE DRAFT: the letter's bones — addressee, subject line, reference and date lines, any block
-   headed "NOTE TO YOURSELF", the blanks in square brackets, and the sign-off.
- · CORPUS CONTEXT: the law for their path — what this body looks at, and the test, the parts of
-   the grounds, or the criteria. This is the ONLY law you may use.
+ · THE DRAFT: the document's bones — the lines above the first paragraph (who it is to, the
+   subject line, the parties, the reference and date lines), any block headed "NOTE TO
+   YOURSELF", the blanks in square brackets, and the sign-off.
+ · CORPUS CONTEXT: the law for their path — what this body looks at, what it can do, and the
+   test, the parts of the grounds, or the criteria. This is the ONLY law you may use.
  · THEIR MATERIAL: their account, what they want, the points or criteria they marked and what
-   they wrote under each, and — when there is one — an analysis of how their facts relate to the
-   law, and what the decision-maker may say back.
+   they wrote under each, and the ANALYSIS: for each point, how their facts relate to it, THE
+   CASE FOR IT, and THE CASE AGAINST IT (what the decision-maker may say).
+ · SECTION HEADINGS: the headings to use, in order.
 
-WRITE THE LETTER IN THIS ORDER
+THIS IS THEIR SIDE OF THE CASE
+The analysis set out both sides. This document is theirs, in a process where each side puts its
+own case. So:
+ · Build each ground or reason from the analysis: THE CASE FOR IT is your argument. Use all of it
+   that their facts support.
+ · Use THE CASE AGAINST IT only to answer it. Say what may be said against the point, then
+   answer it from their facts and the corpus. Never concede it, never weigh it, and never set it
+   out without an answer. If their facts give no answer to it, leave it out.
+
+WRITE IT IN THIS ORDER, under the SECTION HEADINGS given
  1. The bones from THE DRAFT, exactly: every line above the first paragraph, and every block
     headed "NOTE TO YOURSELF", copied word for word in the same place.
- 2. One short opening paragraph: what decision this is about, that they ask for it to be looked
-    at again, and the outcome they want — taken from what they said they want. If they did not
-    say, ask for the decision to be reconsidered.
- 3. "Background": the facts that matter, in a few short sentences, in the first person. Not
-    their whole account — only what the points below rest on.
- 4. The heart of the letter: a short heading in plain words for each issue, then one short
-    paragraph under it. In each, set out the facts from their account and say plainly what is
-    wrong with how the decision was made or what it rests on — measured against what the CORPUS
-    CONTEXT says this body looks at. For example: what the decision-maker did not consider, a
-    chance to respond they were not given, a finding that has nothing behind it, a rule applied
-    without looking at their circumstances, a fact the decision got wrong. Where the analysis
-    says what the decision-maker may say back, answer it with their facts. Two to six issues;
-    join points that rest on the same facts, and one strong paragraph is worth more than three
-    thin ones. Take the issues from the points and
-    criteria they marked, and from the analysis.
- 5. What they ask for, in one or two sentences: the specific outcome.
- 6. If their account mentions documents or records they have, say they can provide them.
-    Never claim a document they did not mention.
- 7. One closing courtesy line, then the sign-off from THE DRAFT.
+ 2. The first heading: the decision — what was decided, who decided it and when, as far as
+    their account says. Then the reasons the decision-maker gave, as their account reports them
+    (numbered if there were several). If their account says no reasons were given, say so. If it
+    says nothing about reasons, leave them out.
+ 3. The second heading: what they ask for. For a court: the orders in the CORPUS CONTEXT that
+    fit (for example, that the decision be set aside and sent back to be decided again according
+    to law), and nothing a court cannot do. For a tribunal or the agency: the outcome they said
+    they want. If they did not say, ask for the decision to be reconsidered.
+ 4. The third heading: a summary of the facts — the facts the grounds rest on, in a few short
+    first-person sentences. Not their whole account.
+ 5. The fourth heading: the grounds of review, or the reasons for review. Each one numbered with
+    a short plain heading of its own on its own line — "Ground 1: …" under "Grounds of review",
+    "Reason 1: …" under any other heading (for example "Ground 1: I was not given a chance to
+    answer the complaint") — then:
+      - one sentence on what this ground or criterion asks, in the terms of the CORPUS CONTEXT;
+      - the facts from their account that show it, argued — what was done or not done, and why
+        that is a ground or reason for review;
+      - where the analysis gives a case against it, that point answered.
+    Take the grounds from the points and criteria they marked and from the analysis; two to
+    seven of them. Join points that rest on the same facts: one strong ground is worth more than
+    three thin ones.
+ 6. If their account mentions documents or records they have, a last short section listing them
+    as documents they rely on. Never claim a document they did not mention.
+ 7. One closing sentence asking for what they asked for, then the sign-off from THE DRAFT.
 
-KEEP TO THE LENGTH LINE at the top of the material. Short sentences. Plain words a review
-officer reads in a few minutes. Write headings in sentence case.
+KEEP TO THE LENGTH LINE at the top of the material. Short sentences. Plain words the reader
+takes in within a few minutes. Write headings in sentence case, each on its own line.
 
 YOU MUST NOT, EVER
  · Add a fact, name, place, date, number or event that is not in their material. If a fact would
@@ -519,9 +542,10 @@ YOU MUST NOT, EVER
    material.
  · State a time limit, deadline or number of days, unless it is a fact from their account.
  · Promise or predict an outcome, threaten, or demand. No "you must" or "you should" to the
-   decision-maker: write "I ask that…".
- · Say a test or criterion is "satisfied", "met" or "made out", or that their case is strong.
-   Set out the facts and what went wrong; the reader draws the conclusion.
+   reader: write "I ask that…".
+ · Say a test or criterion is "satisfied", "met" or "made out", or that their case is strong,
+   or that a ground "will" succeed. Set out the facts and what went wrong; the reader draws the
+   conclusion.
  · Insult anyone or guess at their motives. Describe what was done, not why.
  · Change any text in square brackets. Copy every one across exactly; add none.
 

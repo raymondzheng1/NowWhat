@@ -182,7 +182,7 @@
     "letterFullNotice": "This is the letter with your account in full.",
     "letterWarningTitle": "Before you send it",
     "letterCaseRefused": "We could not write the letter that sets out your case this time. Below is the plain letter, with your account in full. A free legal service can help you shape it.",
-    "letterCaseNotice": "We wrote this letter to set out your case, from what you told us, the points you marked and the analysis above. Check every sentence is true, and that it says what you want to say, before you send it.",
+    "letterCaseNotice": "We wrote this to set out your case, from the analysis above: the decision and its reasons, what you ask for, and each point argued for you, with what the other side may say answered. Check every sentence is true, and that it says what you want to say, before you send it.",
     "letterUseCase": "Use the letter that sets out my case",
     "letterUsePlain": "Use the plain letter with my account in full",
     "letterUseFull": "Use my full account instead",
@@ -310,7 +310,7 @@
     "applyMerits": "Merits review",
     "applyJudicial": "Judicial review",
     "applyMeritsHint": "This letter asks a tribunal to look at the decision again on the facts and make the correct or preferable decision.",
-    "applyJudicialHint": "This letter is about how the decision was made, not the outcome. Judicial review is a court process and it is technical, so this is a starting point to take to a human legal service.",
+    "applyJudicialHint": "This sets out your grounds and your case for the court. Judicial review is a court process and it is technical, so take it to a human legal service before you file anything.",
     "applyReadMore": "Read more about this path",
     "applyNoDraft": "There is no draft for this path. Taking a matter to court is a formal step with its own form and its own rules, and we do not hold a checked version of it. Your notes below are ready to take to a free service, who can tell you what to file and by when.",
     "applyNoDraftCta": "Find free help",
@@ -534,7 +534,12 @@
     "busyGroundsTitle": "Reading your account",
     "busyGroundsDetail": "Looking for the points of review it may relate to. This usually takes a few seconds. Please keep this page open.",
     "busyWordsDetail": "Picking out the parts of your account that belong in the letter. This usually takes a few seconds. Please keep this page open.",
-    "busyShowReady": "Show me what is ready"
+    "busyShowReady": "Show me what is ready",
+    "applyTitleCourt": "Your statement of case",
+    "letterCaseNoticeCourt": "We wrote this statement of your case for the court, from the analysis above: the decision and its reasons, what you ask the court to do, and each ground argued for you, with what the other side may say answered. Check every sentence is true. A free legal service can tell you which court and which form to use, and help you put it into that form.",
+    "letterCaseWritingCourt": "Writing the statement of your case…",
+    "letterCaseRefusedCourt": "We could not write the statement of your case this time. Below is the plain version, with your account in full. A free legal service can help you shape it.",
+    "busyStepCaseCourt": "Your statement of case for the court"
   },
   "ask": {
     "title": "Ask a question",

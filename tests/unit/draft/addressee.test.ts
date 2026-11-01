@@ -43,8 +43,22 @@ describe("the merits letter is addressed to the tribunal", () => {
   // letter about a council's decision (the judicial-review benchmark).
   it("a catch-all entry leaves the addressee as a blank to fill in", () => {
     for (const id of ["vic-generic", "cth-generic"]) {
-      const d = buildDraft(getEntry(id)!, "judicial-review-application");
+      const d = buildDraft(getEntry(id)!, "internal-review-request");
       expect(d.body).toMatch(/^To: \[the agency or council that made the decision\]/m);
+    }
+  });
+
+  // The owner's ruling, 2026-11-01: judicial review drafts a statement of the case for the
+  // court, with the decision-maker as the other party, not a letter asking it to look again.
+  it("judicial review is a statement to the court, with the decision-maker as respondent", () => {
+    for (const id of ["vic-generic", "cth-generic"]) {
+      const d = buildDraft(getEntry(id)!, "judicial-review-application");
+      expect(d.body).toMatch(/^To: \[the court that will hear your application/m);
+      expect(d.body).toMatch(/^Applicant: \[Your name\]$/m);
+      expect(d.body).toMatch(/^Respondent: \[the agency or council that made the decision\]$/m);
+      expect(d.body).toContain("I ask the court to set aside the decision and send it back to be decided again according to law.");
+      expect(d.body).toMatch(/^Signed: \[Your name\]\nApplicant$/m);
+      expect(d.body).not.toContain("Yours faithfully");
     }
   });
 
@@ -157,6 +171,6 @@ describe("the internal-review letter says each thing once, before it closes", ()
     }).body;
     const at = body.indexOf("They never let me reply.");
     expect(at).toBeGreaterThan(body.indexOf("set out below"));
-    expect(at).toBeLessThan(body.indexOf("I ask that the decision be looked at again"));
+    expect(at).toBeLessThan(body.indexOf("I ask the court to set aside"));
   });
 });

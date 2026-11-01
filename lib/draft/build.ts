@@ -36,6 +36,8 @@ export interface Draft {
 }
 
 const SIGN_OFF = "Yours faithfully,\n[Your name]\n[Your contact details]";
+/** A statement to a court is signed by the party, not closed like a letter. */
+const SIGN_OFF_APPLICANT = "Signed: [Your name]\nApplicant";
 
 // The paragraph that starts each letter's close. What the person adds under headings goes
 // ABOVE it: appended at the sign-off, their points printed after "Thank you for your help",
@@ -43,7 +45,10 @@ const SIGN_OFF = "Yours faithfully,\n[Your name]\n[Your contact details]";
 const CLOSE_REASONS = "Please send the statement to the contact details above. Thank you for your help.";
 const CLOSE_INTERNAL =
   "I would be grateful if you would confirm that you have received this request, and let me know if you need anything further from me to complete the review.";
-const CLOSE_JR = "I ask that the decision be looked at again and made according to law.";
+// What judicial review can do, in the corpus's own terms: set aside, and send back to be decided
+// again lawfully. Nothing about the outcome they want — that is not the court's to give.
+const CLOSE_JR =
+  "I ask the court to set aside the decision and send it back to be decided again according to law.";
 const CLOSE_COURT = "I would be grateful if you would confirm that you have received this letter. Thank you for your help.";
 const CLOSE_MERITS = "Please let me know if you need anything further from me. Thank you for your help.";
 export const LETTER_CLOSINGS = [CLOSE_REASONS, CLOSE_INTERNAL, CLOSE_JR, CLOSE_COURT, CLOSE_MERITS];
@@ -200,40 +205,54 @@ export function buildDraft(
   }
 
   // ---- Judicial review -------------------------------------------------------------
-  // A different letter entirely: a court is asked to check LEGALITY, not to remake the
+  // A different document entirely: a court is asked to check LEGALITY, not to remake the
   // decision. Judicial review is technical and the corpus is explicit that free legal help
   // early really matters, so the draft says so at the top rather than pretending a template
   // is enough.
+  //
+  // A STATEMENT OF THEIR CASE FOR THE COURT, not a letter to the decision-maker (the owner's
+  // ruling, 2026-11-01). It was addressed to the council and asked it to "look again", which
+  // is internal review in judicial review's clothes: the council is the other side in a court
+  // case, and the person needs their grounds and their case set out for the court. Which
+  // court, and on which of its forms, depends on the decision — so both are blanks a free
+  // legal service fills in, and the NOTE TO YOURSELF still says this is not the filing.
   if (kind === "judicial-review-application") {
     return {
-      title: "Judicial review — a starting point to take to a lawyer",
+      title: "Judicial review — your grounds and your case, to take to a lawyer",
       filename: `${entry.id}-judicial-review.txt`,
       body: lines(
-        header,
-        "Re: Concern about how a decision was made",
+        "[Your name]",
+        "[Your address]",
+        "[Your contact details]",
         "",
+        "[Date]",
+        "",
+        "To: [the court that will hear your application — a free legal service can tell you which court, and which of its forms to use]",
+        "",
+        "Re: Application for judicial review — the applicant's grounds and case",
+        "",
+        "Applicant: [Your name]",
+        `Respondent: ${issuer}`,
         "Reference number: [reference number from your letter, if any]",
         `Date of the decision: ${decisionDate || "[date on your letter]"}`,
         "",
         SELF_WARNING_HEADING,
         SELF_WARNING_JUDICIAL_REVIEW,
         "",
-        "I am writing about the decision described above. My concern is with the way the decision was made, rather than with the outcome alone.",
+        "I apply for judicial review of the decision described above. My case is about the way the decision was made, not only its outcome.",
         "",
         `What happened, in my own words. ${inTheirWords("describe what you were told, what you were able to respond to, and what you think was not taken into account")}`,
         "",
         ...(opts.groundsListed
-          ? ["The concerns I ask to have looked at are set out below."]
+          ? ["My grounds are set out below."]
           : [
-              "The concern I ask to have looked at is set out below.",
+              "My ground is set out below.",
               "  [name the ground — for example, that you were not given a fair chance to respond, that something irrelevant was taken into account, or that something relevant was not considered]",
             ]),
         "",
         CLOSE_JR,
         "",
-        "Please let me know what information you need from me. Thank you.",
-        "",
-        SIGN_OFF,
+        SIGN_OFF_APPLICANT,
       ),
     };
   }

@@ -55,6 +55,23 @@ describe("a letter as shown and copied", () => {
     expect(isHeadingLine(lines, 7)).toBe(false);
   });
 
+  it("takes a numbered ground or reason for a heading, colon and all, but not a party line", () => {
+    const lines = [
+      "",
+      "Ground 1: I was not given a chance to answer the complaint before the decision was made",
+      "x",
+      "",
+      "Reason 2: The decision rests on a conviction I do not have",
+      "x",
+      "",
+      "Applicant: [Your name]",
+      "x",
+    ];
+    expect(isHeadingLine(lines, 1)).toBe(true);
+    expect(isHeadingLine(lines, 4)).toBe(true);
+    expect(isHeadingLine(lines, 7)).toBe(false);
+  });
+
   it("leaves a letter with no note as it was, apart from the spacing", () => {
     const plain = "To: x\n\nRe: y\n\nI ask for a review.\n\nYours faithfully,\n[Your name]";
     expect(presentLetter(plain)).toEqual({ warnings: [], letter: plain });

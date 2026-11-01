@@ -170,17 +170,22 @@ function inventedNames(source: string, rewritten: string): string[] {
  * the letter is asked to argue from it.
  */
 export function caseMaxWords(
-  c: { groundIds: string[]; notes: Record<string, string>; analysis?: { points: unknown[] } | null },
+  c: { groundIds: string[]; notes: Record<string, string>; analysis?: { points: unknown[]; depth?: unknown[] } | null },
   draft = "",
 ): number {
   const marked = new Set([...c.groundIds, ...Object.keys(c.notes).filter((k) => c.notes[k]?.trim())]);
-  const issues = Math.min(7, Math.max(2, marked.size, c.analysis?.points.length ?? 0));
+  const issues = Math.min(
+    7,
+    Math.max(2, marked.size, c.analysis?.points.length ?? 0, c.analysis?.depth?.length ?? 0),
+  );
   const flatDraft = flat(draft);
   const warnings = SELF_WARNING_BLOCKS.filter((w) => flatDraft.includes(flat(w.text))).reduce(
     (n, w) => n + words(w.text),
     0,
   );
-  return Math.max(850, Math.min(1150, 500 + 90 * issues)) + warnings;
+  // A statement of the case answers the other side on each ground as well as making it, so
+  // each issue has more to carry than in the letter it replaced (the owner's ruling, 2026-11-01).
+  return Math.max(900, Math.min(1400, 550 + 110 * issues)) + warnings;
 }
 
 const words = (s: string) => s.split(/\s+/).filter(Boolean).length;
@@ -292,13 +297,20 @@ export function checkLetterFidelity(
   }
 
   // The structural bones. A "more professional" rewrite that drops the sign-off or the
-  // subject line has produced a nicer paragraph and a worse letter.
+  // subject line has produced a nicer paragraph and a worse letter. Each is required when the
+  // draft has it: a statement to a court is signed by the applicant, not closed "Yours
+  // faithfully", and is held to its own signature line and its parties instead.
   for (const [needle, what] of [
     ["Yours faithfully", "sign-off"],
+    ["Signed:", "signature line"],
+    ["Applicant:", "applicant line"],
+    ["Respondent:", "respondent line"],
     ["Re:", "subject line"],
     ["To:", "addressee"],
   ] as const) {
-    if (!rewritten.includes(needle)) failures.push({ gate: "not-a-letter", detail: what });
+    if (original.includes(needle) && !rewritten.includes(needle)) {
+      failures.push({ gate: "not-a-letter", detail: what });
+    }
   }
 
   return failures;

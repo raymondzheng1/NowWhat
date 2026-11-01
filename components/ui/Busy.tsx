@@ -117,12 +117,12 @@ export function Busy({
   useEffect(() => {
     if (!show) return;
     const previouslyFocused = document.activeElement as HTMLElement | null;
-    panelRef.current?.focus();
+    panelRef.current?.focus({ preventScroll: true });
 
     const keepFocus = (e: KeyboardEvent) => {
       if (e.key === "Tab") {
         e.preventDefault();
-        panelRef.current?.focus();
+        panelRef.current?.focus({ preventScroll: true });
       }
     };
     const { overflow } = document.body.style;
@@ -132,7 +132,10 @@ export function Busy({
     return () => {
       document.removeEventListener("keydown", keepFocus, true);
       document.body.style.overflow = overflow;
-      previouslyFocused?.focus?.();
+      // Without scrolling to it. The button pressed is usually the step's "Next" at the foot of
+      // the page, and the step that replaced it starts at the top: focusing it the plain way
+      // dragged every new step down to its last line (reported 2026-11-01).
+      if (previouslyFocused?.isConnected) previouslyFocused.focus({ preventScroll: true });
     };
   }, [show]);
 

@@ -107,6 +107,83 @@ describe("/api/letter-polish — the case letter", () => {
     expect(seen).toMatch(/hearing/i);
   });
 
+  // The owner's ruling, 2026-11-01: a summary of the case built on the analysis, for the body
+  // that hears it. It argues the case for each point and answers the case against.
+  it("is given each point argued both ways, and the sections for the path", async () => {
+    let seen = "";
+    __setModelForTests(async (call) => {
+      seen = `${call.system}\n${call.user}`;
+      return model(letter(GOOD))(call);
+    });
+    const withDepth = {
+      ...body,
+      case: {
+        ...body.case,
+        analysis: {
+          ...body.case.analysis,
+          depth: [
+            {
+              ref: "procedural-fairness-hearing",
+              for: "Nobody told them about the complaint before the permit was cancelled.",
+              against: "The council may say the complaint was minor and needed no reply.",
+            },
+          ],
+        },
+      },
+    };
+    await POST(
+      new NextRequest("http://x/api/letter-polish", {
+        method: "POST",
+        headers: { "content-type": "application/json", "x-forwarded-for": "9.9.9.7" },
+        body: JSON.stringify(withDepth),
+      }),
+    );
+    // Named as the person saw the point, not by its id.
+    expect(seen).toContain('ON "You never got to have your say"');
+    expect(seen).toContain("THE CASE FOR IT (argue this): Nobody told them about the complaint");
+    expect(seen).toContain("THE CASE AGAINST IT (answer this from their facts; never concede it): The council may say");
+    expect(seen).toContain(
+      "SECTION HEADINGS, in order: The decision and its reasons | What I ask the court to do | Summary of the facts | Grounds of review",
+    );
+    expect(seen).toMatch(/Never concede it/i);
+  });
+
+  it("a statement to the court keeps its parties and its signature line", async () => {
+    const statement = (x: string) =>
+      [
+        "To: [the court that will hear your application — a free legal service can tell you which court, and which of its forms to use]",
+        "",
+        "Re: Application for judicial review — the applicant's grounds and case",
+        "",
+        "Applicant: [Your name]",
+        "Respondent: [the agency or council that made the decision]",
+        "",
+        x,
+        "",
+        "Signed: [Your name]",
+        "Applicant",
+      ].join("\n");
+    const send = async (out: string) => {
+      __setModelForTests(model(out));
+      return (
+        await POST(
+          new NextRequest("http://x/api/letter-polish", {
+            method: "POST",
+            headers: { "content-type": "application/json", "x-forwarded-for": "9.9.9.7" },
+            body: JSON.stringify({ ...body, draft: statement(`What happened, in my own words. ${story}`) }),
+          }),
+        )
+      ).json();
+    };
+    // No "Yours faithfully" in the draft, so none is asked of the rewrite.
+    expect((await send(statement(`Grounds of review\n\nGround 1: I was not given a chance to respond\n${GOOD}`))).status).toBe(
+      "answered",
+    );
+    // But the other party may not go missing.
+    const noRespondent = statement(`Ground 1: I was not given a chance to respond\n${GOOD}`).replace(/^Respondent:.*\n/m, "");
+    expect((await send(noRespondent)).status).toBe("not-covered");
+  });
+
   for (const [name, bad] of [
     ["a new name", `${GOOD} Mr Hargreaves at the council refused to listen.`],
     ["a stated time limit", `${GOOD} I am applying within 60 days.`],
@@ -121,14 +198,16 @@ describe("/api/letter-polish — the case letter", () => {
 
   // Measured live, 2026-11-01: seven marked grounds, refused twice for length under a flat 750.
   it("is allowed more words for more marked issues, and told the number", async () => {
-    expect(caseMaxWords({ groundIds: ["a"], notes: {} })).toBe(850);
-    expect(caseMaxWords({ groundIds: ["a", "b", "c", "d", "e", "f", "g"], notes: {} })).toBe(1130);
-    expect(caseMaxWords({ groundIds: Array.from({ length: 12 }, (_, i) => `g${i}`), notes: {} })).toBe(1130);
-    // The analysis's points count as issues; a warning block copied word for word is on top.
-    expect(caseMaxWords({ groundIds: [], notes: {}, analysis: { points: [1, 2, 3, 4, 5] } })).toBe(950);
+    expect(caseMaxWords({ groundIds: ["a"], notes: {} })).toBe(900);
+    expect(caseMaxWords({ groundIds: ["a", "b", "c", "d", "e", "f", "g"], notes: {} })).toBe(1320);
+    expect(caseMaxWords({ groundIds: Array.from({ length: 12 }, (_, i) => `g${i}`), notes: {} })).toBe(1320);
+    // The analysis's points, and the points it argues both ways, count as issues; a warning
+    // block copied word for word is on top.
+    expect(caseMaxWords({ groundIds: [], notes: {}, analysis: { points: [1, 2, 3, 4, 5] } })).toBe(1100);
+    expect(caseMaxWords({ groundIds: [], notes: {}, analysis: { points: [], depth: [1, 2, 3, 4, 5, 6] } })).toBe(1210);
     const warning = SELF_WARNING_BLOCKS[0]!.text;
     expect(caseMaxWords({ groundIds: ["a"], notes: {} }, `To: x\n\n${warning}\n\nYours faithfully,`)).toBe(
-      850 + warning.split(/\s+/).filter(Boolean).length,
+      900 + warning.split(/\s+/).filter(Boolean).length,
     );
     let seen = "";
     __setModelForTests(async (call) => {
@@ -136,7 +215,7 @@ describe("/api/letter-polish — the case letter", () => {
       return model(letter(GOOD))(call);
     });
     await post();
-    expect(seen).toMatch(/LENGTH: about 638 words/);
+    expect(seen).toMatch(/LENGTH: about 675 words/);
   });
 
   it("tells the second attempt what the route refused the first for", async () => {

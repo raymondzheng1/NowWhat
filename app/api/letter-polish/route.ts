@@ -12,6 +12,7 @@ import { runLetterCase } from "@/lib/generation/runner";
 import { getDataEntry } from "@/lib/data";
 import { getGround } from "@/lib/legal";
 import { contextForPath } from "@/lib/memo/path-context";
+import { withCriterionIds } from "@/lib/memo/criteria";
 import { periodsAreTheirs } from "@/lib/grounds/match";
 import { checkNoCaseCitation } from "@/lib/verification/own-words";
 
@@ -19,6 +20,13 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 /** Attempts at the shorter letter per request: one, then one more if it was refused. */
+// The sections of the case document for each path, in order (the owner's ruling, 2026-11-01):
+// the decision and its reasons, what is asked for, the facts, then the grounds or reasons.
+const CASE_HEADINGS = {
+  "judicial-review": ["The decision and its reasons", "What I ask the court to do", "Summary of the facts", "Grounds of review"],
+  "merits-review": ["The decision and its reasons", "What I ask the tribunal to decide", "Summary of the facts", "Why the decision should be changed"],
+  "internal-review": ["The decision and its reasons", "What I ask for", "Summary of the facts", "Why the decision should be reviewed"],
+} as const;
 const LETTER_ATTEMPTS = 2;
 
 /**
@@ -72,6 +80,11 @@ const BodySchema = z.object({
             .max(6)
             .default([]),
           otherSide: z.string().max(1500).default(""),
+          /** Each point argued both ways — the statement argues the one and answers the other. */
+          depth: z
+            .array(z.object({ ref: z.string().max(200), for: z.string().max(1500), against: z.string().max(1500) }))
+            .max(7)
+            .default([]),
         })
         .nullable()
         .default(null),
@@ -198,7 +211,9 @@ export async function POST(req: NextRequest) {
       forum: c.forum,
       pathName: c.pathName,
     });
-    const noteName = (k: string) => getGround(k)?.plainName ?? k;
+    // A point's name as the person saw it: the ground's plain name, or the criterion's words.
+    const criterionText = new Map(withCriterionIds(c.criteria).map((x) => [x.id, x.text]));
+    const noteName = (k: string) => getGround(k)?.plainName ?? criterionText.get(k) ?? k;
     const notes = Object.entries(c.notes)
       .filter(([, v]) => v.trim())
       .map(([k, v]) => `On "${noteName(k)}": ${v.trim()}`);
@@ -215,17 +230,24 @@ export async function POST(req: NextRequest) {
       body.theirWords.trim(),
       c.goals.length ? `\nWHAT THEY SAID THEY WANT: ${c.goals.join("; ")}` : "",
       notes.length ? `\nWHAT THEY WROTE UNDER THE POINTS THEY MARKED:\n${notes.join("\n")}` : "",
-      a && (a.points.length || a.otherSide)
+      a && (a.points.length || a.otherSide || a.depth.length)
         ? [
             "",
-            "ANALYSIS (how their facts relate to the law above — use it, but every fact must still come from their account):",
+            "ANALYSIS (how their facts relate to the law above — build on it, but every fact must still come from their account):",
             a.situation,
-            ...a.points.map((p) => `- ${p.ref}: ${p.relates} ${p.needed}`.trim()),
-            a.otherSide ? `WHAT THE DECISION-MAKER MAY SAY: ${a.otherSide}` : "",
+            ...a.points.map((p) => `- ${noteName(p.ref)}: ${p.relates} ${p.needed}`.trim()),
+            ...a.depth.flatMap((d) => [
+              "",
+              `ON "${noteName(d.ref)}"`,
+              `THE CASE FOR IT (argue this): ${d.for}`,
+              `THE CASE AGAINST IT (answer this from their facts; never concede it): ${d.against}`,
+            ]),
+            a.otherSide ? `WHAT THE DECISION-MAKER MAY SAY OVERALL (answer it): ${a.otherSide}` : "",
           ]
-            .filter(Boolean)
+            .filter((x) => x !== null)
             .join("\n")
         : "",
+      `\nSECTION HEADINGS, in order: ${CASE_HEADINGS[c.pathId].join(" | ")}`,
     ]
       .filter((x) => x !== "")
       .join("\n");

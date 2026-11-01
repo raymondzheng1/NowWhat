@@ -122,7 +122,7 @@ test("the case letter says to check every sentence, and switches back to the pla
 
   const apply = page.locator("#r-apply");
   await apply.scrollIntoViewIfNeeded({ timeout: 15_000 });
-  await expect(apply).toContainText(/We wrote this letter to set out your case/i, { timeout: 15_000 });
+  await expect(apply).toContainText(/We wrote this to set out your case, from the analysis above/i, { timeout: 15_000 });
   await expect(apply).toContainText("I parked on Batman Street. The sign was hidden by a tree.");
   await expect(apply).not.toContainText("parking enforcement officer");
 
@@ -321,4 +321,48 @@ test("the in-depth analysis argues each marked point for and against, with no ve
   await expect(notes).toContainText("The council may say its letter invited a reply.");
   await expect(notes).not.toContainText(/Where that leaves this point/i);
   await expect(notes).not.toContainText(/The answer likely to be given/i);
+});
+
+// Reported 2026-11-01: the grounds step and the analysis both opened at their last line. The
+// writing screen handed focus back to the "Next" button pressed at the foot of the last step,
+// and the browser scrolled the new step down to it.
+test("a step that is written while you wait opens at its top, not its foot", async ({ page }) => {
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.addInitScript(() => {
+    window.localStorage.setItem("wn:tour:off", "1");
+    window.localStorage.setItem("wn:install:off", "1");
+    if (window.sessionStorage.getItem("__seeded")) return;
+    window.sessionStorage.setItem("__seeded", "1");
+    window.sessionStorage.setItem("wn-consented", JSON.stringify({ matter: "Vic|vic-generic", flags: {} }));
+    window.sessionStorage.setItem(
+      "wn-flow",
+      JSON.stringify({
+        matter: "Vic|vic-generic",
+        chosenPath: "judicial-review",
+        goals: ["reasons"],
+        goalOther: "",
+        account: { "q-story": "The council cancelled my permit. I never got a chance to reply to the complaint before they decided." },
+        relatedGrounds: [],
+        groundNotes: {},
+        criteriaNotes: {},
+        pickedCriteria: [],
+      }),
+    );
+  });
+  const slow = (json: object) => async (route: import("@playwright/test").Route) => {
+    await new Promise((r) => setTimeout(r, 2000));
+    await route.fulfill({ json });
+  };
+  await page.route("**/api/grounds-match", slow({ ok: true, status: "none", suggestions: [] }));
+  await page.route("**/api/memo", slow({ ok: true, status: "not-covered" }));
+  await page.route("**/api/letter-polish", slow({ ok: true, status: "not-covered" }));
+  await page.goto("/start?jur=Vic&area=vic-generic&date=2026-10-14&step=result&view=options");
+
+  for (const name of [/Next: the points you raise/, /Build my analysis/]) {
+    await page.getByRole("button", { name }).click();
+    await expect(page.getByRole("dialog")).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByRole("dialog")).toHaveCount(0, { timeout: 15_000 });
+    await page.waitForTimeout(1200);
+    expect(await page.evaluate(() => window.scrollY)).toBeLessThan(400);
+  }
 });

@@ -49,8 +49,12 @@ export function splitWarnings(body: string): { warnings: string[]; letter: strin
  */
 export function isHeadingLine(lines: string[], i: number): boolean {
   const line = (lines[i] ?? "").trim();
-  if (!line || line.length > 80) return false;
-  if (/[.,;:!?"'”)]$/.test(line) || line.startsWith("[") || line.startsWith("-") || line.includes(":")) return false;
+  // "Ground 1: I was not given a chance to answer" — the statement of case numbers its grounds
+  // and reasons, and those headings carry a colon and run longer than a letter's.
+  const numbered = /^(Ground|Reason) \d+: \S/.test(line);
+  if (!line || line.length > (numbered ? 120 : 80)) return false;
+  if (/[.,;:!?"'”)]$/.test(line) || line.startsWith("[") || line.startsWith("-")) return false;
+  if (line.includes(":") && !numbered) return false;
   if (i > 0 && (lines[i - 1] ?? "").trim() !== "") return false;
   // Followed by its paragraph — directly, or after the blank line `presentLetter` adds.
   const next = (lines[i + 1] ?? "").trim();
