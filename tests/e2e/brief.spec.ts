@@ -6,9 +6,8 @@ import { test, expect, type Page } from "@playwright/test";
  * These run keyless like the rest of the e2e suite, so the two model-backed routes are stood in
  * for with `page.route`. What is under test is the PAGE: what it shows while the brief is being
  * written, where the brief and the full notes sit, what happens when the brief is refused, and
- * how the shorter letter is offered and switched back. A hidden browser pane cannot exercise
- * the letter at all — it is asked for when it scrolls into view, and a page that is not drawn
- * never scrolls — so this is where that path is proved.
+ * how the shorter letter is offered and switched back, and the writing screen that covers the
+ * step while the analysis and the letter are written.
  */
 
 const STORY =
@@ -63,12 +62,26 @@ test("the short analysis leads, after the time limit, and the full notes fold un
   await page.goto(MEMO_URL);
 
   const memo = page.locator("#memo-text");
-  // While it is written: the frame (time limit) and the notice, not the long memo open.
-  await expect(memo).toContainText(/Writing your analysis/i, { timeout: 15_000 });
+  // While it is written, the page is covered by the writing screen, which says what is under way.
+  const writing = page.getByRole("dialog", { name: /Writing up your results/i });
+  await expect(writing).toBeVisible({ timeout: 15_000 });
+  await expect(writing.getByTestId("busy-steps")).toContainText("Your in-depth analysis");
+  // Back does not walk away from it: the request in flight would be lost and still paid for.
+  // (On a fresh load the router stamps the page's history entry a moment late, and the guard
+  // goes on top of it once it has; a person does not press Back inside that moment.)
+  await page.waitForFunction(() => (window.history.state as Record<string, unknown> | null)?.wnBusyGuard === true);
+  await page.goBack();
+  await expect(page).toHaveURL(/view=memo/);
+  await expect(writing).toBeVisible();
+  // Beneath it: the frame (time limit) and the notice, not the long memo open.
+  await expect(memo).toContainText(/Writing your analysis/i);
   await expect(memo.getByRole("heading", { name: "Time limit" })).toBeVisible();
 
   await expect(memo).toContainText(BRIEF.situation, { timeout: 25_000 });
   await expect(memo).not.toContainText(/Writing your analysis/i);
+  await expect(writing).toBeHidden({ timeout: 15_000 });
+  // And the copy Back landed on is taken away again: this is still the analysis step.
+  await expect(page).toHaveURL(/view=memo/);
 
   // The time limit comes before anything the model wrote.
   const text = await memo.innerText();
@@ -146,18 +159,25 @@ test("typing in 'Anything else?' does not ask for a new analysis on every keystr
   let memoCalls = 0;
   await page.route("**/api/memo", async (route) => {
     memoCalls++;
+    // The re-write is slow, so a writing screen covering the box would be caught.
+    if (memoCalls > 1) await new Promise((r) => setTimeout(r, 3000));
     await route.fulfill({ json: { ok: true, status: "answered", brief: BRIEF } });
   });
   await page.goto(MEMO_URL);
   const memo = page.locator("#memo-text");
   await expect(memo).toContainText(BRIEF.situation, { timeout: 15_000 });
   expect(memoCalls).toBe(1);
+  await expect(page.getByRole("dialog")).toHaveCount(0, { timeout: 15_000 });
 
   const more = page.locator("#r-memo textarea").first();
   await more.click();
   await more.pressSequentially("The tree has since been cut back.", { delay: 40 });
   // Settle, then at most one more request for the finished sentence.
-  await page.waitForTimeout(4000);
+  await page.waitForTimeout(2500);
+  // The re-write is quiet: they are mid-sentence in the box, so nothing covers it.
+  await expect(page.getByRole("dialog")).toHaveCount(0);
+  await expect(more).toBeFocused();
+  await page.waitForTimeout(1500);
   expect(memoCalls).toBeLessThanOrEqual(2);
 });
 
@@ -209,8 +229,9 @@ test("judicial review: the grounds the account may relate to come first, ticked,
     );
   }, "The council cancelled my permit. I never got a chance to reply to the complaint before they decided.");
   let calls = 0;
-  await page.route("**/api/grounds-match", (route) => {
+  await page.route("**/api/grounds-match", async (route) => {
     calls++;
+    await new Promise((r) => setTimeout(r, 2500));
     return route.fulfill({
       json: {
         ok: true,
@@ -226,6 +247,10 @@ test("judicial review: the grounds the account may relate to come first, ticked,
     });
   });
   await page.goto("/start?jur=Vic&area=vic-generic&date=2026-10-14&step=result&view=grounds");
+  // While the account is read, the reading screen covers the step.
+  const reading = page.getByRole("dialog", { name: /Reading your account/i });
+  await expect(reading).toBeVisible({ timeout: 15_000 });
+  await expect(reading).toBeHidden({ timeout: 15_000 });
   const suggested = page.getByTestId("grounds-suggested");
   await expect(suggested).toContainText("I never got a chance to reply to the complaint", { timeout: 15_000 });
   await expect(suggested).toContainText("You say you could not answer the complaint first.");

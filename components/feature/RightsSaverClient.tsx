@@ -31,6 +31,7 @@ import { composeMemo, memoPathName } from "@/lib/memo/compose";
 import { composeBrief, draftedFromBrief, type BriefDraft } from "@/lib/memo/brief";
 import type { PathId } from "@/lib/analysis";
 import { Disclaimer } from "@/components/ui/Disclaimer";
+import { Busy, type BusyStep } from "@/components/ui/Busy";
 import { MemoView } from "@/components/feature/MemoView";
 import { LetterView, LetterPlaceholderKey } from "@/components/feature/LetterView";
 import { GetHelp } from "@/components/ui/GetHelp";
@@ -1761,34 +1762,12 @@ function ResultStep({
   const [polished, setPolished] = useState<Record<string, string>>({});
   const [polishing, setPolishing] = useState(false);
   const rawDraftBody = applyDraft?.body ?? "";
-  // Asked for only when the person is actually heading for the letter.
-  //
-  // The letter sits well below the fold of this step, and plenty of people read the analysis
-  // and leave without ever scrolling to it. Firing on entry to the step bought a rewrite that
-  // nobody read. The observer fires well before the section arrives, so the better wording is
-  // normally already there when they reach it, and someone who never scrolls costs nothing.
-  const letterRef = useRef<HTMLElement | null>(null);
-  const [letterNear, setLetterNear] = useState(false);
-  useEffect(() => {
-    if (letterNear) return;
-    // No observer at all (an older browser, or jsdom): ask straight away, exactly as this
-    // behaved before. Saving a few cents is not worth a letter that never improves.
-    if (typeof IntersectionObserver === "undefined") {
-      setLetterNear(true);
-      return;
-    }
-    const el = letterRef.current;
-    // Null because the section is not on this step yet — not a reason to give up and ask.
-    if (!el) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting)) setLetterNear(true);
-      },
-      { rootMargin: "800px 0px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [letterNear, view, rawDraftBody]);
+  // Asked for as soon as the step is entered, with the analysis, behind the one "writing"
+  // screen (the owner's call, 2026-11-01). It used to wait until they scrolled near it, to
+  // save a rewrite nobody read; but then the wait arrived halfway down the page, after the
+  // screen had gone, and a person mid-read was interrupted by a second one.
+  /** The letter request that last FINISHED for this key, answered or not. */
+  const [polishTried, setPolishTried] = useState<string | null>(null);
   // The shorter letter summarises their account; the full one carries every word of it. The
   // person decides which goes out over their name, and is told to check every sentence.
   const [useFullLetter, setUseFullLetter] = useState(false);
@@ -1940,7 +1919,7 @@ function ResultStep({
     !(account["q-story"] ?? "").trim() || draftKey in draftCache || (!drafting && memoTried === draftKey);
   const letterKey = isCaseLetter ? `${rawDraftBody}\u0000${draftKey}` : rawDraftBody;
   useEffect(() => {
-    if (view !== "memo" || !rawDraftBody || !activeApply || !letterNear) return;
+    if (view !== "memo" || !rawDraftBody || !activeApply) return;
     if (isCaseLetter && !analysisSettled) return;
     if (polished[letterKey] !== undefined) return;
     let live = true;
@@ -1991,14 +1970,81 @@ function ResultStep({
         /* offline, blocked or rejected — the deterministic draft is what they get */
       })
       .finally(() => {
+        setPolishTried(letterKey);
         if (live) setPolishing(false);
       });
     return () => {
       live = false;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [view, letterKey, entry.id, letterNear, analysisSettled]);
-  const shortLetter = (rawDraftBody && polished[letterKey]) || "";
+  }, [view, letterKey, entry.id, analysisSettled]);
+
+  // ---- The "writing" screen -------------------------------------------------------------
+  //
+  // While something is written for them the page is covered and leaving is guarded (the
+  // owner's ask, 2026-11-01): with only a line of text to show for it, people took the wait
+  // for a stall and left, losing the work and paying for it anyway. Only the FIRST writing on
+  // entering a step is covered. A re-write because they typed in "Anything else?" keeps its
+  // quiet line: a screen landing on someone mid-sentence would take the box away from them.
+  const storyGiven = !!(account["q-story"] ?? "").trim();
+  const letterWanted = view === "memo" && !!rawDraftBody && !!activeApply;
+  const letterSettled = !letterWanted || polished[letterKey] !== undefined || polishTried === letterKey;
+  const memoPending = view === "memo" && (!analysisSettled || !letterSettled);
+  const [memoReleased, setMemoReleased] = useState(false);
+  useEffect(() => {
+    if (view !== "memo") setMemoReleased(false);
+    else if (!memoPending) setMemoReleased(true);
+  }, [view, memoPending]);
+  const [groundsReleased, setGroundsReleased] = useState<string | null>(null);
+  const groundsPending =
+    view === "grounds" && match?.key === matchKey && match.status === "busy" && groundsReleased !== matchKey;
+  const [wordsReleased, setWordsReleased] = useState(false);
+  const busy: {
+    title: string;
+    detail: string;
+    steps?: BusyStep[];
+    slowAfterMs?: number;
+    onCancel: () => void;
+    cancelLabel?: string;
+  } | null =
+    memoPending && !memoReleased
+      ? {
+          title: t("busyWritingTitle"),
+          detail: t("busyWritingDetail"),
+          steps: [
+            ...(storyGiven
+              ? [{ label: t("busyStepAnalysis"), state: analysisSettled ? "done" : "active" } as BusyStep]
+              : []),
+            ...(letterWanted
+              ? [
+                  {
+                    label: isCaseLetter ? t("busyStepCaseLetter") : t("busyStepLetter"),
+                    state: letterSettled ? "done" : isCaseLetter && !analysisSettled ? "waiting" : "active",
+                  } as BusyStep,
+                ]
+              : []),
+          ],
+          // The analysis and then a case letter written from it: up to a minute, measured live.
+          slowAfterMs: 75_000,
+          onCancel: () => setMemoReleased(true),
+          cancelLabel: t("busyShowReady"),
+        }
+      : groundsPending
+        ? {
+            title: t("busyGroundsTitle"),
+            detail: t("busyGroundsDetail"),
+            onCancel: () => setGroundsReleased(matchKey),
+            cancelLabel: t("busyShowReady"),
+          }
+        : letterBusy && !wordsReleased
+          ? {
+              title: t("letterBusy"),
+              detail: t("busyWordsDetail"),
+              onCancel: () => setWordsReleased(true),
+            }
+          : null;
+
+  const shortLetter =(rawDraftBody && polished[letterKey]) || "";
   /** The letter as shown and copied: the written one where it came back, unless they chose the plain one. */
   const letterRaw = (!useFullLetter && shortLetter) || rawDraftBody;
   // What is shown and copied: the NOTE TO YOURSELF blocks lifted out to sit above the letter,
@@ -2194,6 +2240,15 @@ function ResultStep({
 
   return (
     <div className="space-y-6" ref={topRef}>
+      <Busy
+        show={!!busy}
+        title={busy?.title}
+        detail={busy?.detail}
+        steps={busy?.steps}
+        slowAfterMs={busy?.slowAfterMs}
+        onCancel={busy?.onCancel}
+        cancelLabel={busy?.cancelLabel}
+      />
       <div>
         <p className="eyebrow text-red-ink">{t("resultEyebrow")}</p>
         <h1 className="mt-2 font-display text-[30px] font-black leading-[1.05] text-ink sm:text-[38px]">{entry.title}</h1>
@@ -3028,6 +3083,7 @@ function ResultStep({
               disabled={letterBusy || (account["q-story"] ?? "").trim().length < 20}
               onClick={async () => {
                 setLetterBusy(true);
+                setWordsReleased(false);
                 setLetterMsg(null);
                 try {
                   const res = await fetch("/api/letter", {
@@ -3210,7 +3266,7 @@ function ResultStep({
       )}
 
       {view === "memo" && applyDraft && activeApply && (
-        <section id="r-apply" data-tour="apply" ref={letterRef} className="card">
+        <section id="r-apply" data-tour="apply" className="card">
           <h2 className="font-display text-[21px] font-black text-ink">{t("applyTitle")}</h2>
           <p className="mt-2 text-[15.5px] leading-relaxed text-ink-soft">
             {chosenPath ? t("applyLeadChosen") : t("applyLead")}

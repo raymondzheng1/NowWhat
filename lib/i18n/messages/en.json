@@ -15,7 +15,10 @@
     "busySending": "Sending your message",
     "busySlow": "This is taking longer than usual. Your connection may be slow.",
     "busyCancel": "Stop waiting",
-    "busyGetHelp": "Get free help instead"
+    "busyGetHelp": "Get free help instead",
+    "busyStepDone": "done",
+    "busyStepActive": "under way",
+    "busyStepWaiting": "next"
   },
   "nav": {
     "home": "Home",
@@ -522,7 +525,16 @@
     "memoGroundBlank": "You have not written about this point yet. The questions above are what to think about before you do.",
     "memoPathCourt": "asking a court to hear the matter itself",
     "memoPathDispute": "asking the tribunal to decide the dispute",
-    "memoNoProcessRule": "We do not hold a checked list of what this body requires before it will hear a matter like yours. The time limit below is checked. Ask the official body, or a free legal service, what else applies."
+    "memoNoProcessRule": "We do not hold a checked list of what this body requires before it will hear a matter like yours. The time limit below is checked. Ask the official body, or a free legal service, what else applies.",
+    "busyWritingTitle": "Writing up your results",
+    "busyWritingDetail": "This usually takes under a minute. Please keep this page open. If you leave now, what is being written is lost.",
+    "busyStepAnalysis": "Your in-depth analysis",
+    "busyStepLetter": "Your draft letter",
+    "busyStepCaseLetter": "Your letter setting out your case",
+    "busyGroundsTitle": "Reading your account",
+    "busyGroundsDetail": "Looking for the points of review it may relate to. This usually takes a few seconds. Please keep this page open.",
+    "busyWordsDetail": "Picking out the parts of your account that belong in the letter. This usually takes a few seconds. Please keep this page open.",
+    "busyShowReady": "Show me what is ready"
   },
   "ask": {
     "title": "Ask a question",
@@ -624,7 +636,7 @@
     "intro": "This is a free self-help tool that helps people understand and respond to government decisions.",
     "infoNotAdvice": "This service gives general information, not legal advice, and cannot tell you what will happen in your case. For advice about your own situation, talk to a human legal service.",
     "coverageTitle": "Where this applies",
-    "coverageBody": "This covers decisions made by the Australian Government (Commonwealth) and by the State of Victoria. Victoria stands as the worked example of a state. Every state and territory sets review up in much the same way: you ask the decision-maker to look again, a tribunal can look at the facts afresh, and a court can check that the decision was made lawfully. What each state sets for itself is the detail \u2014 which body hears what, which form to use, and how long you have. Those come from that state's own laws, so no time limit on this site is a time limit for another state. Wherever you are, you are pointed to a free service near you.",
+    "coverageBody": "This covers decisions made by the Australian Government (Commonwealth) and by the State of Victoria. Victoria stands as the worked example of a state. Every state and territory sets review up in much the same way: you ask the decision-maker to look again, a tribunal can look at the facts afresh, and a court can check that the decision was made lawfully. What each state sets for itself is the detail — which body hears what, which form to use, and how long you have. Those come from that state's own laws, so no time limit on this site is a time limit for another state. Wherever you are, you are pointed to a free service near you.",
     "groundedTitle": "Grounded in the rules",
     "groundedBody": "Every answer is grounded in a checked set of rules and points to where it comes from. When something isn't covered, the service says so and points you to a person who can help — it never guesses.",
     "currencyTitle": "Keeping it current",
@@ -745,7 +757,7 @@
   "letter": {
     "internalHeading": "What I am asking you to look at again",
     "criteriaHeading": "What I ask you to consider",
-    "groundsLead":"Below are the things I want looked at. I marked these from a list of common problems. I am not a lawyer.",
+    "groundsLead": "Below are the things I want looked at. I marked these from a list of common problems. I am not a lawyer.",
     "otherConcerns": "I have other concerns about this decision. I am taking those to a human legal service.",
     "groundHearing": "I did not get a chance to have my say",
     "groundRelevant": "I gave them information the decision does not mention",
