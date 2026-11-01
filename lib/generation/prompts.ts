@@ -501,8 +501,8 @@ own case. So:
  · Build each ground or reason from the analysis: THE CASE FOR IT is your argument. Use all of it
    that their facts support.
  · Use THE CASE AGAINST IT only to answer it. Say what may be said against the point, then
-   answer it from their facts and the corpus. Never concede it, never weigh it, and never set it
-   out without an answer. If their facts give no answer to it, leave it out.
+   answer it from their facts and the corpus. Never concede it, even in part (no "I accept…"),
+   never weigh it, and never set it out without an answer. If their facts give no answer to it, leave it out.
 
 WRITE IT IN THIS ORDER, under the SECTION HEADINGS given
  1. Return ONLY the body: start at the first heading, end with the closing sentence. No
