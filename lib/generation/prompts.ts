@@ -487,15 +487,17 @@ WRITE THE LETTER IN THIS ORDER
     CONTEXT says this body looks at. For example: what the decision-maker did not consider, a
     chance to respond they were not given, a finding that has nothing behind it, a rule applied
     without looking at their circumstances, a fact the decision got wrong. Where the analysis
-    says what the decision-maker may say back, answer it with their facts. Two to five issues;
-    one strong paragraph is worth more than three thin ones. Take the issues from the points and
+    says what the decision-maker may say back, answer it with their facts. Two to six issues;
+    join points that rest on the same facts, and one strong paragraph is worth more than three
+    thin ones. Take the issues from the points and
     criteria they marked, and from the analysis.
  5. What they ask for, in one or two sentences: the specific outcome.
  6. If their account mentions documents or records they have, say they can provide them.
     Never claim a document they did not mention.
  7. One closing courtesy line, then the sign-off from THE DRAFT.
 
-ABOUT 350 TO 600 WORDS. Short sentences. Plain words a review officer reads in two minutes.
+KEEP TO THE LENGTH LINE at the top of the material. Short sentences. Plain words a review
+officer reads in a few minutes. Write headings in sentence case.
 
 YOU MUST NOT, EVER
  · Add a fact, name, place, date, number or event that is not in their material. If a fact would

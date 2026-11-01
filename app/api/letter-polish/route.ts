@@ -6,7 +6,7 @@ import { precheck } from "@/lib/cost/guard";
 import { getEntry, FALLBACK_ENTRY_ID } from "@/lib/corpus/index";
 import { runLetterPolish } from "@/lib/generation/runner";
 import { isModelConfigured } from "@/lib/generation/anthropic";
-import { checkLetterFidelity } from "@/lib/letter/fidelity";
+import { caseMaxWords, checkLetterFidelity } from "@/lib/letter/fidelity";
 import { checkMemoCitations } from "@/lib/memo/qa";
 import { runLetterCase } from "@/lib/generation/runner";
 import { getDataEntry } from "@/lib/data";
@@ -79,9 +79,6 @@ const BodySchema = z.object({
     .optional(),
 });
 
-/** A case letter may be as long as a case needs, and no longer than two minutes' reading. */
-const CASE_MAX_WORDS = 750;
-
 export async function POST(req: NextRequest) {
   const ctx = getRequestContext(req);
   // WHICH GATE REFUSED, by name. A refusal looked exactly like a missing key from outside —
@@ -126,19 +123,23 @@ export async function POST(req: NextRequest) {
   // with the long letter. The page shows the full letter while this runs, so a second attempt
   // costs a few cents and some seconds nobody waits on, and every gate still applies to it.
   let lastGates: string[] = [];
+  let hint: string | undefined;
   for (let attempt = 0; attempt < LETTER_ATTEMPTS; attempt++) {
-    const out = await attemptLetter(verifyEntry);
+    const out = await attemptLetter(verifyEntry, hint);
     if ("letter" in out) {
       return apiJson({ ok: true, status: "answered" as const, letter: out.letter }, ctx);
     }
     lastGates = out.gates;
+    // Told what the route's own gates refused — names and our counts, never the rejected text.
+    hint = out.hint;
   }
   return notCovered(lastGates);
 
   async function attemptLetter(
     entry: NonNullable<typeof verifyEntry>,
-  ): Promise<{ letter: string } | { gates: string[] }> {
-  if (body.case) return attemptCase(entry, body.case);
+    hint?: string,
+  ): Promise<{ letter: string } | { gates: string[]; hint?: string }> {
+  if (body.case) return attemptCase(entry, body.case, hint);
   let result;
   try {
     result = await runLetterPolish({
@@ -186,7 +187,8 @@ export async function POST(req: NextRequest) {
   async function attemptCase(
     entry: NonNullable<typeof verifyEntry>,
     c: NonNullable<z.infer<typeof BodySchema>["case"]>,
-  ): Promise<{ letter: string } | { gates: string[] }> {
+    hint?: string,
+  ): Promise<{ letter: string } | { gates: string[]; hint?: string }> {
     const data = getDataEntry(body.entryId);
     if (!data) return { gates: ["unknown-entry"] };
     const { context } = contextForPath(data, {
@@ -202,7 +204,10 @@ export async function POST(req: NextRequest) {
       .map(([k, v]) => `On "${noteName(k)}": ${v.trim()}`);
     const theirs = [body.theirWords.trim(), ...notes].filter(Boolean).join("\n\n");
     const a = c.analysis;
+    const maxWords = caseMaxWords(c);
     const material = [
+      `LENGTH: about ${Math.round(maxWords * 0.75)} words in all, counting the bones and any NOTE TO YOURSELF block. Never more than ${maxWords - 50}.`,
+      "",
       "THE DRAFT:",
       body.draft,
       "",
@@ -236,6 +241,7 @@ export async function POST(req: NextRequest) {
         maxTokens: 2600,
         groundedText: `${context}\n${body.draft}`,
         accountText: theirs,
+        retryHint: hint,
       });
     } catch {
       return { gates: ["error"] };
@@ -246,8 +252,14 @@ export async function POST(req: NextRequest) {
     if (!result.data.covered) return { gates: ["model-declined"] };
 
     const letter = result.data.letter;
-    const fidelity = checkLetterFidelity(body.draft, theirs, letter, { known: context, maxWords: CASE_MAX_WORDS });
-    if (fidelity.length > 0) return { gates: fidelity.map((f) => f.gate) };
+    const fidelity = checkLetterFidelity(body.draft, theirs, letter, { known: context, maxWords });
+    if (fidelity.length > 0) {
+      return {
+        gates: fidelity.map((f) => f.gate),
+        // An invented name is told as the word it was, so the next try can drop exactly that.
+        hint: fidelity.map((f) => `${f.gate} — ${f.detail}`).join("; "),
+      };
+    }
     if (checkMemoCitations(letter, `${context}\n${body.draft}\n${theirs}`).length > 0) {
       return { gates: ["out-of-corpus-citation"] };
     }

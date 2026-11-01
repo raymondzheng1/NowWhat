@@ -48,7 +48,13 @@ export interface LetterFidelityFailure {
  * Kept tiny on purpose: everything a letter of ours says is already in the draft it started
  * from, so the allowance is only for the person's own first-person voice.
  */
-const ALWAYS_ALLOWED = new Set(["i", "i'm", "i've", "i'd", "i'll"]);
+const ALWAYS_ALLOWED = new Set([
+  "i", "i'm", "i've", "i'd", "i'll",
+  // The case letter's register, which names no one: its salutation, the heading the prompt
+  // asks for, and the plain name of the hearing rule. "Chief Executive" is how a careful
+  // letter writes the CEO their account already names.
+  "sir", "madam", "background", "natural", "justice", "chief", "executive",
+]);
 
 /** A word, allowing the apostrophes and hyphens that names and places carry. */
 const WORD = /[A-Za-z][A-Za-z'’-]*/g;
@@ -77,12 +83,25 @@ function inventedNames(source: string, rewritten: string): string[] {
     const lower = w.toLowerCase();
     if (ALWAYS_ALLOWED.has(lower) || known.has(lower)) continue;
     // Sentence-initial: nothing but space, quotes or brackets back to a full stop, a colon, a
-    // line break or the start of the text.
-    const before = text.slice(0, m.index).replace(/["'“‘(\s]+$/, "");
+    // line break or the start of the text. Line breaks are NOT stripped as space: they were, so
+    // the first word under a heading — which ends in no full stop — counted as mid-sentence.
+    const before = text.slice(0, m.index).replace(/["'“‘( \t]+$/, "");
     if (before === "" || /[.!?:\n]$/.test(before)) continue;
     found.add(w);
   }
   return [...found];
+}
+
+/**
+ * A case letter may be as long as its case needs. A flat 750 refused the owner's
+ * judicial-review letter twice: seven marked grounds, a warning block and the bones do not fit
+ * in 750 words and still say anything. So the limit grows with the issues they marked, and the
+ * model is told the number it is held to.
+ */
+export function caseMaxWords(c: { groundIds: string[]; notes: Record<string, string> }): number {
+  const marked = new Set([...c.groundIds, ...Object.keys(c.notes).filter((k) => c.notes[k]?.trim())]);
+  const issues = Math.min(7, Math.max(2, marked.size));
+  return Math.max(750, Math.min(1100, 450 + 90 * issues));
 }
 
 const words = (s: string) => s.split(/\s+/).filter(Boolean).length;

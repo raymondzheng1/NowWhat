@@ -284,6 +284,18 @@ describe("a shorter letter adds no name or place", () => {
     const short = LONG.replace("hidden by a tree", "hidden by a Tree");
     expect(checkLetterFidelity(LONG, MINE, short).filter((f) => f.gate === "invented-name")).toEqual([]);
   });
+
+  // A case letter has headings, which end in no full stop: the word starting the next line
+  // opens a sentence, and was being read as a name.
+  it("does not treat the first word under a heading as a name", () => {
+    const short = LONG.replace("The sign was hidden by a tree.", "The sign\nUnfortunately it was hidden by a tree.");
+    expect(checkLetterFidelity(LONG, MINE, short).filter((f) => f.gate === "invented-name")).toEqual([]);
+  });
+
+  it("still refuses a new name that follows a heading mid-line", () => {
+    const short = LONG.replace("The sign was hidden by a tree.", "The sign\nThe officer, Constable Brown, agreed.");
+    expect(checkLetterFidelity(LONG, MINE, short).some((x) => x.gate === "invented-name")).toBe(true);
+  });
 });
 
 describe("a shorter letter is actually short", () => {

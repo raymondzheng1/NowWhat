@@ -142,6 +142,13 @@ interface RunOpts<T> {
    * plainly that this is covered.
    */
   retryDecline?: boolean;
+  /**
+   * What the caller's own checks refused last time, for the first attempt of this run. The
+   * case letter's fidelity gates run in the route, after this returns, so without it the
+   * second try was written blind and failed the same way: measured on the owner's
+   * judicial-review case, both attempts refused, the second for the same length.
+   */
+  retryHint?: string;
   /** Pull the verifiable prose + declared sources + covered flag out of the parsed shape. */
   extract: (data: T) => { covered: boolean; text: string; declaredSources: string[] };
 }
@@ -153,7 +160,7 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
   let lastFailures: VerifyFailure[] | undefined;
   // The best answer we produced that cleared every SAFETY gate. See the fallback below.
   let readableEnough: { data: T; failures: VerifyFailure[] } | null = null;
-  let retryHint: string | undefined;
+  let retryHint: string | undefined = opts.retryHint;
   // Every gate that refused ANY attempt. Reporting only the last attempt's hid the real
   // pattern — three attempts can fail three different ways, and fixing the one we were told
   // about left the other two in place.

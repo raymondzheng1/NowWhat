@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { NextRequest } from "next/server";
 import { POST } from "@/app/api/letter-polish/route";
+import { caseMaxWords } from "@/lib/letter/fidelity";
 import { __setKvForTests, MemoryKv } from "@/lib/kv/redis";
 import { __setModelForTests, type ModelFn } from "@/lib/generation/anthropic";
 
@@ -116,4 +117,40 @@ describe("/api/letter-polish — the case letter", () => {
       expect((await post()).status).toBe("not-covered");
     });
   }
+
+  // Measured live, 2026-11-01: seven marked grounds, refused twice for length under a flat 750.
+  it("is allowed more words for more marked issues, and told the number", async () => {
+    expect(caseMaxWords({ groundIds: ["a"], notes: {} })).toBe(750);
+    expect(caseMaxWords({ groundIds: ["a", "b", "c", "d", "e", "f", "g"], notes: {} })).toBe(1080);
+    expect(caseMaxWords({ groundIds: Array.from({ length: 12 }, (_, i) => `g${i}`), notes: {} })).toBe(1080);
+    let seen = "";
+    __setModelForTests(async (call) => {
+      seen = call.user;
+      return model(letter(GOOD))(call);
+    });
+    await post();
+    expect(seen).toMatch(/LENGTH: about 563 words/);
+  });
+
+  it("tells the second attempt what the route refused the first for", async () => {
+    const users: string[] = [];
+    let n = 0;
+    __setModelForTests(async (call) => {
+      users.push(call.user);
+      return model(letter(n++ === 0 ? `${GOOD} Mr Hargreaves refused to listen.` : GOOD))(call);
+    });
+    const out = await post();
+    expect(out.status).toBe("answered");
+    expect(users).toHaveLength(2);
+    expect(users[0]).not.toContain("Hargreaves");
+    expect(users[1]).toContain("invented-name — Hargreaves");
+  });
+
+  it("lets the letter's own register through: a salutation, a Background heading, natural justice", async () => {
+    __setModelForTests(
+      model(letter(`Dear Sir or Madam, ${GOOD} This is a matter of Natural Justice.`).replace("I was not given", "Background\nI was not given")),
+    );
+    const out = await post();
+    expect(out.gates ?? out.status).toBe("answered");
+  });
 });
