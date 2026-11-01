@@ -521,8 +521,10 @@ WRITE IT IN THIS ORDER, under the SECTION HEADINGS given
     first-person sentences. Not their whole account.
  5. The fourth heading: the grounds of review, or the reasons for review. Each one numbered with
     a short plain heading of its own on its own line — "Ground 1: …" under "Grounds of review",
-    "Reason 1: …" under any other heading (for example "Ground 1: I was not given a chance to
-    answer the complaint") — then:
+    "Reason 1: …" under any other heading. Where THE DRAFT'S BODY already heads a ground or
+    reason, keep its heading word for word, so the document matches the analysis; otherwise a
+    plain heading of your own (for example "Ground 1: I was not given a chance to answer the
+    complaint") — then:
       - one sentence on what this ground or criterion asks, in the terms of the CORPUS CONTEXT;
       - the facts from their account that show it, argued — what was done or not done, and why
         that is a ground or reason for review;
