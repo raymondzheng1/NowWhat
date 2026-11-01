@@ -5,13 +5,24 @@ import { apiJson } from "@/lib/http/respond";
 import { precheck } from "@/lib/cost/guard";
 import { getDataEntry } from "@/lib/data";
 import { getEntry, FALLBACK_ENTRY_ID } from "@/lib/corpus/index";
-import { runBrief, briefProse } from "@/lib/generation/runner";
+import { runBrief, briefProse, runFrame, runPoint } from "@/lib/generation/runner";
 import { isModelConfigured } from "@/lib/generation/anthropic";
 import { contextForPath } from "@/lib/memo/path-context";
 import { checkMemoCitations } from "@/lib/memo/qa";
+import { getGround } from "@/lib/legal";
+import { withCriterionIds } from "@/lib/memo/criteria";
+import { inMyVoice } from "@/lib/letter/compose";
+import { splitBones } from "@/lib/letter/bones";
+import { assembleStatement, type CasePath } from "@/lib/letter/statement";
+import { checkLetterFidelity } from "@/lib/letter/fidelity";
+import { periodsAreTheirs } from "@/lib/grounds/match";
+import { checkNoCaseCitation } from "@/lib/verification/own-words";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// The longest wait in the app. Room enough that a slow model never cuts it off mid-answer; the
+// page offers a way out long before this (the owner's ask, 2026-11-02).
+export const maxDuration = 300;
 
 /**
  * Write the short analysis a person reads first.
@@ -51,8 +62,13 @@ export const dynamic = "force-dynamic";
  * copies back cost tokens, and a ceiling that is too low truncates the JSON and silently
  * loses the analysis (the memo's lesson). Billing is on tokens used, so headroom is free.
  */
-// Room for the in-depth working too: each point argued both ways roughly doubles the output.
-const BRIEF_TOKENS = 4800;
+const BRIEF_TOKENS = 2400;
+/** One point: both sides and the paragraph for their document, about 400 words at most. */
+const POINT_TOKENS = 1600;
+/** The statement's decision, request, facts and documents. */
+const FRAME_TOKENS = 1400;
+/** The paragraph a point gives their document: asked for in about 130 words. */
+const ARGUMENT_MAX_WORDS = 220;
 
 /** One side of one point in the in-depth working: longer than this is dropped, not shown. */
 // Generous on purpose: a ground with four parts runs past 140 words honestly, and was dropped
@@ -78,6 +94,13 @@ const BodySchema = z.object({
   notes: z.record(z.string(), z.string().max(4000)).default({}),
   /** What they said they want, in the page's words or theirs. Without it the brief guessed. */
   goals: z.array(z.string().max(300)).max(12).default([]),
+  /** The criteria they ticked, so the points worked through are theirs. */
+  pickedCriteria: z.array(z.string().max(600)).max(20).default([]),
+  /**
+   * The plain statement of case from the page, when one is wanted: its head and sign-off are
+   * kept exactly, and the statement is assembled inside them from the work done here.
+   */
+  statementDraft: z.string().max(12000).default(""),
 });
 
 /** The SOURCES lines of a context, as the brief may cite them. */
@@ -160,28 +183,54 @@ export async function POST(req: NextRequest) {
     .join("\n\n");
   if (!theirWords) return notCovered();
 
-  let result;
-  try {
-    result = await runBrief({
-      entry: verifyEntry,
-      context,
-      userInput: theirWords,
-      guard: ctx.guard,
-      byoKeyValue: ctx.byoKeyValue,
-      extraSources,
-      // What it was given and what they said — see the verifier. Grounded either way.
-      groundedText: context,
-      accountText: theirWords,
-      contextSources: contextSourceLines(context),
-      maxTokens: BRIEF_TOKENS,
-    });
-  } catch {
-    return notCovered();
-  }
-  // `theirWords` and `body` go out of scope here. Nothing is written anywhere.
+  // ---- EVERYTHING AT ONCE (the owner's ask, 2026-11-02: quicker) ---------------------------
+  //
+  // The brief, each point argued both ways, and the statement's frame, as parallel calls. They
+  // were one long call — the brief with every point's working inside it, about 30 seconds — and
+  // then the statement waited for it and wrote every ground again, 25 to 70 seconds more. Now the
+  // wait is the slowest single call, and the statement is assembled from the points' work.
+  const points = pointsFor(body);
+  const statementPath =
+    body.statementDraft.trim() && body.pathId !== "court-election" ? (body.pathId as CasePath) : null;
+  const bones = statementPath ? splitBones(body.statementDraft) : null;
+  const settle = <T,>(p: Promise<T>) => p.catch(() => null);
 
-  if (result.status !== "answered" || !result.data) {
-    return notCovered(result.rejectedGates ?? (result.reason ? [result.reason] : []));
+  const [result, worked, frame] = await Promise.all([
+    settle(
+      runBrief({
+        entry: verifyEntry,
+        context,
+        userInput: theirWords,
+        guard: ctx.guard,
+        byoKeyValue: ctx.byoKeyValue,
+        extraSources,
+        // What it was given and what they said — see the verifier. Grounded either way.
+        groundedText: context,
+        accountText: theirWords,
+        contextSources: contextSourceLines(context),
+        maxTokens: BRIEF_TOKENS,
+      }),
+    ),
+    Promise.all(points.map((pt) => settle(workPoint(pt)))),
+    bones && points.length
+      ? settle(
+          runFrame({
+            entry: verifyEntry,
+            context,
+            userInput: theirWords,
+            guard: ctx.guard,
+            byoKeyValue: ctx.byoKeyValue,
+            groundedText: context,
+            accountText: theirWords,
+            maxTokens: FRAME_TOKENS,
+          }),
+        )
+      : Promise.resolve(null),
+  ]);
+  // `theirWords` and `body` go out of scope when this returns. Nothing is written anywhere.
+
+  if (!result || result.status !== "answered" || !result.data) {
+    return notCovered(result?.rejectedGates ?? (result?.reason ? [result.reason] : ["error"]));
   }
   if (!result.data.covered) return notCovered(["model-declined"]);
 
@@ -197,7 +246,7 @@ export async function POST(req: NextRequest) {
     d.points.some((p) => !p.relates.trim() || !p.needed.trim());
   if (incomplete) return notCovered(["incomplete"]);
 
-  const prose = briefProse(result.data);
+  const prose = briefProse({ ...result.data, depth: [] });
 
   // The memo's own citation gate, on top of the verifier: a case, Act or section that did not
   // come from our knowledge base never ships, even if it happens to be real.
@@ -206,16 +255,41 @@ export async function POST(req: NextRequest) {
   if (invented.length > 0) return notCovered(["out-of-corpus-citation"]);
 
   // Short is the point of it. A brief that ran long is refused rather than shown as the short one.
-  const shortProse = briefProse(result.data, { short: true });
-  if (shortProse.split(/\s+/).filter(Boolean).length > BRIEF_MAX_WORDS) return notCovered(["too-long"]);
+  if (prose.split(/\s+/).filter(Boolean).length > BRIEF_MAX_WORDS) return notCovered(["too-long"]);
 
-  // The in-depth working: every word already through the verifier and the citation gate above.
-  // An entry that ran long or left a side empty is dropped on its own; the brief still ships.
-  const wordsIn = (x: string) => x.split(/\s+/).filter(Boolean).length;
-  const depth = (result.data.depth ?? [])
-    .filter((x) => x.for.trim() && x.against.trim())
-    .filter((x) => wordsIn(x.for) <= DEPTH_MAX_WORDS && wordsIn(x.against) <= DEPTH_MAX_WORDS)
-    .slice(0, 7);
+  // The in-depth working: each point that came back whole and cleared its gates. One that did
+  // not is left out on its own — the analysis says so under it — and the brief still ships.
+  const done = points.map((pt, i) => ({ pt, w: worked[i] ?? null }));
+  const depth = done
+    .filter((x): x is { pt: Point; w: Worked } => !!x.w)
+    .map(({ pt, w }) => ({ ref: pt.id, for: w.for, against: w.against }));
+
+  // THE STATEMENT, from that work: only when every point has its paragraph and the frame came
+  // back, and only if the whole of it, assembled, clears every gate the written one faces.
+  // Otherwise the page asks for it the slower way, as before.
+  let statement: string | undefined;
+  if (bones && statementPath && frame?.status === "answered" && frame.data?.covered && done.every((x) => x.w?.argument)) {
+    const f = frame.data;
+    const text = assembleStatement(bones, statementPath, {
+      decision: f.decision,
+      ask: f.ask,
+      facts: f.facts,
+      documents: f.documents.slice(0, 12),
+      points: done.map(({ pt, w }) => ({ heading: pt.heading, argument: w!.argument })),
+    });
+    const draft = body.statementDraft;
+    const fidelity = checkLetterFidelity(draft, theirWords, text, {
+      known: context,
+      maxWords: 100_000,
+      blanksFrom: `${bones.head}\n${bones.tail}`,
+    });
+    const ok =
+      fidelity.length === 0 &&
+      checkMemoCitations(text, `${context}\n${draft}\n${theirWords}`).length === 0 &&
+      periodsAreTheirs(text, `${draft}\n${theirWords}`) &&
+      checkNoCaseCitation([text]);
+    if (ok) statement = text;
+  }
 
   return apiJson(
     {
@@ -230,7 +304,85 @@ export async function POST(req: NextRequest) {
         depth,
         sources: result.data.sources,
       },
+      ...(statement ? { statement } : {}),
     },
     ctx,
   );
+
+  /**
+   * One point, argued both ways and in their voice, against the law for that point alone — a
+   * smaller context than the whole path's, so it is quicker as well as narrower. Its own gates:
+   * the verifier (in the runner), the citation gate, a length cap per side, and for the
+   * paragraph that goes into their document, no case named and no time limit they did not give.
+   */
+  async function workPoint(pt: Point): Promise<Worked | null> {
+    const { context: own, extraSources: ownSources } = contextForPath(entry!, {
+      pathId: body.pathId,
+      groundIds: pt.kind === "ground" ? [pt.id] : [],
+      criteria: pt.kind === "criterion" ? [pt.text] : [],
+      forum: body.forum,
+      pathName: body.pathName,
+    });
+    const r = await runPoint({
+      entry: verifyEntry!,
+      context: own,
+      userInput: theirWords,
+      guard: ctx.guard,
+      byoKeyValue: ctx.byoKeyValue,
+      extraSources: ownSources,
+      groundedText: own,
+      accountText: theirWords,
+      contextSources: contextSourceLines(own),
+      maxTokens: POINT_TOKENS,
+    });
+    if (r.status !== "answered" || !r.data?.covered) return null;
+    const { for: forIt, against, argument } = r.data;
+    if (!forIt.trim() || !against.trim()) return null;
+    if (wordsIn(forIt) > DEPTH_MAX_WORDS || wordsIn(against) > DEPTH_MAX_WORDS) return null;
+    if (checkMemoCitations(`${forIt} ${against} ${argument}`, `${own}\n${theirWords}`).length > 0) return null;
+    // The paragraph is optional to the analysis; a bad one only costs the quick statement.
+    const usable =
+      argument.trim() &&
+      wordsIn(argument) <= ARGUMENT_MAX_WORDS &&
+      checkNoCaseCitation([argument]) &&
+      periodsAreTheirs(argument, theirWords);
+    return { for: forIt.trim(), against: against.trim(), argument: usable ? argument.trim() : "" };
+  }
+}
+
+const wordsIn = (x: string) => x.split(/\s+/).filter(Boolean).length;
+
+interface Point {
+  id: string;
+  kind: "ground" | "criterion";
+  /** The criterion's own words; for a ground, its id. */
+  text: string;
+  /** How it is headed in their document — the analysis's own name for it. */
+  heading: string;
+}
+interface Worked {
+  for: string;
+  against: string;
+  argument: string;
+}
+
+/**
+ * The points the person marked, in the order they marked them: the grounds on judicial review;
+ * otherwise the criteria they ticked, or every criterion for the path when they ticked none (as
+ * the analysis always worked through). At most seven.
+ */
+function pointsFor(body: z.infer<typeof BodySchema>): Point[] {
+  if (body.pathId === "judicial-review") {
+    return body.groundIds.flatMap((id) => {
+      const g = getGround(id);
+      if (!g) return [];
+      const heading = `${g.name} — ${g.plainName.charAt(0).toLowerCase()}${g.plainName.slice(1)}`;
+      return [{ id, kind: "ground" as const, text: id, heading }];
+    }).slice(0, 7);
+  }
+  const all = withCriterionIds(body.criteria);
+  const picked = all.filter((c) => body.pickedCriteria.includes(c.text));
+  return (picked.length ? picked : all)
+    .map((c) => ({ id: c.id, kind: "criterion" as const, text: c.text, heading: inMyVoice(c.text) }))
+    .slice(0, 7);
 }

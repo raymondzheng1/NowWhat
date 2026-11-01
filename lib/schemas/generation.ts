@@ -176,6 +176,37 @@ export const GeneratedBriefSchema = z.object({
 export type GeneratedBrief = z.infer<typeof GeneratedBriefSchema>;
 
 /**
+ * ONE point worked through, by its own call, in parallel with the others (the owner's ask,
+ * 2026-11-02: make it quicker, and let the document use the analysis's work). The case for and
+ * against go into the in-depth analysis; `argument` is the same point as it goes into the
+ * person's own statement of their case, so the statement needs no second pass over the law.
+ */
+export const GeneratedPointSchema = z.object({
+  covered: z.boolean(),
+  ref: z.string().default(""),
+  for: z.string().default(""),
+  against: z.string().default(""),
+  argument: z.string().default(""),
+  sources: z.array(z.string()).default([]),
+});
+export type GeneratedPoint = z.infer<typeof GeneratedPointSchema>;
+
+/**
+ * The parts of the statement of case that are not a ground: the decision and its reasons, what
+ * they ask for, the facts, and the documents they hold. Written in their voice, in parallel
+ * with the analysis.
+ */
+export const GeneratedFrameSchema = z.object({
+  covered: z.boolean(),
+  decision: z.string().default(""),
+  ask: z.string().default(""),
+  facts: z.string().default(""),
+  documents: z.array(z.string()).default([]),
+  sources: z.array(z.string()).default([]),
+});
+export type GeneratedFrame = z.infer<typeof GeneratedFrameSchema>;
+
+/**
  * A polished letter.
  *
  * One field, because the output IS the letter — there is nothing to assemble around it, and

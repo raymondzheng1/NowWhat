@@ -6,7 +6,17 @@ import { CONNECTIVES } from "@/lib/verification/own-words";
  * legal substance comes ONLY from the corpus context passed in the user message.
  */
 
-export type Task = "ask" | "decode" | "letter" | "memo" | "letter-polish" | "brief" | "ground-match" | "letter-case";
+export type Task =
+  | "ask"
+  | "decode"
+  | "letter"
+  | "memo"
+  | "letter-polish"
+  | "brief"
+  | "ground-match"
+  | "letter-case"
+  | "point"
+  | "frame";
 
 const HARD_NO = `
 ABSOLUTE RULES (a person in a vulnerable situation depends on this being safe):
@@ -289,21 +299,10 @@ FILL THESE PARTS:
    the law is printed beside your words.
  · "toGather": up to four short noun phrases — documents or records that would help, such as
    "the notice itself". Not instructions.
- · "depth": the full working, for the in-depth analysis a lawyer reads. One entry for EVERY ground
-   and EVERY criterion in the CORPUS CONTEXT — all of them, every time, even one their account
-   says little about (then say so on the "for" side, and name what is missing). At most seven.
-   "ref" is the ground id or the criterion id, copied exactly (not a part).
-     – "for": three to five sentences, at most about 120 words, making the best honest case, from
-       THEIR facts, that this point applies. Take the parts of its test in turn, by the names the
-       context gives them, and say which of their facts goes to each.
-     – "against": three to five sentences, at most about 120 words, setting out what the
-       decision-maker may argue on this point, from the decision and the facts — including any
-       gap in what they have said.
-   Give both sides fairly. Never say which side is stronger, whether the point is made out, or
-   what will happen: the reader draws the conclusion.
  · "sources": one to three source strings, copied VERBATIM from the SOURCES lines.
+(Each point is argued both ways separately, at the same time as this; do not do it here.)
 
-KEEP IT SHORT: about 200 words across everything except "depth". Short sentences. Plain words.
+KEEP IT SHORT: about 200 words across everything. Short sentences. Plain words.
 
 YOU MUST NOT:
  A. Restate, soften or extend a legal test. The page prints the law beside your words. Name a
@@ -338,8 +337,114 @@ Return JSON:
   "points": [ { "ref": string, "relates": string, "needed": string } ],   // at most 4
   "otherSide": string,
   "toGather": string[],                                                // at most 4
-  "depth": [ { "ref": string, "for": string, "against": string } ],    // one per ground or criterion, at most 7
   "sources": string[]                       // copy 1-3 VERBATIM from the SOURCES lines
+}
+`.trim();
+
+/**
+ * ONE POINT, worked through on its own and at the same time as every other (the owner's ask,
+ * 2026-11-02: quicker, and the document built on the analysis). "for" and "against" are the
+ * in-depth analysis's, in the words the lawyer approved for them when they sat inside the brief;
+ * "argument" is the same point in the person's own statement of their case, so that document is
+ * assembled from this work instead of written again from the start.
+ */
+const POINT_SYSTEM = `
+You are working through ONE point — a ground of review, or a criterion — for a member of the
+public in Australia about a government decision that affects them. The point is the one ground
+or criterion in the CORPUS CONTEXT. A free legal service may read what you write.
+
+FILL THESE PARTS:
+ · "ref": the point's id, copied exactly from the context.
+ · "for": three to five sentences, at most about 120 words, making the best honest case, from
+   THEIR facts, that this point applies. Take the parts of its test in turn, by the names the
+   context gives them, and say which of their facts goes to each. Write it to them ("you say").
+ · "against": three to five sentences, at most about 120 words, setting out what the
+   decision-maker may argue on this point, from the decision and the facts — including any gap
+   in what they have said.
+   Give both sides fairly. Never say which side is stronger, whether the point is made out, or
+   what will happen: the reader draws the conclusion.
+ · "argument": the same point as it goes into THEIR OWN statement of their case, in the first
+   person ("I", "my"), at most about 130 words. This is their side, in a process where each side
+   puts its own case: one sentence on what this point asks, in the terms of the CORPUS CONTEXT;
+   then their facts that show it, argued, from "for"; then what may be said against it, answered
+   from their facts and the context. Never concede it, even in part (no "I accept…"), never weigh
+   it, and never set it out without an answer: if their facts give no answer to it, leave it out.
+   No heading — the page adds one.
+ · "sources": one to three source strings, copied VERBATIM from the SOURCES lines.
+If their account says little about this point, still write all three: say so on the "for" side,
+name what is missing, and in "argument" set out only what they do say.
+
+YOU MUST NOT:
+ A. Restate, soften or extend a legal test beyond what the context says.
+ B. Name a case, Act, section, tribunal or court that is not in the CORPUS CONTEXT. In "argument",
+    name no case at all.
+ C. State a time limit or deadline, or any number of days, weeks, months or years, unless it is a
+    fact from their own account.
+ D. Say the point is strong, weak, likely, made out, satisfied, met or sufficient, or that it is
+    not. Never say what will happen.
+ E. Tell them what to do. No "you should", "you must" or "I recommend".
+ F. Invent a fact, a name, a place, a date or a number. Use only their account.
+ G. Make someone else's words theirs. Quote another person's words in double quotes and say who
+    said them.
+
+Set "covered" to false ONLY if their account is empty or says nothing about any decision.
+`.trim();
+
+const POINT_SHAPE = `
+Return JSON:
+{
+  "covered": boolean,
+  "ref": string,
+  "for": string,
+  "against": string,
+  "argument": string,
+  "sources": string[]                       // copy 1-3 VERBATIM from the SOURCES lines
+}
+`.trim();
+
+/**
+ * The parts of the statement of case that are not a ground, written in the person's voice at the
+ * same time as the analysis. The grounds come from POINT_SYSTEM's "argument".
+ */
+const FRAME_SYSTEM = `
+You are writing three short parts of a member of the public's statement of their case, in their
+own voice ("I", "my"), for the body the CORPUS CONTEXT names for their path: a court (judicial
+review), a tribunal (merits review), or the agency itself (internal review). The grounds are
+written separately; do not write them.
+
+FILL THESE PARTS:
+ · "decision": what was decided, who decided it and when, as far as their account says. Then the
+   reasons the decision-maker gave, as their account reports them — each on its own line starting
+   "1.", "2." if there were several. If their account says no reasons were given, say so. If it
+   says nothing about the reasons, end after what was decided.
+ · "ask": one or two sentences on what they ask for. For a court: only orders the CORPUS CONTEXT
+   says it can make that fit (for example, that the decision be set aside and sent back to be
+   decided again according to law) — never the outcome itself, which a court cannot give. For a
+   tribunal or the agency: the outcome from "WHAT THEY SAID THEY WANT"; if there is none, that the
+   decision be looked at again.
+ · "facts": a summary of the facts that matter, in four to seven short sentences. Only their facts.
+ · "documents": the documents their account says they have, sent or received — short noun
+   phrases. Not records they only say they found out about. An empty list if there are none.
+ · "sources": an empty list.
+
+YOU MUST NOT: add a fact, name, place, date, number, reason or feeling that is not in their
+account; change who did what; name a case; name an Act, section, test or body that is not in the
+CORPUS CONTEXT or their account; state a time limit unless it is a fact from their account;
+promise or predict an outcome; say a test is "satisfied", "met" or "made out"; insult anyone or
+guess at motives; write "you should" or "you must".
+
+Set "covered" to false ONLY if their account says nothing about any decision.
+`.trim();
+
+const FRAME_SHAPE = `
+Return JSON:
+{
+  "covered": boolean,
+  "decision": string,
+  "ask": string,
+  "facts": string,
+  "documents": string[],
+  "sources": []
 }
 `.trim();
 
@@ -577,6 +682,10 @@ export function systemPrompt(task: Task): string {
   // The brief keeps the explainer role and the shared HARD_NO block, like the memo it leads.
   if (task === "brief") return `${role}\n\n${HARD_NO}\n\n${BRIEF_SYSTEM}\n\n${BRIEF_SHAPE}`;
   if (task === "letter-case") return `${LETTER_CASE_SYSTEM}\n\n${LETTER_POLISH_SHAPE}`;
+  // One point, argued both ways: the brief's role and hard rules, as when it sat inside the brief.
+  if (task === "point") return `${role}\n\n${HARD_NO}\n\n${POINT_SYSTEM}\n\n${POINT_SHAPE}`;
+  // The statement's frame is in their voice, so like the case letter it has its own stricter set.
+  if (task === "frame") return `${FRAME_SYSTEM}\n\n${FRAME_SHAPE}`;
   if (task === "ground-match") return `${role}\n\n${HARD_NO}\n\n${MATCH_SYSTEM}\n\n${MATCH_SHAPE}`;
   const shape = task === "ask" ? ASK_SHAPE : DECODE_SHAPE;
   return `${role}\n\n${HARD_NO}\n\n${shape}`;
@@ -597,7 +706,7 @@ export function userPrompt(
   const label =
     task === "ask"
       ? "QUESTION"
-      : task === "letter" || task === "memo" || task === "brief" || task === "ground-match"
+      : task === "letter" || task === "memo" || task === "brief" || task === "ground-match" || task === "point" || task === "frame"
         ? "THEIR ACCOUNT"
         : task === "letter-polish"
           ? "THE DRAFT TO IMPROVE"
@@ -637,7 +746,11 @@ export function repairPrompt(badOutput: string, task: Task): string {
             ? LETTER_SHAPE
             : task === "letter-polish" || task === "letter-case"
               ? LETTER_POLISH_SHAPE
-              : DECODE_SHAPE;
+              : task === "point"
+                ? POINT_SHAPE
+                : task === "frame"
+                  ? FRAME_SHAPE
+                  : DECODE_SHAPE;
   return [
     "The following text was supposed to be a single valid JSON object but could not be parsed.",
     "Return the SAME content as valid JSON only. Do not add, remove, or change any wording — only fix the JSON structure. No code fences.",

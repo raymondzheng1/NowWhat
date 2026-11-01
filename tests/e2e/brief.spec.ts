@@ -367,3 +367,26 @@ test("a step that is written while you wait opens at its top, not its foot", asy
     expect(await page.evaluate(() => window.scrollY)).toBeLessThan(400);
   }
 });
+
+// The owner, 2026-11-02: quicker. The statement comes back with the analysis, built from the same
+// work, and the page shows it without asking for the letter a second time.
+test("a statement that comes back with the analysis is shown, and the letter is not asked for again", async ({ page }) => {
+  await seed(page);
+  let polishCalls = 0;
+  await page.route("**/api/letter-polish", (route) => {
+    polishCalls++;
+    return route.fulfill({ json: { ok: true, status: "not-covered" } });
+  });
+  await page.route("**/api/memo", async (route) => {
+    const { statementDraft } = route.request().postDataJSON() as { statementDraft: string };
+    // The page sends its plain statement; stand in for the assembled one by marking it.
+    const statement = statementDraft.replace(/(Summary of the facts\n)[^\n]*/, "$1ASSEMBLED FROM THE ANALYSIS.");
+    await route.fulfill({ json: { ok: true, status: "answered", brief: BRIEF, statement } });
+  });
+  await page.goto(MEMO_URL);
+  const apply = page.locator("#r-apply");
+  await apply.scrollIntoViewIfNeeded({ timeout: 15_000 });
+  await expect(apply).toContainText("ASSEMBLED FROM THE ANALYSIS.", { timeout: 15_000 });
+  await page.waitForTimeout(1500);
+  expect(polishCalls).toBe(0);
+});

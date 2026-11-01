@@ -13,6 +13,8 @@ import { helpForPlace } from "@/lib/help/elsewhere";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// Room for a slow model call and its retries to finish rather than be cut off (2026-11-02).
+export const maxDuration = 300;
 
 /** Grounded Q&A (PRD §6.5). Cost-guarded, verified, grounded-or-silent. */
 export async function POST(req: NextRequest) {

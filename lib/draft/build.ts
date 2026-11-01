@@ -52,6 +52,18 @@ const CLOSE_JR =
 const CLOSE_COURT = "I would be grateful if you would confirm that you have received this letter. Thank you for your help.";
 const CLOSE_MERITS = "Please let me know if you need anything further from me. Thank you for your help.";
 export const LETTER_CLOSINGS = [CLOSE_REASONS, CLOSE_INTERNAL, CLOSE_JR, CLOSE_COURT, CLOSE_MERITS];
+/** An internal review may not be the step for this decision, and may not pause the next one's clock. */
+const NEXT_STEP_INTERNAL =
+  "If an internal review is not available for a decision of this kind, please tell me what the next step is and who I should write to. Please also tell me the time limit that applies to that next step, so that I can keep track of it while this request is with you.";
+/**
+ * How each review document closes after its reasons — shared with the statement assembled from
+ * the analysis (lib/letter/statement), so the two end the same way.
+ */
+export const CASE_CLOSING = {
+  "judicial-review": [] as string[],
+  "merits-review": [CLOSE_MERITS],
+  "internal-review": [CLOSE_INTERNAL, NEXT_STEP_INTERNAL, "Thank you for your help."],
+};
 
 export interface DraftOptions {
   /** The date on the decision, as the person gave it (YYYY-MM-DD). Fills the date blank. */
@@ -84,7 +96,7 @@ export const CASE_SECTION = {
   whyReview: "Why the decision should be reviewed",
 } as const;
 
-const REASONS_BLANK = "[the reasons the decision-maker gave, as their letter sets them out]";
+export const REASONS_BLANK = "[the reasons the decision-maker gave, as their letter sets them out]";
 const POINT_BLANK = "[set out what happened that shows this]";
 
 /** "Ground 1: …" / "Reason 1: …", each with what they wrote under it, or a blank for it. */
@@ -241,7 +253,7 @@ export function buildDraft(
             : [CASE_SECTION.whyReview, "[set out what you think was missed, what you were not able to explain, or what has changed]", ""]),
         CLOSE_INTERNAL,
         "",
-        "If an internal review is not available for a decision of this kind, please tell me what the next step is and who I should write to. Please also tell me the time limit that applies to that next step, so that I can keep track of it while this request is with you.",
+        NEXT_STEP_INTERNAL,
         "",
         "Thank you for your help.",
         "",

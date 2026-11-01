@@ -1790,6 +1790,7 @@ function ResultStep({
     moreSettled,
     memoNotesKey,
     pointsSaidGoals.join("|"),
+    pickedCriteria.join("|"),
   ].join("\u0000");
   const drafted = draftCache[draftKey] ?? null;
   const [drafting, setDrafting] = useState(false);
@@ -1802,6 +1803,8 @@ function ResultStep({
     if (draftKey in draftCache) return;
     let live = true;
     setDrafting(true);
+    // The case letters only: the enquiries (reasons, the court form) are not statements.
+    const sentDraft = isCaseLetter ? rawDraftBody : "";
     fetch("/api/memo", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -1825,12 +1828,21 @@ function ResultStep({
         story: [story, moreSettled].filter(Boolean).join("\n\n"),
         notes: memoNotes,
         goals: pointsSaidGoals,
+        pickedCriteria,
+        // The plain statement, so the written one can be assembled inside its head and sign-off
+        // from the work this request does anyway — no second request, no second wait.
+        statementDraft: sentDraft,
       }),
     })
       .then((r) => r.json())
       .then(
-        (d: { status?: string; brief?: Partial<MemoDraft> }) => {
+        (d: { status?: string; brief?: Partial<MemoDraft>; statement?: string }) => {
         if (!live) return;
+        // The statement, built from this analysis: it is the case letter for this exact input,
+        // filed under the key the letter request would have used, so that request is skipped.
+        if (d?.status === "answered" && d.statement && sentDraft) {
+          setPolished((prev) => ({ ...prev, [`${sentDraft}\u0000${draftKey}`]: d.statement! }));
+        }
         // A refusal is cached too. It means the gates rejected this exact input, and asking
         // again with the same input would spend money to be refused again.
         setDraftCache((prev) => ({

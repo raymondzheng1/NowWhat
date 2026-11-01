@@ -19,6 +19,8 @@ import { checkNoCaseCitation } from "@/lib/verification/own-words";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// Room for a slow model call and its retries to finish rather than be cut off (2026-11-02).
+export const maxDuration = 300;
 
 /** Attempts at the shorter letter per request: one, then one more if it was refused. */
 // The sections of the case document for each path, in order (the owner's ruling, 2026-11-01):

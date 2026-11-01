@@ -13,11 +13,15 @@ import {
   GeneratedMemoSchema,
   GeneratedLetterSchema,
   GeneratedBriefSchema,
+  GeneratedPointSchema,
+  GeneratedFrameSchema,
   type GeneratedAnswer,
   type GeneratedDecode,
   type GeneratedMemo,
   type GeneratedLetter,
   type GeneratedBrief,
+  type GeneratedPoint,
+  type GeneratedFrame,
 } from "@/lib/schemas/generation";
 
 /**
@@ -426,5 +430,43 @@ export function runLetterPolish(
     retryDecline: true,
     schema: GeneratedLetterSchema,
     extract: (d) => ({ covered: d.covered, text: d.letter, declaredSources: d.sources }),
+  });
+}
+
+/**
+ * One point, argued both ways, and in the person's own words for their statement. Every field
+ * goes to the verifier: the "argument" is customer-visible text in a document sent in their name.
+ */
+export function runPoint(
+  args: Omit<RunOpts<GeneratedPoint>, "task" | "schema" | "extract"> & { contextSources?: string[] },
+): Promise<GenerationResult<GeneratedPoint>> {
+  return runGeneration<GeneratedPoint>({
+    ...args,
+    task: "point",
+    schema: GeneratedPointSchema,
+    retryDecline: true,
+    extract: (d) => ({
+      covered: d.covered,
+      text: [d.for, d.against, d.argument].filter((x) => x.trim()).join(" "),
+      declaredSources: d.sources.length ? d.sources : (args.contextSources ?? []),
+    }),
+  });
+}
+
+/** The statement's decision, request and facts, in their voice. Cites nothing, like a letter. */
+export function runFrame(
+  args: Omit<RunOpts<GeneratedFrame>, "task" | "schema" | "extract">,
+): Promise<GenerationResult<GeneratedFrame>> {
+  return runGeneration<GeneratedFrame>({
+    ...args,
+    task: "frame",
+    citesNothing: true,
+    retryDecline: true,
+    schema: GeneratedFrameSchema,
+    extract: (d) => ({
+      covered: d.covered,
+      text: [d.decision, d.ask, d.facts, ...d.documents].filter((x) => x.trim()).join(" "),
+      declaredSources: d.sources,
+    }),
   });
 }

@@ -11,6 +11,8 @@ import { screenMatches } from "@/lib/grounds/match";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// Room for a slow model call and its retries to finish rather than be cut off (2026-11-02).
+export const maxDuration = 300;
 
 /**
  * Which of the offered grounds the person's account may relate to, and why — a first cut.

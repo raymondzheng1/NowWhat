@@ -11,6 +11,8 @@ import { getDataEntry } from "@/lib/data";
 import { answerableCriteria, withCriterionIds } from "@/lib/memo/criteria";
 import { record } from "@/lib/cost/guard";
 import { SESSION_CAP_USD } from "@/lib/config";
+import { buildDraft } from "@/lib/draft/build";
+import { getEntry } from "@/lib/corpus/index";
 
 /**
  * The safety contract (TECHNICAL_SPEC §7). Anthropic mocked, Upstash via the memory
@@ -237,8 +239,39 @@ const memoBody = {
   notes: {},
 };
 
-const briefModel = (over: Record<string, unknown> = {}): ModelFn => async (call) => ({
-  text: JSON.stringify({
+/** Which kind of call this is, from its instructions (the analysis is split into parallel calls). */
+const kindOf = (system: string) =>
+  system.includes("You are working through ONE point")
+    ? "point"
+    : system.includes("three short parts of a member of the public")
+      ? "frame"
+      : "brief";
+const POINT_FOR = "You say no letter came and nobody asked you about the certificate before the decision.";
+const POINT_AGAINST = "They may say the decision letter itself invited a response, and that you did not reply to it.";
+const POINT_ARGUMENT =
+  "Nobody asked me about the medical certificate I sent before my payment was cut. They may say a letter invited a reply. No letter came to me.";
+const pointJson = (over: Record<string, unknown> = {}) =>
+  JSON.stringify({ covered: true, ref: "x", for: POINT_FOR, against: POINT_AGAINST, argument: POINT_ARGUMENT, sources: [], ...over });
+const frameJson = (over: Record<string, unknown> = {}) =>
+  JSON.stringify({
+    covered: true,
+    decision: "My payment was cut.",
+    ask: "I ask the court to set aside the decision and send it back to be decided again according to law.",
+    facts: "They cut my payment. I sent a medical certificate. Nobody asked me about it.",
+    documents: [],
+    sources: [],
+    ...over,
+  });
+const briefModel = (
+  over: Record<string, unknown> = {},
+  more: { point?: Record<string, unknown>; frame?: Record<string, unknown> } = {},
+): ModelFn => async (call) => ({
+  text:
+    kindOf(call.system) === "point"
+      ? pointJson(more.point)
+      : kindOf(call.system) === "frame"
+        ? frameJson(more.frame)
+        : JSON.stringify({
     covered: true,
     situation: "Centrelink cut your payment. You say you sent a medical certificate. You say nobody asked you about it.",
     path: "Judicial review asks whether the decision was made lawfully.",
@@ -271,14 +304,17 @@ describe("/api/memo (the short analysis)", () => {
   });
 
   it("asks the model for the short analysis, not the old inserts", async () => {
-    let system = "";
+    const systems: string[] = [];
     __setModelForTests(async (call) => {
-      system = call.system;
+      systems.push(call.system);
       return briefModel()(call);
     });
     await memoPost(jsonReq("http://x/api/memo", memoBody));
-    expect(system).toContain("SHORT analysis");
-    expect(system).toMatch(/State a time limit or deadline/);
+    const brief = systems.find((x) => kindOf(x) === "brief") ?? "";
+    expect(brief).toContain("SHORT analysis");
+    expect(brief).toMatch(/State a time limit or deadline/);
+    // It no longer argues the points itself: each is its own call, at the same time.
+    expect(brief).not.toContain('"depth"');
   });
 
   it("falls back when the brief invents a case", async () => {
@@ -317,46 +353,54 @@ describe("/api/memo (the short analysis)", () => {
 
   // The owner, 2026-11-01: the in-depth analysis argues each point both ways, no conclusion.
   describe("the in-depth working", () => {
-    const FOR = "You say no letter came and nobody asked you about the certificate before the decision.";
-    const AGAINST = "They may say the decision letter itself invited a response, and that you did not reply to it.";
+    const FOR = POINT_FOR;
+    const AGAINST = POINT_AGAINST;
 
-    it("comes back with the brief, both sides of each point", async () => {
-      __setModelForTests(briefModel({ depth: [{ ref: "procedural-fairness-hearing", for: FOR, against: AGAINST }] }));
+    it("comes back with the brief, both sides of each point, keyed by the point it was asked about", async () => {
+      __setModelForTests(briefModel({}, { point: { ref: "whatever-the-model-said" } }));
       const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
       expect(body.status).toBe("answered");
       expect(body.brief.depth).toEqual([{ ref: "procedural-fairness-hearing", for: FOR, against: AGAINST }]);
     });
 
-    it("is asked for, both ways, with no conclusion", async () => {
-      let system = "";
+    it("is asked for one point at a time, both ways, with no conclusion, alongside the brief", async () => {
+      const users: string[] = [];
+      const systems: string[] = [];
       __setModelForTests(async (call) => {
-        system = call.system;
+        systems.push(call.system);
+        if (kindOf(call.system) === "point") users.push(call.user);
         return briefModel()(call);
       });
-      await memoPost(jsonReq("http://x/api/memo", memoBody));
-      expect(system).toContain('"depth"');
-      expect(system).toMatch(/Never say which side is stronger/);
+      await memoPost(jsonReq("http://x/api/memo", { ...memoBody, groundIds: ["procedural-fairness-hearing", "no-evidence"] }));
+      const point = systems.find((x) => kindOf(x) === "point") ?? "";
+      expect(point).toMatch(/Never say which side is stronger/);
+      // One call per marked point, each given that point's law alone.
+      expect(users).toHaveLength(2);
+      expect(users.filter((u) => u.includes("use this exact id: no-evidence"))).toHaveLength(1);
+      expect(users.filter((u) => u.includes("use this exact id: procedural-fairness-hearing"))).toHaveLength(1);
     });
 
     it("does not count toward the short brief's length", async () => {
       const long = Array.from({ length: 12 }, () => "You say nobody asked you first.").join(" ");
-      __setModelForTests(briefModel({ depth: [{ ref: "procedural-fairness-hearing", for: long, against: long }] }));
+      __setModelForTests(briefModel({}, { point: { for: long, against: long } }));
       expect((await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json()).status).toBe("answered");
     });
 
     it("drops a side that runs long, and keeps the brief", async () => {
       const tooLong = Array.from({ length: 60 }, () => "You say nobody asked you first.").join(" ");
-      __setModelForTests(briefModel({ depth: [{ ref: "procedural-fairness-hearing", for: tooLong, against: AGAINST }] }));
+      __setModelForTests(briefModel({}, { point: { for: tooLong } }));
       const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
       expect(body.status).toBe("answered");
       expect(body.brief.depth).toEqual([]);
     });
 
-    it("is held to every gate the brief is: a conclusion in it refuses the whole", async () => {
-      __setModelForTests(
-        briefModel({ depth: [{ ref: "procedural-fairness-hearing", for: "The hearing rule test is satisfied.", against: AGAINST }] }),
-      );
-      expect((await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json()).status).toBe("not-covered");
+    it("is held to every gate the brief is: a conclusion in it never ships", async () => {
+      __setModelForTests(briefModel({}, { point: { for: "The hearing rule test is satisfied." } }));
+      const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+      // That point is refused on its own; the brief, which said nothing wrong, still ships.
+      expect(body.status).toBe("answered");
+      expect(JSON.stringify(body)).not.toMatch(/satisfied/);
+      expect(body.brief.depth).toEqual([]);
     });
   });
 
@@ -372,6 +416,7 @@ describe("/api/memo (the short analysis)", () => {
   it("asks once more when the model declines, and answers", async () => {
     let calls = 0;
     __setModelForTests(async (call) => {
+      if (kindOf(call.system) !== "brief") return briefModel()(call);
       calls++;
       return calls === 1 ? briefModel({ covered: false })(call) : briefModel()(call);
     });
@@ -383,6 +428,7 @@ describe("/api/memo (the short analysis)", () => {
   it("two declines are a decline", async () => {
     let calls = 0;
     __setModelForTests(async (call) => {
+      if (kindOf(call.system) !== "brief") return briefModel()(call);
       calls++;
       return briefModel({ covered: false })(call);
     });
@@ -465,12 +511,77 @@ describe("/api/memo (the short analysis)", () => {
   });
 
   // ---- what the model is given -------------------------------------------------------
+  // The owner, 2026-11-02: quicker, and the document built on the analysis's work. The brief,
+  // each point and the statement's frame are written at once; the statement is assembled from
+  // the points' paragraphs and held to every gate the written one faced.
+  describe("the statement, built from the same work", () => {
+    const draft = buildDraft(getEntry("cth-centrelink")!, "judicial-review-application", memoBody.story, {
+      decisionDate: "2026-10-01",
+      points: [{ heading: "Procedural fairness — you never got to have your say", text: "Nobody asked me." }],
+    }).body;
+    const withDraft = { ...memoBody, statementDraft: draft };
+
+    it("comes back with the analysis, inside the draft's own head and sign-off", async () => {
+      __setModelForTests(briefModel());
+      const body = await (await memoPost(jsonReq("http://x/api/memo", withDraft))).json();
+      expect(body.status).toBe("answered");
+      const st: string = body.statement;
+      expect(st.startsWith(draft.slice(0, draft.indexOf("NOTE TO YOURSELF")))).toBe(true);
+      expect(st).toContain("The decision and its reasons\nMy payment was cut.");
+      expect(st).toContain("What I ask the court to do\nI ask the court to set aside the decision");
+      expect(st).toContain("Summary of the facts\nThey cut my payment.");
+      // Headed as the analysis heads the ground, argued in their words from the point's own call.
+      expect(st).toMatch(/Grounds of review\n\nGround 1: .+ — you never got to have your say\nNobody asked me about the medical certificate/);
+      expect(st).toMatch(/\n\nSigned: \[Your name\]\nApplicant$/);
+    });
+
+    it("is not built when a paragraph names a case — the analysis still comes back", async () => {
+      __setModelForTests(briefModel({}, { point: { argument: `${POINT_ARGUMENT} As in Kioa v West, I had a right to be heard.` } }));
+      const body = await (await memoPost(jsonReq("http://x/api/memo", withDraft))).json();
+      expect(body.status).toBe("answered");
+      expect(body.brief.depth).toHaveLength(1);
+      expect(body.statement).toBeUndefined();
+    });
+
+    it("is not built when the frame invents a name", async () => {
+      __setModelForTests(briefModel({}, { frame: { facts: "They cut my payment. Mr Hargreaves at the office refused to listen." } }));
+      const body = await (await memoPost(jsonReq("http://x/api/memo", withDraft))).json();
+      expect(body.status).toBe("answered");
+      expect(body.statement).toBeUndefined();
+    });
+
+    it("is not asked for when no statement is wanted", async () => {
+      const kinds: string[] = [];
+      __setModelForTests(async (call) => {
+        kinds.push(kindOf(call.system));
+        return briefModel()(call);
+      });
+      const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+      expect(body.statement).toBeUndefined();
+      expect(kinds).not.toContain("frame");
+    });
+
+    it("writes everything at the same time, not one after another", async () => {
+      __setModelForTests(async (call) => {
+        await new Promise((r) => setTimeout(r, 300));
+        return briefModel()(call);
+      });
+      const t0 = Date.now();
+      const body = await (
+        await memoPost(jsonReq("http://x/api/memo", { ...withDraft, groundIds: ["procedural-fairness-hearing", "no-evidence"] }))
+      ).json();
+      // A brief, two points and a frame: 1.2s one after another, about 0.3s at once.
+      expect(Date.now() - t0).toBeLessThan(900);
+      expect(body.brief.depth).toHaveLength(2);
+    });
+  });
+
   it("hands the model every id a point may cite, verbatim", async () => {
     // The groundId lesson: anything the model has to echo back must be in front of it.
     const housing = getDataEntry("vic-public-housing")!;
     let prompt = "";
     __setModelForTests(async (call) => {
-      prompt = call.user;
+      if (kindOf(call.system) === "brief") prompt = call.user;
       return briefModel({ points: [] })(call);
     });
     await memoPost(

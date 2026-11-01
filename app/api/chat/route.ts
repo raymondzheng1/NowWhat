@@ -10,6 +10,8 @@ import { redactPii } from "@/lib/chat/redact";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+// Room for a slow model call and its retries to finish rather than be cut off (2026-11-02).
+export const maxDuration = 300;
 
 const Body = z.object({
   messages: z
