@@ -185,7 +185,7 @@ export function caseMaxWords(
   );
   // A statement of the case answers the other side on each ground as well as making it, so
   // each issue has more to carry than in the letter it replaced (the owner's ruling, 2026-11-01).
-  return Math.max(900, Math.min(1400, 550 + 110 * issues)) + warnings;
+  return Math.max(900, Math.min(1600, 500 + 140 * issues)) + warnings;
 }
 
 const words = (s: string) => s.split(/\s+/).filter(Boolean).length;
@@ -250,7 +250,10 @@ export function checkLetterFidelity(
   // they themselves wrote is theirs to state.
   const allowed = knownFigures(original, theirWords, opts.known ?? "");
   const seen = new Set<string>();
-  for (const m of rewritten.matchAll(NUMBER)) {
+  // The document's own numbering is not a fact about them: "Ground 2:" heading a ground, or
+  // "3." starting a line of a list. Refusing those refused the first statement of case live.
+  const counted = rewritten.replace(/^(Ground|Reason) \d+:/gm, "$1:").replace(/^\(?\d{1,2}[.)] /gm, "");
+  for (const m of counted.matchAll(NUMBER)) {
     const n = m[0];
     if (seen.has(n) || allowed.has(n) || figureParts(n).every((p) => allowed.has(p))) continue;
     seen.add(n);

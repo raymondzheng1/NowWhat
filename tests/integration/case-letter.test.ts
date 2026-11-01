@@ -3,6 +3,8 @@ import { NextRequest } from "next/server";
 import { POST } from "@/app/api/letter-polish/route";
 import { caseMaxWords } from "@/lib/letter/fidelity";
 import { SELF_WARNING_BLOCKS } from "@/lib/draft/warnings";
+import { buildDraft } from "@/lib/draft/build";
+import { getEntry } from "@/lib/corpus/index";
 import { __setKvForTests, MemoryKv } from "@/lib/kv/redis";
 import { __setModelForTests, type ModelFn } from "@/lib/generation/anthropic";
 
@@ -184,6 +186,56 @@ describe("/api/letter-polish — the case letter", () => {
     expect((await send(noRespondent)).status).toBe("not-covered");
   });
 
+  // Live, 2026-11-01: the first statement of case was refused for a dropped blank, a missing
+  // party line, its length and "invented" numbers — its own "Ground 1", "Ground 2". Now the
+  // model writes the body, the bones go back on exactly, and its numbering is not a fact.
+  it("writes the body of a real statement, puts the bones back on, and lets the grounds be numbered", async () => {
+    const real = buildDraft(getEntry("vic-generic")!, "judicial-review-application", story, {
+      decisionDate: "2026-03-03",
+      groundsListed: true,
+    }).body;
+    let seen = "";
+    __setModelForTests(async (call) => {
+      seen = call.user;
+      return model(
+        [
+          "The decision and its reasons",
+          "The council cancelled my permit on 3 March.",
+          "",
+          "What I ask the court to do",
+          "I ask the court to set aside the decision and send it back to be decided again according to law.",
+          "",
+          "Grounds of review",
+          "",
+          "Ground 1: I was not given a chance to respond",
+          GOOD,
+          "",
+          "Ground 2: The complaint was not shown to me",
+          "Nobody told me about the complaint.",
+        ].join("\n"),
+      )(call);
+    });
+    const out = await (
+      await POST(
+        new NextRequest("http://x/api/letter-polish", {
+          method: "POST",
+          headers: { "content-type": "application/json", "x-forwarded-for": "9.9.9.7" },
+          body: JSON.stringify({ ...body, draft: real }),
+        }),
+      )
+    ).json();
+    expect(out.status).toBe("answered");
+    // The model saw the top for reference and was asked for the body only.
+    expect(seen).toContain("THE TOP OF THE DOCUMENT (printed above what you write — never copy it):");
+    expect(seen).toContain("THE DRAFT'S BODY:");
+    expect(seen).not.toContain("THE DRAFT:\n");
+    // The document as assembled: the exact head, the body, the exact sign-off.
+    expect(out.letter).toMatch(/^\[Your name\]\n\[Your address\]/);
+    expect(out.letter).toContain("Respondent: [the agency or council that made the decision]");
+    expect(out.letter).toContain("Ground 2: The complaint was not shown to me");
+    expect(out.letter).toMatch(/\n\nSigned: \[Your name\]\nApplicant$/);
+  });
+
   for (const [name, bad] of [
     ["a new name", `${GOOD} Mr Hargreaves at the council refused to listen.`],
     ["a stated time limit", `${GOOD} I am applying within 60 days.`],
@@ -199,12 +251,12 @@ describe("/api/letter-polish — the case letter", () => {
   // Measured live, 2026-11-01: seven marked grounds, refused twice for length under a flat 750.
   it("is allowed more words for more marked issues, and told the number", async () => {
     expect(caseMaxWords({ groundIds: ["a"], notes: {} })).toBe(900);
-    expect(caseMaxWords({ groundIds: ["a", "b", "c", "d", "e", "f", "g"], notes: {} })).toBe(1320);
-    expect(caseMaxWords({ groundIds: Array.from({ length: 12 }, (_, i) => `g${i}`), notes: {} })).toBe(1320);
+    expect(caseMaxWords({ groundIds: ["a", "b", "c", "d", "e", "f", "g"], notes: {} })).toBe(1480);
+    expect(caseMaxWords({ groundIds: Array.from({ length: 12 }, (_, i) => `g${i}`), notes: {} })).toBe(1480);
     // The analysis's points, and the points it argues both ways, count as issues; a warning
     // block copied word for word is on top.
-    expect(caseMaxWords({ groundIds: [], notes: {}, analysis: { points: [1, 2, 3, 4, 5] } })).toBe(1100);
-    expect(caseMaxWords({ groundIds: [], notes: {}, analysis: { points: [], depth: [1, 2, 3, 4, 5, 6] } })).toBe(1210);
+    expect(caseMaxWords({ groundIds: [], notes: {}, analysis: { points: [1, 2, 3, 4, 5] } })).toBe(1200);
+    expect(caseMaxWords({ groundIds: [], notes: {}, analysis: { points: [], depth: [1, 2, 3, 4, 5, 6] } })).toBe(1340);
     const warning = SELF_WARNING_BLOCKS[0]!.text;
     expect(caseMaxWords({ groundIds: ["a"], notes: {} }, `To: x\n\n${warning}\n\nYours faithfully,`)).toBe(
       900 + warning.split(/\s+/).filter(Boolean).length,

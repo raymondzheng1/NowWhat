@@ -483,9 +483,11 @@ the law in the CORPUS CONTEXT. Write it the way a careful advocate would put it 
 clear, firm, courteous and specific.
 
 YOU ARE GIVEN
- · THE DRAFT: the document's bones — the lines above the first paragraph (who it is to, the
-   subject line, the parties, the reference and date lines), any block headed "NOTE TO
-   YOURSELF", the blanks in square brackets, and the sign-off.
+ · THE TOP OF THE DOCUMENT: who it is to, the subject line, the parties and the date of the
+   decision. It is printed above what you write, and the sign-off below it, exactly as they
+   are: never copy either of them.
+ · THE DRAFT'S BODY: the plain version of what you are writing, with any blanks in square
+   brackets.
  · CORPUS CONTEXT: the law for their path — what this body looks at, what it can do, and the
    test, the parts of the grounds, or the criteria. This is the ONLY law you may use.
  · THEIR MATERIAL: their account, what they want, the points or criteria they marked and what
@@ -503,8 +505,8 @@ own case. So:
    out without an answer. If their facts give no answer to it, leave it out.
 
 WRITE IT IN THIS ORDER, under the SECTION HEADINGS given
- 1. The bones from THE DRAFT, exactly: every line above the first paragraph, and every block
-    headed "NOTE TO YOURSELF", copied word for word in the same place.
+ 1. Return ONLY the body: start at the first heading, end with the closing sentence. No
+    addresses, no "To:" or "Re:" lines, no parties, no note, no sign-off — they are added.
  2. The first heading: the decision — what was decided, who decided it and when, as far as
     their account says. Then the reasons the decision-maker gave, as their account reports them
     (numbered if there were several). If their account says no reasons were given, say so. If it
@@ -528,7 +530,8 @@ WRITE IT IN THIS ORDER, under the SECTION HEADINGS given
     three thin ones.
  6. If their account mentions documents or records they have, a last short section listing them
     as documents they rely on. Never claim a document they did not mention.
- 7. One closing sentence asking for what they asked for, then the sign-off from THE DRAFT.
+ 7. One closing sentence asking for what they asked for. Nothing after it.
+Write each ground or reason in at most about 150 words.
 
 KEEP TO THE LENGTH LINE at the top of the material. Short sentences. Plain words the reader
 takes in within a few minutes. Write headings in sentence case, each on its own line.

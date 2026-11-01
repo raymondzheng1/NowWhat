@@ -13,6 +13,7 @@ import { getDataEntry } from "@/lib/data";
 import { getGround } from "@/lib/legal";
 import { contextForPath } from "@/lib/memo/path-context";
 import { withCriterionIds } from "@/lib/memo/criteria";
+import { assemble, bodyOnly, splitBones } from "@/lib/letter/bones";
 import { periodsAreTheirs } from "@/lib/grounds/match";
 import { checkNoCaseCitation } from "@/lib/verification/own-words";
 
@@ -220,11 +221,19 @@ export async function POST(req: NextRequest) {
     const theirs = [body.theirWords.trim(), ...notes].filter(Boolean).join("\n\n");
     const a = c.analysis;
     const maxWords = caseMaxWords(c, body.draft);
+    // The model writes the body; the head and the sign-off go back on from the draft, exactly
+    // (see lib/letter/bones). A draft whose bones cannot be found is sent whole, as before.
+    const bones = splitBones(body.draft);
+    const wordCount = (s: string) => s.split(/\s+/).filter(Boolean).length;
+    const bodyMax = bones ? maxWords - wordCount(bones.head) - wordCount(bones.tail) : maxWords;
     const material = [
-      `LENGTH: about ${Math.round(maxWords * 0.75)} words in all, counting the bones and any NOTE TO YOURSELF block. Never more than ${maxWords - 50}.`,
+      bones
+        ? `LENGTH: about ${Math.round(bodyMax * 0.75)} words for what you write. Never more than ${bodyMax - 50}.`
+        : `LENGTH: about ${Math.round(maxWords * 0.75)} words in all, counting the bones and any NOTE TO YOURSELF block. Never more than ${maxWords - 50}.`,
       "",
-      "THE DRAFT:",
-      body.draft,
+      ...(bones
+        ? ["THE TOP OF THE DOCUMENT (printed above what you write — never copy it):", bones.head, "", "THE DRAFT'S BODY:", bones.body]
+        : ["THE DRAFT:", body.draft]),
       "",
       "THEIR ACCOUNT:",
       body.theirWords.trim(),
@@ -260,7 +269,7 @@ export async function POST(req: NextRequest) {
         userInput: material,
         guard: ctx.guard,
         byoKeyValue: ctx.byoKeyValue,
-        maxTokens: 2600,
+        maxTokens: 3200,
         groundedText: `${context}\n${body.draft}`,
         accountText: theirs,
         retryHint: hint,
@@ -273,7 +282,8 @@ export async function POST(req: NextRequest) {
     }
     if (!result.data.covered) return { gates: ["model-declined"] };
 
-    const letter = result.data.letter;
+    // Bones back on, exactly, around what was written; every gate below sees the whole document.
+    const letter = bones ? assemble(bones, bodyOnly(result.data.letter, bones)) : result.data.letter;
     const fidelity = checkLetterFidelity(body.draft, theirs, letter, { known: context, maxWords });
     if (fidelity.length > 0) {
       return {
