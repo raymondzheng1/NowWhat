@@ -122,6 +122,18 @@ export function ResultView({
   const [kind, setKind] = useState<DraftKind>("reasons-request");
   const [draft, setDraft] = useState<Draft | null>(null);
   const [editing, setEditing] = useState(false);
+  // Only the letters this decision has a path for — the same rule as /start. Offering all
+  // three put a merits-review application in front of someone with a Victorian fine (no
+  // tribunal) and a judicial-review letter addressed to a private rental provider. Asking for
+  // reasons is always open. With no analysis for the entry, that is all we offer.
+  const paths = analysis?.plan.paths ?? [];
+  const offered = DRAFT_KINDS.filter(
+    (k) =>
+      k.id === "reasons-request" ||
+      (k.id === "merits-review-application" &&
+        paths.some((p) => p.id === "merits-review" && p.character === "tribunal")) ||
+      (k.id === "judicial-review-application" && paths.some((p) => p.id === "judicial-review")),
+  );
 
   useEffect(() => {
     let live = true;
@@ -265,7 +277,7 @@ export function ResultView({
                   court to check how it was made. Naming them separately stops a person
                   sending the wrong one. */}
               <div className="mt-3.5 flex flex-wrap gap-2">
-                {DRAFT_KINDS.map((k) => (
+                {offered.length > 1 && offered.map((k) => (
                   <button
                     key={k.id}
                     type="button"
@@ -431,7 +443,12 @@ export function ResultView({
           {/* RAIL */}
           <div className="flex min-w-0 flex-col gap-5 lg:sticky lg:top-[84px] lg:self-start">
             <div className="order-1 lg:order-2">
-              <TieredHelp entryId={entry.id} entryTitle={entry.title} services={entry.getHelp} />
+              <TieredHelp
+                entryId={entry.id}
+                entryTitle={entry.title}
+                jurisdiction={entry.jurisdiction}
+                services={entry.getHelp}
+              />
             </div>
             <div className="order-2 lg:order-1">
               <SourcesPanel sources={entry.sources} lastVerified={entry.lastVerified} />

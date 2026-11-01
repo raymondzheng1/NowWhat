@@ -54,7 +54,74 @@ const ALWAYS_ALLOWED = new Set([
   // asks for, and the plain name of the hearing rule. "Chief Executive" is how a careful
   // letter writes the CEO their account already names.
   "sir", "madam", "background", "natural", "justice", "chief", "executive",
+  // A title on its own names no one; the surname after it is still checked.
+  "mr", "mrs", "ms", "miss", "dr", "prof",
 ]);
+
+/**
+ * A month written in full or short is the same month. Measured on a Centrelink account that said
+ * "since Feb 2025": the letter wrote "since February 2025" and was refused for a name.
+ */
+const MONTHS: [string, string][] = [
+  ["jan", "january"], ["feb", "february"], ["mar", "march"], ["apr", "april"], ["jun", "june"],
+  ["jul", "july"], ["aug", "august"], ["sep", "september"], ["sept", "september"], ["oct", "october"],
+  ["nov", "november"], ["dec", "december"],
+];
+
+/**
+ * The word a token stands for: no case, no possessive. "Dr Marchetti's report" names the same
+ * person as "Dr Marchetti", and "Services Australia's letter" the same agency — both refused a
+ * case letter that every fact of was theirs (four requests out of four, on one account).
+ */
+const stem = (w: string) => w.toLowerCase().replace(/['’]s?$/, "");
+
+/** Every form of the source's words a rewrite may use: stems, hyphen parts, either month form. */
+function knownWords(source: string): Set<string> {
+  const known = new Set<string>();
+  for (const m of source.matchAll(WORD)) {
+    const w = stem(m[0]);
+    known.add(w);
+    for (const part of w.split("-")) if (part) known.add(stem(part));
+  }
+  for (const [short, full] of MONTHS) {
+    if (known.has(short) || known.has(full)) {
+      known.add(short);
+      known.add(full);
+    }
+  }
+  return known;
+}
+
+const isKnown = (w: string, known: Set<string>) => {
+  const k = stem(w);
+  if (ALWAYS_ALLOWED.has(k) || known.has(k)) return true;
+  // "Werribee-based" is theirs if each part is.
+  const parts = k.split("-").filter(Boolean);
+  return parts.length > 1 && parts.every((p) => ALWAYS_ALLOWED.has(p) || known.has(stem(p)));
+};
+
+/** Figures the way people write them both ways: "4-5" holds 4 and 5; "five" is 5. */
+const NUMBER_WORDS = [
+  "zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven",
+  "twelve", "thirteen", "fourteen", "fifteen", "sixteen", "seventeen", "eighteen", "nineteen", "twenty",
+];
+const TENS: Record<string, number> = { thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
+const figureParts = (n: string) => n.split(/[-–/]/).map((p) => p.replace(/[.,]+$/, "")).filter(Boolean);
+function knownFigures(...sources: string[]): Set<string> {
+  const out = new Set<string>();
+  for (const src of sources) {
+    for (const m of src.matchAll(NUMBER)) {
+      out.add(m[0]);
+      for (const p of figureParts(m[0])) out.add(p);
+    }
+    for (const m of src.toLowerCase().matchAll(/[a-z]+/g)) {
+      const i = NUMBER_WORDS.indexOf(m[0]);
+      if (i >= 0) out.add(String(i));
+      if (TENS[m[0]]) out.add(String(TENS[m[0]]));
+    }
+  }
+  return out;
+}
 
 /** A word, allowing the apostrophes and hyphens that names and places carry. */
 const WORD = /[A-Za-z][A-Za-z'’-]*/g;
@@ -73,15 +140,14 @@ const WORD = /[A-Za-z][A-Za-z'’-]*/g;
  * without case, so a model that capitalises "council" has not invented anything.
  */
 function inventedNames(source: string, rewritten: string): string[] {
-  const known = new Set([...source.matchAll(WORD)].map((m) => m[0].toLowerCase()));
+  const known = knownWords(source);
   const found = new Set<string>();
   // Blanks are checked by the placeholder gate; their contents are not prose.
   const text = rewritten.replace(PLACEHOLDER, " ");
   for (const m of text.matchAll(WORD)) {
     const w = m[0];
     if (w[0] !== w[0]!.toUpperCase() || w[0] === w[0]!.toLowerCase()) continue;
-    const lower = w.toLowerCase();
-    if (ALWAYS_ALLOWED.has(lower) || known.has(lower)) continue;
+    if (isKnown(w, known)) continue;
     // Sentence-initial: nothing but space, quotes or brackets back to a full stop, a colon, a
     // line break or the start of the text. Line breaks are NOT stripped as space: they were, so
     // the first word under a heading — which ends in no full stop — counted as mid-sentence.
@@ -97,11 +163,24 @@ function inventedNames(source: string, rewritten: string): string[] {
  * judicial-review letter twice: seven marked grounds, a warning block and the bones do not fit
  * in 750 words and still say anything. So the limit grows with the issues they marked, and the
  * model is told the number it is held to.
+ *
+ * The warning blocks are on top, not inside it: they are copied word for word and are not the
+ * letter's to shorten. Counting them in refused a merits letter twice for being "too long" on a
+ * three-issue Centrelink case. An analysis with more points than they marked counts too, since
+ * the letter is asked to argue from it.
  */
-export function caseMaxWords(c: { groundIds: string[]; notes: Record<string, string> }): number {
+export function caseMaxWords(
+  c: { groundIds: string[]; notes: Record<string, string>; analysis?: { points: unknown[] } | null },
+  draft = "",
+): number {
   const marked = new Set([...c.groundIds, ...Object.keys(c.notes).filter((k) => c.notes[k]?.trim())]);
-  const issues = Math.min(7, Math.max(2, marked.size));
-  return Math.max(750, Math.min(1100, 450 + 90 * issues));
+  const issues = Math.min(7, Math.max(2, marked.size, c.analysis?.points.length ?? 0));
+  const flatDraft = flat(draft);
+  const warnings = SELF_WARNING_BLOCKS.filter((w) => flatDraft.includes(flat(w.text))).reduce(
+    (n, w) => n + words(w.text),
+    0,
+  );
+  return Math.max(850, Math.min(1150, 500 + 90 * issues)) + warnings;
 }
 
 const words = (s: string) => s.split(/\s+/).filter(Boolean).length;
@@ -164,15 +243,11 @@ export function checkLetterFidelity(
 
   // Figures must be traceable. Checked against the draft AND their account, because a date
   // they themselves wrote is theirs to state.
-  const allowed = new Set([
-    ...[...original.matchAll(NUMBER)].map((m) => m[0]),
-    ...[...theirWords.matchAll(NUMBER)].map((m) => m[0]),
-    ...[...(opts.known ?? "").matchAll(NUMBER)].map((m) => m[0]),
-  ]);
+  const allowed = knownFigures(original, theirWords, opts.known ?? "");
   const seen = new Set<string>();
   for (const m of rewritten.matchAll(NUMBER)) {
     const n = m[0];
-    if (seen.has(n) || allowed.has(n)) continue;
+    if (seen.has(n) || allowed.has(n) || figureParts(n).every((p) => allowed.has(p))) continue;
     seen.add(n);
     failures.push({ gate: "invented-figure", detail: n });
   }

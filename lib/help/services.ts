@@ -193,6 +193,10 @@ const LAWYER_TERMS: Record<string, string> = {
   "vic-fines": "fines and infringements",
   "vic-public-housing": "public housing tenancy",
   "vic-generic": "administrative law government decisions",
+  // A Commonwealth matter's title is a sentence ("I got a Centrelink decision or debt I
+  // disagree with"), which made a search for that whole sentence plus "lawyer Victoria".
+  "cth-centrelink": "Centrelink social security",
+  "cth-generic": "administrative law government decisions",
 };
 
 export function lawyerTermForEntry(id: string, title: string): string {
@@ -202,7 +206,14 @@ export function lawyerTermForEntry(id: string, title: string): string {
 /** The Law Institute of Victoria — the proper referral channel for private lawyers. */
 export const LIV_URL = "https://www.liv.asn.au";
 
-/** A live Google search tailored to the matter (the "dynamic" lawyer lookup). */
-export function lawyerSearchUrl(term: string): string {
-  return `https://www.google.com/search?q=${encodeURIComponent(`${term} lawyer Victoria`)}`;
+/** The national body of the law societies — where to find the referral service in any state. */
+export const LAW_COUNCIL_URL = "https://lawcouncil.au";
+
+/**
+ * A live Google search tailored to the matter (the "dynamic" lawyer lookup). A Commonwealth
+ * decision can be anyone's, anywhere in Australia, so it is not narrowed to Victoria.
+ */
+export function lawyerSearchUrl(term: string, jurisdiction: string = "Vic"): string {
+  const where = jurisdiction === "Cth" ? "Australia" : "Victoria";
+  return `https://www.google.com/search?q=${encodeURIComponent(`${term} lawyer ${where}`)}`;
 }

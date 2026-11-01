@@ -76,17 +76,26 @@ const words = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, " ").trim();
 
 /**
  * A sentence is a repeat when the account already holds it — word for word, or with eight or
- * more words of which nine in ten are already there (a pasted line with a word fixed). Short
- * sentences only count when word for word: "The sign was not clear" is a point, not a copy.
+ * more words of which nine in ten of its three-word runs are already there, in that order (a
+ * pasted line with a word fixed). Short sentences only count when word for word: "The sign was
+ * not clear" is a point, not a copy.
+ *
+ * Runs of words, not loose words. Counting loose words treated a note that SAID THE SAME THING
+ * IN OTHER WORDS as a copy, because a long account already holds nearly every ordinary word: on
+ * a Centrelink account, two of about twelve note sentences survived, and the two left read as
+ * orphans. A reworded point is the person's point and stays.
  */
 function isRepeat(sentence: string, story: string): boolean {
   const w = words(sentence);
   if (!w) return true;
-  if (words(story).includes(w)) return true;
+  const st = words(story);
+  if (st.includes(w)) return true;
   const ws = w.split(" ");
   if (ws.length < 8) return false;
-  const have = new Set(words(story).split(" "));
-  return ws.filter((x) => have.has(x)).length / ws.length >= 0.9;
+  const runs = (xs: string[]) => xs.slice(0, -2).map((_, i) => xs.slice(i, i + 3).join(" "));
+  const have = new Set(runs(st.split(" ")));
+  const mine = runs(ws);
+  return mine.filter((r) => have.has(r)).length / mine.length >= 0.9;
 }
 
 /** The note with every sentence already in their account taken out, paragraphs kept. */

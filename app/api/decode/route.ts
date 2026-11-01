@@ -10,11 +10,15 @@ import { runDecode } from "@/lib/generation/runner";
 import { isModelConfigured } from "@/lib/generation/anthropic";
 import { sendQaCopy } from "@/lib/email/qa";
 import { toEntrySummary } from "@/lib/corpus/summary";
+// The same limit the page shrinks photos to: Vercel refuses anything over 4.5 MB before this runs.
+import { MAX_UPLOAD_BYTES } from "@/lib/intake/shrink";
+import { helpForPlace } from "@/lib/help/elsewhere";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-const MAX_UPLOAD_BYTES = 8 * 1024 * 1024;
+/** How a transcription says there was nothing to transcribe. Only checked on a short reply. */
+const NO_TEXT = /\b(no (readable |legible |visible )?text|not (readable|legible)|cannot read|(image|page|photo) (is|appears) blank)\b/i;
 
 /**
  * Decode a letter (PRD §6.2/§6.3). A pasted text or an uploaded photo/PDF is processed
@@ -48,13 +52,15 @@ export async function POST(req: NextRequest) {
   }
 
   if (!pastedText && !file) return badInput();
-  if (file && file.size > MAX_UPLOAD_BYTES) return badInput(413);
+  if (file && file.size > MAX_UPLOAD_BYTES) {
+    return apiJson({ ok: false, status: "error", message: "errors.uploadTooLarge" }, ctx, 413);
+  }
 
   // Decode needs the model. With none configured, degrade gracefully (no spend, no OCR).
   if (!isModelConfigured()) {
     const match = pastedText.length >= 10 ? classifyForDecode(pastedText) : null;
     const help = (match ? getEntry(match.entryId) : getEntry(FALLBACK_ENTRY_ID))?.getHelp ?? [];
-    return apiJson({ ok: true, status: "not-covered", getHelp: help }, ctx);
+    return apiJson({ ok: true, status: "not-covered", getHelp: helpForPlace(pastedText, help) }, ctx);
   }
 
   // --- Cost guard FIRST (gates both OCR and decode spend; fail-closed). ---
@@ -74,6 +80,9 @@ export async function POST(req: NextRequest) {
       await record(ctx.guard, estimateCostUsd(ocr.model, ocr.inputTokens, ocr.outputTokens ?? 0));
     }
     letterText = (ocr.text ?? "").trim();
+    // A photo with no letter in it: the vision model says so in a sentence, which read as a
+    // letter and cost a second call to be told "not sure". Measured on a blank image.
+    if (letterText.length < 200 && NO_TEXT.test(letterText)) letterText = "";
     // `bytes` goes out of scope here — the image is never persisted.
   }
 
@@ -85,7 +94,7 @@ export async function POST(req: NextRequest) {
   const match = classifyForDecode(letterText);
   if (!match) {
     return apiJson(
-      { ok: true, status: "not-covered", getHelp: getEntry(FALLBACK_ENTRY_ID)?.getHelp ?? [] },
+      { ok: true, status: "not-covered", getHelp: helpForPlace(letterText, getEntry(FALLBACK_ENTRY_ID)?.getHelp ?? []) },
       ctx,
     );
   }
@@ -102,7 +111,7 @@ export async function POST(req: NextRequest) {
       byoKeyValue: ctx.byoKeyValue,
     });
   } catch {
-    return apiJson({ ok: true, status: "not-covered", getHelp: entry.getHelp }, ctx);
+    return apiJson({ ok: true, status: "not-covered", getHelp: helpForPlace(letterText, entry.getHelp) }, ctx);
   }
   // letterText goes out of scope here — never persisted.
 
@@ -117,7 +126,7 @@ export async function POST(req: NextRequest) {
       {
         ok: true,
         status: "not-covered",
-        getHelp: entry.getHelp,
+        getHelp: helpForPlace(letterText, entry.getHelp),
         why: result.reason,
         gates: result.rejectedGates,
       },

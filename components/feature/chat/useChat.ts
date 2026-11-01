@@ -57,6 +57,9 @@ export function useChat() {
       if (data.status === "unavailable") setUnavailable(true);
       if (data.area) setHandoff({ area: data.area, date: data.decisionDate ?? null });
     } catch {
+      // A page that is not our JSON (the host's own error, a dropped connection): the same
+      // help card as "unavailable", so there is always somewhere to go.
+      setUnavailable(true);
       setMessages((m) => [
         ...m,
         { role: "assistant", content: "Something went wrong on my end. Please try the step-by-step guide." },

@@ -263,6 +263,9 @@ const NATIONAL_EQUIVALENT: Record<string, HelpService> = {
   },
 };
 
+/** The national finders, for a matter outside what we cover (another state). */
+export const NATIONAL_HELP: HelpService[] = Object.values(NATIONAL_EQUIVALENT);
+
 /**
  * The services to show for a set of stop reasons, de-duplicated, most specific first —
  * national ones in place of Victorian ones for a Commonwealth matter.

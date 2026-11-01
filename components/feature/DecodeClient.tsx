@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { postDecodeText, postDecodeFile, type DecodeResponse, TimeoutError } from "@/components/feature/api";
+import { shrinkForUpload, UploadTooLargeError } from "@/lib/intake/shrink";
 import { ResultView } from "@/components/feature/ResultView";
 import { NotCovered } from "@/components/feature/NotCovered";
 import { ToolTopBar } from "@/components/site/ToolTopBar";
@@ -59,12 +60,18 @@ export function DecodeClient({
       const r =
         text.trim().length >= 10
           ? await postDecodeText(text.trim())
-          : await postDecodeFile(file as File);
+          : await postDecodeFile(await shrinkForUpload(file as File));
       if (r.ok) setResult(r);
       else setError(msg(r.message));
     } catch (err) {
       // A stalled connection is not the same as a broken app; say which one it was.
-      setError(err instanceof TimeoutError ? te("timeout") : te("generic"));
+      setError(
+        err instanceof UploadTooLargeError
+          ? te("uploadTooLarge")
+          : err instanceof TimeoutError
+            ? te("timeout")
+            : te("generic"),
+      );
     } finally {
       setLoading(false);
     }

@@ -9,6 +9,7 @@ import { isModelConfigured } from "@/lib/generation/anthropic";
 import { sendQaCopy } from "@/lib/email/qa";
 import { getEntry, FALLBACK_ENTRY_ID } from "@/lib/corpus/index";
 import { toEntrySummary } from "@/lib/corpus/summary";
+import { helpForPlace } from "@/lib/help/elsewhere";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -32,7 +33,7 @@ export async function POST(req: NextRequest) {
   // help (route to the step-by-step guide / real services) instead of failing closed.
   if (!isModelConfigured()) {
     const help = (retrieveForAsk(parsed.data.question)?.entry ?? getEntry(FALLBACK_ENTRY_ID))?.getHelp ?? [];
-    return apiJson({ ok: true, status: "not-covered", getHelp: help }, ctx);
+    return apiJson({ ok: true, status: "not-covered", getHelp: helpForPlace(parsed.data.question, help) }, ctx);
   }
 
   // Cost guard FIRST (fail-closed), before any model call.
@@ -49,7 +50,7 @@ export async function POST(req: NextRequest) {
       {
         ok: true,
         status: "not-covered",
-        getHelp: fallbackHelp?.getHelp ?? [],
+        getHelp: helpForPlace(parsed.data.question, fallbackHelp?.getHelp ?? []),
       },
       ctx,
     );
@@ -67,7 +68,11 @@ export async function POST(req: NextRequest) {
   } catch {
     // Provider/network error — never expose internals; degrade to honest help.
     return apiJson(
-      { ok: true, status: "not-covered", getHelp: retrieved.entry.getHelp ?? fallbackHelp?.getHelp ?? [] },
+      {
+        ok: true,
+        status: "not-covered",
+        getHelp: helpForPlace(parsed.data.question, retrieved.entry.getHelp ?? fallbackHelp?.getHelp ?? []),
+      },
       ctx,
     );
   }
@@ -82,7 +87,10 @@ export async function POST(req: NextRequest) {
       {
         ok: true,
         status: "not-covered",
-        getHelp: (retrieved.entry.getHelp.length ? retrieved.entry : fallbackHelp)?.getHelp ?? [],
+        getHelp: helpForPlace(
+          parsed.data.question,
+          (retrieved.entry.getHelp.length ? retrieved.entry : fallbackHelp)?.getHelp ?? [],
+        ),
         // Gate names only — a fixed identifier set, never model or user text.
         why: result.reason,
         gates: result.rejectedGates,

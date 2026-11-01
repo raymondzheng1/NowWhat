@@ -1,4 +1,5 @@
 import type { DataPathway } from "@/lib/schemas/data";
+import { todayLocal } from "@/lib/time/clock";
 import { ruleForPath, officialSourceForPath, type RulePath } from "@/lib/deadline/rule";
 import type { Ground } from "@/lib/schemas/legal";
 import type { Memo, MemoBlock } from "@/lib/memo/compose";
@@ -119,7 +120,7 @@ export function composeBrief(input: BriefInput): Memo {
   meta(t("memoAbout"), entry.title);
   if (decisionDate) meta(t("memoDecisionDate"), decisionDate);
   meta(t("memoPath"), forum ? `${pathName} (${forum})` : pathName);
-  meta(t("memoPrepared"), new Date().toISOString().slice(0, 10));
+  meta(t("memoPrepared"), todayLocal());
 
   // ---- The time limit, before anything the model wrote ----------------------------------
   // First, and never from the model. It is the one thing a person can lose everything by

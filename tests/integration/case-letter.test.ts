@@ -2,6 +2,7 @@ import { describe, it, expect, beforeEach, afterEach } from "vitest";
 import { NextRequest } from "next/server";
 import { POST } from "@/app/api/letter-polish/route";
 import { caseMaxWords } from "@/lib/letter/fidelity";
+import { SELF_WARNING_BLOCKS } from "@/lib/draft/warnings";
 import { __setKvForTests, MemoryKv } from "@/lib/kv/redis";
 import { __setModelForTests, type ModelFn } from "@/lib/generation/anthropic";
 
@@ -120,16 +121,22 @@ describe("/api/letter-polish — the case letter", () => {
 
   // Measured live, 2026-11-01: seven marked grounds, refused twice for length under a flat 750.
   it("is allowed more words for more marked issues, and told the number", async () => {
-    expect(caseMaxWords({ groundIds: ["a"], notes: {} })).toBe(750);
-    expect(caseMaxWords({ groundIds: ["a", "b", "c", "d", "e", "f", "g"], notes: {} })).toBe(1080);
-    expect(caseMaxWords({ groundIds: Array.from({ length: 12 }, (_, i) => `g${i}`), notes: {} })).toBe(1080);
+    expect(caseMaxWords({ groundIds: ["a"], notes: {} })).toBe(850);
+    expect(caseMaxWords({ groundIds: ["a", "b", "c", "d", "e", "f", "g"], notes: {} })).toBe(1130);
+    expect(caseMaxWords({ groundIds: Array.from({ length: 12 }, (_, i) => `g${i}`), notes: {} })).toBe(1130);
+    // The analysis's points count as issues; a warning block copied word for word is on top.
+    expect(caseMaxWords({ groundIds: [], notes: {}, analysis: { points: [1, 2, 3, 4, 5] } })).toBe(950);
+    const warning = SELF_WARNING_BLOCKS[0]!.text;
+    expect(caseMaxWords({ groundIds: ["a"], notes: {} }, `To: x\n\n${warning}\n\nYours faithfully,`)).toBe(
+      850 + warning.split(/\s+/).filter(Boolean).length,
+    );
     let seen = "";
     __setModelForTests(async (call) => {
       seen = call.user;
       return model(letter(GOOD))(call);
     });
     await post();
-    expect(seen).toMatch(/LENGTH: about 563 words/);
+    expect(seen).toMatch(/LENGTH: about 638 words/);
   });
 
   it("tells the second attempt what the route refused the first for", async () => {

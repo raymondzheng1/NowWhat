@@ -158,6 +158,15 @@ describe("/api/decode", () => {
     expect(body.entry.id).toBe("vic-renting");
     expect(JSON.stringify(body)).not.toContain(SECRET);
   });
+
+  // Vercel refuses a body over 4.5 MB before the route runs; our own limit sits under it and says why.
+  it("refuses an upload over the limit by name, so the page can say it is too big", async () => {
+    const fd = new FormData();
+    fd.append("file", new File([new Uint8Array(4 * 1024 * 1024 + 1)], "big.png", { type: "image/png" }));
+    const res = await decodePost(new NextRequest("http://t/api/decode", { method: "POST", body: fd }));
+    expect(res.status).toBe(413);
+    expect((await res.json()).message).toBe("errors.uploadTooLarge");
+  });
 });
 
 describe("/api/chat (conversational intake)", () => {

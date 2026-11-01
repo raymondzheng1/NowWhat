@@ -1,4 +1,5 @@
 import type { Concept, Ground, Process } from "@/lib/schemas/legal";
+import { todayLocal } from "@/lib/time/clock";
 import type { DataPathway } from "@/lib/schemas/data";
 import { ruleForPath, officialSourceForPath, type RulePath } from "@/lib/deadline/rule";
 import { midSentence } from "@/lib/analysis";
@@ -429,7 +430,7 @@ export function composeMemo(input: MemoInput): Memo {
     const pHref = input.pathHref ? guide(input.siteUrl, input.pathHref) : "";
     if (pHref) link(t("memoReadMore"), pHref);
   }
-  meta(t("memoPrepared"), new Date().toISOString().slice(0, 10));
+  meta(t("memoPrepared"), todayLocal());
   blank();
   disclaimer(t("memoNotAdvice"));
 
@@ -781,6 +782,16 @@ export function composeMemo(input: MemoInput): Memo {
   // ---- Close -----------------------------------------------------------------------
   h(t("memoNext"));
   para(t("memoNextBody"));
+
+  // ---- Free help, always ---------------------------------------------------------------
+  // The same list the short analysis ends with. These notes are what a person gets when the
+  // short analysis could not be written — exactly when a service to call matters most — and
+  // they named none, on screen or in the download.
+  h(t("briefHelp"));
+  for (const s of entry.getHelp.slice(0, 3)) {
+    L.push(`  - ${[s.service, s.phone, s.link].filter(Boolean).join(" — ")}`);
+    B.push({ kind: "contact", service: s.service, href: s.link, ...(s.phone ? { phone: s.phone } : {}) });
+  }
 
   // ---- Where this came from --------------------------------------------------------
   // Added 2026-08-23 after external legal review. The memo stamped the day it was prepared

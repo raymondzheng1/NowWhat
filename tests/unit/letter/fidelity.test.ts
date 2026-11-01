@@ -324,3 +324,33 @@ describe("a blank made from the person's own note is theirs", () => {
     expect(checkLetterFidelity(D, MINE, out).some((f) => f.gate === "placeholder-invented")).toBe(true);
   });
 });
+
+// Measured live, 2026-11-01, on a Centrelink account: four case letters out of four refused
+// for writing the person's own names and figures in another ordinary form.
+describe("their own words in another form are still theirs", () => {
+  const ACCOUNT =
+    "My surgeon Dr Marchetti wrote a report. Services Australia sent a letter. My psychologist Ruth Okonkwo has seen me since Feb 2025. I studied 4-5 hrs a week. Rent is $420/wk. It took five weeks.";
+  const D = "To: x\nRe: y\n\nI ask for a review.\n\nYours faithfully,\n[Your name]";
+  const gates = (body: string) =>
+    checkLetterFidelity(D, ACCOUNT, D.replace("I ask for a review.", body)).map((f) => `${f.gate}:${f.detail}`);
+
+  for (const ok of [
+    "I rely on Dr Marchetti's report.",
+    "The letter is Services Australia's.",
+    "My psychologist, Ms Okonkwo, has seen me since February 2025.",
+    "I studied 4 to 5 hours a week.",
+    "My rent is $420 a week.",
+    "It took 5 weeks.",
+  ]) {
+    it(`accepts: ${ok}`, () => expect(gates(ok)).toEqual([]));
+  }
+
+  for (const [bad, gate] of [
+    ["I rely on Dr Brennan's report.", "invented-name:Brennan's"],
+    ["My psychologist has seen me since March 2025.", "invented-name:March"],
+    ["I studied 4 to 6 hours a week.", "invented-figure:6"],
+    ["I studied 3-5 hours a week.", "invented-figure:3-5"],
+  ] as const) {
+    it(`still refuses: ${bad}`, () => expect(gates(bad)).toContain(gate));
+  }
+});

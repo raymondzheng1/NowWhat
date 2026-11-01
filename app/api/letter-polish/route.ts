@@ -204,7 +204,7 @@ export async function POST(req: NextRequest) {
       .map(([k, v]) => `On "${noteName(k)}": ${v.trim()}`);
     const theirs = [body.theirWords.trim(), ...notes].filter(Boolean).join("\n\n");
     const a = c.analysis;
-    const maxWords = caseMaxWords(c);
+    const maxWords = caseMaxWords(c, body.draft);
     const material = [
       `LENGTH: about ${Math.round(maxWords * 0.75)} words in all, counting the bones and any NOTE TO YOURSELF block. Never more than ${maxWords - 50}.`,
       "",

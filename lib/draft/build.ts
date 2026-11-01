@@ -291,7 +291,13 @@ export function buildDraft(
       ? "I am including, or can provide, the following.\n" +
         entry.evidenceChecklist.map((e) => `  - ${e}`).join("\n")
       : "";
-  const reviewBody = tribunal ?? "the reviewing body";
+  // "considered again by Administrative Review Tribunal (ART)" read as a slip. A name that
+  // opens with an acronym ("VCAT") takes no article; a name in words does.
+  const reviewBody = !tribunal
+    ? "the reviewing body"
+    : /^(the\s|[A-Z]{2,}\b)/.test(tribunal)
+      ? tribunal
+      : `the ${tribunal}`;
   return {
     title: "Request to review a decision (merits review)",
     filename: `${entry.id}-merits-review.txt`,

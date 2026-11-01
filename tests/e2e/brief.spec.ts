@@ -134,6 +134,8 @@ test("a refused shorter letter shows the full one with no notice", async ({ page
   await apply.scrollIntoViewIfNeeded({ timeout: 15_000 });
   await expect(apply).toContainText("parking enforcement officer", { timeout: 15_000 });
   await expect(apply).not.toContainText(/We shortened your account/i);
+  // A refused case letter is named as such, so the plain one is read as the fallback.
+  await expect(apply.getByTestId("letter-case-refused")).toBeVisible();
 });
 
 test("typing in 'Anything else?' does not ask for a new analysis on every keystroke", async ({ page }) => {

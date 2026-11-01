@@ -27,6 +27,8 @@ describe("the merits letter is addressed to the tribunal", () => {
       expect(d.body).toMatch(to);
       const reviewer = /considered again by ([^.]+)\./.exec(d.body)?.[1] ?? "";
       expect(reviewer).toMatch(/VCAT|Tribunal/);
+      // An acronym stands alone; a name in words takes "the".
+      expect(reviewer).toMatch(/^(VCAT|the Administrative Review Tribunal)/);
       expect(d.body).toContain(SELF_WARNING_MERITS);
     });
   }
@@ -119,6 +121,13 @@ describe("the internal-review letter says each thing once, before it closes", ()
     expect(body.split("overgrown foliage").length - 1).toBe(1);
     expect(body.split("45 degrees").length - 1).toBe(1);
     expect(body).toContain(`${L.criteriaHeading}\nThe sign is not clear.`);
+  });
+
+  // Measured live, 2026-11-01: loose-word matching deleted ten of twelve reworded note sentences.
+  it("a note that makes the account's point in other words is kept", () => {
+    const note = "The street tree foliage covered the panel, so the time-limit was unreadable from the road.";
+    const body = compose({ "q-criteria": note });
+    expect(body).toContain(note);
   });
 
   it("a note with nothing new is left out, heading and all", () => {

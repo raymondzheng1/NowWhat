@@ -1,5 +1,6 @@
 "use client";
 
+import { todayLocal } from "@/lib/time/clock";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { useTranslations } from "next-intl";
@@ -445,7 +446,7 @@ export function RightsSaverClient({
     return () => window.removeEventListener("popstate", onPop);
   }, [consent, areaId, jurisdiction]);
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayLocal();
   const areas = jurisdiction
     ? allEntries
         .filter((e) => e.jurisdiction === jurisdiction)
@@ -2946,7 +2947,10 @@ function ResultStep({
                     />
                   </div>
                 ))}
-              <p className="text-[14.5px] leading-snug text-ink-faint">{t("groundNotesPrivacy")}</p>
+              {/* Honest about the one send on this step: the suggestions came from their account. */}
+              <p className="text-[14.5px] leading-snug text-ink-faint">
+                {t(match?.key === matchKey ? "groundsSentPrivacy" : "groundNotesPrivacy")}
+              </p>
             </div>
           )}
 
@@ -2987,8 +2991,9 @@ function ResultStep({
             </div>
           )}
 
-          {/* The one action on /start that sends anything. Labelled so, next to the button,
-              because every other word on this page promises the opposite. */}
+          {/* An action that sends what they wrote. Labelled so, next to the button. (Not the only
+              one: the analysis, the case letter and the grounds suggestions send too — the privacy
+              note under every step and the privacy page say so.) */}
           <div className="mt-6 border-t-2 border-line pt-5">
             <p className="text-[15px] leading-relaxed text-ink-soft">{t("letterSendNote")}</p>
             <button
@@ -3239,6 +3244,14 @@ function ResultStep({
                     : t("letterUseFull")}
               </button>
             </div>
+          )}
+          {/* Refused: say so, so the plain letter is read as the fallback it is — not as the
+              letter that sets out their case. Without this line the person saw their account
+              pasted under a template and could not tell anything had gone wrong. */}
+          {isCaseLetter && !polishing && polished[letterKey] === "" && (
+            <p data-testid="letter-case-refused" className="mt-3 text-[15px] leading-relaxed text-ink-soft">
+              {t("letterCaseRefused")}
+            </p>
           )}
           <LetterView body={letterBody} label={activeApply.label} />
           <LetterPlaceholderKey text={t("letterPlaceholderKey")} />

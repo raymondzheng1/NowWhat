@@ -40,17 +40,18 @@ export default function PrivacyPage() {
         <H2>Working out your options, step by step</H2>
         <p className="mt-3 leading-relaxed">
           Most of that tool runs on your own device. Picking who made the decision, seeing which
-          paths are open, marking the points you want to raise — none of that is sent to us, and
+          paths are open, ticking the points you want to raise — none of that is sent to us, and
           it works the same with the connection dropped.
         </p>
         <p className="mt-3 leading-relaxed">
-          <strong className="text-ink">One step is different, and this is it.</strong> To write
-          your memo — the notes you can take to a legal service — we send what you have told us to
-          our server, so the analysis can be written around your own words, and the notes come
-          straight back. It is read in the moment and discarded. It is not saved, it is not used to
-          train anything, and it is not used for anything else. The step says so on the page before
-          it happens. If that request cannot be made, or what comes back does not pass our checks,
-          you still get a full memo — it is simply written by the app instead.
+          <strong className="text-ink">Three things are different.</strong> When we write
+          something for you, we send what you have told us to our server so it can be written
+          around your own words, and it comes straight back: your analysis (and again if you add
+          to it), your draft letter, and — if you are asking a court to check a decision — the
+          grounds we suggest from your account. What we send is read in the moment and discarded.
+          It is not saved, it is not used to train anything, and it is not used for anything else.
+          If a request cannot be made, or what comes back does not pass our checks, you still get
+          a full analysis and letter — they are simply written by the app instead.
         </p>
 
         <H2>What we do use, and why</H2>

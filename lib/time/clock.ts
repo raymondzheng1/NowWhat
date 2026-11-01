@@ -24,3 +24,14 @@ export function now(): Date {
 export function todayUtc(): string {
   return now().toISOString().slice(0, 10);
 }
+
+/**
+ * The person's own calendar date, YYYY-MM-DD, for anything they see or pick. The UTC date is
+ * yesterday in Melbourne until 10 or 11 in the morning, so a letter dated today could not be
+ * picked, and a memo prepared this morning was stamped with yesterday.
+ */
+export function todayLocal(): string {
+  const d = now();
+  const p = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`;
+}

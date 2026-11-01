@@ -41,8 +41,8 @@ export default function TermsPage() {
         <H2>Check the important dates yourself</H2>
         <p className="mt-3 leading-relaxed">
           Time limits matter, and the date that applies can depend on details of your situation. We
-          show a date only when we can ground it in a verified rule, but you should confirm the exact
-          deadline with a free legal service before you rely on it.
+          show a date only when we can ground it in a verified rule. A free legal service can confirm the
+          exact deadline for you before you rely on it.
         </p>
 
         <H2>We try to be accurate, but no guarantees</H2>

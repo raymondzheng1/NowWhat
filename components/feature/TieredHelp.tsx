@@ -7,6 +7,7 @@ import {
   lawyerTermForEntry,
   lawyerSearchUrl,
   LIV_URL,
+  LAW_COUNCIL_URL,
 } from "@/lib/help/services";
 
 /**
@@ -68,17 +69,22 @@ export function TieredHelp({
   entryId,
   entryTitle,
   services,
+  jurisdiction = "Vic",
   title = "Get free help",
 }: {
   entryId: string;
   entryTitle: string;
+  /** "Cth" or "Vic": a Commonwealth matter is not sent to Victorian referral services. */
+  jurisdiction?: string;
   services: HelpService[];
   title?: string;
 }) {
   const gov = services.filter((s) => classifyHelpTier(s) === "government");
   const legal = services.filter((s) => classifyHelpTier(s) === "legal");
-  const tier1 = gov.length ? gov : directoryByTier("government").slice(0, 2);
-  const tier2 = legal.length ? legal : directoryByTier("legal").slice(0, 2);
+  const where = jurisdiction === "Cth" ? "Cth" : "Vic";
+  const tier1 = gov.length ? gov : directoryByTier("government", where).slice(0, 2);
+  const tier2 = legal.length ? legal : directoryByTier("legal", where).slice(0, 2);
+  const cth = where === "Cth";
   const term = lawyerTermForEntry(entryId, entryTitle);
 
   return (
@@ -129,15 +135,15 @@ export function TieredHelp({
           <p className="mt-0.5 text-[14.5px] text-ink-faint">Fees apply.</p>
           <div className="mt-1.5 flex flex-col">
             <a
-              href={LIV_URL}
+              href={cth ? LAW_COUNCIL_URL : LIV_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="link inline-flex min-h-[44px] items-center text-[14.5px]"
             >
-              Law Institute of Victoria — referral service →
+              {cth ? "Law Council of Australia — find your state's law society →" : "Law Institute of Victoria — referral service →"}
             </a>
             <a
-              href={lawyerSearchUrl(term)}
+              href={lawyerSearchUrl(term, where)}
               target="_blank"
               rel="noopener noreferrer"
               className="link inline-flex min-h-[44px] items-center text-[14.5px]"

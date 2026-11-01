@@ -1,5 +1,6 @@
 "use client";
 
+import { UploadTooLargeError } from "@/lib/intake/shrink";
 import type { EntrySummary } from "@/lib/corpus/summary";
 import type { GeneratedAnswer, GeneratedDecode } from "@/lib/schemas/generation";
 import type { DeadlineResult } from "@/lib/deadline/compute";
@@ -106,7 +107,11 @@ export async function postDecodeFile(file: File): Promise<DecodeResponse> {
   // Uploads get longer: a photo of a letter over a slow mobile connection is legitimately
   // slower than a text call, but it still must not hang forever.
   return withTimeout<DecodeResponse>(UPLOAD_TIMEOUT_MS, (signal) =>
-    fetch("/api/decode", { signal, method: "POST", body: form, cache: "no-store" }),
+    fetch("/api/decode", { signal, method: "POST", body: form, cache: "no-store" }).then((r) => {
+      // The host's own refusal is a page, not our JSON — name it rather than fail to parse it.
+      if (r.status === 413) throw new UploadTooLargeError();
+      return r;
+    }),
   );
 }
 
