@@ -689,6 +689,8 @@ export function composeMemo(input: MemoInput): Memo {
       const note = rule(groundNotes[g.id] ?? "");
       if (note) quote(note, t("memoYourNote"));
       const d = input.drafted?.application?.find((a) => a.groundId === g.id);
+      // Whether the analysis argued ANY point both ways: only then is a point without it a gap.
+      const argued = !!input.drafted?.application?.some((a) => a.forThem?.trim() || a.against?.trim());
       // WHAT THE POINT BREAKS INTO, each part with its question and, where the analysis
       // reached it, what their account has to do with it. Matched by id inside this ground —
       // element ids are local, so a global lookup would misfile the answer; an id we never
@@ -712,6 +714,9 @@ export function composeMemo(input: MemoInput): Memo {
       // is gone for the same reason — it could say nothing a conclusion would say.
       if (d?.forThem.trim()) argue("for", t("memoDraftedForThem"), rule(d.forThem));
       if (d?.against.trim()) argue("against", t("memoDraftedAgainst"), rule(d.against));
+      // Said, not left as a gap: the fourth of four marked grounds once came back with neither
+      // side and the point simply stopped, which read as if it had been forgotten (2026-11-02).
+      if (argued && !d?.forThem.trim() && !d?.against.trim()) para(t("memoDraftedNone"));
       if (d?.toTest.trim()) {
         label(t("memoDraftedToTest"));
         para(rule(d.toTest));

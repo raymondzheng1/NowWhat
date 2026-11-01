@@ -769,6 +769,20 @@ describe("the drafted application is written to each part of the test", () => {
     expect(sides).toEqual(["for", "against"]);
   });
 
+  // Reported 2026-11-02: four grounds marked, the fourth argued neither way and simply stopping.
+  it("says so when one point was argued both ways and another was not", () => {
+    const two = listGrounds().filter((g) => g.id === "procedural-fairness-hearing" || g.id === "no-evidence");
+    expect(two).toHaveLength(2);
+    const m = composeMemo({ ...base, process: judicial, grounds: two, story: "x", drafted: draftFor([]) });
+    expect(m.body.split(t("memoDraftedNone")).length - 1).toBe(1);
+    // Under the point that has none, not the one that has both.
+    const at = (id: string) => m.body.indexOf(two.find((g) => g.id === id)!.name);
+    const [first, second] = [at("no-evidence"), at("procedural-fairness-hearing")].sort((a, b) => a - b);
+    const none = m.body.indexOf(t("memoDraftedNone"));
+    const inNoEvidence = at("no-evidence") === first ? none > first && none < second! : none > second!;
+    expect(inNoEvidence).toBe(true);
+  });
+
   it("composes exactly as before when no draft arrived", () => {
     const without = composeMemo({ ...base, process: judicial, grounds: pf, story: "x" });
     const withEmpty = composeMemo({

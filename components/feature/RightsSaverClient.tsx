@@ -18,7 +18,7 @@ import { deadlineRuleView } from "@/lib/deadline/rule";
 import { siteUrl } from "@/lib/config";
 import { reasonsRequestTemplate, REASONS_CLOCK_WARNING } from "@/lib/reasons";
 import { type DraftKind } from "@/lib/draft/build";
-import { composeLetter, LETTER_GROUND_HEADINGS, LAWYER_NOTE_ONLY } from "@/lib/letter/compose";
+import { composeLetter, inMyVoice } from "@/lib/letter/compose";
 import type { PathwayEntry } from "@/lib/schemas/corpus";
 import {
   checkTripwire,
@@ -273,7 +273,6 @@ export function RightsSaverClient({
   corpusByEntry?: Record<string, PathwayEntry>;
 }) {
   const t = useTranslations("rights");
-  const tLetter = useTranslations("letter");
   const allEntries = useMemo(() => listDataEntries(), []);
 
   const [step, setStep] = useState<Step>("who");
@@ -629,7 +628,6 @@ export function RightsSaverClient({
               onRefile={refileTo}
               onViewChange={setResultView}
               initialView={initialViewRef.current ?? null}
-              tLetter={tLetter}
               faqs={faqsByEntry[entry.id] ?? []}
               corpusEntry={corpusByEntry[entry.id]}
             />
@@ -969,7 +967,6 @@ function WhatStep({
 
 function ResultStep({
   t,
-  tLetter,
   entry,
   jurisdiction,
   decisionDate,
@@ -990,7 +987,6 @@ function ResultStep({
   corpusEntry,
 }: {
   t: ReturnType<typeof useTranslations>;
-  tLetter: ReturnType<typeof useTranslations>;
   entry: DataPathway;
   jurisdiction: Jurisdiction;
   decisionDate: string;
@@ -1230,15 +1226,6 @@ function ResultStep({
       /* quota or private mode — losing the restore is not worth breaking the step */
     }
   }, [entry, chosenPath, goals, goalOther, account, relatedGrounds, groundNotes, criteriaNotes, pickedCriteria]);
-  // Lines the model selected FROM the person's own words, and which of them they have ticked.
-  // Only ticked lines reach the letter, so nothing is ever sent that they have not read.
-  const [picked, setPicked] = useState<
-    { groundId: string; sentences: { text: string; sensitive: string[] }[] }[] | null
-  >(null);
-  const [chosen, setChosen] = useState<Set<string>>(new Set());
-  const [letterBusy, setLetterBusy] = useState(false);
-  const [letterMsg, setLetterMsg] = useState<string | null>(null);
-
   const trip = checkTripwire({ jurisdiction, flags, entry });
   const stopServices = servicesForStop(trip.stopReasons, jurisdiction);
   const caps = capabilitiesForStop(trip.stopReasons);
@@ -1408,23 +1395,19 @@ function ResultStep({
   // The internal-review note is a second block, and only on that path's letter: what someone
   // types under "what you are asking them to look at again" IS the substance of that letter,
   // and it reached the memo but never the draft, so the letter kept its placeholder.
-  // What they wrote under the criteria they TICKED, for the letter. It used to reach the
-  // analysis and never the letter, so a fines review request stated no review ground at all
-  // while the person had written "my brother was driving, not me" under mistake of identity.
-  // Unticked criteria are left out: a note they abandoned is not something they chose to send.
-  const criteriaForLetter = pickedCriteria
-    .map((c) => (criteriaNotes[c] ?? "").trim())
-    .filter(Boolean)
-    .join("\n\n");
-  // Headings inside the person's own letter are in THEIR voice. "What you are asking them to
-  // look at again" is the app talking to them, and it was printing in a letter to an agency.
-  const universalQs = [
-    { id: "q-story", label: t("accountQStory") },
-    ...(chosenPath === "internal-review" && (criteriaNotes[INTERNAL_NOTE_KEY] ?? "").trim()
-      ? [{ id: "q-internal", label: tLetter("internalHeading") }]
-      : []),
-    ...(criteriaForLetter ? [{ id: "q-criteria", label: tLetter("criteriaHeading") }] : []),
-  ];
+  // The criteria they TICKED, each with what they wrote under it, as the document's reasons. All
+  // of them, written or not (the owner's ruling, 2026-11-02): it is the final document, so a
+  // point they chose is never held back. The criterion is written to them ("your situation"), so
+  // as a heading in their own document it is put in their voice.
+  const criteriaForLetter = pickedCriteria.map((c) => ({
+    heading: inMyVoice(c),
+    text: (criteriaNotes[c] ?? "").trim(),
+  }));
+  // A ground is headed as the analysis heads it: "Error of law — they got the law wrong".
+  const groundHeading = (id: string) => {
+    const g = shownGrounds.find((x) => x.id === id);
+    return g ? `${g.name} — ${g.plainName.charAt(0).toLowerCase()}${g.plainName.slice(1)}` : undefined;
+  };
 
   const applyDraft =
     corpusEntry && activeApply
@@ -1436,34 +1419,18 @@ function ResultStep({
               ...account,
               // What they wrote on the internal-review step, so the letter carries it.
               "q-internal": (criteriaNotes[INTERNAL_NOTE_KEY] ?? "").trim(),
-              "q-criteria": criteriaForLetter,
-              // Their own words on a ground go in first; a picked sentence for the same
-              // ground overwrites it below, because a sentence they ticked is one they have
-              // already approved for a letter someone else will read.
+              // Their own words on each ground they marked.
               ...Object.fromEntries(
                 Object.entries(groundNotes)
                   .filter(([id, v]) => relatedGrounds.includes(id) && v.trim())
                   .map(([id, v]) => [`g-${id}`, v.trim()]),
               ),
-              // Ticked lines become the text under each heading. Untouched if they never
-              // pressed the button, so the deterministic letter is unchanged.
-              ...Object.fromEntries(
-                (picked ?? []).map((p) => [
-                  `g-${p.groundId}`,
-                  p.sentences
-                    .filter((x) => chosen.has(`${p.groundId}::${x.text}`))
-                    .map((x) => x.text)
-                    .join(" "),
-                ]),
-              ),
             },
             groundIds: relatedGrounds,
           },
-          headingFor: (k) => tLetter(k),
+          groundHeading,
+          criteria: criteriaForLetter,
           decisionDate: decisionDate || undefined,
-          groundsLead: tLetter("groundsLead"),
-          otherConcerns: tLetter("otherConcerns"),
-          universal: universalQs,
         })
       : null;
 
@@ -2004,7 +1971,6 @@ function ResultStep({
   const [groundsReleased, setGroundsReleased] = useState<string | null>(null);
   const groundsPending =
     view === "grounds" && match?.key === matchKey && match.status === "busy" && groundsReleased !== matchKey;
-  const [wordsReleased, setWordsReleased] = useState(false);
   const busy: {
     title: string;
     detail: string;
@@ -2043,15 +2009,9 @@ function ResultStep({
             onCancel: () => setGroundsReleased(matchKey),
             cancelLabel: t("busyShowReady"),
           }
-        : letterBusy && !wordsReleased
-          ? {
-              title: t("letterBusy"),
-              detail: t("busyWordsDetail"),
-              onCancel: () => setWordsReleased(true),
-            }
-          : null;
+        : null;
 
-  const shortLetter =(rawDraftBody && polished[letterKey]) || "";
+  const shortLetter = (rawDraftBody && polished[letterKey]) || "";
   /** The letter as shown and copied: the written one where it came back, unless they chose the plain one. */
   const letterRaw = (!useFullLetter && shortLetter) || rawDraftBody;
   // What is shown and copied: the NOTE TO YOURSELF blocks lifted out to sit above the letter,
@@ -3061,125 +3021,16 @@ function ResultStep({
                 {relatedGrounds.map((id) => {
                   const g = shownGrounds.find((x) => x.id === id);
                   if (!g) return null;
-                  const inLetter = Boolean(LETTER_GROUND_HEADINGS[id]) && !LAWYER_NOTE_ONLY.has(id);
                   return (
                     <li key={id} className="flex gap-2.5 text-[15px] leading-snug text-ink">
                       <span aria-hidden="true" className="mt-[8px] h-1.5 w-1.5 flex-none rounded-[2px] bg-red" />
                       <span>
                         {g.plainName}
-                        {!inLetter && (
-                          <span className="block text-[14px] text-ink-faint">
-                            {t("accountGroundNoteLawyer")}
-                          </span>
-                        )}
                       </span>
                     </li>
                   );
                 })}
               </ul>
-            </div>
-          )}
-
-          {/* An action that sends what they wrote. Labelled so, next to the button. (Not the only
-              one: the analysis, the case letter and the grounds suggestions send too — the privacy
-              note under every step and the privacy page say so.) */}
-          <div className="mt-6 border-t-2 border-line pt-5">
-            <p className="text-[15px] leading-relaxed text-ink-soft">{t("letterSendNote")}</p>
-            <button
-              type="button"
-              disabled={letterBusy || (account["q-story"] ?? "").trim().length < 20}
-              onClick={async () => {
-                setLetterBusy(true);
-                setWordsReleased(false);
-                setLetterMsg(null);
-                try {
-                  const res = await fetch("/api/letter", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    cache: "no-store",
-                    body: JSON.stringify({
-                      entryId: entry.id,
-                      account: account["q-story"] ?? "",
-                      groundIds: relatedGrounds,
-                    }),
-                  });
-                  const data = await res.json();
-                  if (data.status === "ready") {
-                    setPicked(data.points);
-                    setChosen(new Set());
-                  } else if (data.status === "third-party") setLetterMsg(t("letterThirdParty"));
-                  else if (data.status === "nothing-usable") setLetterMsg(t("letterNothing"));
-                  else setLetterMsg(t("letterUnavailable"));
-                } catch {
-                  setLetterMsg(t("letterUnavailable"));
-                } finally {
-                  setLetterBusy(false);
-                }
-              }}
-              className="btn btn-primary mt-3.5 disabled:opacity-60"
-            >
-              {letterBusy ? t("letterBusy") : picked ? t("letterBtnAgain") : t("letterBtn")}
-            </button>
-            {letterMsg && (
-              <p role="status" className="mt-3 text-[15.5px] leading-relaxed text-ink">
-                {letterMsg}
-              </p>
-            )}
-          </div>
-
-          {/* Nothing reaches the letter until the person ticks it. This is where they attest:
-              no gate can tell a fact they lived from a fact they would like, so only they can. */}
-          {picked && picked.length > 0 && (
-            <div className="mt-6 rounded-card border-2 border-ink bg-paper p-4 sm:p-5">
-              <h3 className="font-display text-[19px] font-black text-ink">{t("letterPickTitle")}</h3>
-              <p className="mt-1.5 text-[15.5px] leading-relaxed text-ink-soft">{t("letterPickLead")}</p>
-              <p className="mt-2 text-[15px] font-medium leading-relaxed text-red-ink">
-                {t("letterCheckTrue")}
-              </p>
-              <div className="mt-4 space-y-5">
-                {picked.map((pt) => {
-                  const g = jrGrounds.find((x) => x.id === pt.groundId);
-                  return (
-                    <div key={pt.groundId}>
-                      <p className="font-display text-[13px] font-black uppercase tracking-[0.1em] text-ink-faint">
-                        {g?.plainName ?? pt.groundId}
-                      </p>
-                      <ul className="mt-2 space-y-2.5">
-                        {pt.sentences.map((sen) => {
-                          const key = `${pt.groundId}::${sen.text}`;
-                          return (
-                            <li key={key}>
-                              <label className="flex min-h-[44px] items-start gap-3 text-[15.5px] leading-snug text-ink">
-                                <input
-                                  type="checkbox"
-                                  checked={chosen.has(key)}
-                                  onChange={(e) =>
-                                    setChosen((prev) => {
-                                      const next = new Set(prev);
-                                      if (e.target.checked) next.add(key);
-                                      else next.delete(key);
-                                      return next;
-                                    })
-                                  }
-                                  className="mt-1 h-5 w-5 shrink-0 accent-ink"
-                                />
-                                <span>
-                                  {sen.text}
-                                  {sen.sensitive.length > 0 && (
-                                    <span className="mt-1 block text-[14.5px] leading-snug text-amber-ink">
-                                      {t("letterSensitive")}
-                                    </span>
-                                  )}
-                                </span>
-                              </label>
-                            </li>
-                          );
-                        })}
-                      </ul>
-                    </div>
-                  );
-                })}
-              </div>
             </div>
           )}
 

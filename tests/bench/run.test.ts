@@ -3,7 +3,7 @@ import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { resolve } from "node:path";
 import { getDataEntry } from "@/lib/data";
 import { getEntry } from "@/lib/corpus/index";
-import { getProcess, listGrounds, listConcepts } from "@/lib/legal";
+import { getGround, getProcess, listGrounds, listConcepts } from "@/lib/legal";
 import { avenueView } from "@/lib/triage";
 import { planFor, type PathId } from "@/lib/analysis";
 import { composeMemo, memoPathName } from "@/lib/memo/compose";
@@ -37,7 +37,6 @@ const INPUT = process.env.BENCH_INPUT;
 const OUTPUT = process.env.BENCH_OUTPUT ?? resolve(__dirname, "out");
 
 const R = messages.rights as unknown as Record<string, string>;
-const L = messages.letter as unknown as Record<string, string>;
 const t = (k: string) => R[k] ?? k;
 
 const LETTER_KIND: Record<PathId, DraftKind> = {
@@ -152,7 +151,6 @@ describe.skipIf(!INPUT)("bench", () => {
             answers: {
               "q-story": s.story,
               "q-internal": (s.internalNote ?? "").trim(),
-              "q-criteria": Object.values(s.criteriaNotes ?? {}).map((v) => v.trim()).filter(Boolean).join("\n\n"),
               ...Object.fromEntries(
                 Object.entries(s.groundNotes ?? {})
                   .filter(([id, v]) => (s.groundIds ?? []).includes(id) && v.trim())
@@ -161,14 +159,11 @@ describe.skipIf(!INPUT)("bench", () => {
             },
             groundIds: s.groundIds ?? [],
           },
-          headingFor: (k) => L[k] ?? k,
-          groundsLead: L.groundsLead ?? "",
-          otherConcerns: L.otherConcerns ?? "",
-          universal: [
-            { id: "q-story", label: R.accountQStory ?? "What happened?" },
-            { id: "q-internal", label: L.internalHeading ?? INTERNAL_NOTE_KEY },
-            { id: "q-criteria", label: L.criteriaHeading ?? "" },
-          ],
+          groundHeading: (id) => {
+            const g = getGround(id);
+            return g ? `${g.name} — ${g.plainName.charAt(0).toLowerCase()}${g.plainName.slice(1)}` : undefined;
+          },
+          criteria: Object.entries(s.criteriaNotes ?? {}).map(([heading, text]) => ({ heading, text })),
           decisionDate: s.decisionDate,
         })
       : null;

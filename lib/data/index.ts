@@ -111,8 +111,12 @@ export function classifyData(text: string, jurisdiction?: Jurisdiction): DataCla
  *
  * This only SUGGESTS — the person decides, and nothing moves without them. So it is built to
  * stay quiet unless the evidence is plain:
- *   · it speaks only to someone who chose a GENERAL page. A person who picked renting chose
- *     renting; a passing mention of a fine is not a reason to second-guess them;
+ *   · a person who chose a GENERAL page hears from it on the evidence below. One who chose a
+ *     SPECIFIC page (renting, housing) hears from it only when what they wrote is plainly about
+ *     the other decision and hardly about theirs: at least twice the score, from the same strong
+ *     evidence. A passing mention of a fine in a renting story is not that; a parking
+ *     infringement written up under renting is (reported live, 2026-11-02 — it used to say
+ *     nothing at all off a general page);
  *   · the match must be a specific decision type, never a generic catch-all;
  *   · words match whole ("fine" is not "finest"), and the evidence must be about the
  *     DECISION, not just who made it: a body's name alone — "the local council", "Victoria
@@ -131,7 +135,7 @@ export function suggestEntry(
   if (!text.trim()) return null;
   const entries = getDataIndex().entries;
   const chosen = entries.find((e) => e.id === chosenId);
-  if (!chosen?.isFallback) return null;
+  if (!chosen) return null;
   const scores = scoreText(text, undefined, true);
   const fallback = new Set(entries.filter((e) => e.isFallback).map((e) => e.id));
   const jurOf = new Map(entries.map((e) => [e.id, e.jurisdiction] as const));
@@ -141,7 +145,8 @@ export function suggestEntry(
     const about = [...v.tokens].filter((tok) => v.kinds.get(tok) !== "decisionMaker");
     const byWho = v.tokens.size - about.length;
     const strong = about.length >= 2 || about.some((tok) => tok.includes(" ")) || (about.length >= 1 && byWho >= 1);
-    return strong && v.score > chosenScore;
+    // Off a specific page, the other decision has to dominate what they wrote, not edge it.
+    return strong && v.score > (chosen.isFallback ? chosenScore : 2 * chosenScore);
   };
 
   let best: { entryId: string; score: number; tokens: Set<string>; same: boolean } | null = null;

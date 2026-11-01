@@ -57,11 +57,39 @@ export interface DraftOptions {
   /** The date on the decision, as the person gave it (YYYY-MM-DD). Fills the date blank. */
   decisionDate?: string;
   /**
-   * The person's own points will be listed below the judicial-review letter, so its
-   * "[name the ground — …]" blank is not needed — leaving it there asked them to name what
-   * the letter already names.
+   * The grounds (judicial review) or reasons (merits and internal review) the person marked,
+   * each with what they wrote under it. Every one is listed: the document is the final one
+   * they send, so nothing is held back "for a human legal service" (the owner's ruling,
+   * 2026-11-02). An empty `text` keeps a blank for them to fill in.
    */
-  groundsListed?: boolean;
+  points?: CasePoint[];
+  /** What they wrote on the internal-review step: what they ask the agency to look at again. */
+  internalNote?: string;
+}
+
+export interface CasePoint {
+  heading: string;
+  text: string;
+}
+
+/** The sections every review document has, in order (see the case document in lib/generation/prompts). */
+export const CASE_SECTION = {
+  decision: "The decision and its reasons",
+  facts: "Summary of the facts",
+  askCourt: "What I ask the court to do",
+  askTribunal: "What I ask the tribunal to decide",
+  askAgency: "What I ask for",
+  grounds: "Grounds of review",
+  whyChange: "Why the decision should be changed",
+  whyReview: "Why the decision should be reviewed",
+} as const;
+
+const REASONS_BLANK = "[the reasons the decision-maker gave, as their letter sets them out]";
+const POINT_BLANK = "[set out what happened that shows this]";
+
+/** "Ground 1: …" / "Reason 1: …", each with what they wrote under it, or a blank for it. */
+function numbered(label: "Ground" | "Reason", points: CasePoint[]): string[] {
+  return points.flatMap((p, i) => [`${label} ${i + 1}: ${p.heading}`, p.text.trim() || POINT_BLANK, ""]);
 }
 
 const MONTHS = [
@@ -191,8 +219,26 @@ export function buildDraft(
         "",
         "I am writing to ask you to review the decision described above.",
         "",
-        `My reasons are as follows. ${inTheirWords("set out what you think was missed, what you were not able to explain, or what has changed")}`,
+        CASE_SECTION.decision,
+        REASONS_BLANK,
         "",
+        CASE_SECTION.askAgency,
+        "I ask that the decision be looked at again, and changed where it is wrong.",
+        "",
+        CASE_SECTION.facts,
+        inTheirWords("set out what happened, in a few sentences"),
+        "",
+        // The reasons section: what they wrote and the points they ticked. With neither, their
+        // account above IS their reasons, and only someone who gave nothing gets the blank.
+        ...(opts.internalNote?.trim() || opts.points?.length
+          ? [
+              CASE_SECTION.whyReview,
+              ...(opts.internalNote?.trim() ? [opts.internalNote.trim(), ""] : []),
+              ...numbered("Reason", opts.points ?? []),
+            ]
+          : context?.trim()
+            ? []
+            : [CASE_SECTION.whyReview, "[set out what you think was missed, what you were not able to explain, or what has changed]", ""]),
         CLOSE_INTERNAL,
         "",
         "If an internal review is not available for a decision of this kind, please tell me what the next step is and who I should write to. Please also tell me the time limit that applies to that next step, so that I can keep track of it while this request is with you.",
@@ -241,17 +287,22 @@ export function buildDraft(
         "",
         "I apply for judicial review of the decision described above. My case is about the way the decision was made, not only its outcome.",
         "",
-        `What happened, in my own words. ${inTheirWords("describe what you were told, what you were able to respond to, and what you think was not taken into account")}`,
+        CASE_SECTION.decision,
+        REASONS_BLANK,
         "",
-        ...(opts.groundsListed
-          ? ["My grounds are set out below."]
-          : [
-              "My ground is set out below.",
-              "  [name the ground — for example, that you were not given a fair chance to respond, that something irrelevant was taken into account, or that something relevant was not considered]",
-            ]),
-        "",
+        CASE_SECTION.askCourt,
         CLOSE_JR,
         "",
+        CASE_SECTION.facts,
+        inTheirWords("describe what you were told, what you were able to respond to, and what you think was not taken into account"),
+        "",
+        CASE_SECTION.grounds,
+        ...(opts.points?.length
+          ? numbered("Ground", opts.points)
+          : [
+              "[name each ground, and set out what happened that shows it — for example, that you were not given a fair chance to respond, that something irrelevant was taken into account, or that something relevant was not considered]",
+              "",
+            ]),
         SIGN_OFF_APPLICANT,
       ),
     };
@@ -332,10 +383,20 @@ export function buildDraft(
       "",
       `I am writing to apply for a review of the decision described above. I do not agree with the decision, and I ask that it be considered again by ${reviewBody}.`,
       "",
+      CASE_SECTION.decision,
+      REASONS_BLANK,
+      "",
+      CASE_SECTION.askTribunal,
       "I ask that the decision be looked at afresh on the facts, so that the correct or preferable decision can be made on the material now available.",
       "",
-      `Why I disagree, in my own words. ${inTheirWords("explain briefly what you think was wrong, and anything about your situation that has changed")}`,
+      CASE_SECTION.facts,
+      inTheirWords("set out what happened, in a few sentences"),
       "",
+      ...(opts.points?.length
+        ? [CASE_SECTION.whyChange, ...numbered("Reason", opts.points)]
+        : context?.trim()
+          ? []
+          : [CASE_SECTION.whyChange, "[explain briefly what you think was wrong, and anything about your situation that has changed]", ""]),
       evidence,
       "",
       CLOSE_MERITS,

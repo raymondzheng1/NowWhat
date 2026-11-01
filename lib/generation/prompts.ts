@@ -289,14 +289,16 @@ FILL THESE PARTS:
    the law is printed beside your words.
  · "toGather": up to four short noun phrases — documents or records that would help, such as
    "the notice itself". Not instructions.
- · "depth": the full working, for the in-depth analysis a lawyer reads. One entry for EACH ground
-   and EACH criterion in the CORPUS CONTEXT that their account or their notes say something
-   about — at most six. "ref" is the ground id or the criterion id, copied exactly (not a part).
-     – "for": three to five sentences making the best honest case, from THEIR facts, that this
-       point applies. Take the parts of its test in turn, by the names the context gives them,
-       and say which of their facts goes to each.
-     – "against": three to five sentences setting out what the decision-maker may argue on this
-       point, from the decision and the facts — including any gap in what they have said.
+ · "depth": the full working, for the in-depth analysis a lawyer reads. One entry for EVERY ground
+   and EVERY criterion in the CORPUS CONTEXT — all of them, every time, even one their account
+   says little about (then say so on the "for" side, and name what is missing). At most seven.
+   "ref" is the ground id or the criterion id, copied exactly (not a part).
+     – "for": three to five sentences, at most about 120 words, making the best honest case, from
+       THEIR facts, that this point applies. Take the parts of its test in turn, by the names the
+       context gives them, and say which of their facts goes to each.
+     – "against": three to five sentences, at most about 120 words, setting out what the
+       decision-maker may argue on this point, from the decision and the facts — including any
+       gap in what they have said.
    Give both sides fairly. Never say which side is stronger, whether the point is made out, or
    what will happen: the reader draws the conclusion.
  · "sources": one to three source strings, copied VERBATIM from the SOURCES lines.
@@ -336,7 +338,7 @@ Return JSON:
   "points": [ { "ref": string, "relates": string, "needed": string } ],   // at most 4
   "otherSide": string,
   "toGather": string[],                                                // at most 4
-  "depth": [ { "ref": string, "for": string, "against": string } ],    // at most 6
+  "depth": [ { "ref": string, "for": string, "against": string } ],    // one per ground or criterion, at most 7
   "sources": string[]                       // copy 1-3 VERBATIM from the SOURCES lines
 }
 `.trim();
@@ -510,7 +512,7 @@ WRITE IT IN THIS ORDER, under the SECTION HEADINGS given
  2. The first heading: the decision — what was decided, who decided it and when, as far as
     their account says. Then the reasons the decision-maker gave, as their account reports them
     (numbered if there were several). If their account says no reasons were given, say so. If it
-    says nothing about reasons, leave them out.
+    says nothing about reasons, keep the draft's blank for them exactly.
  3. The second heading: what they ask for. For a court: the orders in the CORPUS CONTEXT that
     fit (for example, that the decision be set aside and sent back to be decided again according
     to law), and nothing a court cannot do. For a tribunal or the agency: the outcome they said
@@ -551,7 +553,8 @@ YOU MUST NOT, EVER
    or that a ground "will" succeed. Set out the facts and what went wrong; the reader draws the
    conclusion.
  · Insult anyone or guess at their motives. Describe what was done, not why.
- · Change any text in square brackets. Copy every one across exactly; add none.
+ · Invent a blank. A blank in square brackets in THE DRAFT'S BODY is either answered from their
+   account (then the facts replace it) or copied across exactly. Add none of your own.
 
 Set "covered" to false ONLY if the material says nothing about any decision. Long, angry or
 legal-sounding accounts are not a reason to decline: make the case from the facts in them.

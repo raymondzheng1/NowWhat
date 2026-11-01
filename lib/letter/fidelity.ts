@@ -210,7 +210,17 @@ export function checkLetterFidelity(
    * Act — it may use), and the length a case letter is allowed. The shorter letter passes
    * neither, and is held to the draft alone and to being short.
    */
-  opts: { known?: string; maxWords?: number } = {},
+  opts: {
+    known?: string;
+    maxWords?: number;
+    /**
+     * The text whose blanks must all come back. The whole draft by default. For the statement of
+     * case it is the bones alone: its body's blanks ("the reasons the decision-maker gave") are
+     * there to be FILLED from their account, and a rule that they must survive made the model
+     * either keep a blank beside the answer to it, or be refused for filling it.
+     */
+    blanksFrom?: string;
+  } = {},
 ): LetterFidelityFailure[] {
   const failures: LetterFidelityFailure[] = [];
 
@@ -225,10 +235,15 @@ export function checkLetterFidelity(
     }
     return m;
   };
-  const before = bracketsOf(original);
+  const before = bracketsOf(opts.blanksFrom ?? original);
   const after = bracketsOf(rewritten);
+  // Their own reminders ("[Insert Rego]" in their account) are theirs to keep or not: a summary
+  // of the account that leaves one out has dropped nothing of ours. Live, the parking account's
+  // two reminders refused every statement written from it (2026-11-02).
+  const theirsLower = norm(theirWords);
 
   for (const [b, n] of before) {
+    if (b && theirsLower.includes(b)) continue;
     const kept = after.get(b) ?? 0;
     if (kept < n) {
       failures.push({ gate: "placeholder-dropped", detail: n > 1 ? `${b} (${kept} of ${n})` : b });
@@ -239,9 +254,9 @@ export function checkLetterFidelity(
   // "[Insert Rego]" has not invented a field: it has made their own reminder into a blank the
   // page highlights, which is the better outcome. Measured on a real account: that alone was
   // refusing one shorter letter in six.
-  const theirsLower = norm(theirWords);
+  const inDraft = bracketsOf(original);
   for (const [b, n] of after) {
-    if (n > (before.get(b) ?? 0) && !(b && theirsLower.includes(b))) {
+    if (n > (inDraft.get(b) ?? 0) && !(b && theirsLower.includes(b))) {
       failures.push({ gate: "placeholder-invented", detail: b });
     }
   }

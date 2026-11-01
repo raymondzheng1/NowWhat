@@ -68,10 +68,12 @@ describe("the suggestion stays quiet on weak evidence", () => {
     expect(suggestEntry("The finest enforcement of the rules, they said.", "vic-generic")).toBeNull();
   });
 
-  it("only someone who chose a general page is asked", () => {
+  // Was "only someone who chose a general page is asked". The owner's ruling, 2026-11-02: a
+  // story plainly about another decision is recognised from any page (see the bar below).
+  it("a story wholly about another decision is recognised from a specific page too", () => {
     expect(
-      suggestEntry("Centrelink sent me a debt notice for my JobSeeker payments.", "vic-renting"),
-    ).toBeNull();
+      suggestEntry("Centrelink sent me a debt notice for my JobSeeker payments.", "vic-renting")?.entryId,
+    ).toBe("cth-centrelink");
   });
 
   it("a match in their own jurisdiction wins", () => {
@@ -110,5 +112,21 @@ describe("a title inside a sentence", () => {
 
   it("gives the bare noun when no article is wanted", () => {
     expect(titleAsNoun("A Victorian government decision")).toBe("Victorian government decision");
+  });
+});
+
+// Reported live, 2026-11-02: the parking account filed under renting, or under public housing,
+// was never recognised as a fine, because only the general pages were ever checked.
+describe("a fine written up under a specific page", () => {
+  it("is recognised under renting and under public housing", () => {
+    expect(suggestEntry(PARKING, "vic-renting")?.entryId).toBe("vic-fines");
+    expect(suggestEntry(PARKING, "vic-public-housing")?.entryId).toBe("vic-fines");
+  });
+
+  it("but a renting story that mentions a fine in passing stays where they put it", () => {
+    const RENT =
+      "My landlord gave me a notice to vacate because he says I owe two months rent. The rental " +
+      "provider did not do the repairs, so I stopped paying. I also got a parking fine last week.";
+    expect(suggestEntry(RENT, "vic-renting")).toBeNull();
   });
 });

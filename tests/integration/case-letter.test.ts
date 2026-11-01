@@ -192,7 +192,7 @@ describe("/api/letter-polish — the case letter", () => {
   it("writes the body of a real statement, puts the bones back on, and lets the grounds be numbered", async () => {
     const real = buildDraft(getEntry("vic-generic")!, "judicial-review-application", story, {
       decisionDate: "2026-03-03",
-      groundsListed: true,
+      points: [{ heading: "Procedural fairness — you never got to have your say", text: "Nobody told me about the complaint." }],
     }).body;
     let seen = "";
     __setModelForTests(async (call) => {
@@ -234,6 +234,35 @@ describe("/api/letter-polish — the case letter", () => {
     expect(out.letter).toContain("Respondent: [the agency or council that made the decision]");
     expect(out.letter).toContain("Ground 2: The complaint was not shown to me");
     expect(out.letter).toMatch(/\n\nSigned: \[Your name\]\nApplicant$/);
+  });
+
+  // Live, 2026-11-02: the parking account carried the person's own reminders, "[Insert Rego]"
+  // and "[Insert Notice Number]". A summary that left them out was refused for dropping a blank,
+  // every time, and the person got the plain template. Theirs to keep or leave; ours still count.
+  it("may leave out a blank from their own account, and fill the draft's body blanks, but invent none", async () => {
+    const theirs = `${story} My registration is [Insert Rego].`;
+    const real = buildDraft(getEntry("vic-generic")!, "judicial-review-application", theirs, {
+      decisionDate: "2026-03-03",
+      points: [{ heading: "Procedural fairness — you never got to have your say", text: "" }],
+    }).body;
+    expect(real).toContain("[Insert Rego]");
+    expect(real).toContain("[the reasons the decision-maker gave, as their letter sets them out]");
+    expect(real).toContain("[set out what happened that shows this]");
+    const send = async (out: string) => {
+      __setModelForTests(model(out));
+      return (
+        await POST(
+          new NextRequest("http://x/api/letter-polish", {
+            method: "POST",
+            headers: { "content-type": "application/json", "x-forwarded-for": "9.9.9.7" },
+            body: JSON.stringify({ ...body, draft: real, theirWords: theirs }),
+          }),
+        )
+      ).json();
+    };
+    const statement = `Grounds of review\n\nGround 1: I was not given a chance to respond\n${GOOD}`;
+    expect((await send(statement)).status).toBe("answered");
+    expect((await send(`${statement}\n\n[add the date you found out]`)).status).toBe("not-covered");
   });
 
   for (const [name, bad] of [

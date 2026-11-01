@@ -1,5 +1,5 @@
 import type { PathwayEntry } from "@/lib/schemas/corpus";
-import { buildDraft, LETTER_CLOSINGS, type Draft, type DraftKind } from "@/lib/draft/build";
+import { buildDraft, type CasePoint, type Draft, type DraftKind } from "@/lib/draft/build";
 
 /**
  * Composes the person's own account into a review letter — deterministically, on the device.
@@ -61,13 +61,13 @@ export interface ComposeInput {
   entry: PathwayEntry;
   kind: DraftKind;
   account: LetterAccount;
-  /** Resolved heading text, so all customer prose stays in en.json. */
-  headingFor: (key: string) => string;
-  /** Lead line shown above the marked points, and the truncation disclosure. */
-  groundsLead: string;
-  otherConcerns: string;
-  /** Labels for the universal questions, in the order they should appear. */
-  universal: { id: string; label: string }[];
+  /**
+   * How a marked ground is headed in the document: the name the analysis gives it, so the two
+   * read as one piece of work. Undefined for an id that is not a ground here, which is left out.
+   */
+  groundHeading: (id: string) => string | undefined;
+  /** The criteria they ticked (merits and internal review), each with what they wrote under it. */
+  criteria?: CasePoint[];
   /** The date on the decision they gave on the first steps (YYYY-MM-DD), if any. */
   decisionDate?: string;
 }
@@ -114,92 +114,64 @@ export function withoutRepeats(note: string, story: string): string {
     .join("\n\n");
 }
 
-/** "the fine should be withdrawn." under a heading in a letter reads as a slip. */
+/**
+ * A line written TO the person, put in their own voice for a heading in their document: "The
+ * tribunal decides whether the rules were applied correctly to your situation." becomes "…to my
+ * situation", with no full stop. Only the second person changes; nothing else is reworded.
+ */
+export function inMyVoice(line: string): string {
+  return line
+    .trim()
+    .replace(/[.]+$/, "")
+    .replace(/\byourself\b/gi, "myself")
+    .replace(/\byours\b/gi, "mine")
+    .replace(/\byour\b/g, "my")
+    .replace(/\bYour\b/g, "My")
+    .replace(/\byou (are|were|have|had|can|could|did|do|will|would)\b/gi, (_, v: string) =>
+      `I ${v.toLowerCase() === "are" ? "am" : v.toLowerCase() === "were" ? "was" : v.toLowerCase()}`,
+    )
+    .replace(/\byou\b/gi, "me");
+}
+
+/**
+ * Their note under a point, without the sentences their account already says — unless that
+ * leaves nothing. A note prefilled from a suggestion IS a sentence of their account, and a
+ * ground with a blank under it says less than one that repeats the fact it rests on.
+ */
+const own = (note: string, story: string) => capitalise(withoutRepeats(note, story) || note.trim());
+
+/** "the fine should be withdrawn." under a heading reads as a slip. */
 const capitalise = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /**
- * Returns the deterministic draft with the person's account woven in. When they have written
- * nothing, this is exactly the letter they would have got before — never a blank page.
+ * The plain document, built on the device: their account, and every point they marked with what
+ * they wrote under it (the owner's ruling, 2026-11-02 — it is the final document, so nothing is
+ * held back for "a human legal service", and it carries every ground the analysis works through).
+ * It is what they get when the written statement is not available, and what that statement is
+ * written from. When they have written nothing, it is the template with its blanks.
  */
 export function composeLetter(input: ComposeInput): Draft {
   const { answers, groundIds } = input.account;
   const said = (id: string) => (answers[id] ?? "").trim();
-  // Worked out first, because the template needs to know: a judicial-review letter whose
-  // grounds are listed below it should not also ask the person to name one.
-  const willList = groundIds.some(
-    (id) => !!LETTER_GROUND_HEADINGS[id] && !LAWYER_NOTE_ONLY.has(id) && !!said(`g-${id}`),
-  );
-  // Their reason for writing, into the letter's own "why" sentence.
-  //
-  // `buildDraft` has always taken a `context`, and this never passed one — so the template's
-  // bracketed prompt ("[set out what you think was missed]") survived into the draft of
-  // every person who had just spent a step telling us exactly that, and their account was
-  // appended further down instead. The prompt is the app admitting it does not know; it
-  // should not be there when it does.
-  const base = buildDraft(input.entry, input.kind, said("q-story") || undefined, {
-    decisionDate: input.decisionDate,
-    groundsListed: willList,
-  });
-
-  const parts: string[] = [];
-
-  // The person's own narrative, under the questions they were asked.
-  //
-  // ONCE. Their account became the letter's own reason for writing (above), and was then
-  // appended again under "What happened?" — so a person who wrote a page got a letter that
-  // said it twice, word for word, and read as though it had been pasted in by mistake.
-  // Reported from the live site. An answer already in the letter is not added again; the
-  // test is the text itself, so it holds whichever template carried it.
-  //
-  // AND NOT AGAIN UNDER A HEADING. What someone types under a criterion or "what you are asking
-  // them to look at again" is very often their account's own sentences, pasted a second time —
-  // the owner's parking review said every fact twice, once as the reasons and once under "What
-  // I ask you to consider". A sentence already in their account is dropped from the note; a
-  // note left with nothing new is dropped whole.
   const story = said("q-story");
-  for (const q of input.universal) {
-    const raw = said(q.id);
-    const v = q.id === "q-story" ? raw : withoutRepeats(raw, story);
-    if (!v || base.body.includes(v)) continue;
-    parts.push(`${q.label}\n${capitalise(v)}`);
-  }
+  const opts = { decisionDate: input.decisionDate };
 
-  // The points they marked, each with what THEY wrote under it. A heading with nothing
-  // written under it is dropped: an unexplained heading is an assertion we would be making.
-  const marked: string[] = [];
-  let omitted = false;
-  for (const id of groundIds) {
-    const key = LETTER_GROUND_HEADINGS[id];
-    const body = said(`g-${id}`);
-    if (!key || LAWYER_NOTE_ONLY.has(id)) {
-      omitted = true;
-      continue;
-    }
-    if (!body) {
-      omitted = true;
-      continue;
-    }
-    marked.push(`${input.headingFor(key)}\n${body}`);
+  if (input.kind === "judicial-review-application") {
+    const points = groundIds.flatMap((id) => {
+      const heading = input.groundHeading(id);
+      return heading ? [{ heading, text: own(said(`g-${id}`), story) }] : [];
+    });
+    return buildDraft(input.entry, input.kind, story || undefined, { ...opts, points });
   }
-  if (marked.length > 0) {
-    // A blank line between points, so each heading starts its own block and reads as one.
-    parts.push([input.groundsLead, ...marked].join("\n\n"));
+  if (
+    input.kind === "merits-review-application" ||
+    input.kind === "review-application" ||
+    input.kind === "internal-review-request"
+  ) {
+    const points = (input.criteria ?? []).map((c) => ({ heading: c.heading, text: own(c.text, story) }));
+    const internalNote = input.kind === "internal-review-request" ? own(said("q-internal"), story) : undefined;
+    return buildDraft(input.entry, input.kind, story || undefined, { ...opts, points, internalNote });
   }
-  // Say plainly that the letter is not everything — in the letter, not just in the UI.
-  if (omitted) parts.push(input.otherConcerns);
-
-  if (parts.length === 0) return base;
-
-  // Slot it in above the letter's close — the paragraph that asks them to confirm receipt and
-  // thanks them — so the letter says what it asks and why, and only then signs off. Above the
-  // sign-off alone put their points after "Thank you for your help".
-  const SIGN_OFF = "Yours faithfully,";
-  const closes = LETTER_CLOSINGS.map((c) => base.body.indexOf(c)).filter((i) => i >= 0);
-  const idx = closes.length > 0 ? Math.min(...closes) : base.body.lastIndexOf(SIGN_OFF);
-  const block = parts.join("\n\n");
-  const body =
-    idx === -1
-      ? `${base.body}\n\n${block}`
-      : `${base.body.slice(0, idx).trimEnd()}\n\n${block}\n\n${base.body.slice(idx)}`;
-  return { ...base, body };
+  // The enquiries (reasons, the court form) carry their account as it is.
+  return buildDraft(input.entry, input.kind, story || undefined, opts);
 }

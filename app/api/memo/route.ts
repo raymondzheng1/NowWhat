@@ -52,10 +52,12 @@ export const dynamic = "force-dynamic";
  * loses the analysis (the memo's lesson). Billing is on tokens used, so headroom is free.
  */
 // Room for the in-depth working too: each point argued both ways roughly doubles the output.
-const BRIEF_TOKENS = 3600;
+const BRIEF_TOKENS = 4800;
 
 /** One side of one point in the in-depth working: longer than this is dropped, not shown. */
-const DEPTH_MAX_WORDS = 140;
+// Generous on purpose: a ground with four parts runs past 140 words honestly, and was dropped
+// whole — the fourth of four marked grounds showed no case for or against (2026-11-02).
+const DEPTH_MAX_WORDS = 240;
 
 /**
  * The brief is meant to be short; one that is not has stopped doing its job. Over this many
@@ -213,7 +215,7 @@ export async function POST(req: NextRequest) {
   const depth = (result.data.depth ?? [])
     .filter((x) => x.for.trim() && x.against.trim())
     .filter((x) => wordsIn(x.for) <= DEPTH_MAX_WORDS && wordsIn(x.against) <= DEPTH_MAX_WORDS)
-    .slice(0, 6);
+    .slice(0, 7);
 
   return apiJson(
     {

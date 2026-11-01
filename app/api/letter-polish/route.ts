@@ -284,7 +284,13 @@ export async function POST(req: NextRequest) {
 
     // Bones back on, exactly, around what was written; every gate below sees the whole document.
     const letter = bones ? assemble(bones, bodyOnly(result.data.letter, bones)) : result.data.letter;
-    const fidelity = checkLetterFidelity(body.draft, theirs, letter, { known: context, maxWords });
+    const fidelity = checkLetterFidelity(body.draft, theirs, letter, {
+      known: context,
+      maxWords,
+      // The bones go back on exactly, so theirs are the blanks that must survive; the body's are
+      // there to be filled from what they told us.
+      ...(bones ? { blanksFrom: `${bones.head}\n${bones.tail}` } : {}),
+    });
     if (fidelity.length > 0) {
       return {
         gates: fidelity.map((f) => f.gate),

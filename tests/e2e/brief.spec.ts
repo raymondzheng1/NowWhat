@@ -115,7 +115,8 @@ test("the case letter says to check every sentence, and switches back to the pla
   await page.route("**/api/letter-polish", async (route) => {
     const { draft, case: c } = route.request().postDataJSON() as { draft: string; case?: { pathId: string } };
     pathId = c?.pathId;
-    const letter = draft.replace(/My reasons are as follows\.[^\n]*/, "I parked on Batman Street. The sign was hidden by a tree.");
+    // The written statement summarises the facts: stand in for that by replacing the summary.
+    const letter = draft.replace(/(Summary of the facts\n)[^\n]*/, "$1I parked on Batman Street. The sign was hidden by a tree.");
     await route.fulfill({ json: { ok: true, status: "answered", letter } });
   });
   await page.goto(MEMO_URL);

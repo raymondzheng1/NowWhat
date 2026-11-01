@@ -1,11 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { buildDraft } from "@/lib/draft/build";
-import { composeLetter, LETTER_GROUND_HEADINGS } from "@/lib/letter/compose";
+import { composeLetter } from "@/lib/letter/compose";
 import { SELF_WARNING_MERITS } from "@/lib/draft/warnings";
 import { getEntry } from "@/lib/corpus/index";
-import messages from "@/lib/i18n/messages/en.json";
-
-const L = messages.letter as unknown as Record<string, string>;
 
 /**
  * The merits letter goes to the TRIBUNAL. It took `pathways[0]`, which is the tribunal only
@@ -83,94 +80,106 @@ describe("the letter uses what the person already told us", () => {
     expect(d.body).toContain("[date on your letter]");
   });
 
-  it("judicial review: no '[name the ground]' blank once their own points are listed", () => {
-    const id = Object.keys(LETTER_GROUND_HEADINGS)[0]!;
+  it("judicial review lists every marked ground, numbered, with what they wrote under it", () => {
     const out = composeLetter({
       entry: getEntry("vic-generic")!,
       kind: "judicial-review-application",
-      account: { answers: { [`g-${id}`]: "They never let me reply to the complaint." }, groundIds: [id] },
-      headingFor: (k) => L[k]!,
-      groundsLead: L.groundsLead!,
-      otherConcerns: L.otherConcerns!,
-      universal: [],
+      account: {
+        answers: { "g-error-of-law": "They applied the wrong standard for a sign." },
+        groundIds: ["error-of-law", "subjective-jurisdictional-fact"],
+      },
+      groundHeading: (id) => ({ "error-of-law": "Error of law — they got the law wrong", "subjective-jurisdictional-fact": "A state of mind the power depended on — they had to be satisfied of something first" })[id],
     });
-    expect(out.body).toContain("They never let me reply to the complaint.");
-    expect(out.body).not.toContain("[name the ground");
+    expect(out.body).toContain("Grounds of review\nGround 1: Error of law — they got the law wrong\nThey applied the wrong standard for a sign.");
+    // Marked and not written about: still listed, with a blank to fill in. Nothing is held back.
+    expect(out.body).toContain("Ground 2: A state of mind the power depended on — they had to be satisfied of something first\n[set out what happened that shows this]");
+    expect(out.body).not.toContain("[name each ground");
   });
 
   it("judicial review with nothing marked keeps the blank", () => {
     const d = buildDraft(getEntry("vic-generic")!, "judicial-review-application");
-    expect(d.body).toContain("[name the ground");
+    expect(d.body).toContain("[name each ground");
   });
 });
 
 /**
- * The owner's parking review, 2026-11-01: every fact said twice — once as the reasons, then
- * again under "What I ask you to consider" — and both headed sections printed after "Thank you
- * for your help", as if the letter had already ended.
+ * The owner's rulings, 2026-11-01 and -02: the document is the final one, set out as a case.
+ * Nothing is said twice, nothing is held back "for a human legal service", and nobody is made to
+ * announce "I am not a lawyer".
  */
-describe("the internal-review letter says each thing once, before it closes", () => {
+describe("the review document is set out as a case, and says each thing once", () => {
   const story =
     "The main parking control sign was heavily covered by overgrown foliage from a nearby street tree, making the time-limit panel unreadable. The signpost itself was turned about 45 degrees away from the road.";
-  const compose = (answers: Record<string, string>) =>
+  const compose = (kind: "internal-review-request" | "merits-review-application", answers: Record<string, string>, criteria: { heading: string; text: string }[] = []) =>
     composeLetter({
       entry: getEntry("vic-generic")!,
-      kind: "internal-review-request",
+      kind,
       account: { answers: { "q-story": story, ...answers }, groundIds: [] },
-      headingFor: (k) => L[k]!,
-      groundsLead: L.groundsLead!,
-      otherConcerns: L.otherConcerns!,
-      universal: [
-        { id: "q-story", label: "What happened?" },
-        { id: "q-internal", label: L.internalHeading! },
-        { id: "q-criteria", label: L.criteriaHeading! },
-      ],
+      groundHeading: () => undefined,
+      criteria,
     }).body;
 
+  it("has the four sections, in order, for every review path", () => {
+    for (const kind of ["internal-review-request", "merits-review-application"] as const) {
+      const body = compose(kind, {});
+      const at = (x: string) => body.indexOf(x);
+      expect(at("The decision and its reasons")).toBeGreaterThan(0);
+      expect(at("Summary of the facts")).toBeGreaterThan(at("The decision and its reasons"));
+      expect(body.split("overgrown foliage").length - 1).toBe(1);
+    }
+    // With only their account, the account IS their reasons: no empty reasons section.
+    expect(compose("internal-review-request", {})).toMatch(/What I ask for\n.*\n\nSummary of the facts\n.*overgrown foliage/);
+    expect(compose("internal-review-request", {})).not.toContain("Why the decision should be reviewed");
+    // With a point they ticked, it has one.
+    const pt = [{ heading: "The sign was not clear", text: "It was covered by a tree." }];
+    expect(compose("internal-review-request", {}, pt)).toMatch(/Summary of the facts[\s\S]*Why the decision should be reviewed\nReason 1: The sign was not clear/);
+    expect(compose("merits-review-application", {}, pt)).toMatch(/What I ask the tribunal to decide[\s\S]*Why the decision should be changed\nReason 1:/);
+  });
+
   it("a note that repeats the account keeps only what is new", () => {
-    const body = compose({
-      "q-criteria":
-        "the sign is not clear. The main parking control sign was heavily covered by overgrown foliage from a nearby street tree, making the time-limit panel unreadable.\n\nThe signpost itself was turned about 45 degrees away from the road.",
-    });
+    const body = compose("internal-review-request", {}, [
+      {
+        heading: "The sign was not clear",
+        text: "the sign is not clear. The main parking control sign was heavily covered by overgrown foliage from a nearby street tree, making the time-limit panel unreadable.\n\nThe signpost itself was turned about 45 degrees away from the road.",
+      },
+    ]);
     expect(body.split("overgrown foliage").length - 1).toBe(1);
     expect(body.split("45 degrees").length - 1).toBe(1);
-    expect(body).toContain(`${L.criteriaHeading}\nThe sign is not clear.`);
+    expect(body).toContain("Reason 1: The sign was not clear\nThe sign is not clear.");
   });
 
   // Measured live, 2026-11-01: loose-word matching deleted ten of twelve reworded note sentences.
   it("a note that makes the account's point in other words is kept", () => {
     const note = "The street tree foliage covered the panel, so the time-limit was unreadable from the road.";
-    const body = compose({ "q-criteria": note });
-    expect(body).toContain(note);
+    expect(compose("internal-review-request", {}, [{ heading: "The sign", text: note }])).toContain(note);
   });
 
-  it("a note with nothing new is left out, heading and all", () => {
-    const body = compose({ "q-criteria": "The signpost itself was turned about 45 degrees away from the road." });
-    expect(body).not.toContain(L.criteriaHeading!);
+  it("a note that only repeats the account is kept whole rather than leave a blank under the point", () => {
+    const body = compose("internal-review-request", {}, [
+      { heading: "The sign", text: "The signpost itself was turned about 45 degrees away from the road." },
+    ]);
+    expect(body).toContain("Reason 1: The sign\nThe signpost itself was turned about 45 degrees away from the road.");
   });
 
-  it("their headed points come before the close, never after 'Thank you'", () => {
-    const body = compose({ "q-internal": "the fine should be withdrawn." });
-    const at = body.indexOf(L.internalHeading!);
-    expect(at).toBeGreaterThan(body.indexOf("My reasons are as follows."));
+  it("their points come before the close, never after 'Thank you'", () => {
+    const body = compose("internal-review-request", { "q-internal": "The fine should be withdrawn." });
+    const at = body.indexOf("The fine should be withdrawn.");
+    expect(at).toBeGreaterThan(body.indexOf("Why the decision should be reviewed"));
     expect(at).toBeLessThan(body.indexOf("I would be grateful if you would confirm"));
     expect(at).toBeLessThan(body.indexOf("Thank you for your help."));
-    expect(body).toContain("The fine should be withdrawn.");
   });
 
-  it("judicial review: the grounds sit under 'set out below', before the request and the thanks", () => {
-    const id = Object.keys(LETTER_GROUND_HEADINGS)[0]!;
+  it("never says 'I am not a lawyer', and never holds a point back for a legal service", () => {
     const body = composeLetter({
       entry: getEntry("vic-generic")!,
       kind: "judicial-review-application",
-      account: { answers: { [`g-${id}`]: "They never let me reply." }, groundIds: [id] },
-      headingFor: (k) => L[k]!,
-      groundsLead: L.groundsLead!,
-      otherConcerns: L.otherConcerns!,
-      universal: [],
+      account: { answers: { "q-story": story }, groundIds: ["invalid-delegation", "procedural-fairness-bias"] },
+      groundHeading: (id) => id,
     }).body;
-    const at = body.indexOf("They never let me reply.");
-    expect(at).toBeGreaterThan(body.indexOf("set out below"));
-    expect(at).toBeLessThan(body.indexOf("I ask the court to set aside"));
+    expect(body).not.toMatch(/not a lawyer/i);
+    expect(body).not.toMatch(/human legal service/i);
+    expect(body).toContain("Ground 2: procedural-fairness-bias");
+    // And the grounds come before the signature.
+    expect(body.indexOf("Ground 1:")).toBeLessThan(body.indexOf("Signed:"));
   });
 });

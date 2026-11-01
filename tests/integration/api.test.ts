@@ -345,7 +345,7 @@ describe("/api/memo (the short analysis)", () => {
     });
 
     it("drops a side that runs long, and keeps the brief", async () => {
-      const tooLong = Array.from({ length: 40 }, () => "You say nobody asked you first.").join(" ");
+      const tooLong = Array.from({ length: 60 }, () => "You say nobody asked you first.").join(" ");
       __setModelForTests(briefModel({ depth: [{ ref: "procedural-fairness-hearing", for: tooLong, against: AGAINST }] }));
       const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
       expect(body.status).toBe("answered");

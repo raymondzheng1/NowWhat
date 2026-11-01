@@ -49,7 +49,7 @@ describe("merits vs judicial review drafts (each written to what that forum deci
     const d = buildDraft(entry, "judicial-review-application");
     const body = d.body.toLowerCase();
     expect(body).toContain("the way the");
-    expect(body).toContain("name the ground");
+    expect(body).toContain("name each ground");
     // It must not ask the court to remake the decision on the facts.
     expect(body).not.toContain("afresh on the facts");
     expect(d.filename).toContain("judicial-review");

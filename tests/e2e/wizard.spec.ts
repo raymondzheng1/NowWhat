@@ -637,15 +637,17 @@ test("the flow gives guidance first and hands over last", async ({ page }) => {
   await expect(note).toBeVisible();
   await note.fill("They never showed me the report they relied on.");
 
-  // The letter action lives HERE now — after the points exist, which is the only place it
-  // can do what it says it does.
-  await expect(page.getByRole("button", { name: /put my words into the letter/i })).toBeVisible();
+  // No separate "put my words into the letter" step (the owner, 2026-11-02): the analysis and
+  // the document are both written from what they wrote here, by the one button.
+  await expect(page.getByRole("button", { name: /put my words into the letter/i })).toHaveCount(0);
 
   // Then the memo — carrying the person's own words on that point, verbatim.
   await advance(page, /build my analysis/i);
   const memo = page.locator("#memo-text");
   await expect(memo).toBeVisible({ timeout: 15_000 });
   await expect(memo).toContainText(/They never showed me the report they relied on\./);
+  // And the document carries it too, numbered under its ground.
+  await expect(page.locator("#r-apply")).toContainText(/Ground 1: .*They never showed me the report they relied on\./s);
 
   // And only now, the hand-over to a person.
   await advance(page, /next: talk to a person/i);

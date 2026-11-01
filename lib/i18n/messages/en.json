@@ -539,7 +539,8 @@
     "letterCaseNoticeCourt": "We wrote this statement of your case for the court, from the analysis above: the decision and its reasons, what you ask the court to do, and each ground argued for you, with what the other side may say answered. Check every sentence is true. A free legal service can tell you which court and which form to use, and help you put it into that form.",
     "letterCaseWritingCourt": "Writing the statement of your case…",
     "letterCaseRefusedCourt": "We could not write the statement of your case this time. Below is the plain version, with your account in full. A free legal service can help you shape it.",
-    "busyStepCaseCourt": "Your statement of case for the court"
+    "busyStepCaseCourt": "Your statement of case for the court",
+    "memoDraftedNone": "The case for and against this point was not written this time. A free legal service can work through it with you."
   },
   "ask": {
     "title": "Ask a question",

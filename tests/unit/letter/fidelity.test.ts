@@ -354,3 +354,17 @@ describe("their own words in another form are still theirs", () => {
     it(`still refuses: ${bad}`, () => expect(gates(bad)).toContain(gate));
   }
 });
+
+// Live, 2026-11-02: the person's own reminder in their account ("[Insert Rego]") is not our blank.
+describe("a blank from their own account", () => {
+  const theirs = "My car [Insert Rego] was parked on Batman Street.";
+  const draft = `To: x\n\nRe: y\n\n[Your name]\n\n${theirs}\n\nYours faithfully,\n[Your name]`;
+  it("may be left out of a rewrite", () => {
+    const out = checkLetterFidelity(draft, theirs, "To: x\n\nRe: y\n\n[Your name]\n\nMy car was parked on Batman Street.\n\nYours faithfully,\n[Your name]");
+    expect(out.map((f) => f.gate)).not.toContain("placeholder-dropped");
+  });
+  it("while ours may not", () => {
+    const out = checkLetterFidelity(draft, theirs, "To: x\n\nRe: y\n\nMy car was parked on Batman Street.\n\nYours faithfully,\n[Your name]");
+    expect(out.map((f) => f.gate)).toContain("placeholder-dropped");
+  });
+});
