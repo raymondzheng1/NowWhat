@@ -528,8 +528,9 @@ WRITE IT IN THIS ORDER, under the SECTION HEADINGS given
     Take the grounds from the points and criteria they marked and from the analysis; two to
     seven of them. Join points that rest on the same facts: one strong ground is worth more than
     three thin ones.
- 6. If their account mentions documents or records they have, a last short section listing them
-    as documents they rely on. Never claim a document they did not mention.
+ 6. If their account says they have, sent or received a document, a last short section listing
+    those documents as ones they rely on. Only those: not a record they only say they found out
+    about, and never one they did not mention.
  7. One closing sentence asking for what they asked for. Nothing after it.
 Write each ground or reason in at most about 150 words.
 

@@ -2030,8 +2030,9 @@ function ResultStep({
                 ]
               : []),
           ],
-          // The analysis and then a case letter written from it: up to a minute, measured live.
-          slowAfterMs: 75_000,
+          // The analysis, then the statement of case written from it: about a minute and a half
+          // for six grounds, measured live (2026-11-01).
+          slowAfterMs: 150_000,
           onCancel: () => setMemoReleased(true),
           cancelLabel: t("busyShowReady"),
         }
