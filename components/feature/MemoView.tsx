@@ -68,6 +68,31 @@ export function MemoView({ blocks }: { blocks: MemoBlock[] }) {
                 {b.text}
               </h4>
             );
+          case "label":
+            // One part of a point — "Rule", "Authority", "What has to be shown". Smaller than the
+            // point's own heading, so the point reads as one unit with labelled parts.
+            return (
+              <h5
+                key={i}
+                className="mt-4 font-display text-[12.5px] font-black uppercase tracking-[0.1em] text-ink-faint"
+              >
+                {b.text}
+              </h5>
+            );
+          case "case":
+            // The case for, and the case against: a pair, boxed alike and told apart by colour
+            // and label only. Neither is weighed — the reader draws the conclusion.
+            return (
+              <section
+                key={i}
+                className={`mt-3 rounded-sticker border-l-4 px-4 py-3 ${
+                  b.side === "for" ? "border-help bg-help-soft" : "border-amber-border bg-amber-bg"
+                }`}
+              >
+                <h5 className="font-display text-[13px] font-black uppercase tracking-[0.08em] text-ink">{b.label}</h5>
+                <p className="mt-1 text-[15px] leading-relaxed text-ink">{b.text}</p>
+              </section>
+            );
           case "meta":
             return (
               <p key={i} className="flex flex-wrap gap-x-2 text-[15px] leading-relaxed">

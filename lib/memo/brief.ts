@@ -2,7 +2,7 @@ import type { DataPathway } from "@/lib/schemas/data";
 import { todayLocal } from "@/lib/time/clock";
 import { ruleForPath, officialSourceForPath, type RulePath } from "@/lib/deadline/rule";
 import type { Ground } from "@/lib/schemas/legal";
-import type { Memo, MemoBlock } from "@/lib/memo/compose";
+import type { Memo, MemoBlock, MemoInput } from "@/lib/memo/compose";
 import { answerableCriteria, withCriterionIds } from "@/lib/memo/criteria";
 
 /**
@@ -31,6 +31,8 @@ export interface BriefDraft {
   points: { ref: string; relates: string; needed: string }[];
   otherSide: string;
   toGather: string[];
+  /** Each point argued both ways, for the in-depth analysis only (see `draftedFromBrief`). */
+  depth?: { ref: string; for: string; against: string }[];
   sources: string[];
 }
 
@@ -207,4 +209,51 @@ export function composeBrief(input: BriefInput): Memo {
   }
 
   return { title: entry.title, body: L.join("\n").trim(), blocks: B };
+}
+
+/**
+ * The model's working, in the shape the in-depth analysis reads (`MemoInput["drafted"]`).
+ *
+ * The in-depth analysis has long been able to print, under each point, the case for it, the
+ * case against it, and what each part of its test has to do with their account — and since the
+ * short brief replaced the long draft, nothing fed it, so each point closed on the corpus's own
+ * "what it is not" under the label "the answer likely to be given". This maps the brief's
+ * points (a part: "groundId/partId"; a criterion: its id) and its `depth` (a ground or a
+ * criterion, argued both ways) back into that shape. An id that is neither finds nothing in the
+ * memo and prints nowhere, exactly as before.
+ */
+export function draftedFromBrief(brief: BriefDraft | null, groundIds: string[]): MemoInput["drafted"] {
+  if (!brief) return null;
+  const depth = brief.depth ?? [];
+  const application = groundIds
+    .map((gid) => {
+      const d = depth.find((x) => x.ref === gid);
+      const whole = brief.points.find((p) => p.ref === gid);
+      const elements = brief.points
+        .filter((p) => p.ref.startsWith(`${gid}/`))
+        .map((p) => ({ elementId: p.ref.slice(gid.length + 1), says: p.relates, missing: p.needed }));
+      return {
+        groundId: gid,
+        forThem: d?.for ?? whole?.relates ?? "",
+        against: d?.against ?? "",
+        toTest: whole?.needed ?? "",
+        elements,
+      };
+    })
+    .filter((a) => a.forThem || a.against || a.toTest || a.elements.length);
+  const isGround = (ref: string) => groundIds.some((g) => ref === g || ref.startsWith(`${g}/`));
+  const criterionRefs = [...new Set([...brief.points.map((p) => p.ref), ...depth.map((x) => x.ref)])].filter(
+    (r) => !isGround(r) && !r.includes("/"),
+  );
+  const criteria = criterionRefs.map((id) => {
+    const p = brief.points.find((x) => x.ref === id);
+    const d = depth.find((x) => x.ref === id);
+    return {
+      criterionId: id,
+      says: p?.relates ?? "",
+      missing: p?.needed ?? "",
+      ...(d ? { forIt: d.for, against: d.against } : {}),
+    };
+  });
+  return { application, criteria };
 }

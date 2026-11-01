@@ -51,7 +51,11 @@ export const dynamic = "force-dynamic";
  * copies back cost tokens, and a ceiling that is too low truncates the JSON and silently
  * loses the analysis (the memo's lesson). Billing is on tokens used, so headroom is free.
  */
-const BRIEF_TOKENS = 1600;
+// Room for the in-depth working too: each point argued both ways roughly doubles the output.
+const BRIEF_TOKENS = 3600;
+
+/** One side of one point in the in-depth working: longer than this is dropped, not shown. */
+const DEPTH_MAX_WORDS = 140;
 
 /**
  * The brief is meant to be short; one that is not has stopped doing its job. Over this many
@@ -200,7 +204,16 @@ export async function POST(req: NextRequest) {
   if (invented.length > 0) return notCovered(["out-of-corpus-citation"]);
 
   // Short is the point of it. A brief that ran long is refused rather than shown as the short one.
-  if (prose.split(/\s+/).filter(Boolean).length > BRIEF_MAX_WORDS) return notCovered(["too-long"]);
+  const shortProse = briefProse(result.data, { short: true });
+  if (shortProse.split(/\s+/).filter(Boolean).length > BRIEF_MAX_WORDS) return notCovered(["too-long"]);
+
+  // The in-depth working: every word already through the verifier and the citation gate above.
+  // An entry that ran long or left a side empty is dropped on its own; the brief still ships.
+  const wordsIn = (x: string) => x.split(/\s+/).filter(Boolean).length;
+  const depth = (result.data.depth ?? [])
+    .filter((x) => x.for.trim() && x.against.trim())
+    .filter((x) => wordsIn(x.for) <= DEPTH_MAX_WORDS && wordsIn(x.against) <= DEPTH_MAX_WORDS)
+    .slice(0, 6);
 
   return apiJson(
     {
@@ -212,6 +225,7 @@ export async function POST(req: NextRequest) {
         points: result.data.points,
         otherSide: result.data.otherSide,
         toGather: result.data.toGather,
+        depth,
         sources: result.data.sources,
       },
     },

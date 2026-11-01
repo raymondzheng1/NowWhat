@@ -315,6 +315,51 @@ describe("/api/memo (the short analysis)", () => {
     expect((await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json()).status).toBe("not-covered");
   });
 
+  // The owner, 2026-11-01: the in-depth analysis argues each point both ways, no conclusion.
+  describe("the in-depth working", () => {
+    const FOR = "You say no letter came and nobody asked you about the certificate before the decision.";
+    const AGAINST = "They may say the decision letter itself invited a response, and that you did not reply to it.";
+
+    it("comes back with the brief, both sides of each point", async () => {
+      __setModelForTests(briefModel({ depth: [{ ref: "procedural-fairness-hearing", for: FOR, against: AGAINST }] }));
+      const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+      expect(body.status).toBe("answered");
+      expect(body.brief.depth).toEqual([{ ref: "procedural-fairness-hearing", for: FOR, against: AGAINST }]);
+    });
+
+    it("is asked for, both ways, with no conclusion", async () => {
+      let system = "";
+      __setModelForTests(async (call) => {
+        system = call.system;
+        return briefModel()(call);
+      });
+      await memoPost(jsonReq("http://x/api/memo", memoBody));
+      expect(system).toContain('"depth"');
+      expect(system).toMatch(/Never say which side is stronger/);
+    });
+
+    it("does not count toward the short brief's length", async () => {
+      const long = Array.from({ length: 12 }, () => "You say nobody asked you first.").join(" ");
+      __setModelForTests(briefModel({ depth: [{ ref: "procedural-fairness-hearing", for: long, against: long }] }));
+      expect((await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json()).status).toBe("answered");
+    });
+
+    it("drops a side that runs long, and keeps the brief", async () => {
+      const tooLong = Array.from({ length: 40 }, () => "You say nobody asked you first.").join(" ");
+      __setModelForTests(briefModel({ depth: [{ ref: "procedural-fairness-hearing", for: tooLong, against: AGAINST }] }));
+      const body = await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json();
+      expect(body.status).toBe("answered");
+      expect(body.brief.depth).toEqual([]);
+    });
+
+    it("is held to every gate the brief is: a conclusion in it refuses the whole", async () => {
+      __setModelForTests(
+        briefModel({ depth: [{ ref: "procedural-fairness-hearing", for: "The hearing rule test is satisfied.", against: AGAINST }] }),
+      );
+      expect((await (await memoPost(jsonReq("http://x/api/memo", memoBody))).json()).status).toBe("not-covered");
+    });
+  });
+
   it("falls back when the 'short' analysis is not short", async () => {
     const long = Array.from({ length: 60 }, () => "You say they did not ask you first.").join(" ");
     __setModelForTests(briefModel({ situation: long }));

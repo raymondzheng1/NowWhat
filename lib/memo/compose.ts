@@ -1,4 +1,5 @@
 import type { Concept, Ground, Process } from "@/lib/schemas/legal";
+import { forApplicant } from "@/lib/memo/applicant";
 import { todayLocal } from "@/lib/time/clock";
 import type { DataPathway } from "@/lib/schemas/data";
 import { ruleForPath, officialSourceForPath, type RulePath } from "@/lib/deadline/rule";
@@ -199,7 +200,7 @@ export interface MemoInput {
      * nowhere, which is why the ids are derived from the criteria's words rather than their
      * position in a list that is built twice.
      */
-    criteria?: { criterionId: string; says: string; missing: string }[];
+    criteria?: { criterionId: string; says: string; missing: string; forIt?: string; against?: string }[];
   } | null;
   /** The path being worked through: picks the part of the time rule, and the official link. */
   pathId?: RulePath;
@@ -235,6 +236,10 @@ export type MemoBlock =
    * ours, about what they said, and the two must never look alike.
    */
   | { kind: "note"; label: string; text: string }
+  /** A small label over one part of a point in the in-depth analysis. */
+  | { kind: "label"; text: string }
+  /** One side of a point, argued — the case for it, or the case against. Never a conclusion. */
+  | { kind: "case"; side: "for" | "against"; label: string; text: string }
   | { kind: "quote"; text: string; label?: string }
   | { kind: "link"; text: string; href: string }
   /**
@@ -254,6 +259,8 @@ export interface Memo {
 }
 
 const rule = (s: string) => s.replace(/\s+/g, " ").trim();
+/** Corpus rule material in the in-depth register: of "the applicant", not to "you" (lib/memo/applicant). */
+const law = (s: string) => forApplicant(rule(s));
 
 /** An absolute link into the app's own guides, or nothing when no base URL is known. */
 const guide = (base: string | undefined, path: string) =>
@@ -382,7 +389,7 @@ export function composeMemo(input: MemoInput): Memo {
    * `noteLine`, not `quote`: these are OUR words about what they said. Quoting is for theirs.
    */
   const criterion = (text: string, id: string | null) => {
-    item(rule(text));
+    item(law(text));
     const n = (criteriaNotes[text] ?? "").trim().replace(/\s+/g, " ");
     if (n) quote(n, t("memoYourNote"), "        ");
     if (!id) return;
@@ -390,12 +397,30 @@ export function composeMemo(input: MemoInput): Memo {
     const says = (d?.says ?? "").trim();
     const missing = (d?.missing ?? "").trim();
     if (says) noteLine(t("memoCriterionSays"), rule(says));
+    // Argued both ways, as the grounds are, and no conclusion.
+    const forIt = (d?.forIt ?? "").trim();
+    const against = (d?.against ?? "").trim();
+    if (forIt) argue("for", t("memoDraftedForThem"), rule(forIt));
+    if (against) argue("against", t("memoDraftedAgainst"), rule(against));
     if (missing) noteLine(t("memoCriterionMissing"), rule(missing));
   };
   /** The ids for a criteria list, on the same two rules the context uses. */
   const criterionIds = (list: string[]) => {
     const ided = withCriterionIds(answerableCriteria(entry, list));
     return (c: string) => ided.find((x) => x.text === c)?.id ?? null;
+  };
+  /** A small label over one part of a point: "Rule", "Authority", "What has to be shown". */
+  const label = (x: string) => {
+    L.push("");
+    L.push(`  ${x}:`);
+    B.push({ kind: "label", text: x });
+  };
+  /** One side of a point, argued. Boxed on the page so the two sides read as a pair. */
+  const argue = (side: "for" | "against", heading: string, x: string) => {
+    L.push("");
+    L.push(`  ${heading}:`);
+    L.push(`  ${x}`);
+    B.push({ kind: "case", side, label: heading, text: x });
   };
   const link = (label: string, href: string) => {
     L.push(`${label}: ${href}`);
@@ -536,14 +561,14 @@ export function composeMemo(input: MemoInput): Memo {
     h(t("memoIssue1Internal"));
     para(t("memoIssue1QInternal"));
     sub(t("memoRule"));
-    for (const k of internal.keyPoints) item(rule(k));
+    for (const k of internal.keyPoints) item(law(k));
     sub(t("memoApplication"));
     para(`${t("memoInternalBodyIs")} ${midSentence(forum)}.`, "  ");
     if (entry.deadlineRule) para(rule(ruleForPath(entry.deadlineRule, pathId)), "  ");
     para(t("memoTimeCheck"), "  ");
 
     h(t("memoIssue2Internal"));
-    para(rule(internal.whatItMeans));
+    para(law(internal.whatItMeans));
     // What the lawyer supplied for THIS scheme, where they supplied it. For a Victorian fine
     // that is the statutory review grounds the issuing agency applies — the part a duty
     // lawyer most needs, and the part that was sitting under the Magistrates' Court card
@@ -555,7 +580,7 @@ export function composeMemo(input: MemoInput): Memo {
     }
     if (internal.whatItIsNot) {
       sub(t("memoWhatItIsNot"));
-      para(rule(internal.whatItIsNot), "  ");
+      para(law(internal.whatItIsNot), "  ");
     }
 
     const askedFor = internalNote.trim().replace(/\s+/g, " ");
@@ -574,7 +599,7 @@ export function composeMemo(input: MemoInput): Memo {
   // election, so the memo says so and keeps the forum, the deadline rule and the time-limit
   // warning — all of which come from the entry, not from the process.
   if (isTribunal || proc.id === "judicial-review") {
-    for (const c of proc.canApply) item(rule(c));
+    for (const c of proc.canApply) item(law(c));
   } else {
     para(t("memoNoProcessRule"), "  ");
   }
@@ -589,10 +614,10 @@ export function composeMemo(input: MemoInput): Memo {
   if (input.standing) {
     sub(t("memoStanding"));
     para(t("memoStandingQ"), "  ");
-    para(rule(input.standing.whatItMeans), "  ");
-    for (const k of input.standing.keyPoints) item(rule(k));
+    para(law(input.standing.whatItMeans), "  ");
+    for (const k of input.standing.keyPoints) item(law(k));
     if (input.standing.whatItIsNot) {
-      para(`${t("memoWhatItIsNot")}: ${rule(input.standing.whatItIsNot)}`, "  ");
+      para(`${t("memoWhatItIsNot")}: ${law(input.standing.whatItIsNot)}`, "  ");
     }
   }
 
@@ -609,10 +634,10 @@ export function composeMemo(input: MemoInput): Memo {
   // wants a person to have understood (the merits-review benchmark).
   if (isTribunal || proc.id === "judicial-review") {
     sub(t("memoHowItWorks"));
-    para(rule(proc.whatItIs), "  ");
+    para(law(proc.whatItIs), "  ");
     if (proc.goodToKnow.length) {
       sub(t("memoGoodToKnow"));
-      for (const g of proc.goodToKnow) item(rule(g));
+      for (const g of proc.goodToKnow) item(law(g));
     }
   }
   const criteriaList = input.criteria ?? (proc.id === "merits-review" ? entry.mrCriteria : []);
@@ -623,10 +648,10 @@ export function composeMemo(input: MemoInput): Memo {
   }
   if (isTribunal) {
     sub(t("memoWhatItCanDo"));
-    for (const r of proc.remedies) item(rule(r));
+    for (const r of proc.remedies) item(law(r));
     if (proc.limits.length) {
       sub(t("memoWhatItCannotDo"));
-      for (const r of proc.limits) item(rule(r));
+      for (const r of proc.limits) item(law(r));
     }
   }
   }
@@ -637,54 +662,43 @@ export function composeMemo(input: MemoInput): Memo {
     para(t("memoGroundsLead"));
     grounds.forEach((g, i) => {
       sub(`${i + 1}. ${g.name}: ${g.plainName}`);
-      para(`${t("memoIssue")}: ${rule(g.oneLine)}`);
-      blank();
-      para(`${t("memoRule")}: ${rule(g.test)}`);
+      // THE LAW FIRST, each part under its own label, so a reader can find the test, the
+      // authority or the exclusions at a glance — this section is the core of the service
+      // (the owner, 2026-11-01), and it read as one undifferentiated run of "X: …" lines.
+      label(t("memoIssue"));
+      para(law(g.oneLine));
+      label(t("memoRule"));
+      para(law(g.test));
       if (g.leadingCases.length) {
-        blank();
-        para(`${t("memoWhereFrom")}:`);
+        label(t("memoWhereFrom"));
         for (const c of g.leadingCases) {
-          item(`${c.name}${c.pinpoint ? ` (${c.pinpoint})` : ""}`, c.explains ? rule(c.explains) : undefined);
+          item(`${c.name}${c.pinpoint ? ` (${c.pinpoint})` : ""}`, c.explains ? law(c.explains) : undefined);
         }
       }
-      // WHAT THE POINT BREAKS INTO. `elements` has been on every ground since the corpus
-      // was written and nothing read it, so the memo stated a test and then never worked
-      // through it — which is the difference between naming a rule and applying one. Each
-      // element carries its own `layPrompt`, a question already written for a lay reader
-      // and already inside the reading-level gate, so this adds no new claim and no new
-      // prose of ours.
-      // WHAT TENDS TO RELATE TO THIS, which is rule material rather than application: it is
-      // what the corpus says about the test in general, true of anyone raising it. It used
-      // to sit after the parts, and once the parts carried what THIS person had said, the
-      // list closed by asking them to say which of these happened to them — after the memo
-      // had already set out what they said. Same words, read before the application instead.
-      blank();
-      para(`${t("memoArgument")}:`);
-      for (const w of g.whatRelates) item(rule(w));
-      para(t("memoArgumentNote"), "  ");
-      const d = input.drafted?.application?.find((a) => a.groundId === g.id);
-      // The application OPENS on the point as a whole, then works through the parts. That
-      // order is the reference memoranda's own, and it was worth moving this block up for:
-      // the overview read as an afterthought when it came after the parts it introduces.
-      if (d?.forThem.trim()) {
-        blank();
-        sub(t("memoDraftedForThem"));
-        para(rule(d.forThem));
+      // WHAT TENDS TO RELATE TO THIS, and what the point does NOT cover: rule material, true of
+      // anyone raising it, so it sits with the law and before anything about this person. The
+      // second used to close the point under "the answer likely to be given", which read as
+      // the other side's case — one-sided, and not what the corpus field is.
+      label(t("memoArgument"));
+      for (const w of g.whatRelates) item(law(w));
+      if (g.whatItIsNot) {
+        label(t("memoCounter"));
+        para(law(g.whatItIsNot));
       }
+      // THEN THEIR WORDS, verbatim and uncharacterised — the reader decides what they are worth.
+      const note = rule(groundNotes[g.id] ?? "");
+      if (note) quote(note, t("memoYourNote"));
+      const d = input.drafted?.application?.find((a) => a.groundId === g.id);
+      // WHAT THE POINT BREAKS INTO, each part with its question and, where the analysis
+      // reached it, what their account has to do with it. Matched by id inside this ground —
+      // element ids are local, so a global lookup would misfile the answer; an id we never
+      // supplied finds no part and prints nowhere. `noteLine`, not `quote`: these are OUR
+      // words about what they said.
       if (g.elements.length) {
-        blank();
-        sub(t("memoElements"));
-        para(t("memoElementsLead"), "  ");
+        label(t("memoElements"));
+        para(t("memoElementsLead"));
         for (const el of g.elements) {
-          item(rule(el.name), el.layPrompt ? `${t("memoElementAsked")}: ${rule(el.layPrompt)}` : undefined);
-          // THE APPLICATION, UNDER THE PART IT BELONGS TO. Matched by id inside this
-          // ground — element ids are local ("notice", "applies"), so the same id means
-          // different things under different grounds and a global lookup would misfile
-          // the answer. An id we never supplied finds no part and prints nowhere.
-          //
-          // `para`, not `quote`: these are OUR words about what they said. Quoting is
-          // reserved for their own, and blurring that line is how a memo ends up
-          // attributing a sentence to a person who never wrote it.
+          item(law(el.name), el.layPrompt ? `${t("memoElementAsked")}: ${rule(el.layPrompt)}` : undefined);
           const de = d?.elements?.find((x) => x.elementId === el.id);
           const says = (de?.says ?? "").trim();
           const missing = (de?.missing ?? "").trim();
@@ -692,50 +706,18 @@ export function composeMemo(input: MemoInput): Memo {
           if (missing) noteLine(t("memoElementMissing"), rule(missing));
         }
       }
-      // What their account has to do with THIS test, and the answer they will get back.
-      // The generic list above stays: it is what the corpus says relates to the ground in
-      // general, and it is true whether or not a draft arrived.
-      if (d) {
-        if (d.against.trim()) {
-          blank();
-          sub(t("memoDraftedAgainst"));
-          para(rule(d.against));
-        }
-        if (d.toTest.trim()) {
-          blank();
-          sub(t("memoDraftedToTest"));
-          para(rule(d.toTest));
-        }
+      // THE CASE FOR AND THE CASE AGAINST, side by side, and no conclusion (the owner's call,
+      // 2026-11-01): every argument we can make either way, and the weighing left to the
+      // person who advises them, so this never reads as advice. "Where that leaves this point"
+      // is gone for the same reason — it could say nothing a conclusion would say.
+      if (d?.forThem.trim()) argue("for", t("memoDraftedForThem"), rule(d.forThem));
+      if (d?.against.trim()) argue("against", t("memoDraftedAgainst"), rule(d.against));
+      if (d?.toTest.trim()) {
+        label(t("memoDraftedToTest"));
+        para(rule(d.toTest));
       }
       const gHref = guide(input.siteUrl, `/learn/grounds/${g.id}`);
-      if (gHref) {
-        blank();
-        link(t("memoReadMore"), gHref);
-      }
-      // Their own words on this point, if they wrote any. Verbatim and unlabelled as
-      // evidence — the reader of this memo decides what it is worth, not us.
-      const note = (groundNotes[g.id] ?? "").trim().replace(/\s+/g, " ");
-      if (note) {
-        blank();
-        quote(note, t("memoYourNote"));
-      }
-      if (g.whatItIsNot) {
-        blank();
-        para(`${t("memoCounter")}:`);
-        para(rule(g.whatItIsNot), "  ");
-      }
-      // WHERE THAT LEAVES IT. The reference memos close every issue, and this is the one
-      // place the register had to change rather than be copied. Theirs closes with
-      // "prospects of success are high"; ours may not, and not only because a gate forbids
-      // it — we are not advising a client, we are handing someone their own matter.
-      //
-      // So the close says what is true and checkable: whether they have written on this
-      // point, that the questions above are its parts, and that a gap is a question nobody
-      // has asked them yet rather than a weakness. It names no strength and no outcome.
-      blank();
-      sub(t("memoConclusion"));
-      para(note ? t("memoGroundWritten") : t("memoGroundBlank"), "  ");
-      para(t("memoOpenNote"), "  ");
+      if (gHref) link(t("memoReadMore"), gHref);
     });
     blank();
     para(t("memoNoWeight"));
@@ -755,7 +737,7 @@ export function composeMemo(input: MemoInput): Memo {
     para(t("memoPrivativeYes"), "  ");
     if (input.justiciability?.whatItMeans) {
       sub(t("memoRule"));
-      para(rule(input.justiciability.whatItMeans), "  ");
+      para(law(input.justiciability.whatItMeans), "  ");
     }
   }
 

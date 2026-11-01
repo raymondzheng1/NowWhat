@@ -302,11 +302,14 @@ test("the fines court election is never dressed up as merits review", async ({ p
   const letter = page.locator("#r-apply .rounded-card");
   await expect(letter).toHaveCount(1, { timeout: 15_000 });
   await expect(page.locator("#r-apply")).not.toContainText(/There is no draft for this path/i);
-  await expect(letter).toContainText(/NOTE TO YOURSELF/);
-  await expect(letter).toContainText(/this letter is not the election/i);
-  await expect(letter).toContainText(/sending it does not elect anything/i);
-  // Human help, in the letter itself rather than only in the hand-off step.
-  await expect(letter).toContainText(/talk to a free legal service before you elect/i);
+  // The warning is addressed to the person, so since 2026-11-01 (the owner's call) it sits
+  // above the letter, word for word, rather than inside what they send.
+  const warning = page.locator("#r-apply").getByTestId("letter-warning");
+  await expect(letter).not.toContainText(/NOTE TO YOURSELF/);
+  await expect(warning).toContainText(/this letter is not the election/i);
+  await expect(warning).toContainText(/sending it does not elect anything/i);
+  // Human help, beside the letter rather than only in the hand-off step.
+  await expect(warning).toContainText(/talk to a free legal service before you elect/i);
   // It asks for the three facts a free service would tell them to get.
   await expect(letter).toContainText(/which form i need to complete/i);
   await expect(letter).toContainText(/the date by which it must be received/i);

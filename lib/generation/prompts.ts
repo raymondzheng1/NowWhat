@@ -289,9 +289,19 @@ FILL THESE PARTS:
    the law is printed beside your words.
  · "toGather": up to four short noun phrases — documents or records that would help, such as
    "the notice itself". Not instructions.
+ · "depth": the full working, for the in-depth analysis a lawyer reads. One entry for EACH ground
+   and EACH criterion in the CORPUS CONTEXT that their account or their notes say something
+   about — at most six. "ref" is the ground id or the criterion id, copied exactly (not a part).
+     – "for": three to five sentences making the best honest case, from THEIR facts, that this
+       point applies. Take the parts of its test in turn, by the names the context gives them,
+       and say which of their facts goes to each.
+     – "against": three to five sentences setting out what the decision-maker may argue on this
+       point, from the decision and the facts — including any gap in what they have said.
+   Give both sides fairly. Never say which side is stronger, whether the point is made out, or
+   what will happen: the reader draws the conclusion.
  · "sources": one to three source strings, copied VERBATIM from the SOURCES lines.
 
-KEEP IT SHORT: about 200 words across all the text. Short sentences. Plain words.
+KEEP IT SHORT: about 200 words across everything except "depth". Short sentences. Plain words.
 
 YOU MUST NOT:
  A. Restate, soften or extend a legal test. The page prints the law beside your words. Name a
@@ -326,6 +336,7 @@ Return JSON:
   "points": [ { "ref": string, "relates": string, "needed": string } ],   // at most 4
   "otherSide": string,
   "toGather": string[],                                                // at most 4
+  "depth": [ { "ref": string, "for": string, "against": string } ],    // at most 6
   "sources": string[]                       // copy 1-3 VERBATIM from the SOURCES lines
 }
 `.trim();

@@ -1,5 +1,9 @@
 import { describe, it, expect } from "vitest";
 import { composeMemo, memoPathName } from "@/lib/memo/compose";
+import { forApplicant } from "@/lib/memo/applicant";
+
+/** Corpus rule text as the in-depth analysis prints it: one line, of "the applicant". */
+const law = (s: string) => forApplicant(s.replace(/\s+/g, " ").trim());
 import { getConcept, getProcess, listGrounds } from "@/lib/legal";
 import { getDataEntry } from "@/lib/data";
 import { withCriterionIds, answerableCriteria, isOrientation } from "@/lib/memo/criteria";
@@ -179,7 +183,7 @@ describe("the memo opens with the shape of the matter", () => {
       process: merits,
       criteriaNotes: { [c]: "The income figure they used was from the wrong year." },
     });
-    expect(m.body).toContain(c);
+    expect(m.body).toContain(law(c));
     expect(m.body).toContain('"The income figure they used was from the wrong year."');
   });
 
@@ -223,8 +227,8 @@ describe("a memo about internal review borrows nothing from a tribunal", () => {
     expect(m.body).toContain("memoIssue1Internal".toUpperCase());
     expect(m.body).toContain("memoIssue2Internal".toUpperCase());
     // The concept's own words, not ours.
-    expect(m.body).toContain(internal.keyPoints[0]!);
-    expect(m.body).toContain("Many schemes let you ask the department");
+    expect(m.body).toContain(law(internal.keyPoints[0]!));
+    expect(m.body).toContain("Many schemes let the applicant ask the department");
   });
 
   it("carries no tribunal question, no remedies and no limits", () => {
@@ -522,22 +526,21 @@ describe("the professional structure the owner's worked memoranda use", () => {
     const g = pf[0]!;
     expect(g.elements.length).toBeGreaterThan(1);
     for (const el of g.elements) {
-      expect(m.body).toContain(el.name);
+      expect(m.body).toContain(law(el.name));
       if (el.layPrompt) expect(m.body).toContain(el.layPrompt);
     }
   });
 
-  // Every issue in both reference memoranda closes. Ours closes too — in the one register
-  // we are allowed, which is what is answered, what is open, and who can tell them which
-  // of it matters.
-  it("closes every point, without saying how strong it is", () => {
+  // The owner, 2026-11-01: each point is argued both ways and closes with no conclusion —
+  // "where that leaves this point" said nothing a conclusion would say, and is gone.
+  it("closes no point with a verdict, and says none is weighed", () => {
     const m = composeMemo({ ...base, process: judicial, grounds: pf });
-    expect(m.body).toContain(t("memoConclusion"));
-    expect(m.body).toContain(t("memoOpenNote"));
+    expect(m.body).not.toContain(t("memoConclusion"));
+    expect(m.body).not.toContain(t("memoOpenNote"));
     expect(m.body).toContain(t("memoNoWeight"));
   });
 
-  it("says whether they have written on a point, and never that a gap is a weakness", () => {
+  it("quotes their words on a point, and says nothing about a point they left blank", () => {
     const written = composeMemo({
       ...base,
       process: judicial,
@@ -545,9 +548,9 @@ describe("the professional structure the owner's worked memoranda use", () => {
       groundNotes: { "procedural-fairness-hearing": "They used a report I never saw." },
     });
     const blank = composeMemo({ ...base, process: judicial, grounds: pf });
-    expect(written.body).toContain(t("memoGroundWritten"));
-    expect(blank.body).toContain(t("memoGroundBlank"));
-    expect(blank.body).not.toContain(t("memoGroundWritten"));
+    expect(written.body).toContain('"They used a report I never saw."');
+    expect(blank.body).not.toContain(t("memoYourNote"));
+    expect(blank.body).not.toContain(t("memoGroundBlank"));
   });
 
   // STANDING. Its own issue in both reference memoranda, and a sub-issue of eligibility
@@ -557,7 +560,7 @@ describe("the professional structure the owner's worked memoranda use", () => {
     const standing = getConcept("standing")!;
     const m = composeMemo({ ...base, process: judicial, grounds: pf, standing });
     expect(m.body).toContain(t("memoStanding"));
-    expect(m.body).toContain(standing.whatItMeans.slice(0, 40));
+    expect(m.body).toContain(law(standing.whatItMeans).slice(0, 40));
     // Under eligibility, so the numbered sections stay 1, 2, 3.
     expect(m.body.indexOf(t("memoStanding"))).toBeGreaterThan(m.body.indexOf(t("memoIssue1").toUpperCase()));
     expect(m.body.indexOf(t("memoStanding"))).toBeLessThan(m.body.indexOf(t("memoIssue2").toUpperCase()));
@@ -654,14 +657,14 @@ describe("a court election is not handed a tribunal's memo", () => {
   it("leaves a real tribunal memo untouched", () => {
     const b = composeMemo({ ...base, character: "tribunal" }).body;
     expect(b).toContain(merits.plainName);
-    for (const line of merits.canApply) expect(b).toContain(line);
+    for (const line of merits.canApply) expect(b).toContain(law(line));
     expect(b).not.toContain(t("memoNoProcessRule"));
   });
 
   it("leaves judicial review untouched", () => {
     const b = composeMemo({ ...base, process: judicial, character: "court" }).body;
     expect(b).toContain(judicial.plainName);
-    for (const line of judicial.canApply) expect(b).toContain(line);
+    for (const line of judicial.canApply) expect(b).toContain(law(line));
     expect(b).not.toContain(t("memoNoProcessRule"));
   });
 });
@@ -708,13 +711,13 @@ describe("the drafted application is written to each part of the test", () => {
     ]);
     const b = m.body;
     const el = ground.elements.find((e) => e.id === "notice")!;
-    const partAt = b.indexOf(el.name);
+    const partAt = b.indexOf(law(el.name));
     const saysAt = b.indexOf("You say no letter came before the decision.");
     expect(partAt).toBeGreaterThan(-1);
     expect(saysAt).toBeGreaterThan(partAt);
     // And under THAT part, not under the one after it.
     const nextPart = ground.elements.find((e) => e.id === "adverse-information")!;
-    expect(saysAt).toBeLessThan(b.indexOf(nextPart.name));
+    expect(saysAt).toBeLessThan(b.indexOf(law(nextPart.name)));
     expect(b).toContain(t("memoElementSays"));
   });
 
@@ -751,12 +754,19 @@ describe("the drafted application is written to each part of the test", () => {
     expect(m.body).toContain("You say no letter came.");
   });
 
-  it("opens on the point as a whole, then works through the parts", () => {
+  // The owner, 2026-11-01: the parts first, then the case for and the case against as a pair.
+  it("works through the parts, then argues the point both ways, for before against", () => {
     const m = memo([{ elementId: "notice", says: "You say no letter came.", missing: "" }]);
     const b = m.body;
-    expect(b.indexOf(t("memoDraftedForThem"))).toBeLessThan(b.indexOf(t("memoElements")));
-    // And the answer back still comes after the parts, not before them.
-    expect(b.indexOf(t("memoDraftedAgainst"))).toBeGreaterThan(b.indexOf(t("memoElements")));
+    const parts = b.indexOf(t("memoElements"));
+    const forAt = b.indexOf(t("memoDraftedForThem"));
+    const againstAt = b.indexOf(t("memoDraftedAgainst"));
+    expect(parts).toBeGreaterThan(-1);
+    expect(forAt).toBeGreaterThan(parts);
+    expect(againstAt).toBeGreaterThan(forAt);
+    // Boxed as a pair on the page.
+    const sides = m.blocks.filter((x) => x.kind === "case").map((x) => (x as { side: string }).side);
+    expect(sides).toEqual(["for", "against"]);
   });
 
   it("composes exactly as before when no draft arrived", () => {
@@ -1067,7 +1077,7 @@ describe("the drafted analysis is written against what the body decides", () => 
       story: "They say my notice to vacate is valid and I have nowhere else to go.",
     });
     // Every criterion still printed, with no drafted lines and no empty headings.
-    for (const c of housing.mrCriteria!) expect(without.body).toContain(c);
+    for (const c of housing.mrCriteria!) expect(without.body).toContain(law(c));
     expect(without.body).not.toContain(t("memoCriterionSays"));
     expect(withDraft.body).not.toContain(t("memoCriterionSays"));
   });

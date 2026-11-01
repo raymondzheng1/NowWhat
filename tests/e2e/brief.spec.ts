@@ -76,7 +76,7 @@ test("the short analysis leads, after the time limit, and the full notes fold un
 
   // The full notes are there, folded.
   const notes = memo.locator("details");
-  await expect(notes.locator("summary")).toHaveText(/Full notes for a lawyer/i);
+  await expect(notes.locator("summary")).toHaveText(/In-depth analysis/i);
   expect(await notes.evaluate((d) => (d as HTMLDetailsElement).open)).toBe(false);
 
   // One request for one analysis. A second while the first is in flight is paid twice.
@@ -236,5 +236,64 @@ test("judicial review: the grounds the account may relate to come first, ticked,
   await expect(box).not.toBeChecked();
   await box.check();
   await expect(page.getByText("Other grounds people raise")).toBeVisible();
+  // Its note starts from the sentence of their account it rests on.
+  await expect(page.locator("#gn-procedural-fairness-hearing")).toHaveValue(
+    "I never got a chance to reply to the complaint before they decided.",
+  );
   expect(calls).toBe(1);
+});
+
+// The owner, 2026-11-01: the in-depth analysis argues each point both ways, and concludes nothing.
+test("the in-depth analysis argues each marked point for and against, with no verdict", async ({ page }) => {
+  await page.addInitScript((story) => {
+    window.localStorage.setItem("wn:tour:off", "1");
+    window.localStorage.setItem("wn:install:off", "1");
+    if (window.sessionStorage.getItem("__seeded")) return;
+    window.sessionStorage.setItem("__seeded", "1");
+    window.sessionStorage.setItem("wn-consented", JSON.stringify({ matter: "Vic|vic-generic", flags: {} }));
+    window.sessionStorage.setItem(
+      "wn-flow",
+      JSON.stringify({
+        matter: "Vic|vic-generic",
+        chosenPath: "judicial-review",
+        goals: [],
+        goalOther: "",
+        account: { "q-story": story },
+        relatedGrounds: ["procedural-fairness-hearing"],
+        groundNotes: { "procedural-fairness-hearing": "I never got a chance to reply." },
+        criteriaNotes: {},
+        pickedCriteria: [],
+      }),
+    );
+  }, STORY);
+  await page.route("**/api/memo", (route) =>
+    route.fulfill({
+      json: {
+        ok: true,
+        status: "answered",
+        brief: {
+          ...BRIEF,
+          depth: [
+            {
+              ref: "procedural-fairness-hearing",
+              for: "You say nobody asked you before the decision was made.",
+              against: "The council may say its letter invited a reply.",
+            },
+          ],
+        },
+      },
+    }),
+  );
+  await page.goto(MEMO_URL);
+  const memo = page.locator("#memo-text");
+  await expect(memo).toContainText(BRIEF.situation, { timeout: 15_000 });
+  const notes = memo.locator("details");
+  await expect(notes.locator("summary")).toHaveText(/In-depth analysis/i);
+  await notes.locator("summary").click();
+  await expect(notes).toContainText("The case for this point");
+  await expect(notes).toContainText("You say nobody asked you before the decision was made.");
+  await expect(notes).toContainText("The case against this point");
+  await expect(notes).toContainText("The council may say its letter invited a reply.");
+  await expect(notes).not.toContainText(/Where that leaves this point/i);
+  await expect(notes).not.toContainText(/The answer likely to be given/i);
 });

@@ -182,7 +182,8 @@ export function composeLetter(input: ComposeInput): Draft {
     marked.push(`${input.headingFor(key)}\n${body}`);
   }
   if (marked.length > 0) {
-    parts.push([input.groundsLead, "", ...marked].join("\n"));
+    // A blank line between points, so each heading starts its own block and reads as one.
+    parts.push([input.groundsLead, ...marked].join("\n\n"));
   }
   // Say plainly that the letter is not everything — in the letter, not just in the UI.
   if (omitted) parts.push(input.otherConcerns);

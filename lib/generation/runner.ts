@@ -376,14 +376,18 @@ export function runGroundMatch(
   });
 }
 
-/** All the prose a brief carries, in one string — for the verifier and the route's own gates. */
-export function briefProse(d: GeneratedBrief): string {
+/**
+ * All the prose a brief carries, in one string — for the verifier and the route's own gates.
+ * `short` leaves out the in-depth working, for the gate that keeps the brief itself short.
+ */
+export function briefProse(d: GeneratedBrief, opts: { short?: boolean } = {}): string {
   return [
     d.situation,
     d.path,
     ...d.points.flatMap((p) => [p.relates, p.needed]),
     d.otherSide,
     ...d.toGather,
+    ...(opts.short ? [] : (d.depth ?? []).flatMap((x) => [x.for, x.against])),
   ]
     .filter((x) => x && x.trim())
     .join(" ");

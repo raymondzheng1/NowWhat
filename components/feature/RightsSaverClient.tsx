@@ -1,5 +1,6 @@
 "use client";
 
+import { presentLetter } from "@/lib/letter/present";
 import { todayLocal } from "@/lib/time/clock";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
@@ -27,7 +28,7 @@ import {
   type TripwireFlags,
 } from "@/lib/tripwire";
 import { composeMemo, memoPathName } from "@/lib/memo/compose";
-import { composeBrief, type BriefDraft } from "@/lib/memo/brief";
+import { composeBrief, draftedFromBrief, type BriefDraft } from "@/lib/memo/brief";
 import type { PathId } from "@/lib/analysis";
 import { Disclaimer } from "@/components/ui/Disclaimer";
 import { MemoView } from "@/components/feature/MemoView";
@@ -1539,6 +1540,20 @@ function ResultStep({
         // Ticked to start with, as a first cut — but never over choices they have already made.
         if (suggestions.length) {
           onRestoreGrounds((prev) => (prev.length === 0 ? suggestions.map((x) => x.groundId) : prev));
+          // A starting point for "what happened, on each point": the sentence of THEIR account
+          // the suggestion rests on (the owner's call, 2026-11-01). Their own words, so it can go
+          // into the analysis and the letter as theirs; the "why" is ours and stays on the card.
+          // Only into an empty box — never over anything they have written.
+          setGroundNotes((prev) => {
+            const next = { ...prev };
+            for (const x of suggestions) {
+              const q = x.quote.trim();
+              if (q && !(next[x.groundId] ?? "").trim()) {
+                next[x.groundId] = q.charAt(0).toUpperCase() + q.slice(1) + (/[.!?"”]$/.test(q) ? "" : ".");
+              }
+            }
+            return next;
+          });
         }
       } catch {
         settle([]);
@@ -1879,6 +1894,8 @@ function ResultStep({
                   points: d.brief.points ?? [],
                   otherSide: d.brief.otherSide ?? "",
                   toGather: d.brief.toGather ?? [],
+                  // The in-depth working: each point argued both ways (see draftedFromBrief).
+                  depth: d.brief.depth ?? [],
                   sources: d.brief.sources ?? [],
                 }
               : null,
@@ -1983,7 +2000,10 @@ function ResultStep({
   }, [view, letterKey, entry.id, letterNear, analysisSettled]);
   const shortLetter = (rawDraftBody && polished[letterKey]) || "";
   /** The letter as shown and copied: the written one where it came back, unless they chose the plain one. */
-  const letterBody = (!useFullLetter && shortLetter) || rawDraftBody;
+  const letterRaw = (!useFullLetter && shortLetter) || rawDraftBody;
+  // What is shown and copied: the NOTE TO YOURSELF blocks lifted out to sit above the letter,
+  // and a blank line after each heading (see lib/letter/present).
+  const { warnings: letterWarnings, letter: letterBody } = presentLetter(letterRaw);
 
   // THE FULL NOTES. No `drafted` any more: the model writes the short brief instead, and these
   // are the corpus's own words, composed on the device, for a lawyer who wants the detail.
@@ -2013,6 +2033,13 @@ function ResultStep({
         : [],
     groundNotes,
     criteriaNotes,
+    // The model's working, argued both ways under each point (the owner's call, 2026-11-01).
+    // Null until it arrives, and on any refusal — the in-depth analysis then prints the law
+    // and their words alone, exactly as before.
+    drafted: draftedFromBrief(
+      drafted,
+      memoPathId === "judicial-review" ? relatedGrounds.filter((id) => shownGrounds.some((g) => g.id === id)) : [],
+    ),
     // Paired with the question that was asked, not merged into the criterion notes — those
     // are looked up by criterion, so an answer keyed by its question matched nothing.
     schemeAnswers: schemeQuestions
@@ -3252,6 +3279,18 @@ function ResultStep({
             <p data-testid="letter-case-refused" className="mt-3 text-[15px] leading-relaxed text-ink-soft">
               {t("letterCaseRefused")}
             </p>
+          )}
+          {letterWarnings.length > 0 && (
+            <div data-testid="letter-warning" className="mt-3 rounded-sticker border-2 border-amber-border bg-amber-bg px-4 py-3">
+              <p className="font-display text-[13px] font-black uppercase tracking-[0.08em] text-amber-ink">
+                {t("letterWarningTitle")}
+              </p>
+              {letterWarnings.map((w) => (
+                <p key={w} className="mt-1.5 text-[15px] leading-relaxed text-ink">
+                  {w}
+                </p>
+              ))}
+            </div>
           )}
           <LetterView body={letterBody} label={activeApply.label} />
           <LetterPlaceholderKey text={t("letterPlaceholderKey")} />

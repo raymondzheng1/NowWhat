@@ -163,6 +163,14 @@ export const GeneratedBriefSchema = z.object({
   otherSide: z.string().default(""),
   /** Documents or records that would help — noun phrases, not instructions. */
   toGather: z.array(z.string()).default([]),
+  /**
+   * The working behind the brief, for the in-depth analysis: each point argued both ways, and
+   * no conclusion (the owner's call, 2026-11-01). `ref` is a ground or criterion id from the
+   * context; one we did not supply matches nothing and is dropped.
+   */
+  depth: z
+    .array(z.object({ ref: z.string(), for: z.string().default(""), against: z.string().default("") }))
+    .default([]),
   sources: z.array(z.string()).default([]),
 });
 export type GeneratedBrief = z.infer<typeof GeneratedBriefSchema>;

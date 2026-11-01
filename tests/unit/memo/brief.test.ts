@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { composeBrief, type BriefDraft } from "@/lib/memo/brief";
+import { composeBrief, draftedFromBrief, type BriefDraft } from "@/lib/memo/brief";
 import { getDataEntry } from "@/lib/data";
 import { listGrounds } from "@/lib/legal";
 import { withCriterionIds, answerableCriteria } from "@/lib/memo/criteria";
@@ -126,5 +126,56 @@ describe("the brief's sources are ones a person can look up", () => {
     }).body;
     expect(b).not.toMatch(/knowledge base/i);
     expect(b).toContain("https://www.vcat.vic.gov.au");
+  });
+});
+
+// The owner, 2026-11-01: the in-depth analysis argues each point both ways, from the brief.
+describe("the brief's working, in the shape the in-depth analysis reads", () => {
+  const brief: BriefDraft = {
+    situation: "s",
+    path: "p",
+    points: [
+      { ref: "procedural-fairness-hearing/notice", relates: "No letter came.", needed: "The date." },
+      { ref: "c-income", relates: "The figure was wrong.", needed: "Payslips." },
+      { ref: "made-up/part", relates: "x", needed: "y" },
+    ],
+    otherSide: "o",
+    toGather: [],
+    depth: [
+      { ref: "procedural-fairness-hearing", for: "FOR the ground", against: "AGAINST the ground" },
+      { ref: "c-income", for: "FOR the criterion", against: "AGAINST the criterion" },
+    ],
+    sources: [],
+  };
+
+  it("puts each ground's case for and against, and its parts, under that ground", () => {
+    const d = draftedFromBrief(brief, ["procedural-fairness-hearing"])!;
+    expect(d.application).toEqual([
+      {
+        groundId: "procedural-fairness-hearing",
+        forThem: "FOR the ground",
+        against: "AGAINST the ground",
+        toTest: "",
+        elements: [{ elementId: "notice", says: "No letter came.", missing: "The date." }],
+      },
+    ]);
+  });
+
+  it("puts a criterion's case for and against under that criterion", () => {
+    const d = draftedFromBrief(brief, ["procedural-fairness-hearing"])!;
+    expect(d.criteria).toContainEqual({
+      criterionId: "c-income",
+      says: "The figure was wrong.",
+      missing: "Payslips.",
+      forIt: "FOR the criterion",
+      against: "AGAINST the criterion",
+    });
+  });
+
+  it("files nothing under a ground that was not marked, and nothing when there is no brief", () => {
+    const d = draftedFromBrief(brief, [])!;
+    expect(d.application).toEqual([]);
+    expect(d.criteria!.map((c) => c.criterionId)).not.toContain("made-up/part");
+    expect(draftedFromBrief(null, ["procedural-fairness-hearing"])).toBeNull();
   });
 });
