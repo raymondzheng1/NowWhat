@@ -137,12 +137,18 @@ export function ResultView({
 
   useEffect(() => {
     let live = true;
-    void postDraft(entry.id, kind).then((r) => {
-      if (live && r.ok) {
-        setDraft(r.draft);
+    // A failed or timed-out request was an unhandled rejection that left an empty section with a
+    // Download that did nothing (the QA review, 2026-11-02). It now clears the draft instead, and
+    // the section says it could not be prepared.
+    postDraft(entry.id, kind)
+      .then((r) => {
+        if (!live) return;
+        setDraft(r.ok ? r.draft : null);
         setEditing(false);
-      }
-    });
+      })
+      .catch(() => {
+        if (live) setDraft(null);
+      });
     return () => {
       live = false;
     };
@@ -265,7 +271,8 @@ export function ResultView({
                   <button
                     type="button"
                     onClick={() => draft && downloadText(draft.filename, draft.body)}
-                    className="inline-flex items-center rounded-button px-4 font-display text-[13px] font-extrabold uppercase tracking-[0.06em] text-cream-onRed shadow-chip transition-shadow hover:shadow-sticker"
+                    disabled={!draft}
+                    className="inline-flex items-center rounded-button disabled:opacity-50 px-4 font-display text-[13px] font-extrabold uppercase tracking-[0.06em] text-cream-onRed shadow-chip transition-shadow hover:shadow-sticker"
                     style={{ minHeight: 44, background: "var(--red-cta)" }}
                   >
                     Download
@@ -297,6 +304,11 @@ export function ResultView({
                   </Link>
                 )}
               </p>
+              {!draft && (
+                <p role="status" className="mt-3.5 text-[15px] leading-relaxed text-ink-soft">
+                  This draft could not be prepared just now. Please try again in a moment. Free help is always available.
+                </p>
+              )}
               {draft && (
                 editing ? (
                   <AutoTextarea

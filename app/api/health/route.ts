@@ -1,10 +1,12 @@
 import { NextResponse } from "next/server";
+import { qaEnabled } from "@/lib/email/qa";
 import { isModelConfigured } from "@/lib/generation/anthropic";
 import { isKvConfigured } from "@/lib/kv/redis";
 import {
   SESSION_CAP_USD,
   GLOBAL_DAILY_BUDGET_USD,
   IP_RATE_LIMIT,
+  IP_DAILY_CAP_USD,
   MODELS,
 } from "@/lib/config";
 
@@ -39,6 +41,11 @@ export function GET() {
         sessionCapUsd: SESSION_CAP_USD,
         globalDailyBudgetUsd: GLOBAL_DAILY_BUDGET_USD,
         ipRequestsPerHour: IP_RATE_LIMIT.max,
+        ipDailyCapUsd: IP_DAILY_CAP_USD,
+        smallModel: MODELS.small,
+        // Whether visitors' letters and chats are being emailed to the operator for QA. It must be
+        // false at launch; it was not visible from outside (the QA review, 2026-11-02).
+        qaEmailInteractions: qaEnabled(),
       },
     },
     { headers: { "Cache-Control": "no-store" } },

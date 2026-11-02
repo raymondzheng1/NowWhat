@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { DecodeTextRequestSchema } from "@/lib/schemas/api";
-import { getRequestContext } from "@/lib/http/request-context";
+import { getRequestContext, isCrossSite } from "@/lib/http/request-context";
 import { apiJson } from "@/lib/http/respond";
 import { precheck, record, estimateCostUsd } from "@/lib/cost/guard";
 import { runOcr } from "@/lib/intake/ocr";
@@ -16,6 +16,8 @@ import { helpForPlace } from "@/lib/help/elsewhere";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+/** As long as a pasted letter may be on the JSON path (DecodeTextRequestSchema). */
+const MAX_PASTE_CHARS = 20_000;
 // Room for a slow model call and its retries to finish rather than be cut off (2026-11-02).
 export const maxDuration = 300;
 
@@ -30,6 +32,8 @@ const NO_TEXT = /\b(no (readable |legible |visible )?text|not (readable|legible)
  */
 export async function POST(req: NextRequest) {
   const ctx = getRequestContext(req);
+  // Not from another site's page: that would spend this service's budget (QA, 2026-11-02).
+  if (isCrossSite(req)) return apiJson({ ok: false, status: "error", message: "errors.badInput" }, ctx, 403);
   const badInput = (code = 400) =>
     apiJson({ ok: false, status: "error", message: "errors.badInput" }, ctx, code);
 
@@ -41,7 +45,11 @@ export async function POST(req: NextRequest) {
     if (contentType.includes("multipart/form-data")) {
       const form = await req.formData();
       const pasted = form.get("text");
-      if (typeof pasted === "string") pastedText = pasted.trim();
+      // Held to the same length as a pasted JSON body: the form path was unbounded (QA, 2026-11-02).
+      if (typeof pasted === "string") {
+        if (pasted.length > MAX_PASTE_CHARS) return badInput();
+        pastedText = pasted.trim();
+      }
       const f = form.get("file");
       if (f instanceof File) file = f;
     } else {
@@ -76,7 +84,7 @@ export async function POST(req: NextRequest) {
   let letterText = pastedText;
   if (!letterText && file) {
     const bytes = new Uint8Array(await file.arrayBuffer());
-    const ocr = await runOcr(bytes, file.type || "image/png");
+    const ocr = await runOcr(bytes, file.type || "image/png", ctx.byoKeyValue);
     if (!ocr.available) return apiJson({ ok: true, status: "ocr-unavailable" }, ctx);
     if (typeof ocr.inputTokens === "number" && ocr.model) {
       await record(ctx.guard, estimateCostUsd(ocr.model, ocr.inputTokens, ocr.outputTokens ?? 0));

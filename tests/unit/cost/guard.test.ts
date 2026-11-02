@@ -60,3 +60,46 @@ describe("cost guard fail-closed", () => {
     if (!r.allowed) expect(r.reason).toBe("unconfigured");
   });
 });
+
+// The QA review, 2026-11-02.
+describe("caps a client cannot shed", () => {
+  it("a new session cookie does not reset today's spend for that address", async () => {
+    const { IP_DAILY_CAP_USD } = await import("@/lib/config");
+    await record(ctx({ sessionId: "first" }), IP_DAILY_CAP_USD);
+    const r = await precheck(ctx({ sessionId: "brand-new" }));
+    expect(r.allowed).toBe(false);
+    if (!r.allowed) expect(r.reason).toBe("cap");
+  });
+
+  it("their own key skips the meters but not the rate limit", async () => {
+    let last = await precheck(ctx({ byoKey: true }));
+    for (let i = 0; i < IP_RATE_LIMIT.max + 1; i++) last = await precheck(ctx({ byoKey: true }));
+    expect(last.allowed).toBe(false);
+  });
+
+  it("only a value shaped like a key counts as their own key", async () => {
+    const { getRequestContext } = await import("@/lib/http/request-context");
+    const req = (v: string) => new Request("http://x/", { headers: { "x-byo-anthropic-key": v } });
+    expect(getRequestContext(req("junk")).guard.byoKey).toBe(false);
+    expect(getRequestContext(req("sk-ant-api03-abcdefghijklmnopqrstuvwxyz0123")).guard.byoKey).toBe(true);
+  });
+
+  it("one more call is refused once the day's budget is spent mid-request", async () => {
+    const { withinBudget } = await import("@/lib/cost/guard");
+    const { GLOBAL_DAILY_BUDGET_USD } = await import("@/lib/config");
+    expect(await withinBudget(ctx())).toBe(true);
+    await record(ctx({ sessionId: "other", ip: "9.9.9.9" }), GLOBAL_DAILY_BUDGET_USD);
+    expect(await withinBudget(ctx())).toBe(false);
+  });
+});
+
+describe("a request from another site's page", () => {
+  it("is recognised, and a same-site or headerless one is not", async () => {
+    const { isCrossSite } = await import("@/lib/http/request-context");
+    const req = (h: Record<string, string>) => new Request("https://now-what.example/api/memo", { method: "POST", headers: h });
+    expect(isCrossSite(req({ "sec-fetch-site": "cross-site" }))).toBe(true);
+    expect(isCrossSite(req({ origin: "https://evil.example", host: "now-what.example" }))).toBe(true);
+    expect(isCrossSite(req({ origin: "https://now-what.example", host: "now-what.example", "sec-fetch-site": "same-origin" }))).toBe(false);
+    expect(isCrossSite(req({}))).toBe(false);
+  });
+});

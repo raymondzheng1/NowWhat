@@ -61,6 +61,9 @@ export function Busy({
   const t = useTranslations("common");
   const panelRef = useRef<HTMLDivElement>(null);
   const [slow, setSlow] = useState(false);
+  /** What Escape does: the cancel action, once the slow notice offers it. */
+  const cancelRef = useRef<(() => void) | null>(null);
+  cancelRef.current = slow && onCancel ? onCancel : null;
 
   // Own up to a slow request rather than leaving the person staring at three dots.
   useEffect(() => {
@@ -119,11 +122,23 @@ export function Busy({
     const previouslyFocused = document.activeElement as HTMLElement | null;
     panelRef.current?.focus({ preventScroll: true });
 
+    // Tab moves through the panel's own controls and stays inside it. It used to send focus back
+    // to the panel every time, so "Stop waiting" and "Get free help" could never be reached from
+    // a keyboard (the QA review, 2026-11-02). Escape is the way out once one is offered.
     const keepFocus = (e: KeyboardEvent) => {
-      if (e.key === "Tab") {
+      const panel = panelRef.current;
+      if (!panel) return;
+      if (e.key === "Escape" && cancelRef.current) {
         e.preventDefault();
-        panelRef.current?.focus({ preventScroll: true });
+        cancelRef.current();
+        return;
       }
+      if (e.key !== "Tab") return;
+      const stops = [panel, ...panel.querySelectorAll<HTMLElement>("a[href], button:not([disabled])")];
+      const at = stops.indexOf(document.activeElement as HTMLElement);
+      const next = stops[(at + (e.shiftKey ? stops.length - 1 : 1) + stops.length) % stops.length] ?? panel;
+      e.preventDefault();
+      next.focus({ preventScroll: true });
     };
     const { overflow } = document.body.style;
     document.body.style.overflow = "hidden";

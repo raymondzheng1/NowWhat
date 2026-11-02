@@ -455,7 +455,6 @@ export function RightsSaverClient({
 
   useEffect(() => {
     function onPop() {
-      poppingRef.current = true;
       // Restore from the URL, not from React state: the handler's closure can hold a stale
       // value, and the URL is the thing the browser actually navigated to.
       const p = new URLSearchParams(window.location.search);
@@ -463,17 +462,17 @@ export function RightsSaverClient({
       const area = p.get("area");
       const date = p.get("date");
       const want = p.get("step");
+      // Never let Back or Forward walk INTO a result that was never consented to.
+      const target: Step =
+        want === "result" ? (consent && area ? "result" : "what") : want === "what" && (jur || jurisdiction) ? "what" : "who";
+      // Only a pop to ANOTHER step is the one the sync below must not re-push. The writing
+      // screen's own history steps land on the same step; flagging them left the flag set, so the
+      // next real change ("Start over") never reached the address bar (the QA review, 2026-11-02).
+      poppingRef.current = target !== lastStepRef.current;
       if (jur === "Vic" || jur === "Cth") setJurisdiction(jur);
       if (area && getDataEntry(area)) setAreaId(area);
       if (date && /^\d{4}-\d{2}-\d{2}$/.test(date)) setDecisionDate(date);
-      if (want === "result") {
-        // Never let Back or Forward walk INTO a result that was never consented to.
-        setStep(consent && area ? "result" : "what");
-      } else if (want === "what" && (jur || jurisdiction)) {
-        setStep("what");
-      } else {
-        setStep("who");
-      }
+      setStep(target);
     }
     window.addEventListener("popstate", onPop);
     return () => window.removeEventListener("popstate", onPop);
@@ -1770,6 +1769,7 @@ function ResultStep({
   // have to be able to answer for every sentence in it.
   const [polished, setPolished] = useState<Record<string, string>>({});
   const [polishing, setPolishing] = useState(false);
+  const polishInFlight = useRef(0);
   const rawDraftBody = applyDraft?.body ?? "";
   // Asked for as soon as the step is entered, with the analysis, behind the one "writing"
   // screen (the owner's call, 2026-11-01). It used to wait until they scrolled near it, to
@@ -1833,6 +1833,10 @@ function ResultStep({
   ].join("\u0000");
   const drafted = draftCache[draftKey] ?? null;
   const [drafting, setDrafting] = useState(false);
+  /** Analysis requests still in flight — see the `finally` below. */
+  const memoInFlight = useRef(0);
+  /** Why the analysis could not be written just now (limit reached, offline), or null. */
+  const [memoNotice, setMemoNotice] = useState<string | null>(null);
   // The analysis request that last FINISHED, answered or not — so the letter can wait for it.
   const [memoTried, setMemoTried] = useState<string | null>(null);
   useEffect(() => {
@@ -1847,8 +1851,9 @@ function ResultStep({
       setMemoTried(draftKey);
       return;
     }
-    let live = true;
+    memoInFlight.current += 1;
     setDrafting(true);
+    setMemoNotice(null);
     // The case letters only: the enquiries (reasons, the court form) are not statements.
     const sentDraft = isCaseLetter ? rawDraftBody : "";
     fetch("/api/memo", {
@@ -1882,8 +1887,14 @@ function ResultStep({
     })
       .then((r) => r.json())
       .then(
-        (d: { status?: string; brief?: Partial<MemoDraft>; statement?: string }) => {
-        if (!live) return;
+        (d: { status?: string; brief?: Partial<MemoDraft>; statement?: string; message?: string }) => {
+        // Kept even if they have moved on: it is filed under the input it was written for, so it
+        // is there when they come back, instead of being paid for twice (the QA review).
+        // Blocked (today's limit, too many requests): said, calmly, not left silent.
+        if (d?.status === "blocked") {
+          setMemoNotice(d.message ?? t("memoUnavailable"));
+          return;
+        }
         // The statement, built from this analysis: it is the case letter for this exact input,
         // filed under the key the letter request would have used, so that request is skipped.
         if (d?.status === "answered" && d.statement && sentDraft) {
@@ -1912,16 +1923,18 @@ function ResultStep({
       },
       )
       .catch(() => {
-        /* offline, blocked, or rejected — the composed memo stands on its own. NOT cached:
-           a dropped connection is worth retrying, unlike a refusal. */
+        /* offline — the composed memo stands on its own. NOT cached: a dropped connection is
+           worth retrying, unlike a refusal. Said, so the person is not left wondering. */
+        setMemoNotice(t("memoOffline"));
       })
       .finally(() => {
         setMemoTried(draftKey);
-        if (live) setDrafting(false);
+        // Counted, not flagged per run: when they left mid re-write the flag of the run that
+        // was cut off never cleared it, and the hand-over view sat on "Writing your analysis…"
+        // for good (the QA review, 2026-11-02).
+        memoInFlight.current -= 1;
+        if (memoInFlight.current === 0) setDrafting(false);
       });
-    return () => {
-      live = false;
-    };
     // Re-drafts when the approach, the marked points or their words change — the things the
     // analysis is actually about. Not on every keystroke: `q-more` is read when the step is
     // entered and when the path changes, which is what the deterministic memo already does.
@@ -1957,7 +1970,7 @@ function ResultStep({
       setPolished((prev) => ({ ...prev, [letterKey]: keptLetter }));
       return;
     }
-    let live = true;
+    polishInFlight.current += 1;
     setPolishing(true);
     const a = drafted;
     fetch("/api/letter-polish", {
@@ -1999,22 +2012,24 @@ function ResultStep({
     })
       .then((r) => r.json())
       .then((d: { status?: string; letter?: string }) => {
-        if (!live) return;
+        // Blocked (a limit) is not a refusal: nothing is cached, so it can be asked for again,
+        // and the "could not write it this time" notice is not shown for it (the QA review).
+        if (d?.status === "blocked") return;
         // Cached against everything it was written from, so a change to the path, the account,
-        // the points or the analysis asks again, and re-entering the step does not.
+        // the points or the analysis asks again, and re-entering the step does not — and kept
+        // even if they moved on meanwhile, under the input it was written for.
         setPolished((prev) => ({ ...prev, [letterKey]: d?.status === "answered" && d.letter ? d.letter : "" }));
         if (d?.status === "answered" && d.letter) keepWritten("letters", letterKey, d.letter);
       })
       .catch(() => {
-        /* offline, blocked or rejected — the deterministic draft is what they get */
+        /* offline — the deterministic draft is what they get */
       })
       .finally(() => {
         setPolishTried(letterKey);
-        if (live) setPolishing(false);
+        // Counted, like the analysis: a cut-off run must not leave "writing…" up for good.
+        polishInFlight.current -= 1;
+        if (polishInFlight.current === 0) setPolishing(false);
       });
-    return () => {
-      live = false;
-    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [view, letterKey, entry.id, analysisSettled]);
 
@@ -2212,6 +2227,11 @@ function ResultStep({
           {t("memoWriting")}
         </p>
       )}
+      {memoNotice && !drafting && !drafted && (
+        <p role="status" data-testid="memo-notice" className="mt-4 text-[15px] leading-relaxed text-ink-soft">
+          {memoNotice}
+        </p>
+      )}
       {briefShown ? (
         // Keyed by state, so it opens or closes when the brief arrives, not only on a click.
         <details key={drafted ? "folded" : "pending"} className="mt-6 rounded-sticker border-2 border-line px-4 py-3">
@@ -2358,9 +2378,9 @@ function ResultStep({
                 <Icon.People className="h-6 w-6 text-white" strokeWidth={1.9} />
               </span>
               <div className="min-w-0 flex-1">
-                <h1 className="font-display text-[24px] font-black leading-tight text-help-ink sm:text-[28px]">
+                <h2 className="font-display text-[24px] font-black leading-tight text-help-ink sm:text-[28px]">
                   {t("routeTitle")}
-                </h1>
+                </h2>
                 <p className="mt-2 text-[16px] leading-relaxed text-help-ink">{t("routeBody")}</p>
                 {/* The number, first. This is the highest-stakes screen in the product: the
                     route to a human must be the first thing a thumb can reach, not two

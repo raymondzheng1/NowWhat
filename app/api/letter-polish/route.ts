@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { getRequestContext } from "@/lib/http/request-context";
+import { getRequestContext, isCrossSite } from "@/lib/http/request-context";
 import { apiJson } from "@/lib/http/respond";
 import { precheck } from "@/lib/cost/guard";
 import { getEntry, FALLBACK_ENTRY_ID } from "@/lib/corpus/index";
@@ -75,7 +75,11 @@ const BodySchema = z.object({
       goals: z.array(z.string().max(300)).max(12).default([]),
       groundIds: z.array(z.string().max(64)).max(20).default([]),
       criteria: z.array(z.string().max(600)).max(20).default([]),
-      notes: z.record(z.string(), z.string().max(4000)).default({}),
+      notes: z
+      .record(z.string().max(600), z.string().max(4000))
+      // Bounded in count too: the keys were unbounded, so one request could carry any amount.
+      .refine((r) => Object.keys(r).length <= 40, "too many notes")
+      .default({}),
       analysis: z
         .object({
           situation: z.string().max(2000).default(""),
@@ -98,6 +102,8 @@ const BodySchema = z.object({
 
 export async function POST(req: NextRequest) {
   const ctx = getRequestContext(req);
+  // Not from another site's page: that would spend this service's budget (QA, 2026-11-02).
+  if (isCrossSite(req)) return apiJson({ ok: false, status: "error", message: "errors.badInput" }, ctx, 403);
   // WHICH GATE REFUSED, by name. A refusal looked exactly like a missing key from outside —
   // the page silently kept the long version and nobody could say why, which is how the
   // shorter letter failed on a real account without anyone noticing. Gate names are a fixed

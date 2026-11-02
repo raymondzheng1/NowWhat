@@ -312,7 +312,7 @@
     "applyMeritsHint": "This letter asks a tribunal to look at the decision again on the facts and make the correct or preferable decision.",
     "applyJudicialHint": "This sets out your grounds and your case for the court. Judicial review is a court process and it is technical, so take it to a human legal service before you file anything.",
     "applyReadMore": "Read more about this path",
-    "applyNoDraft": "There is no draft for this path. Taking a matter to court is a formal step with its own form and its own rules, and we do not hold a checked version of it. Your notes below are ready to take to a free service, who can tell you what to file and by when.",
+    "applyNoDraft": "There is no draft for this path. This step is a formal one, with its own form and its own rules, and we do not hold a checked version of it. Your notes below are ready to take to a free service, who can tell you what to file and by when.",
     "applyNoDraftCta": "Find free help",
     "contentsTitle": "On this page",
     "routeHelpTitle": "Who to talk to about this",
@@ -541,7 +541,9 @@
     "letterCaseRefusedCourt": "We could not write the statement of your case this time. Below is the plain version, with your account in full. A free legal service can help you shape it.",
     "busyStepCaseCourt": "Your statement of case for the court",
     "memoDraftedNone": "The case for and against this point was not written this time. A free legal service can work through it with you.",
-    "jrOtherRoutes": "This decision can also go to {routes}. Judicial review in a court is a different, technical process. A free legal service can tell you which of these fits before you file anything."
+    "jrOtherRoutes": "This decision can also go to {routes}. Judicial review in a court is a different, technical process. A free legal service can tell you which of these fits before you file anything.",
+    "memoUnavailable": "The analysis cannot be written just now. Everything below is still yours to use, and free help is always available.",
+    "memoOffline": "The analysis could not be written because the connection dropped. Everything below still works. Come back to this step to try again."
   },
   "ask": {
     "title": "Ask a question",

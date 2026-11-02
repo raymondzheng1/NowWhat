@@ -2,7 +2,7 @@ import type { z } from "zod";
 import { callModel } from "@/lib/generation/anthropic";
 import { systemPrompt, userPrompt, repairPrompt, type Task } from "@/lib/generation/prompts";
 import { verifyOutput, type VerifyFailure } from "@/lib/verification/verify";
-import { record, costOf, type GuardContext } from "@/lib/cost/guard";
+import { record, costOf, withinBudget, type GuardContext } from "@/lib/cost/guard";
 import { getKv } from "@/lib/kv/redis";
 import { MODELS, MAX_GENERATION_ATTEMPTS } from "@/lib/config";
 import type { PathwayEntry } from "@/lib/schemas/corpus";
@@ -174,6 +174,11 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
   let declined = 0;
 
   while (attempts < MAX_GENERATION_ATTEMPTS) {
+    // Over today's budget or this person's cap since the request was admitted: stop here.
+    if (!(await withinBudget(opts.guard))) {
+      everyGate.add("budget");
+      break;
+    }
     attempts++;
 
     // Always regenerate from CLEAN context — never feed a rejected draft back in.

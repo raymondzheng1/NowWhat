@@ -33,6 +33,13 @@ function usdFromEnv(raw: string | undefined, fallback: number): number {
 /** Hard per-session model-spend cap in USD (PRD §6.9). Overridable by env. */
 export const SESSION_CAP_USD = usdFromEnv(process.env.SESSION_CAP_USD, 5);
 
+/**
+ * Per-IP daily model-spend cap in USD. The session cap keys on a cookie, and a client that sends
+ * no cookie gets a fresh session — and a fresh cap — on every request (the QA review, 2026-11-02).
+ * This one cannot be shed that way. About six judicial-review analyses a day at today's prices.
+ */
+export const IP_DAILY_CAP_USD = usdFromEnv(process.env.IP_DAILY_CAP_USD, 1);
+
 /** Global daily budget kill-switch in USD. */
 export const GLOBAL_DAILY_BUDGET_USD = usdFromEnv(
   process.env.GLOBAL_DAILY_BUDGET_USD,

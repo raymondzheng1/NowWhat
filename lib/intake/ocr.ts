@@ -41,7 +41,7 @@ function toBase64(bytes: Uint8Array): string {
   return Buffer.from(bytes).toString("base64");
 }
 
-async function anthropicOcr(bytes: Uint8Array, mediaType: string): Promise<OcrResult> {
+async function anthropicOcr(bytes: Uint8Array, mediaType: string, byoKeyValue?: string): Promise<OcrResult> {
   const r = await callVision({
     bytes,
     mediaType,
@@ -49,6 +49,7 @@ async function anthropicOcr(bytes: Uint8Array, mediaType: string): Promise<OcrRe
     model: MODELS.primary,
     // A two-page letter is ~1,400 tokens; billing is on what is used, so room costs nothing.
     maxTokens: 4000,
+    byoKeyValue,
   });
   return {
     available: true,
@@ -82,12 +83,12 @@ async function gcvOcr(bytes: Uint8Array): Promise<OcrResult> {
  * Run OCR on image/PDF bytes held in memory. `available:false` means no provider is
  * configured (the caller should ask the person to paste the text instead).
  */
-export async function runOcr(bytes: Uint8Array, mediaType: string): Promise<OcrResult> {
+export async function runOcr(bytes: Uint8Array, mediaType: string, byoKeyValue?: string): Promise<OcrResult> {
   const provider = ocrProvider();
   if (provider === "none") return { available: false };
   try {
     if (provider === "gcv") return await gcvOcr(bytes);
-    return await anthropicOcr(bytes, mediaType);
+    return await anthropicOcr(bytes, mediaType, byoKeyValue);
   } catch {
     // Provider/network/format error — never expose internals; treat as unreadable.
     return { available: true, text: "" };

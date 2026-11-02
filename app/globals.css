@@ -468,3 +468,11 @@
     break-after: avoid;
   }
 }
+
+/* The tilted "sticker" cards can poke a few pixels past a 375px screen when rotated, which gave
+   the whole page a sideways scroll on a phone (the QA review, 2026-11-02). Clipped, not hidden:
+   clip makes no scroll container, so the sticky bars still stick. */
+html,
+body {
+  overflow-x: clip;
+}

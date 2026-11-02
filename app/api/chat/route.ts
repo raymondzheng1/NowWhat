@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { getRequestContext } from "@/lib/http/request-context";
+import { getRequestContext, isCrossSite } from "@/lib/http/request-context";
 import { apiJson } from "@/lib/http/respond";
 import { precheck } from "@/lib/cost/guard";
 import { isModelConfigured } from "@/lib/generation/anthropic";
@@ -27,6 +27,8 @@ const Body = z.object({
  */
 export async function POST(req: NextRequest) {
   const ctx = getRequestContext(req);
+  // Not from another site's page: that would spend this service's budget (QA, 2026-11-02).
+  if (isCrossSite(req)) return apiJson({ ok: false, status: "error", message: "errors.badInput" }, ctx, 403);
 
   let body: unknown;
   try {

@@ -64,12 +64,18 @@ export function keyForSurface(surface: ModelCall["surface"]): string {
 
 // One cached client per key, so a second key does not mean a new client on every call.
 const clients = new Map<string, Anthropic>();
+/**
+ * Inside the routes' five-minute limit. The SDK's own defaults — ten minutes and two retries — could
+ * outlast it, so a stuck call was cut off by the platform instead of failing cleanly into the
+ * person's fallback (the QA review, 2026-11-02). Our runner already retries on its own terms.
+ */
+const CLIENT_OPTIONS = { timeout: 120_000, maxRetries: 1 } as const;
 function client(byoKeyValue: string | undefined, surface: ModelCall["surface"]): Anthropic {
-  if (byoKeyValue) return new Anthropic({ apiKey: byoKeyValue });
+  if (byoKeyValue) return new Anthropic({ apiKey: byoKeyValue, ...CLIENT_OPTIONS });
   const key = keyForSurface(surface);
   let c = clients.get(key);
   if (!c) {
-    c = new Anthropic({ apiKey: key });
+    c = new Anthropic({ apiKey: key, ...CLIENT_OPTIONS });
     clients.set(key, c);
   }
   return c;
@@ -135,6 +141,8 @@ export interface VisionCall {
   prompt: string;
   model: string;
   maxTokens: number;
+  /** The person's own key, when they sent one: their transcription is on their account. */
+  byoKeyValue?: string;
 }
 export type VisionFn = (call: VisionCall) => Promise<ModelResult>;
 
@@ -150,7 +158,9 @@ const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/gif", "image/webp
 export const callVision: VisionFn = async (call) => {
   if (injectedVision) return injectedVision(call);
 
-  const anthropic = client(undefined, "default");
+  // On their key when they sent one: a BYO request is not metered, so on ours it would be free
+  // to them and unmetered for us (the QA review, 2026-11-02).
+  const anthropic = client(call.byoKeyValue, "default");
   const data = Buffer.from(call.bytes).toString("base64");
   let block: Anthropic.ContentBlockParam;
   if (call.mediaType === "application/pdf") {

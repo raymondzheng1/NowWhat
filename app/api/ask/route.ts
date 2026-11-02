@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { AskRequestSchema } from "@/lib/schemas/api";
-import { getRequestContext } from "@/lib/http/request-context";
+import { getRequestContext, isCrossSite } from "@/lib/http/request-context";
 import { apiJson } from "@/lib/http/respond";
 import { precheck } from "@/lib/cost/guard";
 import { retrieveForAsk, buildContext } from "@/lib/retrieval/select";
@@ -19,6 +19,8 @@ export const maxDuration = 300;
 /** Grounded Q&A (PRD §6.5). Cost-guarded, verified, grounded-or-silent. */
 export async function POST(req: NextRequest) {
   const ctx = getRequestContext(req);
+  // Not from another site's page: that would spend this service's budget (QA, 2026-11-02).
+  if (isCrossSite(req)) return apiJson({ ok: false, status: "error", message: "errors.badInput" }, ctx, 403);
 
   let body: unknown;
   try {

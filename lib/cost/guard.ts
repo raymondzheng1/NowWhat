@@ -4,6 +4,7 @@ import {
   SESSION_CAP_USD,
   GLOBAL_DAILY_BUDGET_USD,
   IP_RATE_LIMIT,
+  IP_DAILY_CAP_USD,
   MODEL_PRICES_USD_PER_MTOK,
   UNPRICED_MODEL_USD_PER_MTOK,
 } from "@/lib/config";
@@ -31,6 +32,7 @@ const DAILY_TTL = 60 * 60 * 48; // 48h
 const sessionKey = (id: string) => `spend:${id}`;
 const budgetKey = () => `budget:global:${todayUtc()}`;
 const ipKey = (ip: string) => `ip:${ip}`;
+const ipSpendKey = (ip: string) => `spend:ip:${ip}:${todayUtc()}`;
 
 const isProd = () => process.env.NODE_ENV === "production";
 
@@ -80,7 +82,6 @@ export function costOf(r: {
 }
 
 export async function precheck(ctx: GuardContext): Promise<GuardResult> {
-  if (ctx.byoKey) return { allowed: true, byoKey: true };
 
   // Fail closed: no KV in production means no safe metering → deny.
   if (!isKvConfigured() && isProd()) {
@@ -102,6 +103,19 @@ export async function precheck(ctx: GuardContext): Promise<GuardResult> {
         allowed: false,
         reason: "rate",
         message: "You've made a lot of requests. Please wait a little while and try again.",
+      };
+    }
+    // Their own key pays for their own calls, so no meter applies to them — but the rate limit
+    // above does (the QA review, 2026-11-02: a BYO request skipped it entirely).
+    if (ctx.byoKey) return { allowed: true, byoKey: true };
+
+    // Per-IP daily spend: the cap a client cannot shed by dropping its session cookie.
+    const spentIp = Number((await kv.get<number>(ipSpendKey(ctx.ip))) ?? 0);
+    if (spentIp >= IP_DAILY_CAP_USD) {
+      return {
+        allowed: false,
+        reason: "cap",
+        message: "You've reached today's limit for free answers. Free help is always available — and the step-by-step guide still works.",
       };
     }
 
@@ -142,9 +156,32 @@ export async function record(ctx: GuardContext, costUsd: number): Promise<void> 
     const kv = getKv();
     const s = await kv.incrbyfloat(sessionKey(ctx.sessionId), costUsd);
     if (s === costUsd) await kv.expire(sessionKey(ctx.sessionId), SESSION_TTL);
+    const i = await kv.incrbyfloat(ipSpendKey(ctx.ip), costUsd);
+    if (i === costUsd) await kv.expire(ipSpendKey(ctx.ip), DAILY_TTL);
     const g = await kv.incrbyfloat(budgetKey(), costUsd);
     if (g === costUsd) await kv.expire(budgetKey(), DAILY_TTL);
   } catch {
     // Never throw from accounting; the response already happened.
+  }
+}
+
+/**
+ * Whether one more model call still fits today's budget and this person's caps. `precheck` runs
+ * once per request, and an analysis request then makes a dozen or more calls with their retries,
+ * so the day could be overrun by a whole request (the QA review, 2026-11-02). Checked before each
+ * call; a KV error lets the call go, since the request was already admitted by `precheck`.
+ */
+export async function withinBudget(ctx: GuardContext): Promise<boolean> {
+  if (ctx.byoKey) return true;
+  try {
+    const kv = getKv();
+    const [g, s, i] = await Promise.all([
+      kv.get<number>(budgetKey()),
+      kv.get<number>(sessionKey(ctx.sessionId)),
+      kv.get<number>(ipSpendKey(ctx.ip)),
+    ]);
+    return Number(g ?? 0) < GLOBAL_DAILY_BUDGET_USD && Number(s ?? 0) < SESSION_CAP_USD && Number(i ?? 0) < IP_DAILY_CAP_USD;
+  } catch {
+    return true;
   }
 }

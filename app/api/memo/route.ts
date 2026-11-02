@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { z } from "zod";
-import { getRequestContext } from "@/lib/http/request-context";
+import { getRequestContext, isCrossSite } from "@/lib/http/request-context";
 import { apiJson } from "@/lib/http/respond";
 import { precheck } from "@/lib/cost/guard";
 import { getDataEntry } from "@/lib/data";
@@ -95,7 +95,11 @@ const BodySchema = z.object({
   criteria: z.array(z.string().max(600)).max(20).default([]),
   /** What the person wrote. Bounded so one request cannot become an upload channel. */
   story: z.string().max(8000).default(""),
-  notes: z.record(z.string(), z.string().max(4000)).default({}),
+  notes: z
+      .record(z.string().max(600), z.string().max(4000))
+      // Bounded in count too: the keys were unbounded, so one request could carry any amount.
+      .refine((r) => Object.keys(r).length <= 40, "too many notes")
+      .default({}),
   /** What they said they want, in the page's words or theirs. Without it the brief guessed. */
   goals: z.array(z.string().max(300)).max(12).default([]),
   /** The criteria they ticked, so the points worked through are theirs. */
@@ -121,6 +125,8 @@ function contextSourceLines(context: string): string[] {
 
 export async function POST(req: NextRequest) {
   const ctx = getRequestContext(req);
+  // Not from another site's page: that would spend this service's budget (QA, 2026-11-02).
+  if (isCrossSite(req)) return apiJson({ ok: false, status: "error", message: "errors.badInput" }, ctx, 403);
   // WHICH GATE REFUSED, by name. A refusal looked exactly like a missing key from outside —
   // the page silently kept the long version and nobody could say why, which is how the
   // shorter letter failed on a real account without anyone noticing. Gate names are a fixed
