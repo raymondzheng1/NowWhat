@@ -1,4 +1,6 @@
 import type { PathwayEntry } from "@/lib/schemas/corpus";
+// The checklist is written to the person; in their own letter it is in their voice.
+import { inMyVoice } from "@/lib/text/voice";
 import {
   SELF_WARNING_HEADING,
   SELF_WARNING_JUDICIAL_REVIEW,
@@ -139,9 +141,14 @@ export function buildDraft(
   // A catch-all entry does not know who decided. "Victorian government department" headed a
   // letter about a COUNCIL's decision (the judicial-review benchmark), so for those the
   // addressee is a blank the person fills in — the page highlights it like every other.
-  const issuer = entry.isFallback
-    ? "[the agency or council that made the decision]"
-    : (entry.issuers[0] ?? "the agency that made the decision");
+  // Nor does an entry whose decisions come from several bodies: a council's parking notice was
+  // addressed to "Fines Victoria", the first of five issuers, and named it as the respondent in
+  // a court statement (the quality review, 2026-11-02). Two names for one body (Services
+  // Australia / Centrelink) still name it.
+  const issuer =
+    entry.isFallback || entry.issuers.length > 2
+      ? "[the agency or council that made the decision]"
+      : (entry.issuers[0] ?? "the agency that made the decision");
   const isMerits = kind === "merits-review-application" || kind === "review-application";
   const tribunal = tribunalOf(entry);
   // A merits application goes to the tribunal, not to the agency whose decision it is.
@@ -371,7 +378,7 @@ export function buildDraft(
   const evidence =
     entry.evidenceChecklist.length > 0
       ? "I am including, or can provide, the following.\n" +
-        entry.evidenceChecklist.map((e) => `  - ${e}`).join("\n")
+        entry.evidenceChecklist.map((e) => `  - ${inMyVoice(e)}`).join("\n")
       : "";
   // "considered again by Administrative Review Tribunal (ART)" read as a slip. A name that
   // opens with an acronym ("VCAT") takes no article; a name in words does.

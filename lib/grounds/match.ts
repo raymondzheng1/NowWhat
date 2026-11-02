@@ -1,3 +1,4 @@
+import { numberWordsToDigits } from "@/lib/text/numbers";
 import { z } from "zod";
 import { checkQuoteAnchored, checkNoCaseCitation, checkNoTimeLimitClaim } from "@/lib/verification/own-words";
 
@@ -51,8 +52,9 @@ export interface GroundSuggestion {
  */
 const PERIOD = /\b\d+\s*(?:business\s+|working\s+)?(?:day|week|month|year)s?\b/gi;
 export function periodsAreTheirs(why: string, account: string): boolean {
-  const flat = (x: string) => x.toLowerCase().replace(/\s+/g, " ");
-  return (why.match(PERIOD) ?? []).every((p) => flat(account).includes(flat(p)));
+  // Words as digits on both sides: "sixty days" is the same period as "60 days".
+  const flat = (x: string) => numberWordsToDigits(x).toLowerCase().replace(/\s+/g, " ");
+  return (flat(why).match(PERIOD) ?? []).every((p) => flat(account).includes(flat(p)));
 }
 
 /** Every "why", for the verifier — the only prose of ours this step shows. */

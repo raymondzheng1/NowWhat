@@ -8,15 +8,19 @@ import { getEntry, FALLBACK_ENTRY_ID } from "@/lib/corpus/index";
 import { runBrief, briefProse, runFrame, runPoint } from "@/lib/generation/runner";
 import { isModelConfigured } from "@/lib/generation/anthropic";
 import { contextForPath } from "@/lib/memo/path-context";
+import { buildFrameContext } from "@/lib/memo/context";
 import { checkMemoCitations } from "@/lib/memo/qa";
 import { getGround } from "@/lib/legal";
-import { withCriterionIds } from "@/lib/memo/criteria";
-import { inMyVoice } from "@/lib/letter/compose";
+import { answerableCriteria, withCriterionIds } from "@/lib/memo/criteria";
+import type { DataPathway } from "@/lib/schemas/data";
+import { sensitiveFlags } from "@/lib/verification/own-words";
+import { criterionHeading } from "@/lib/letter/compose";
 import { splitBones } from "@/lib/letter/bones";
 import { assembleStatement, type CasePath } from "@/lib/letter/statement";
 import { checkLetterFidelity } from "@/lib/letter/fidelity";
 import { periodsAreTheirs } from "@/lib/grounds/match";
 import { checkNoCaseCitation } from "@/lib/verification/own-words";
+import { checkStatementVoice } from "@/lib/safety/no-advice";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -157,12 +161,20 @@ export async function POST(req: NextRequest) {
     return apiJson({ ok: false, status: "blocked", reason: guard.reason, message: guard.message }, ctx, code);
   }
 
-  const { context, extraSources } = contextForPath(entry, {
+  const { context, extraSources, proc, internal } = contextForPath(entry, {
     pathId: body.pathId,
     groundIds: body.groundIds,
     criteria: body.criteria,
     forum: body.forum,
     pathName: body.pathName,
+  });
+  // The statement's frame gets only what it can use; see buildFrameContext.
+  const frameContext = buildFrameContext({
+    entry,
+    process: proc,
+    internal,
+    forum: body.forum || entry.title,
+    pathName: body.pathName || "review",
   });
 
   // The verifier's allow-list is a decode-corpus entry. The two knowledge sources share ids
@@ -189,7 +201,8 @@ export async function POST(req: NextRequest) {
   // were one long call — the brief with every point's working inside it, about 30 seconds — and
   // then the statement waited for it and wrote every ground again, 25 to 70 seconds more. Now the
   // wait is the slowest single call, and the statement is assembled from the points' work.
-  const points = pointsFor(body);
+  const points = pointsFor(body, entry);
+  const forStatement = points.filter((pt) => pt.inStatement);
   const statementPath =
     body.statementDraft.trim() && body.pathId !== "court-election" ? (body.pathId as CasePath) : null;
   const bones = statementPath ? splitBones(body.statementDraft) : null;
@@ -212,15 +225,15 @@ export async function POST(req: NextRequest) {
       }),
     ),
     Promise.all(points.map((pt) => settle(workPoint(pt)))),
-    bones && points.length
+    bones && forStatement.length
       ? settle(
           runFrame({
             entry: verifyEntry,
-            context,
+            context: frameContext,
             userInput: theirWords,
             guard: ctx.guard,
             byoKeyValue: ctx.byoKeyValue,
-            groundedText: context,
+            groundedText: frameContext,
             accountText: theirWords,
             maxTokens: FRAME_TOKENS,
           }),
@@ -260,6 +273,20 @@ export async function POST(req: NextRequest) {
   // The in-depth working: each point that came back whole and cleared its gates. One that did
   // not is left out on its own — the analysis says so under it — and the brief still ships.
   const done = points.map((pt, i) => ({ pt, w: worked[i] ?? null }));
+
+  // ONE OR TWO POINTS SHORT. When a paragraph for their document failed its own gates and the
+  // rest are fine, ask again for just those points, told why — a fraction of the cost of the
+  // slower whole-statement rewrite the page would otherwise fall back to, and seconds instead of
+  // a minute (the efficiency review, 2026-11-02). More than two short, and it falls back.
+  const short = done.filter((x) => x.pt.inStatement && !x.w?.argument);
+  if (bones && statementPath && frame?.status === "answered" && short.length > 0 && short.length <= 2) {
+    const again = await Promise.all(short.map(({ pt }) => settle(workPoint(pt, RETRY_HINT))));
+    short.forEach((x, i) => {
+      const w = again[i];
+      if (w?.argument) x.w = w;
+    });
+  }
+
   const depth = done
     .filter((x): x is { pt: Point; w: Worked } => !!x.w)
     .map(({ pt, w }) => ({ ref: pt.id, for: w.for, against: w.against }));
@@ -268,14 +295,22 @@ export async function POST(req: NextRequest) {
   // back, and only if the whole of it, assembled, clears every gate the written one faces.
   // Otherwise the page asks for it the slower way, as before.
   let statement: string | undefined;
-  if (bones && statementPath && frame?.status === "answered" && frame.data?.covered && done.every((x) => x.w?.argument)) {
+  const inDoc = done.filter((x) => x.pt.inStatement);
+  if (
+    bones &&
+    statementPath &&
+    inDoc.length > 0 &&
+    frame?.status === "answered" &&
+    frame.data?.covered &&
+    inDoc.every((x) => x.w?.argument)
+  ) {
     const f = frame.data;
     const text = assembleStatement(bones, statementPath, {
-      decision: f.decision,
+      decision: withoutAppSpeak(f.decision),
       ask: f.ask,
-      facts: f.facts,
+      facts: withoutAppSpeak(f.facts),
       documents: f.documents.slice(0, 12),
-      points: done.map(({ pt, w }) => ({ heading: pt.heading, argument: w!.argument })),
+      points: inDoc.map(({ pt, w }) => ({ heading: pt.heading, argument: withoutAppSpeak(w!.argument) })),
     });
     const draft = body.statementDraft;
     const fidelity = checkLetterFidelity(draft, theirWords, text, {
@@ -287,7 +322,9 @@ export async function POST(req: NextRequest) {
       fidelity.length === 0 &&
       checkMemoCitations(text, `${context}\n${draft}\n${theirWords}`).length === 0 &&
       periodsAreTheirs(text, `${draft}\n${theirWords}`) &&
-      checkNoCaseCitation([text]);
+      checkNoCaseCitation([text]) &&
+      // Their own voice: no concession, no prediction, nothing declared made out.
+      checkStatementVoice(text).ok;
     if (ok) statement = text;
   }
 
@@ -315,7 +352,7 @@ export async function POST(req: NextRequest) {
    * the verifier (in the runner), the citation gate, a length cap per side, and for the
    * paragraph that goes into their document, no case named and no time limit they did not give.
    */
-  async function workPoint(pt: Point): Promise<Worked | null> {
+  async function workPoint(pt: Point, hint?: string): Promise<Worked | null> {
     const { context: own, extraSources: ownSources } = contextForPath(entry!, {
       pathId: body.pathId,
       groundIds: pt.kind === "ground" ? [pt.id] : [],
@@ -334,6 +371,7 @@ export async function POST(req: NextRequest) {
       accountText: theirWords,
       contextSources: contextSourceLines(own),
       maxTokens: POINT_TOKENS,
+      retryHint: hint,
     });
     if (r.status !== "answered" || !r.data?.covered) return null;
     const { for: forIt, against, argument } = r.data;
@@ -345,12 +383,17 @@ export async function POST(req: NextRequest) {
       argument.trim() &&
       wordsIn(argument) <= ARGUMENT_MAX_WORDS &&
       checkNoCaseCitation([argument]) &&
+      checkStatementVoice(argument).ok &&
       periodsAreTheirs(argument, theirWords);
     return { for: forIt.trim(), against: against.trim(), argument: usable ? argument.trim() : "" };
   }
 }
 
 const wordsIn = (x: string) => x.split(/\s+/).filter(Boolean).length;
+
+/** Why a point is asked for again: the paragraph for their document was refused. */
+const RETRY_HINT =
+  'the "argument" for their statement was refused. Keep it under 150 words, name no case, state no period of time they did not give, concede nothing ("I accept…"), and predict nothing.';
 
 interface Point {
   id: string;
@@ -359,6 +402,8 @@ interface Point {
   text: string;
   /** How it is headed in their document — the analysis's own name for it. */
   heading: string;
+  /** A point they chose, so it is one of the reasons in their document. */
+  inStatement: boolean;
 }
 interface Worked {
   for: string;
@@ -371,18 +416,49 @@ interface Worked {
  * otherwise the criteria they ticked, or every criterion for the path when they ticked none (as
  * the analysis always worked through). At most seven.
  */
-function pointsFor(body: z.infer<typeof BodySchema>): Point[] {
+function pointsFor(body: z.infer<typeof BodySchema>, entry: DataPathway): Point[] {
+  // A court election puts the CHARGE before a court; its "criterion" is a routing line, and
+  // arguing it both ways drifted towards a defence of the charge (the quality review).
+  if (body.pathId === "court-election") return [];
   if (body.pathId === "judicial-review") {
-    return body.groundIds.flatMap((id) => {
-      const g = getGround(id);
-      if (!g) return [];
-      const heading = `${g.name} — ${g.plainName.charAt(0).toLowerCase()}${g.plainName.slice(1)}`;
-      return [{ id, kind: "ground" as const, text: id, heading }];
-    }).slice(0, 7);
+    // Up to ten: the seventh-of-seven cut-off dropped a marked ground without a word.
+    return body.groundIds
+      .flatMap((id) => {
+        const g = getGround(id);
+        if (!g) return [];
+        const heading = `${g.name} — ${g.plainName.charAt(0).toLowerCase()}${g.plainName.slice(1)}`;
+        return [{ id, kind: "ground" as const, text: id, heading, inStatement: true }];
+      })
+      .slice(0, 10);
   }
-  const all = withCriterionIds(body.criteria);
+  // Only criteria a person can answer — never the routing lines.
+  const all = withCriterionIds(answerableCriteria(entry, body.criteria));
   const picked = all.filter((c) => body.pickedCriteria.includes(c.text));
-  return (picked.length ? picked : all)
-    .map((c) => ({ id: c.id, kind: "criterion" as const, text: c.text, heading: inMyVoice(c.text) }))
-    .slice(0, 7);
+  // Ticked: argued, and the statement's reasons. Nothing ticked: the analysis still works
+  // through each criterion, but none goes into their document as a reason they chose — and a
+  // sensitive one ("special circumstances such as mental illness… family violence") is never
+  // argued unasked (the quality review, 2026-11-02).
+  const chosen = picked.length ? picked : all.filter((c) => sensitiveFlags(c.text).length === 0);
+  return chosen
+    .map((c) => ({
+      id: c.id,
+      kind: "criterion" as const,
+      text: c.text,
+      heading: criterionHeading(c.text),
+      inStatement: picked.length > 0,
+    }))
+    .slice(0, 10);
+}
+
+/**
+ * A sentence about "my account" or "their account" is the app talking, not the person: "My
+ * account does not say what reasons were given" sat in a court document (the quality review,
+ * 2026-11-02). Such sentences are taken out; a decision left empty keeps the blank for reasons.
+ */
+function withoutAppSpeak(text: string): string {
+  return text
+    .split(/(?<=[.!?])\s+/)
+    .filter((x) => !/\b(my|their|the person's|your) account\b/i.test(x))
+    .join(" ")
+    .trim();
 }

@@ -390,3 +390,37 @@ test("a statement that comes back with the analysis is shown, and the letter is 
   await page.waitForTimeout(1500);
   expect(polishCalls).toBe(0);
 });
+
+// The quality review, 2026-11-02: a parking notice went to the Supreme Court with nothing saying
+// the scheme has its own review and a court hearing.
+test("a court statement for a fine names the scheme's own routes above it", async ({ page }) => {
+  await page.addInitScript(() => {
+    window.localStorage.setItem("wn:tour:off", "1");
+    window.localStorage.setItem("wn:install:off", "1");
+    if (window.sessionStorage.getItem("__seeded")) return;
+    window.sessionStorage.setItem("__seeded", "1");
+    window.sessionStorage.setItem("wn-consented", JSON.stringify({ matter: "Vic|vic-fines", flags: {} }));
+    window.sessionStorage.setItem(
+      "wn-flow",
+      JSON.stringify({
+        matter: "Vic|vic-fines",
+        chosenPath: "judicial-review",
+        goals: [],
+        goalOther: "",
+        account: { "q-story": "A parking officer gave me an infringement notice. The sign was hidden by a tree." },
+        relatedGrounds: ["no-evidence"],
+        groundNotes: {},
+        criteriaNotes: {},
+        pickedCriteria: [],
+      }),
+    );
+  });
+  await page.route("**/api/memo", (route) => route.fulfill({ json: { ok: true, status: "not-covered" } }));
+  await page.route("**/api/letter-polish", (route) => route.fulfill({ json: { ok: true, status: "not-covered" } }));
+  await page.goto("/start?jur=Vic&area=vic-fines&date=2026-10-14&step=result&view=memo");
+  const note = page.getByTestId("jr-other-routes");
+  await note.scrollIntoViewIfNeeded({ timeout: 15_000 });
+  await expect(note).toContainText("Fines Victoria");
+  await expect(note).toContainText("Magistrates' Court");
+  await expect(note).toContainText(/free legal service/i);
+});

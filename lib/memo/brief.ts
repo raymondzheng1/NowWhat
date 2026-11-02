@@ -77,7 +77,9 @@ function labelsFor(input: Pick<BriefInput, "entry" | "criteria" | "grounds">): (
   for (const g of input.grounds) {
     exact.set(g.id, `${g.name}: ${g.plainName}`);
     for (const el of g.elements) {
-      const label = `${g.name}: ${el.name}`;
+      // "No evidence for a key finding: No evidence for a key finding" — a part named as its
+      // ground is printed once (the quality review, 2026-11-02).
+      const label = el.name.trim().toLowerCase() === g.name.trim().toLowerCase() ? g.name : `${g.name}: ${el.name}`;
       exact.set(`${g.id}/${el.id}`, label);
       bare.set(el.id, bare.has(el.id) ? null : label);
     }
@@ -222,8 +224,25 @@ export function composeBrief(input: BriefInput): Memo {
  * criterion, argued both ways) back into that shape. An id that is neither finds nothing in the
  * memo and prints nowhere, exactly as before.
  */
-export function draftedFromBrief(brief: BriefDraft | null, groundIds: string[]): MemoInput["drafted"] {
-  if (!brief) return null;
+export function draftedFromBrief(
+  briefIn: BriefDraft | null,
+  groundIds: string[],
+  /** Each marked ground's part ids, so a bare part id ("critical") finds its ground. */
+  partsOf: Record<string, string[]> = {},
+): MemoInput["drafted"] {
+  if (!briefIn) return null;
+  // The brief often names a part by its bare id ("no-support", "critical") rather than
+  // "groundId/partId". The short analysis already resolved those (labelsFor); this did not, so
+  // every part's line was lost from the in-depth analysis and filed as a criterion a judicial-
+  // review memo never prints (the quality review, 2026-11-02). Same rule: a bare id that belongs
+  // to exactly one marked ground is that ground's part.
+  const owner = (ref: string) => {
+    const r = ref.trim();
+    if (r.includes("/") || groundIds.includes(r)) return r;
+    const hits = groundIds.filter((g) => (partsOf[g] ?? []).includes(r));
+    return hits.length === 1 ? `${hits[0]}/${r}` : r;
+  };
+  const brief = { ...briefIn, points: briefIn.points.map((p) => ({ ...p, ref: owner(p.ref) })) };
   const depth = brief.depth ?? [];
   const application = groundIds
     .map((gid) => {

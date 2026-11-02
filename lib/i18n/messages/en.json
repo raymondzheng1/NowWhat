@@ -479,7 +479,7 @@
     "memoMoreTitle": "Anything else we should know?",
     "memoMoreLead": "The analysis is built from what you have told us, so the way to improve it is to add to it. Dates, letters, phone calls, anything that has changed.",
     "memoMorePlaceholder": "For example: a letter they sent in June that I never replied to.",
-    "memoMoreLive": "The analysis above is written again when you stop typing.",
+    "memoMoreLive": "The analysis and your draft are written again when you finish typing here.",
     "memoNextTitle": "What you can do from here",
     "memoNextLetter": "Draft a letter to apply",
     "memoNextHuman": "Take it to a free service",
@@ -540,7 +540,8 @@
     "letterCaseWritingCourt": "Writing the statement of your case…",
     "letterCaseRefusedCourt": "We could not write the statement of your case this time. Below is the plain version, with your account in full. A free legal service can help you shape it.",
     "busyStepCaseCourt": "Your statement of case for the court",
-    "memoDraftedNone": "The case for and against this point was not written this time. A free legal service can work through it with you."
+    "memoDraftedNone": "The case for and against this point was not written this time. A free legal service can work through it with you.",
+    "jrOtherRoutes": "This decision can also go to {routes}. Judicial review in a court is a different, technical process. A free legal service can tell you which of these fits before you file anything."
   },
   "ask": {
     "title": "Ask a question",

@@ -16,6 +16,7 @@ import { withCriterionIds } from "@/lib/memo/criteria";
 import { assemble, bodyOnly, splitBones } from "@/lib/letter/bones";
 import { periodsAreTheirs } from "@/lib/grounds/match";
 import { checkNoCaseCitation } from "@/lib/verification/own-words";
+import { checkStatementVoice } from "@/lib/safety/no-advice";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -307,6 +308,9 @@ export async function POST(req: NextRequest) {
     // The context carries the leading cases, for the analysis. A letter to the agency names
     // none: a self-represented person should not be answering for case law in their own name.
     if (!checkNoCaseCitation([letter])) return { gates: ["case-citation"] };
+    // Their own voice: a concession or a prediction in the first person passed every other gate.
+    const voice = checkStatementVoice(letter);
+    if (!voice.ok) return { gates: ["statement-voice"], hint: `statement-voice — remove: ${voice.hits.map((h) => `"${h.match}"`).join(", ")}` };
     return { letter };
   }
 }

@@ -52,18 +52,30 @@ export const MODELS = {
   // LLM answers against the keyless wizard.
   primary: process.env.ANTHROPIC_MODEL?.trim() || "claude-sonnet-5",
   // Small model for structural envelope repair only (never substance, harness §11).
-  small: "claude-haiku-4-5-20251001",
+  // and, since 2026-11-02, the first cut at which grounds an account may relate to: a matching
+  // task whose every quote is checked against the account and every "why" against the gates.
+  // Haiku 5.5 is a twentieth of the primary model's price. ANTHROPIC_MODEL_SMALL reverts it.
+  small: process.env.ANTHROPIC_MODEL_SMALL?.trim() || "claude-haiku-5-5",
 };
 
 /** Per-1M-token prices (USD) used by the cost meter. Update on model change. */
+//
+// The official table (checked 2026-11-02). Sonnet 5 was metered at $3/$15 and Opus 5 at $15/$75 —
+// the previous generation's prices — so every flow counted ~50% dearer than it was and the day's
+// budget admitted a third fewer people than it paid for. Cache writes are 1.25x input and reads
+// 0.1x; they were not metered at all, so cached system prompts went uncounted.
 export const MODEL_PRICES_USD_PER_MTOK: Record<
   string,
-  { input: number; output: number }
+  { input: number; output: number; cacheWrite: number; cacheRead: number }
 > = {
-  "claude-opus-5": { input: 15, output: 75 },
-  "claude-sonnet-5": { input: 3, output: 15 },
-  "claude-haiku-4-5-20251001": { input: 1, output: 5 },
+  "claude-opus-5": { input: 5, output: 25, cacheWrite: 6.25, cacheRead: 0.5 },
+  "claude-sonnet-5": { input: 2, output: 10, cacheWrite: 2.5, cacheRead: 0.2 },
+  "claude-sonnet-5-5": { input: 2, output: 10, cacheWrite: 2.5, cacheRead: 0.2 },
+  "claude-haiku-5-5": { input: 0.1, output: 0.5, cacheWrite: 0.125, cacheRead: 0.01 },
+  "claude-haiku-4-5-20251001": { input: 1, output: 5, cacheWrite: 1.25, cacheRead: 0.1 },
 };
+/** What a model missing from the table is metered at: dearer than anything we use. */
+export const UNPRICED_MODEL_USD_PER_MTOK = { input: 10, output: 50, cacheWrite: 12.5, cacheRead: 1 };
 
 /** Plain-language target. Year-6 ideal; hard-fail above the ceiling (PRD §4). */
 export const READING_GRADE = { ideal: 9, ceiling: 11 } as const;

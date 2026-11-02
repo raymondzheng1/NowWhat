@@ -18,7 +18,7 @@ import { deadlineRuleView } from "@/lib/deadline/rule";
 import { siteUrl } from "@/lib/config";
 import { reasonsRequestTemplate, REASONS_CLOCK_WARNING } from "@/lib/reasons";
 import { type DraftKind } from "@/lib/draft/build";
-import { composeLetter, inMyVoice } from "@/lib/letter/compose";
+import { composeLetter, criterionHeading } from "@/lib/letter/compose";
 import type { PathwayEntry } from "@/lib/schemas/corpus";
 import {
   checkTripwire,
@@ -86,8 +86,40 @@ interface FlowState {
 function forgetFlow(): void {
   try {
     window.sessionStorage.removeItem(FLOW_KEY);
+    window.sessionStorage.removeItem(WRITTEN_KEY);
   } catch {
     /* nothing to clear */
+  }
+}
+
+/**
+ * What was written for them in this tab — the analysis and the statement — kept beside their
+ * account, which this tab already keeps, and gone with it when the tab closes or they start over.
+ *
+ * A reload used to write both again from the start: six or more model calls, about twelve cents
+ * and twenty seconds, for words they had already been shown (the efficiency review, 2026-11-02).
+ * Nothing new leaves the device; this only stops it being asked for twice. The last few are kept.
+ */
+const WRITTEN_KEY = "wn-written";
+const WRITTEN_KEEP = 4;
+type Written = { drafts: Record<string, unknown>; letters: Record<string, string> };
+function readWritten(): Written {
+  try {
+    const w = JSON.parse(window.sessionStorage.getItem(WRITTEN_KEY) ?? "{}") as Partial<Written>;
+    return { drafts: w.drafts ?? {}, letters: w.letters ?? {} };
+  } catch {
+    return { drafts: {}, letters: {} };
+  }
+}
+function keepWritten(kind: keyof Written, key: string, value: unknown): void {
+  try {
+    const w = readWritten();
+    const map = { ...(w[kind] as Record<string, unknown>), [key]: value };
+    const keys = Object.keys(map);
+    for (const k of keys.slice(0, Math.max(0, keys.length - WRITTEN_KEEP))) delete map[k];
+    window.sessionStorage.setItem(WRITTEN_KEY, JSON.stringify({ ...w, [kind]: map }));
+  } catch {
+    /* quota or private mode: it is only asked for again */
   }
 }
 /** The urgent-question answers given with consent for this matter, or null to ask again. */
@@ -1104,7 +1136,10 @@ function ResultStep({
   const moreNow = (account["q-more"] ?? "").trim();
   useEffect(() => {
     if (moreNow === moreSettled) return;
-    const id = window.setTimeout(() => setMoreSettled(moreNow), 1500);
+    // Six seconds: a pause between thoughts, not between words. Each re-write is the whole
+    // analysis and statement — six or more model calls — and at 1.5s one added sentence could be
+    // paid for three times (the efficiency review, 2026-11-02). Leaving the box commits at once.
+    const id = window.setTimeout(() => setMoreSettled(moreNow), 6000);
     return () => window.clearTimeout(id);
   }, [moreNow, moreSettled]);
   // WHAT THEY WROTE, AGAINST WHAT THEY PICKED. See `suggestEntry`: a parking infringement
@@ -1383,6 +1418,10 @@ function ResultStep({
   const activeApply = offeredApply.find((k) => k.id === applyKind) ?? offeredApply[0];
   // Judicial review drafts a statement of their case for the court, not a letter.
   const forCourt = activeApply?.id === "judicial-review-application";
+  /** The decision type's other open routes, in its own words, for the note above a court statement. */
+  const otherRoutes = [entry.avenue.ir, entry.avenue.mr, entry.avenue.court]
+    .filter((a): a is NonNullable<typeof a> => !!a?.available && !!a.body?.trim())
+    .map((a) => a.body.trim());
   const applyTitle = forCourt ? t("applyTitleCourt") : t("applyTitle");
   // True when the person chose a path we deliberately hold no letter for, so the memo view
   // can say that rather than silently dropping the section.
@@ -1400,7 +1439,7 @@ function ResultStep({
   // point they chose is never held back. The criterion is written to them ("your situation"), so
   // as a heading in their own document it is put in their voice.
   const criteriaForLetter = pickedCriteria.map((c) => ({
-    heading: inMyVoice(c),
+    heading: criterionHeading(c),
     text: (criteriaNotes[c] ?? "").trim(),
   }));
   // A ground is headed as the analysis heads it: "Error of law — they got the law wrong".
@@ -1801,6 +1840,13 @@ function ResultStep({
     const story = (account["q-story"] ?? "").trim();
     if (!story) return;
     if (draftKey in draftCache) return;
+    // Already written for exactly this, earlier in this tab (before a reload): shown, not re-asked.
+    const kept = readWritten().drafts[draftKey] as MemoDraft | undefined;
+    if (kept) {
+      setDraftCache((prev) => ({ ...prev, [draftKey]: kept }));
+      setMemoTried(draftKey);
+      return;
+    }
     let live = true;
     setDrafting(true);
     // The case letters only: the enquiries (reasons, the court form) are not statements.
@@ -1841,26 +1887,28 @@ function ResultStep({
         // The statement, built from this analysis: it is the case letter for this exact input,
         // filed under the key the letter request would have used, so that request is skipped.
         if (d?.status === "answered" && d.statement && sentDraft) {
-          setPolished((prev) => ({ ...prev, [`${sentDraft}\u0000${draftKey}`]: d.statement! }));
+          const letterAt = `${sentDraft}\u0000${draftKey}`;
+          setPolished((prev) => ({ ...prev, [letterAt]: d.statement! }));
+          keepWritten("letters", letterAt, d.statement);
         }
         // A refusal is cached too. It means the gates rejected this exact input, and asking
         // again with the same input would spend money to be refused again.
-        setDraftCache((prev) => ({
-          ...prev,
-          [draftKey]:
-            d?.status === "answered" && d.brief
-              ? {
-                  situation: d.brief.situation ?? "",
-                  path: d.brief.path ?? "",
-                  points: d.brief.points ?? [],
-                  otherSide: d.brief.otherSide ?? "",
-                  toGather: d.brief.toGather ?? [],
-                  // The in-depth working: each point argued both ways (see draftedFromBrief).
-                  depth: d.brief.depth ?? [],
-                  sources: d.brief.sources ?? [],
-                }
-              : null,
-        }));
+        const written: MemoDraft | null =
+          d?.status === "answered" && d.brief
+            ? {
+                situation: d.brief.situation ?? "",
+                path: d.brief.path ?? "",
+                points: d.brief.points ?? [],
+                otherSide: d.brief.otherSide ?? "",
+                toGather: d.brief.toGather ?? [],
+                // The in-depth working: each point argued both ways (see draftedFromBrief).
+                depth: d.brief.depth ?? [],
+                sources: d.brief.sources ?? [],
+              }
+            : null;
+        setDraftCache((prev) => ({ ...prev, [draftKey]: written }));
+        // Kept for a reload of this tab; a refusal is not — after a reload it may be asked again.
+        if (written) keepWritten("drafts", draftKey, written);
       },
       )
       .catch(() => {
@@ -1904,6 +1952,11 @@ function ResultStep({
     if (view !== "memo" || !rawDraftBody || !activeApply) return;
     if (isCaseLetter && !analysisSettled) return;
     if (polished[letterKey] !== undefined) return;
+    const keptLetter = readWritten().letters[letterKey];
+    if (keptLetter) {
+      setPolished((prev) => ({ ...prev, [letterKey]: keptLetter }));
+      return;
+    }
     let live = true;
     setPolishing(true);
     const a = drafted;
@@ -1950,6 +2003,7 @@ function ResultStep({
         // Cached against everything it was written from, so a change to the path, the account,
         // the points or the analysis asks again, and re-entering the step does not.
         setPolished((prev) => ({ ...prev, [letterKey]: d?.status === "answered" && d.letter ? d.letter : "" }));
+        if (d?.status === "answered" && d.letter) keepWritten("letters", letterKey, d.letter);
       })
       .catch(() => {
         /* offline, blocked or rejected — the deterministic draft is what they get */
@@ -2065,6 +2119,7 @@ function ResultStep({
     drafted: draftedFromBrief(
       drafted,
       memoPathId === "judicial-review" ? relatedGrounds.filter((id) => shownGrounds.some((g) => g.id === id)) : [],
+      Object.fromEntries(shownGrounds.map((g) => [g.id, g.elements.map((el) => el.id)])),
     ),
     // Paired with the question that was asked, not merged into the criterion notes — those
     // are looked up by criterion, so an answer keyed by its question matched nothing.
@@ -2811,6 +2866,7 @@ function ResultStep({
               id="memo-more"
               value={account["q-more"] ?? ""}
               onChange={(e) => setAccount((a) => ({ ...a, "q-more": e.target.value }))}
+              onBlur={() => setMoreSettled(moreNow)}
               rows={4}
               placeholder={t("memoMorePlaceholder")}
               className="input mt-3 w-full"
@@ -3205,6 +3261,15 @@ function ResultStep({
           {isCaseLetter && !polishing && polished[letterKey] === "" && (
             <p data-testid="letter-case-refused" className="mt-3 text-[15px] leading-relaxed text-ink-soft">
               {t(forCourt ? "letterCaseRefusedCourt" : "letterCaseRefused")}
+            </p>
+          )}
+          {/* The other routes this decision type has, named before a court statement (the quality
+              review, 2026-11-02): a parking notice went to the Supreme Court with nothing saying
+              the scheme has its own review and a court hearing. The routes are the entry's own
+              words; nothing here weighs them. */}
+          {forCourt && otherRoutes.length > 0 && (
+            <p data-testid="jr-other-routes" className="mt-3 rounded-sticker border-2 border-help bg-help-soft px-4 py-3 text-[15px] leading-relaxed text-ink">
+              {t("jrOtherRoutes", { routes: otherRoutes.join("; or ") })}
             </p>
           )}
           {letterWarnings.length > 0 && (

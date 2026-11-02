@@ -26,6 +26,9 @@ export interface ModelResult {
   text: string;
   inputTokens: number;
   outputTokens: number;
+  /** Prompt-cache tokens, billed apart from inputTokens (write 1.25x, read 0.1x). */
+  cacheWriteTokens?: number;
+  cacheReadTokens?: number;
   model: string;
 }
 
@@ -86,7 +89,8 @@ function client(byoKeyValue: string | undefined, surface: ModelCall["surface"]):
  * Newer models reject "disabled" with a 400 (Claude Opus 5.5, Claude Sonnet 5.5, Fable), so
  * the list is explicit: a model not on it keeps its default and gets headroom instead.
  */
-export const THINKING_OFF_OK = /^claude-(sonnet-5|opus-5|opus-4-[5-8]|sonnet-4-[56]|haiku-4-5)(?:$|-\d{8}$)/;
+// Haiku 5.5 accepts "disabled" at its default effort (medium); only xhigh/max refuse it.
+export const THINKING_OFF_OK = /^claude-(sonnet-5|opus-5|opus-4-[5-8]|sonnet-4-[56]|haiku-4-5|haiku-5-5)(?:$|-\d{8}$)/;
 
 /** Room for thinking on a model that will not turn it off, so it cannot crowd out the answer. */
 const THINKING_HEADROOM = 6000;
@@ -116,6 +120,8 @@ export const callModel: ModelFn = async (call) => {
     text,
     inputTokens: res.usage.input_tokens,
     outputTokens: res.usage.output_tokens,
+    cacheWriteTokens: res.usage.cache_creation_input_tokens ?? 0,
+    cacheReadTokens: res.usage.cache_read_input_tokens ?? 0,
     model: call.model,
   };
 };
@@ -159,9 +165,13 @@ export const callVision: VisionFn = async (call) => {
   }
   const content: Anthropic.ContentBlockParam[] = [block, { type: "text", text: call.prompt }];
 
+  // Transcription, not reasoning: left unset, the current models think first, paying for it and
+  // spending the output room a two-page letter needs (the efficiency review, 2026-11-02).
+  const thinkingOff = THINKING_OFF_OK.test(call.model);
   const res = await anthropic.messages.create({
     model: call.model,
-    max_tokens: call.maxTokens,
+    max_tokens: thinkingOff ? call.maxTokens : call.maxTokens + THINKING_HEADROOM,
+    ...(thinkingOff ? { thinking: { type: "disabled" as const } } : {}),
     messages: [{ role: "user", content }],
   });
 
@@ -174,6 +184,8 @@ export const callVision: VisionFn = async (call) => {
     text,
     inputTokens: res.usage.input_tokens,
     outputTokens: res.usage.output_tokens,
+    cacheWriteTokens: res.usage.cache_creation_input_tokens ?? 0,
+    cacheReadTokens: res.usage.cache_read_input_tokens ?? 0,
     model: call.model,
   };
 };

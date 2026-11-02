@@ -1,3 +1,4 @@
+import { numberWordsToDigits } from "@/lib/text/numbers";
 import type { PathwayEntry } from "@/lib/schemas/corpus";
 import { checkNoAdvice, checkNoAiMentions, checkNoScore } from "@/lib/safety/no-advice";
 import { fkGrade } from "@/lib/text/readability";
@@ -189,7 +190,7 @@ const TIME_FIGURE_RE =
   /\b(\d{1,4})\s*(?:calendar|business|working)?\s*(day|days|week|weeks|month|months|year|years)\b/gi;
 
 function collectFigures(text: string, into: Set<string>): void {
-  for (const m of text.matchAll(TIME_FIGURE_RE)) {
+  for (const m of numberWordsToDigits(text).matchAll(TIME_FIGURE_RE)) {
     into.add(`${Number(m[1])} ${normUnit(m[2]!)}`);
   }
 }
@@ -270,7 +271,8 @@ export function verifyOutput(input: VerifyInput): VerifyResult {
   const grounded = groundedTimeFigures(entry);
   if (input.groundedText) collectFigures(input.groundedText, grounded);
   if (input.accountText) collectFigures(input.accountText, grounded);
-  for (const m of text.matchAll(TIME_FIGURE_RE)) {
+  // Words as digits: "sixty days" is checked exactly as "60 days" is.
+  for (const m of numberWordsToDigits(text).matchAll(TIME_FIGURE_RE)) {
     const tok = `${Number(m[1])} ${normUnit(m[2]!)}`;
     if (!grounded.has(tok)) {
       failures.push({

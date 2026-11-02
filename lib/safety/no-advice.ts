@@ -41,3 +41,13 @@ export function checkNoScore(text: string): GateResult {
 export function checkNoAiMentions(text: string): GateResult {
   return run(text, patterns.aiMentions);
 }
+
+/**
+ * The person's own statement of their case (first person). The advice and prediction groups are
+ * written in the second person ("you should", "you'll win"), so a statement that conceded the
+ * other side's point ("I accept the tribunal can consider…" — live, 2026-11-01) or predicted its
+ * own success passed every gate. Applied to each argued point and to every assembled statement.
+ */
+export function checkStatementVoice(text: string): GateResult {
+  return run(text, [...patterns.statement, ...patterns.prediction, ...patterns.score, ...patterns.satisfies]);
+}

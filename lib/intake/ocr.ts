@@ -47,7 +47,8 @@ async function anthropicOcr(bytes: Uint8Array, mediaType: string): Promise<OcrRe
     mediaType,
     prompt: TRANSCRIBE_PROMPT,
     model: MODELS.primary,
-    maxTokens: 1500,
+    // A two-page letter is ~1,400 tokens; billing is on what is used, so room costs nothing.
+    maxTokens: 4000,
   });
   return {
     available: true,

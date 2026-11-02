@@ -179,3 +179,30 @@ describe("the brief's working, in the shape the in-depth analysis reads", () => 
     expect(draftedFromBrief(null, ["procedural-fairness-hearing"])).toBeNull();
   });
 });
+
+// The quality review, 2026-11-02: the live brief named parts by bare id ("critical"), so the
+// in-depth analysis lost every part's line and filed the parts as criteria.
+describe("a part named by its bare id", () => {
+  it("finds its ground, and is not filed as a criterion", () => {
+    const d = draftedFromBrief(
+      {
+        situation: "s",
+        path: "p",
+        otherSide: "o",
+        toGather: [],
+        sources: [],
+        points: [
+          { ref: "critical", relates: "The finding the notice rests on.", needed: "The officer's notes." },
+          { ref: "shared-part", relates: "Belongs to two grounds.", needed: "" },
+        ],
+        depth: [],
+      },
+      ["no-evidence", "other"],
+      { "no-evidence": ["no-support", "critical", "shared-part"], other: ["shared-part"] },
+    )!;
+    const ne = d.application!.find((a) => a.groundId === "no-evidence")!;
+    expect(ne.elements).toEqual([{ elementId: "critical", says: "The finding the notice rests on.", missing: "The officer's notes." }]);
+    // Ambiguous, so not guessed — and never a ground's part filed as a criterion.
+    expect((d.criteria ?? []).map((c) => c.criterionId)).not.toContain("critical");
+  });
+});

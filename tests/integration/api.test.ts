@@ -543,6 +543,72 @@ describe("/api/memo (the short analysis)", () => {
       expect(body.statement).toBeUndefined();
     });
 
+    // The efficiency review, 2026-11-02: one refused paragraph sent the whole statement to the
+    // slower rewrite. Now only that point is asked again, told why.
+    it("asks again for just the point whose paragraph was refused, and then builds", async () => {
+      let pointCalls = 0;
+      let hinted = "";
+      __setModelForTests(async (call) => {
+        if (kindOf(call.system) !== "point") return briefModel()(call);
+        pointCalls++;
+        if (pointCalls === 1) {
+          return briefModel({}, { point: { argument: `${POINT_ARGUMENT} I accept that a letter was sent.` } })(call);
+        }
+        hinted = call.user;
+        return briefModel()(call);
+      });
+      const body = await (await memoPost(jsonReq("http://x/api/memo", withDraft))).json();
+      expect(body.statement).toContain("Nobody asked me about the medical certificate");
+      expect(body.statement).not.toContain("I accept");
+      expect(pointCalls).toBe(2);
+      expect(hinted).toMatch(/concede nothing/);
+    });
+
+    // The quality review, 2026-11-02.
+    it("argues no point on a court election — its criterion is a routing line", async () => {
+      const kinds: string[] = [];
+      __setModelForTests(async (call) => {
+        kinds.push(kindOf(call.system));
+        return briefModel()(call);
+      });
+      const fines = getDataEntry("vic-fines")!;
+      await memoPost(
+        jsonReq("http://x/api/memo", { ...memoBody, entryId: "vic-fines", pathId: "court-election", groundIds: [], criteria: fines.courtCriteria ?? [] }),
+      );
+      expect(kinds).not.toContain("point");
+    });
+
+    it("with nothing ticked, works through the criteria but puts none in their document, and never a sensitive one", async () => {
+      const fines = getDataEntry("vic-fines")!;
+      const users: string[] = [];
+      const kinds: string[] = [];
+      __setModelForTests(async (call) => {
+        kinds.push(kindOf(call.system));
+        if (kindOf(call.system) === "point") users.push(call.user);
+        return briefModel()(call);
+      });
+      const draft = buildDraft(getEntry("vic-fines")!, "internal-review-request", memoBody.story).body;
+      const body = await (
+        await memoPost(
+          jsonReq("http://x/api/memo", {
+            ...memoBody,
+            entryId: "vic-fines",
+            pathId: "internal-review",
+            groundIds: [],
+            criteria: fines.irCriteria ?? [],
+            pickedCriteria: [],
+            statementDraft: draft,
+          }),
+        )
+      ).json();
+      expect(users.length).toBeGreaterThan(0);
+      expect(users.join("\n")).not.toMatch(/family violence/);
+      // Nothing they chose, so no reasons in their name: the frame is not asked for, and the page
+      // writes the document from their account the slower way.
+      expect(kinds).not.toContain("frame");
+      expect(body.statement).toBeUndefined();
+    });
+
     it("is not built when the frame invents a name", async () => {
       __setModelForTests(briefModel({}, { frame: { facts: "They cut my payment. Mr Hargreaves at the office refused to listen." } }));
       const body = await (await memoPost(jsonReq("http://x/api/memo", withDraft))).json();

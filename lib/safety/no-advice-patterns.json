@@ -1,50 +1,179 @@
 {
   "_comment": "SoT for the no-advice / no-prediction gate AND the no-advice-check linter (harness §11.2 tone gate, PRD §11). Both the runtime gate (lib/safety/no-advice.ts) and scripts/no-advice-check.mjs read THIS file. Patterns are JS regex source strings, matched case-insensitively. Keep precise to avoid flagging legitimate plain-language copy ('you may be able to...').",
   "advice": [
-    { "pattern": "\\byou should\\b", "why": "first-person advice ('you should…')" },
-    { "pattern": "\\byou ought to\\b", "why": "first-person advice" },
-    { "pattern": "\\byou must\\b(?!\\s+(apply|lodge|act)\\s+(by|within|before))", "why": "directive advice" },
-    { "pattern": "\\bI (would |strongly )?(advise|recommend|suggest)\\b", "why": "first-person advice" },
-    { "pattern": "\\bwe (advise|recommend|suggest)\\b", "why": "first-person advice" },
-    { "pattern": "\\byour best (option|bet|move|choice) is\\b", "why": "directs a choice" },
-    { "pattern": "\\bthe best (option|thing|course) (for you|is to)\\b", "why": "directs a choice" },
-    { "pattern": "\\bI think you\\b", "why": "first-person advice" },
-    { "pattern": "\\byou'?d be better off\\b", "why": "directs a choice" }
+    {
+      "pattern": "\\byou should\\b",
+      "why": "first-person advice ('you should…')"
+    },
+    {
+      "pattern": "\\byou ought to\\b",
+      "why": "first-person advice"
+    },
+    {
+      "pattern": "\\byou must\\b(?!\\s+(apply|lodge|act)\\s+(by|within|before))",
+      "why": "directive advice"
+    },
+    {
+      "pattern": "\\bI (would |strongly )?(advise|recommend|suggest)\\b",
+      "why": "first-person advice"
+    },
+    {
+      "pattern": "\\bwe (advise|recommend|suggest)\\b",
+      "why": "first-person advice"
+    },
+    {
+      "pattern": "\\byour best (option|bet|move|choice) is\\b",
+      "why": "directs a choice"
+    },
+    {
+      "pattern": "\\bthe best (option|thing|course) (for you|is to)\\b",
+      "why": "directs a choice"
+    },
+    {
+      "pattern": "\\bI think you\\b",
+      "why": "first-person advice"
+    },
+    {
+      "pattern": "\\byou'?d be better off\\b",
+      "why": "directs a choice"
+    }
   ],
   "prediction": [
-    { "pattern": "\\byou('| wi)?ll (win|lose|succeed|fail)\\b", "why": "predicts the outcome" },
-    { "pattern": "\\byou (will|won'?t|wo n't) (win|lose|succeed|get)\\b", "why": "predicts the outcome" },
-    { "pattern": "\\b(guarantee|guaranteed|guaranteeing)\\b", "why": "guarantees an outcome" },
-    { "pattern": "\\b(definitely|certainly|surely) (win|lose|succeed|fail|get)\\b", "why": "predicts the outcome" },
-    { "pattern": "\\byour (claim|appeal|case|review) will (succeed|fail|be (approved|rejected|won|lost))\\b", "why": "predicts the outcome" },
-    { "pattern": "\\b(high|good|strong|low|poor) chance(s)? of (winning|success|losing)\\b", "why": "predicts the outcome" },
-    { "pattern": "\\byou are (sure|certain) to\\b", "why": "predicts the outcome" }
+    {
+      "pattern": "\\byou('| wi)?ll (win|lose|succeed|fail)\\b",
+      "why": "predicts the outcome"
+    },
+    {
+      "pattern": "\\byou (will|won'?t|wo n't) (win|lose|succeed|get)\\b",
+      "why": "predicts the outcome"
+    },
+    {
+      "pattern": "\\b(guarantee|guaranteed|guaranteeing)\\b",
+      "why": "guarantees an outcome"
+    },
+    {
+      "pattern": "\\b(definitely|certainly|surely) (win|lose|succeed|fail|get)\\b",
+      "why": "predicts the outcome"
+    },
+    {
+      "pattern": "\\byour (claim|appeal|case|review) will (succeed|fail|be (approved|rejected|won|lost))\\b",
+      "why": "predicts the outcome"
+    },
+    {
+      "pattern": "\\b(high|good|strong|low|poor) chance(s)? of (winning|success|losing)\\b",
+      "why": "predicts the outcome"
+    },
+    {
+      "pattern": "\\byou are (sure|certain) to\\b",
+      "why": "predicts the outcome"
+    }
   ],
   "score": [
-    { "pattern": "\\b(strong|strongest|weak|weakest|good|poor|best) (ground|grounds|case|argument|claim|prospect|prospects)\\b", "why": "scores/ranks the strength of grounds (no score, no ranking)" },
-    { "pattern": "\\brank(s|ed|ing)?\\b.{0,20}\\bgrounds?\\b", "why": "ranks grounds (forbidden — show all grounds neutrally)" },
-    { "pattern": "\\b(prospects|chance|chances|odds|likelihood) of (success|winning|losing)\\b", "why": "predicts/quantifies prospects" },
-    { "pattern": "\\b(likely|unlikely) to (win|succeed|fail|lose)\\b", "why": "predicts likelihood of outcome" },
-    { "pattern": "\\byour (strongest|best) (ground|argument|point)\\b", "why": "privileges one ground (implicit strength score)" },
-    { "pattern": "\\b(focus on|lead with) (your |the )?(strongest|best)\\b", "why": "ranks grounds by strength" }
+    {
+      "pattern": "\\b(strong|strongest|weak|weakest|good|poor|best) (ground|grounds|case|argument|claim|prospect|prospects)\\b",
+      "why": "scores/ranks the strength of grounds (no score, no ranking)"
+    },
+    {
+      "pattern": "\\brank(s|ed|ing)?\\b.{0,20}\\bgrounds?\\b",
+      "why": "ranks grounds (forbidden — show all grounds neutrally)"
+    },
+    {
+      "pattern": "\\b(prospects|chance|chances|odds|likelihood) of (success|winning|losing)\\b",
+      "why": "predicts/quantifies prospects"
+    },
+    {
+      "pattern": "\\b(likely|unlikely) to (win|succeed|fail|lose)\\b",
+      "why": "predicts likelihood of outcome"
+    },
+    {
+      "pattern": "\\byour (strongest|best) (ground|argument|point)\\b",
+      "why": "privileges one ground (implicit strength score)"
+    },
+    {
+      "pattern": "\\b(focus on|lead with) (your |the )?(strongest|best)\\b",
+      "why": "ranks grounds by strength"
+    }
   ],
   "satisfies": [
-    { "pattern": "\\bsatisf(y|ies|ied)\\b.{0,20}\\b(element|elements|ground|test|requirement|limb|criterion|criteria|part)\\b", "why": "a fact may only 'relate to' an element, never 'satisfy' it" },
-    { "pattern": "\\b(meets|met|meeting) (this |the |that |each )?(element|test|requirement|limb|criterion|criteria|part)\\b", "why": "'meets the element' is a strength judgment (use 'relates to')" },
-    { "pattern": "\\b(establishes|proves|makes out|demonstrates) (this |the |that |your )?(element|ground|case|requirement|criterion|criteria|part)\\b", "why": "asserts the ground is made out (use 'relates to')" },
-    { "pattern": "\\bis sufficient (for|to (satisfy|establish|meet|prove))\\b", "why": "sufficiency is a strength judgment (use 'relates to')" },
-    { "pattern": "\\b(this|that|these|those|your|their|the|each|both)\\s+(?:[A-Za-z-]+\\s+){0,3}(element|elements|criterion|criteria|ground|grounds|test|requirement|limb|part)\\b[^.?!]{0,24}\\b(is|are|was|were|has been|have been)\\b[^.?!]{0,16}\\b(satisfied|met|established|proved|proven|made out|sufficient)\\b", "why": "the same judgment written the other way round ('this criterion is satisfied')" }
+    {
+      "pattern": "\\bsatisf(y|ies|ied)\\b.{0,20}\\b(element|elements|ground|test|requirement|limb|criterion|criteria|part)\\b",
+      "why": "a fact may only 'relate to' an element, never 'satisfy' it"
+    },
+    {
+      "pattern": "\\b(meets|met|meeting) (this |the |that |each )?(element|test|requirement|limb|criterion|criteria|part)\\b",
+      "why": "'meets the element' is a strength judgment (use 'relates to')"
+    },
+    {
+      "pattern": "\\b(establishes|proves|makes out|demonstrates) (this |the |that |your )?(element|ground|case|requirement|criterion|criteria|part)\\b",
+      "why": "asserts the ground is made out (use 'relates to')"
+    },
+    {
+      "pattern": "\\bis sufficient (for|to (satisfy|establish|meet|prove))\\b",
+      "why": "sufficiency is a strength judgment (use 'relates to')"
+    },
+    {
+      "pattern": "\\b(this|that|these|those|your|their|the|each|both)\\s+(?:[A-Za-z-]+\\s+){0,3}(element|elements|criterion|criteria|ground|grounds|test|requirement|limb|part)\\b[^.?!]{0,24}\\b(is|are|was|were|has been|have been)\\b[^.?!]{0,16}\\b(satisfied|met|established|proved|proven|made out|sufficient)\\b",
+      "why": "the same judgment written the other way round ('this criterion is satisfied')"
+    }
   ],
   "aiMentions": [
-    { "pattern": "\\bAI\\b", "why": "no AI mentions in customer copy" },
-    { "pattern": "\\bA\\.I\\.", "why": "no AI mentions in customer copy" },
-    { "pattern": "\\bLLM\\b", "why": "no AI mentions in customer copy" },
-    { "pattern": "\\bClaude\\b", "why": "no model mentions in customer copy" },
-    { "pattern": "\\bChatGPT\\b", "why": "no model mentions in customer copy" },
-    { "pattern": "\\bAnthropic\\b", "why": "no vendor mentions in customer copy" },
-    { "pattern": "\\b(large )?language model\\b", "why": "no AI mentions in customer copy" },
-    { "pattern": "\\bartificial intelligence\\b", "why": "no AI mentions in customer copy" },
-    { "pattern": "\\bchatbot\\b", "why": "no AI mentions in customer copy" },
-    { "pattern": "\\bgenerative\\b", "why": "no AI mentions in customer copy" }
+    {
+      "pattern": "\\bAI\\b",
+      "why": "no AI mentions in customer copy"
+    },
+    {
+      "pattern": "\\bA\\.I\\.",
+      "why": "no AI mentions in customer copy"
+    },
+    {
+      "pattern": "\\bLLM\\b",
+      "why": "no AI mentions in customer copy"
+    },
+    {
+      "pattern": "\\bClaude\\b",
+      "why": "no model mentions in customer copy"
+    },
+    {
+      "pattern": "\\bChatGPT\\b",
+      "why": "no model mentions in customer copy"
+    },
+    {
+      "pattern": "\\bAnthropic\\b",
+      "why": "no vendor mentions in customer copy"
+    },
+    {
+      "pattern": "\\b(large )?language model\\b",
+      "why": "no AI mentions in customer copy"
+    },
+    {
+      "pattern": "\\bartificial intelligence\\b",
+      "why": "no AI mentions in customer copy"
+    },
+    {
+      "pattern": "\\bchatbot\\b",
+      "why": "no AI mentions in customer copy"
+    },
+    {
+      "pattern": "\\bgenerative\\b",
+      "why": "no AI mentions in customer copy"
+    }
+  ],
+  "statement": [
+    {
+      "pattern": "\\bI (accept|concede|admit|acknowledge|agree) (that|the|it|this|my|they)\\b",
+      "why": "concedes the other side's point in the person's own statement"
+    },
+    {
+      "pattern": "\\b(I|my (case|ground|grounds|application|appeal|review)) (will|should|must|am (sure|certain|bound) to) (win|succeed|prevail|be (granted|upheld|allowed|successful))\\b",
+      "why": "predicts the outcome in the person's own voice"
+    },
+    {
+      "pattern": "\\b(this|my|the|each) (ground|point|case|argument|application) (is|are|must be|will be) (made out|established|successful|strong|clear-cut|bound to succeed|certain to succeed)\\b",
+      "why": "declares a ground made out or strong"
+    },
+    {
+      "pattern": "\\b(the court|the tribunal|the agency) (will|is bound to|is certain to) (find|set aside|grant|agree|accept|rule)\\b",
+      "why": "predicts what the body will do"
+    }
   ]
 }

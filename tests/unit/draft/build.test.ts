@@ -23,9 +23,10 @@ describe("draft builder", () => {
     expect(fromGeneric.body.toLowerCase()).not.toContain("verify");
   });
 
-  it("review-application lists the evidence checklist", () => {
+  it("review-application lists the evidence checklist, in the person's own voice", () => {
     const d = buildDraft(verifiedEntry, "review-application");
-    expect(d.body).toContain("your records");
+    expect(d.body).toContain("my records");
+    expect(d.body).not.toContain("your records");
   });
 
   it("is written in the person's own voice (no 'you should')", () => {

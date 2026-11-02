@@ -5,7 +5,7 @@ import { getEntry, listEntries } from "@/lib/corpus/index";
 import { checkNoAdvice, checkNoAiMentions } from "@/lib/safety/no-advice";
 import { MODELS } from "@/lib/config";
 import type { GuardContext } from "@/lib/cost/guard";
-import { record, estimateCostUsd } from "@/lib/cost/guard";
+import { record, costOf } from "@/lib/cost/guard";
 
 /**
  * Conversational intake (Tier-B adaptation of FairGo's chat). The assistant's job is to
@@ -85,7 +85,7 @@ export async function runChatTurn(args: {
     byoKeyValue: args.byoKeyValue,
     surface: "chat",
   });
-  await record(args.guard, estimateCostUsd(res.model, res.inputTokens, res.outputTokens));
+  await record(args.guard, costOf(res));
 
   let turn: ChatTurn;
   try {

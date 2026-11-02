@@ -1,3 +1,5 @@
+import { numberWordsToDigits } from "@/lib/text/numbers";
+
 /**
  * The own-words gate — the primary control on a model-assisted letter.
  *
@@ -173,7 +175,7 @@ const TIME_CLAIM =
   /\b(i|we)\s+(have|had|has|get|got|am entitled to|are entitled to)\s+\d+\s*(day|days|week|weeks|month|months)\b|\bwithin\s+\d+\s*(day|days|week|weeks|month|months)\s+(i|we|you)\b|\bdeadline is\b|\btime limit is\b/i;
 
 export function checkNoTimeLimitClaim(sentences: string[]): boolean {
-  return !TIME_CLAIM.test(sentences.join(" "));
+  return !TIME_CLAIM.test(numberWordsToDigits(sentences.join(" ")));
 }
 
 /** No case citation ever reaches a letter a self-represented person sends. */

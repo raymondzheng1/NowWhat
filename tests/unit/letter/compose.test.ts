@@ -116,3 +116,35 @@ describe("a criterion as a heading in their document", () => {
     expect(inMyVoice("The youth allowance rules.")).toBe("The youth allowance rules");
   });
 });
+
+// The quality review, 2026-11-02: criteria read as descriptions of the tribunal, not reasons.
+describe("a criterion as a reason's heading", () => {
+  it("keeps the question it asks, in their voice", async () => {
+    const { criterionHeading } = await import("@/lib/letter/compose");
+    expect(criterionHeading("The tribunal decides whether the rules were applied correctly to your situation.")).toBe(
+      "Whether the rules were applied correctly to my situation",
+    );
+    expect(criterionHeading("Where there is a debt, it decides whether the debt is owed and how much it is.")).toBe(
+      "Whether the debt is owed and how much it is",
+    );
+    expect(criterionHeading("The grounds include a mistake of identity, and a decision that was contrary to law.")).toBe(
+      "A mistake of identity, and a decision that was contrary to law",
+    );
+    expect(
+      criterionHeading("For an eviction, VCAT also decides whether it is reasonable and proportionate to make you leave. It weighs the impact on you."),
+    ).toBe("Whether it is reasonable and proportionate to make me leave");
+  });
+});
+
+// The quality review, 2026-11-02: a council's parking notice named "Fines Victoria" as respondent.
+describe("a decision type with several decision-makers", () => {
+  it("leaves the respondent and addressee as a blank", async () => {
+    const { buildDraft } = await import("@/lib/draft/build");
+    const jr = buildDraft(getEntry("vic-fines")!, "judicial-review-application").body;
+    expect(jr).toMatch(/^Respondent: \[the agency or council that made the decision\]$/m);
+    const ir = buildDraft(getEntry("vic-fines")!, "internal-review-request").body;
+    expect(ir).toMatch(/^To: \[the agency or council that made the decision\]$/m);
+    // One body under two names is still named.
+    expect(buildDraft(getEntry("cth-centrelink")!, "internal-review-request").body).toMatch(/^To: Services Australia$/m);
+  });
+});

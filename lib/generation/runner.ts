@@ -2,7 +2,7 @@ import type { z } from "zod";
 import { callModel } from "@/lib/generation/anthropic";
 import { systemPrompt, userPrompt, repairPrompt, type Task } from "@/lib/generation/prompts";
 import { verifyOutput, type VerifyFailure } from "@/lib/verification/verify";
-import { record, estimateCostUsd, type GuardContext } from "@/lib/cost/guard";
+import { record, costOf, type GuardContext } from "@/lib/cost/guard";
 import { getKv } from "@/lib/kv/redis";
 import { MODELS, MAX_GENERATION_ATTEMPTS } from "@/lib/config";
 import type { PathwayEntry } from "@/lib/schemas/corpus";
@@ -105,6 +105,8 @@ export interface GenerationResult<T> {
 
 interface RunOpts<T> {
   task: Task;
+  /** The model for this task; the primary model unless the task is a matching one. */
+  model?: string;
   /**
    * Room for the answer, in output tokens. Defaults to the 1200 every task shared.
    *
@@ -178,11 +180,11 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
     const res = await callModel({
       system: sys,
       user: userPrompt(opts.task, opts.context, opts.userInput, retryHint),
-      model: MODELS.primary,
+      model: opts.model ?? MODELS.primary,
       maxTokens,
       byoKeyValue: opts.byoKeyValue,
     });
-    await record(opts.guard, estimateCostUsd(res.model, res.inputTokens, res.outputTokens));
+    await record(opts.guard, costOf(res));
 
     let parsed = tryParse(res.text);
 
@@ -195,7 +197,7 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
         maxTokens,
         byoKeyValue: opts.byoKeyValue,
       });
-      await record(opts.guard, estimateCostUsd(repair.model, repair.inputTokens, repair.outputTokens));
+      await record(opts.guard, costOf(repair));
       parsed = tryParse(repair.text);
     }
     if (parsed === null) continue;
@@ -237,6 +239,9 @@ async function runGeneration<T>(opts: RunOpts<T>): Promise<GenerationResult<T>> 
     // cleared every safety gate, and use it only if we run out of attempts.
     if (verdict.failures.every((f) => f.gate === "reading-level")) {
       readableEnough = { data, failures: verdict.failures };
+      // One more try at plainer prose is worth a call; a third is not, since this answer is kept
+      // anyway (the efficiency review, 2026-11-02).
+      if (attempts >= 2) break;
     }
 
     // Tell the next attempt what to change, without ever feeding back the rejected draft.
@@ -373,6 +378,8 @@ export function runGroundMatch(
   return runGeneration<GroundMatch>({
     ...args,
     task: "ground-match",
+    // A first cut, matched and machine-checked, not written: the small model (see MODELS).
+    model: MODELS.small,
     // It names grounds by id and cites nothing; the page prints each ground's own words.
     citesNothing: true,
     schema: GroundMatchSchema,

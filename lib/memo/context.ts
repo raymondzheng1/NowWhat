@@ -214,3 +214,32 @@ export function fitsJurisdiction(source: string, jurisdiction: DataPathway["juri
   return jurisdiction === "Vic" ? vic || !CTH_SOURCE.test(source) : !vic;
 }
 
+
+/**
+ * What the statement's frame needs, and nothing more: the kind of decision, the path and the body
+ * it goes to, and what that body can and cannot do (for "what I ask"). The frame cites nothing and
+ * may state no time limit, so the tests, cases and time rule of the full context could not help
+ * it and cost tokens on every analysis: about 3,300 of them, against about 400 here (the
+ * efficiency review, 2026-11-02). The assembled statement is still checked against the full one.
+ */
+export function buildFrameContext(input: {
+  entry: DataPathway;
+  process: Process | null;
+  internal: Concept | null;
+  forum: string;
+  pathName: string;
+}): string {
+  const { entry, process: proc, internal, forum, pathName } = input;
+  const L = [`DECISION TYPE: ${entry.title}`, `THE PATH: ${pathName}, at ${forum}`];
+  if (proc) {
+    L.push(`WHAT THIS BODY ASKS: ${proc.question}`, "WHAT IT CAN DO:");
+    for (const r of proc.remedies) L.push(`  - ${r}`);
+    if (proc.limits.length) {
+      L.push("WHAT IT CANNOT DO:");
+      for (const r of proc.limits) L.push(`  - ${r}`);
+    }
+  } else if (internal) {
+    L.push(`WHAT THIS STEP IS: ${internal.oneLine}`);
+  }
+  return L.join("\n");
+}

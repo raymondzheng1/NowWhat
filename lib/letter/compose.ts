@@ -1,6 +1,8 @@
 import type { PathwayEntry } from "@/lib/schemas/corpus";
 import { buildDraft, type CasePoint, type Draft, type DraftKind } from "@/lib/draft/build";
 
+export { criterionHeading, inMyVoice } from "@/lib/text/voice";
+
 /**
  * Composes the person's own account into a review letter — deterministically, on the device.
  *
@@ -114,24 +116,6 @@ export function withoutRepeats(note: string, story: string): string {
     .join("\n\n");
 }
 
-/**
- * A line written TO the person, put in their own voice for a heading in their document: "The
- * tribunal decides whether the rules were applied correctly to your situation." becomes "…to my
- * situation", with no full stop. Only the second person changes; nothing else is reworded.
- */
-export function inMyVoice(line: string): string {
-  return line
-    .trim()
-    .replace(/[.]+$/, "")
-    .replace(/\byourself\b/gi, "myself")
-    .replace(/\byours\b/gi, "mine")
-    .replace(/\byour\b/g, "my")
-    .replace(/\bYour\b/g, "My")
-    .replace(/\byou (are|were|have|had|can|could|did|do|will|would)\b/gi, (_, v: string) =>
-      `I ${v.toLowerCase() === "are" ? "am" : v.toLowerCase() === "were" ? "was" : v.toLowerCase()}`,
-    )
-    .replace(/\byou\b/gi, "me");
-}
 
 /**
  * Their note under a point, without the sentences their account already says — unless that

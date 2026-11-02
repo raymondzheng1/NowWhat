@@ -365,19 +365,27 @@ FILL THESE PARTS:
    what will happen: the reader draws the conclusion.
  · "argument": the same point as it goes into THEIR OWN statement of their case, in the first
    person ("I", "my"), at most about 130 words. This is their side, in a process where each side
-   puts its own case: one sentence on what this point asks, in the terms of the CORPUS CONTEXT;
-   then their facts that show it, argued, from "for"; then what may be said against it, answered
-   from their facts and the context. Never concede it, even in part (no "I accept…"), never weigh
-   it, and never set it out without an answer: if their facts give no answer to it, leave it out.
+   puts its own case: what this point asks, in the terms of the CORPUS CONTEXT; then their facts
+   that show it, argued, from "for"; then what may be said against it, answered from their facts
+   and the context. Never concede it, even in part (no "I accept…"), never weigh it, and never set
+   it out without an answer: if their facts give no answer to it, leave it out.
+   The statement already has a summary of the facts above the grounds, and other grounds rest on
+   the same facts: do not retell them. Name only the facts this point turns on, briefly, and
+   spend the words on why they matter to THIS point. Do not open with "This ground asks" — start
+   with the point itself. Never write "my account" or "their account": write the facts.
    No heading — the page adds one.
  · "sources": one to three source strings, copied VERBATIM from the SOURCES lines.
 If their account says little about this point, still write all three: say so on the "for" side,
 name what is missing, and in "argument" set out only what they do say.
 
 YOU MUST NOT:
- A. Restate, soften or extend a legal test beyond what the context says.
+ A. Restate, soften or extend a legal test beyond what the context says. Name a part of the test
+    by the name the context gives it ("the finding mattered"), never by its id ("critical",
+    "gateway", "wrong-test").
  B. Name a case, Act, section, tribunal or court that is not in the CORPUS CONTEXT. In "argument",
-    name no case at all.
+    name no case at all. A rule that comes only from THEIR account, not the context, is theirs:
+    write "I understand the rule to be…", never "The rule says…". Never say what an Act they
+    name is for, or what it would contain.
  C. State a time limit or deadline, or any number of days, weeks, months or years, unless it is a
     fact from their own account.
  D. Say the point is strong, weak, likely, made out, satisfied, met or sufficient, or that it is
@@ -416,13 +424,17 @@ FILL THESE PARTS:
  · "decision": what was decided, who decided it and when, as far as their account says. Then the
    reasons the decision-maker gave, as their account reports them — each on its own line starting
    "1.", "2." if there were several. If their account says no reasons were given, say so. If it
-   says nothing about the reasons, end after what was decided.
+   says nothing about the reasons, end after what was decided — never write "my account does
+   not say": the page leaves a blank for them to fill in.
  · "ask": one or two sentences on what they ask for. For a court: only orders the CORPUS CONTEXT
    says it can make that fit (for example, that the decision be set aside and sent back to be
    decided again according to law) — never the outcome itself, which a court cannot give. For a
    tribunal or the agency: the outcome from "WHAT THEY SAID THEY WANT"; if there is none, that the
    decision be looked at again.
  · "facts": a summary of the facts that matter, in four to seven short sentences. Only their facts.
+   Lead with the facts their case rests on. Keep any reminder they left themselves in square
+   brackets ("[Insert Rego]") exactly as they wrote it, and keep their own hedges ("or insert the
+   offence") rather than stating as fact what they were unsure of. Never write "my account".
  · "documents": the documents their account says they have, sent or received — short noun
    phrases. Not records they only say they found out about. An empty list if there are none.
  · "sources": an empty list.

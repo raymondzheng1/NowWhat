@@ -5,6 +5,7 @@ import {
   GLOBAL_DAILY_BUDGET_USD,
   IP_RATE_LIMIT,
   MODEL_PRICES_USD_PER_MTOK,
+  UNPRICED_MODEL_USD_PER_MTOK,
 } from "@/lib/config";
 
 /**
@@ -47,22 +48,35 @@ const isProd = () => process.env.NODE_ENV === "production";
  * effective values are on /api/health, so the real fix — add the model to the table — is
  * visible from outside.
  */
-const UNPRICED_MODEL_USD_PER_MTOK = Object.values(MODEL_PRICES_USD_PER_MTOK).reduce(
-  (worst, p) => ({
-    input: Math.max(worst.input, p.input),
-    output: Math.max(worst.output, p.output),
-  }),
-  { input: 0, output: 0 },
-);
+// An explicit sentinel, not the dearest row of the table: with the table at today's (lower)
+// prices, "the dearest we know" would under-meter a newer, dearer model.
+const UNPRICED = UNPRICED_MODEL_USD_PER_MTOK;
 
-/** Estimate USD cost of one model call from token usage. */
+/** Estimate USD cost of one model call from token usage, cache writes and reads included. */
 export function estimateCostUsd(
   model: string,
   inputTokens: number,
   outputTokens: number,
+  cache: { write?: number; read?: number } = {},
 ): number {
-  const p = MODEL_PRICES_USD_PER_MTOK[model] ?? UNPRICED_MODEL_USD_PER_MTOK;
-  return (inputTokens / 1_000_000) * p.input + (outputTokens / 1_000_000) * p.output;
+  const p = MODEL_PRICES_USD_PER_MTOK[model] ?? UNPRICED;
+  return (
+    (inputTokens / 1_000_000) * p.input +
+    ((cache.write ?? 0) / 1_000_000) * p.cacheWrite +
+    ((cache.read ?? 0) / 1_000_000) * p.cacheRead +
+    (outputTokens / 1_000_000) * p.output
+  );
+}
+
+/** The cost of one model call as the API reported it. */
+export function costOf(r: {
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  cacheWriteTokens?: number;
+  cacheReadTokens?: number;
+}): number {
+  return estimateCostUsd(r.model, r.inputTokens, r.outputTokens, { write: r.cacheWriteTokens, read: r.cacheReadTokens });
 }
 
 export async function precheck(ctx: GuardContext): Promise<GuardResult> {
